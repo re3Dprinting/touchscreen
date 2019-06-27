@@ -1,42 +1,59 @@
-import socket 
+from socket import *
 from threading import Thread 
+import threading
 from SocketServer import ThreadingMixIn 
+from gigabotclient import *
 
-ackmessage = "OK"
-
-# Multithreaded Python server : TCP Server Socket Thread Pool
-class ClientThread(Thread): 
-    def __init__(self,ip,port): 
-        Thread.__init__(self) 
-        self.ip = ip 
-        self.port = port 
-        print "[+] New server socket thread started for " + ip + ":" + str(port) 
- 
-    def run(self): 
-        while True : 
-            data = conn.recv(2048) 
-            print "Server received data:", data.decode("utf-8")
-            conn.send(ackmessage.encode())  # echo
-
-
-# Multithreaded Python server : TCP Server Socket Program Stub
+# Multithreaded TCP Server Socket Program Stub
 TCP_IP = '' 
 TCP_PORT = 63200
 BUFFER_SIZE = 20  # Usually 1024, but we need quick response 
+ackmessage = "OK"
+gigabotthreads = []
+#data_lock = threading.Lock()
+gigabots = []
 
-tcpServer = socket.socket(socket.AF_INET, socket.SOCK_STREAM) 
-tcpServer.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1) 
-tcpServer.bind((TCP_IP, TCP_PORT)) 
-tcpServer.listen(5)
-print "socket is listening" 
-threads = []   
+
+# Multithreaded Python server : TCP Server Socket Thread Pool
+class GigabotThread(Thread): 
+    def __init__(self,conn, ip,port): 
+        Thread.__init__(self) 
+        self.conn = conn
+        conn.send("Connected!\n")
+        self.ip = ip 
+        self.port = port 
+        print "A new Gigabot Machine was connected! \n"
+        self.machine = 0
  
-while True: 
-    print "Multithreaded Python server : Waiting for connections from TCP clients..." 
-    (conn, (ip,port)) = tcpServer.accept() 
-    newthread = ClientThread(ip,port) 
-    newthread.start() 
-    threads.append(newthread) 
- 
-for t in threads: 
-    t.join()
+    def run(self): 
+        data = self.conn.recv(2048)
+
+        self.machine = gigabotclient(520,"XLT", str(ip), "On")
+        gigabots.append(self.machine)
+        self.machine.printdata()
+
+        while True : 
+            data = self.conn.recv(2048) 
+            print "Recieved data: ", data.decode("utf-8")
+            conn.send(ackmessage.encode())  # echo
+
+
+if __name__ == "__main__":
+    print "Chromebook Gigabot Dashboard Data Server : Waiting for connections Gigabot clients..." 
+    chromeServer = socket(AF_INET, SOCK_STREAM) 
+    chromeServer.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1) 
+    chromeServer.bind((TCP_IP, TCP_PORT)) 
+    chromeServer.listen(5)
+    print "socket is listening"  
+
+    while True: 
+        (conn, (ip,port)) = chromeServer.accept() 
+
+        #Create a new client
+        newthread = GigabotThread(conn,ip,port) 
+        newthread.start() 
+        gigabotthreads.append(newthread) 
+     
+    for t in gigabotthreads: 
+        t.join()
+    gigabots.clear()
