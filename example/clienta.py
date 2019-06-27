@@ -2,7 +2,7 @@
 import socket 
 
 host = '192.168.1.49' 
-port = 6677 
+port = 63200
 BUFFER_SIZE = 2000 
 MESSAGE = raw_input("tcpClientA: Enter message/ Enter exit:") 
 

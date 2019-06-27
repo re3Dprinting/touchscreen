@@ -8,7 +8,7 @@ import sys
 
 host = '192.168.1.49'
 baudrate = 250000
-port = 3000
+port = 63200
 
 
 if __name__ == "__main__":
