@@ -16,8 +16,9 @@ if __name__ == "__main__":
 	gigabotclient= socket(AF_INET,SOCK_STREAM)
 	gigabotclient.connect((host,port))
 	data = gigabotclient.recv(1024)
-	if len(data) > 0:
-		print data
+	while(len(data) == 0):
+		data = gigabotclient.recv(1024)
+	print(data)
 
 
 	com = list(serial.tools.list_ports.comports())
