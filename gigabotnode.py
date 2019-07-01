@@ -4,7 +4,7 @@ import serial
 import serial.tools.list_ports
 import gigabotconnection
 import sys
-
+import json
 
 host = '192.168.1.49'
 baudrate = 250000
@@ -57,8 +57,9 @@ if __name__ == "__main__":
 				 	print(serial_recv)
 				 	d_serial_recv = serial_recv.decode('utf-8')
 				 	gcodedata.parsedata(insize, d_serial_recv)
+					t = json.dumps(gcodedata.temp).encode("base64")
 				 	print(gcodedata.temp)
-					#conn.send(giga.temp.encode())
+					gigabotclient.send(t)
 			except IOError:
 				print "Device Disconnected!\n"
 				break
