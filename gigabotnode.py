@@ -29,9 +29,10 @@ def extractheader(client, conn, serdata):
 	insiz = conn.inWaiting()
 	if insiz: time.sleep(0.5)
 	insiz = conn.inWaiting()
+	print(insiz)
 	serdata.parsedata(insiz, conn.read(insiz).decode("utf-8"))
-	client.send((serdata.uploaddate + "|" + serdata.model).encode("base64"))
-
+	t = json.dumps(serdata.uploaddate +"|"+ serdata.model).encode("base64")
+	client.send(t)
 
 
 if __name__ == "__main__":
@@ -42,6 +43,8 @@ if __name__ == "__main__":
 	while(len(data) == 0): #Wait for the Connected transmission
 		data = gigabotclient.recv(1024)
 	print(data)
+	gigabotclient.send("Connection Confirmed\n")
+	
 
 	#connect to the serial device
 	serialconn = connecttocom() 
@@ -66,15 +69,14 @@ if __name__ == "__main__":
 					insize = serialconn.inWaiting()
 					
 					print(insize)
-				 	serial_recv = serialconn.read(insize)
-				 	print(serial_recv)
-				 	d_serial_recv = serial_recv.decode('utf-8')
-				 	serial_data.parsedata(insize, d_serial_recv)
-
-
-					t = json.dumps(serial_data.temp).encode("base64")
-				 	print(serial_data.temp)
-					gigabotclient.send(t)
+				 	d_serial_recv = serialconn.read(insize).decode('utf-8')
+				 	print d_serial_recv
+					serial_data.parsedata(insize, d_serial_recv)
+					
+					if(len(serial_data.temp) != 0) :
+						t = json.dumps(serial_data.temp).encode("base64")
+				 		print(serial_data.temp)
+						gigabotclient.send(t)
 			except IOError:
 				print "Device Disconnected!\n"
 				break
