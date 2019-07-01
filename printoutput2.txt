@@ -1,0 +1,78 @@
+SEND: M155 S5
+1342
+start
+echo:Marlin 1.1.8
+
+echo: Last Updated: Jun 13 2019 14:04:27 | Author: (GBXL V4.x.x - Marlin 1.1.8)
+echo:Compiled: Jun 13 2019
+echo: Free Memory: 1744  PlannerBufferBytes: 2816
+echo:V54 stored settings retrieved (675 bytes; crc 54980)
+echo:  G21    ; Units in mm
+echo:  M149 C ; Units in Celsius
+
+echo:Filament settings: Disabled
+echo:  M200 D3.00
+echo:  M200 T1 D3.00
+echo:  M200 D0
+echo:Steps per unit:
+echo:  M92 X118.52 Y118.52 Z4031.50 E947.00
+echo:Maximum feedrates (units/s):
+echo:  M203 X150.00 Y150.00 Z4.00 E60.00
+echo:Maximum Acceleration (units/s2):
+echo:  M201 X2000 Y2000 Z100 E10000
+echo:Acceleration (units/s2): P<print_accel> R<retract_accel> T<travel_accel>
+echo:  M204 P1000.00 R1500.00 T3000.00
+echo:Advanced: S<min_feedrate> T<min_travel_feedrate> B<min_segment_time_us> X<max_xy_jerk> Z<max_z_jerk> E<max_e_jerk>
+echo:  M205 S0.00 T0.00 B20000 X7.00 Y7.00 Z0.30 E5.00
+echo:Home offset:
+echo:  M206 X0.00 Y0.00 Z0.00
+echo:Hotend offsets:
+echo:  M218 T1 X54.30 Y0.00
+echo:Endstop adjustment:
+echo:  M666 Y0.00
+echo:Material heatup parameters:
+echo:  M145 S0 H180 B60 F0
+echo:  M145 S1 H215 B115 F0
+echo:PID settings:
+echo:  M301 P32.00 I4.00 D74.00
+echo:LCD Contrast:
+echo:  M250 C140
+echo:Linear Advance:
+echo:  M900 K0.08
+echo:Filament load/unload lengths:
+echo:  M603 T0 L0.00 U100.00
+echo:  M603 T1 L0.00 U100.00
+
+{}
+3
+ok
+
+{}
+78
+ T:21.42 /0.00 B:19.71 /0.00 T0:21.42 /0.00 T1:21.06 /0.00 @:0 B@:0 @0:0 @1:0
+
+{'B': [19.71, 0.0], 'T0': [21.42, 0.0], 'T1': [21.06, 0.0]}
+78
+ T:21.42 /0.00 B:19.59 /0.00 T0:21.42 /0.00 T1:21.12 /0.00 @:0 B@:0 @0:0 @1:0
+
+{'B': [19.59, 0.0], 'T0': [21.42, 0.0], 'T1': [21.12, 0.0]}
+78
+ T:21.18 /0.00 B:19.84 /0.00 T0:21.18 /0.00 T1:21.12 /0.00 @:0 B@:0 @0:0 @1:0
+
+{'B': [19.84, 0.0], 'T0': [21.18, 0.0], 'T1': [21.12, 0.0]}
+78
+ T:21.36 /0.00 B:19.84 /0.00 T0:21.36 /0.00 T1:21.24 /0.00 @:0 B@:0 @0:0 @1:0
+
+{'B': [19.84, 0.0], 'T0': [21.36, 0.0], 'T1': [21.24, 0.0]}
+78
+ T:21.36 /0.00 B:19.78 /0.00 T0:21.36 /0.00 T1:20.94 /0.00 @:0 B@:0 @0:0 @1:0
+
+{'B': [19.78, 0.0], 'T0': [21.36, 0.0], 'T1': [20.94, 0.0]}
+Traceback (most recent call last):
+  File "gigabotnode.py", line 48, in <module>
+    insize = serialconn.inWaiting()
+  File "/usr/lib/python2.7/dist-packages/serial/serialutil.py", line 538, in inWaiting
+    return self.in_waiting
+  File "/usr/lib/python2.7/dist-packages/serial/serialposix.py", line 464, in in_waiting
+    s = fcntl.ioctl(self.fd, TIOCINQ, TIOCM_zero_str)
+IOError: [Errno 5] Input/output error
