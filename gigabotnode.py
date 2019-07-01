@@ -25,6 +25,14 @@ def connecttocom():
 		print "COM port is unavalible/ or run program with root permission."
 		exit()
 
+def extractheader(client, conn, serdata):
+	insiz = conn.inWaiting()
+	if insiz: time.sleep(0.5)
+	insiz = conn.inWaiting()
+	serdata.parsedata(insiz, conn.read(insiz).decode("utf-8"))
+	client.send((serdata.uploaddate + "|" + serdata.model).encode("base64"))
+
+
 
 if __name__ == "__main__":
 	#connect to the server
@@ -41,9 +49,13 @@ if __name__ == "__main__":
 	if serialconn.is_open:
 		time.sleep(1)
 		print("SEND: M155 S5\r")
+		#send a M155 code to enable temperture reportings every 5s
 		serialconn.write('M155 S5\r'.encode('utf-8'))
+		time.sleep(1)
+		#create new serial data object. 
 		serial_data = gigabotconnection.serialdata()
 
+		extractheader(gigabotclient, serialconn, serial_data)
 
 		while True:
 			try:
