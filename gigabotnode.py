@@ -19,6 +19,7 @@ def connecttocom():
 	try:
 		#open up serial port.
 		serconn = serial.Serial(com, baudrate=baudrate)
+		serconn.timeout = 1 # set serial read timeout
 		return serconn
 	except:
 		print "COM port is unavalible/ or run program with root permission."
@@ -30,20 +31,20 @@ if __name__ == "__main__":
 	gigabotclient= socket(AF_INET,SOCK_STREAM)
 	gigabotclient.connect((host,port))
 	data = gigabotclient.recv(1024)
-	while(len(data) == 0):
+	while(len(data) == 0): #Wait for the Connected transmission
 		data = gigabotclient.recv(1024)
 	print(data)
 
-
-	serialconn = connecttocom() #connect to the serial device
-
-	serialconn.timeout = 1  # set read timeout
+	#connect to the serial device
+	serialconn = connecttocom() 
 
 	if serialconn.is_open:
 		time.sleep(1)
 		print("SEND: M155 S5\r")
 		serialconn.write('M155 S5\r'.encode('utf-8'))
-		gcodedata = gigabotconnection.gcodedata()
+		serial_data = gigabotconnection.serialdata()
+
+
 		while True:
 			try:
 				insize = serialconn.inWaiting()
@@ -56,9 +57,11 @@ if __name__ == "__main__":
 				 	serial_recv = serialconn.read(insize)
 				 	print(serial_recv)
 				 	d_serial_recv = serial_recv.decode('utf-8')
-				 	gcodedata.parsedata(insize, d_serial_recv)
-					t = json.dumps(gcodedata.temp).encode("base64")
-				 	print(gcodedata.temp)
+				 	serial_data.parsedata(insize, d_serial_recv)
+
+
+					t = json.dumps(serial_data.temp).encode("base64")
+				 	print(serial_data.temp)
 					gigabotclient.send(t)
 			except IOError:
 				print "Device Disconnected!\n"

@@ -3,7 +3,7 @@ import time
 import serial
 import serial.tools.list_ports
 
-class gcodedata:
+class serialdata:
 	def __init__(self):
 		self.temp = dict()
 		self.uploaddate= ""
