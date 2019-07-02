@@ -18,8 +18,14 @@ class gigabotclient():
 		self.printtime += newprint
 	def printdata(self):
 		print "Gigabot #",self.idnum," " + self.model + "\n"
+		print "Last Updated: " + self.dateuploaded + "\n"
 		print "IP address:\t" + self.ipaddress + "\n"
-		print "Bed Temp:\t", self.btemp, "\n"
-		print "Temperature 1:\t", self.temp1, "\n"
-		print "Temperature 2:\t", self.temp2, "\n"
-		print "Total Time:\t", self.printtime, "\n"
+		print "Total Print Time:\t", self.printtime, "\n"
+	def parsedata(self, d_ata):
+		if ("B" in d_ata):
+			self.btemp = d_ata["B"]
+			self.temp1 = d_ata["T0"]
+			self.temp2 = d_ata["T1"]
+	def printtemp(self): 
+		print "T1:\t" + str(self.temp1[0]) + "/" + str(self.temp1[1]) + "\t" + "T2:\t" + str(self.temp2[0]) + "/" + str(self.temp2[1]) + "\t" + "B:\t" + str(self.btemp[0]) + "/" +str(self.btemp[1]) 
+
