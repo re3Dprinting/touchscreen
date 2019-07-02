@@ -20,10 +20,15 @@ def connecttocom():
 		#open up serial port.
 		serconn = serial.Serial(com, baudrate=baudrate)
 		serconn.timeout = 1 # set serial read timeout
-		return serconn
 	except:
 		print "COM port is unavalible/ or run program with root permission."
 		exit()
+	#Toggle Arduino DTR pin to restart the firmware
+	serconn.setDTR(False)
+	time.sleep(1)
+	serconn.flushInput()
+	serconn.setDTR(True)	
+	return serconn
 
 def extractheader(client, conn, serdata):
 	insiz = conn.inWaiting()
@@ -48,7 +53,6 @@ if __name__ == "__main__":
 
 	#connect to the serial device
 	serialconn = connecttocom() 
-
 	if serialconn.is_open:
 		time.sleep(1)
 		print("SEND: M155 S5\r")
