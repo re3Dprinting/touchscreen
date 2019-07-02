@@ -3,7 +3,7 @@ import time
 import serial
 import serial.tools.list_ports
 
-class gcodedata:
+class serialdata:
 	def __init__(self):
 		self.temp = dict()
 		self.uploaddate= ""
@@ -21,7 +21,7 @@ class gcodedata:
 		start = end = data.find("Last Updated:") + len("Last Updated:")
 		while(ord(data[end]) != 124): end += 1
 		self.uploaddate = data[start:end].strip()
-		print(self.uploaddate)
+		#print self.uploaddate
 		start = end
 		#Increment until you hit "G" for GB
 		while(ord(data[start]) != 66): start += 1
@@ -30,8 +30,7 @@ class gcodedata:
 		modstring = data[start+1:end].strip()
 		if("3" in modstring): self.model = "Regular"
 		else: self.model = modstring
-		print self.model
-
+		#print self.model
 
 	def parsedata(self,msglen, data):
 		if(msglen <200 and 'T' in data):
