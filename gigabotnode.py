@@ -49,7 +49,7 @@ if __name__ == "__main__":
 	if serialconn.is_open:
 		time.sleep(1)
 		print("SEND: M155 S5\r")
-		#send a M155 code to enable temperture reportings every 5s
+		#send to serial a M155 code to enable temperture reportings every 5s
 		serialconn.write('M155 S5\r'.encode('utf-8'))
 		time.sleep(1)
 		#create new serial data object. 
