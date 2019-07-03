@@ -20,7 +20,7 @@ class GigabotThread(Thread):
     def __init__(self,conn, ip,port): 
         Thread.__init__(self) 
         self.conn = conn
-        conn.send("Connected!\n")
+        conn.send("Server Confirmed Connection\n")
         self.ip = ip 
         self.port = port 
         print "A new Gigabot Machine was connected! \n"

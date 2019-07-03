@@ -17,10 +17,10 @@ class gigabotclient():
 	def updateprinttime(self, newprint):
 		self.printtime += newprint
 	def printdata(self):
-		print "Gigabot #",self.idnum," " + self.model + "\n"
-		print "Last Updated: " + self.dateuploaded + "\n"
-		print "IP address:\t" + self.ipaddress + "\n"
-		print "Total Print Time:\t", self.printtime, "\n"
+		print "Gigabot #",self.idnum," " + self.model
+		print "Last Updated: " + self.dateuploaded
+		print "IP address:\t" + self.ipaddress
+		print "Total Print Time:\t", self.printtime
 	def parsedata(self, d_ata):
 		if ("B" in d_ata):
 			self.btemp = d_ata["B"]
