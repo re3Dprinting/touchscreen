@@ -20,14 +20,17 @@ class serialconn(Serial):
 			self.setDTR(True)
 			self.data = serialdata()
 			time.sleep(3)
+			#Extract Header information from the first few bytes of data
+			self.header = self.readdata()
+			self.en_reporttemperture()
 		except:
 			print "COM port is unavalible/ or run program with root permission."
 			time.sleep(3)
 
 	def attemptconnection(self):
-		while not self.is_open: serial_conn = self.__init__()
+		self.__init__()
 	
-	def connect_to_bot(self):
+	def en_reporttemperture(self):
 		print("SEND: M155 S5\r")
 		#send to serial a M155 code to enable temperture reportings every 5s
 		self.write('M155 S5\r'.encode('utf-8'))
@@ -36,13 +39,14 @@ class serialconn(Serial):
 
 	def readdata(self):
 		insize = self.inWaiting()
-		if insize: time.sleep(0.5)
-		insize = self.inWaiting()
-		print "Bytes from Serial: ",insize
-		serial_recv= self.read(insize)
-		print(serial_recv)
-		msg = self.data.parsedata(insize, serial_recv)
-		return msg
+		if insize: 
+			time.sleep(0.5)
+			insize = self.inWaiting()
+			print "Bytes from Serial: ",insize
+			serial_recv= self.read(insize)
+			print(serial_recv)
+			msg = self.data.parsedata(insize, serial_recv)
+			return msg
 
 		
 
@@ -71,9 +75,7 @@ class serialdata:
 		end = start
 		while(ord(data[end]) != 86): end += 1
 		modstring = data[start+1:end].strip()
-		if("3" in modstring): self.model = "Regular"
-		else: self.model = modstring
-		#print self.model
+		self.model = "Regular" if "3" in modstring else modstring
 
 	def parsedata(self,msglen, data):
 		data = data.decode("utf-8")
@@ -84,7 +86,7 @@ class serialdata:
 			return self.temp
 		if(msglen >200 and "Updated" in data):
 			self.extractheader(data)
-			return self.uploaddate + "|" + self.model
+			return self.uploaddate + "||" + self.model
 
 
 # if __name__ == "__main__":
