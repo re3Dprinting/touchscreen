@@ -20,39 +20,38 @@ class GigabotThread(Thread):
     def __init__(self,conn, ip,port): 
         Thread.__init__(self) 
         self.conn = conn
-        conn.send("Connected!\n")
+        self.senddata("Server Confirmed Connection\n")
         self.ip = ip 
         self.port = port 
-        print "A new Gigabot Machine was connected! \n"
-        self.machine = 0
+        self.machine = gigabotclient(str(ip), "OFF/Disconnected")
+        print "A new Gigabot Client connected! \n"
+        #Recieve first packet which is Client Confirmation
+        print self.recvdata()
+        self.senddata("OK") #ACK
+
  
     def run(self): 
-        #first data packet is confirmation
-        data = self.conn.recv(2048)
-        print data
-
-        self.collectheader(data)
-        self.machine.printdata()
+        #Second data packet is the header information for the Machine.
+        data = self.recvdata()
+        self.machine.parsedata(data)
+        self.senddata("OK") #ACK 
 
         while True : 
-            data = self.conn.recv(2048) 
-            #c_data = data.decode("base64")
-            c_data = json.loads(data.decode("base64"))
-            #print "Recieved data: ", c_data
+            c_data = self.recvdata()
             self.machine.parsedata(c_data)
-            self.machine.printtemp()
+            self.senddata("OK")  # echo
 
-            conn.send(ackmessage.encode())  # echo
+    def senddata(self, msg):
+        if(msg):
+            temp = json.dumps(msg).encode("base64")
+            self.conn.send(temp)
 
-    def collectheader(self, d):
-        try:
-            machine_data = json.loads(self.conn.recv(2048).decode("base64"))
-            m=machine_data.split("|")
-            self.machine = gigabotclient(520,m[1], str(ip), "On")
-            self.machine.dateuploaded = m[0]
-            gigabots.append(self.machine)
-        except ValueError:
-            pass
+    def recvdata(self):
+        data = self.conn.recv(2048)
+        if(data):
+            m_data = json.loads(data.decode("base64"))
+            self.senddata("OK") #Send ACK message
+            return m_data
 
 
 

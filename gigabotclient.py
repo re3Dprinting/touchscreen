@@ -1,8 +1,8 @@
 
 class gigabotclient():
-	def __init__(self, idnum, model, ipaddress, status):
-		self.idnum = idnum
-		self.model = model
+	def __init__(self, ipaddress, status):
+		self.idnum = 999
+		self.model = "default"
 		self.ipaddress = ipaddress
 		self.status = status
 		self.btemp = (0,0)
@@ -26,6 +26,12 @@ class gigabotclient():
 			self.btemp = d_ata["B"]
 			self.temp1 = d_ata["T0"]
 			self.temp2 = d_ata["T1"]
+			self.printtemp()
+		elif ("||" in d_ata):
+			m = d_ata.split("||")
+			self.dateuploaded = m[0]
+			self.model = m[1]
+			self.printdata()
 	def printtemp(self): 
 		print "T1:\t" + str(self.temp1[0]) + "/" + str(self.temp1[1]) + "\t" + "T2:\t" + str(self.temp2[0]) + "/" + str(self.temp2[1]) + "\t" + "B:\t" + str(self.btemp[0]) + "/" +str(self.btemp[1]) 
 
