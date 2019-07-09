@@ -1,62 +1,84 @@
-from socket import *
 import time
 import serial
 import serial.tools.list_ports
-import g_serial
+from g_serial import * 
+from g_client import *
+from g_data import * 
 import sys
-import json
-
+import threading
+ 
+host = "192.168.1.211" 
+port = 63200
 baudrate = 250000
+serverconnected = False
+serialconnected = False
 
-class rpiclient(socket):
-	def __init__(self, host, port):
-		socket.__init__(self,AF_INET,SOCK_STREAM)
-		self.connect((host,port))
-		self.serial = None
-		data = self.recv(1024)
-		
-		self.waitforACK()
+class mainhandler():
+	def __init__(self, clientconn, serialconn, data_o):
+		self.clientconn = clientconn
+		self.serialconn = serialconn
+		self.data = data_o
+		self.statusthread = threading.Timer(1, self.sendstat())
+	
+	def ex_wrap(self, function):
+		try:
+			function()
+		except error, exc:
+			self.clientconn.is_conn = False
+			print "Server Disconnected!"
+		except IOError:
+			self.serialconn.is_open = False
+			print "Serial Disconnected!\n"
 
-		self.send("Client Confirmed Connection\n")
-	def senddata(self, msg):
-		if msg:
-			temp = json.dumps(msg).encode("base64")
-			self.send(temp)
-	def waitforACK(self):
-		data = self.recv(1024)
-		while(len(data) == 0):
-			data = self.recv(1024)
+	def attempt_transfer_header(self):
+		if self.clientconn.is_conn and self.serialconn.is_open:
+			# d = self.serialconn.readdata()
+			# print(d)
+			self.clientconn.senddata(self.serialconn.header)
+
+	def loop(self):
+		#Conditional statement if one or both of the Server and Serial is disconnected.
+		if(not (self.clientconn.is_conn and self.serialconn.is_open) ):
+			#If either one is disconnected, attempt to connect.
+			if not self.clientconn.is_conn: self.clientconn.attemptconnect("192.168.1.211",63200)
+			if not self.serialconn.is_open: self.serialconn.attemptconnection()
+			#The instant both become connected, send the header to the server.
+			if(self.clientconn.is_conn and self.serialconn.is_open): self.clientconn.senddata(self.serialconn.header)
+
+		if self.clientconn.is_conn and not self.serialconn.is_open:
+			#Set status of the printer to OFF
+			self.data.status = "OF"
+
+		if not self.clientconn.is_conn and self.serialconn.is_open:
+			d = self.serialconn.readdata()
+
+		elif self.clientconn.is_conn and self.serialconn.is_open:
+			d = self.serialconn.readdata()
+			#self.clientconn.senddata(d)
+
+	def sendstat(self):
+		print("data transfered")
+		self.clientconn.senddata("ST"+self.data.status)
+
+
 
 
 
 if __name__ == "__main__":
 	#connect to the server
-	g_client= rpiclient("192.168.1.49",63200)
+	client_conn= g_client("192.168.1.211",63200)
+	serial_conn = g_serial()
+	data_obj = serial_conn.data
 
+	mainhand = mainhandler(client_conn, serial_conn, data_obj)
 
-	serial_conn = g_serial.serialconn()
-
-	#Send server a notification that client is waiting for Gigabot connection.
-	#if not serial_conn.is_open: g_client
-	serial_conn.attemptconnection()
-
-	#Extract Header information from the first few bytes of data
-	header = serial_conn.readdata()
-	g_client.senddata(header)
-	g_client.waitforACK()
-
-	serial_conn.connect_to_bot()
+	#Send Header data if both serial and server are connected
+	mainhand.ex_wrap(mainhand.attempt_transfer_header)
 
 	while True:
 		time.sleep(1)
-		try:
-			d = serial_conn.readdata()
-			g_client.senddata(d)
-			g_client.waitforACK()
-			
-		except IOError:
-			print "Device Disconnected!\n"
-			break
+		mainhand.ex_wrap(mainhand.loop)
+
 	print "program ended"
 
 	# conn.close()
