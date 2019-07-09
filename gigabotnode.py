@@ -18,7 +18,8 @@ class mainhandler():
 		self.clientconn = clientconn
 		self.serialconn = serialconn
 		self.data = data_o
-		self.statusthread = threading.Timer(1, self.sendstat())
+		self.statusthread = SenderThread(self.clientconn, self.data)
+		self.statusthread.start()
 	
 	def ex_wrap(self, function):
 		try:
@@ -56,9 +57,24 @@ class mainhandler():
 			d = self.serialconn.readdata()
 			#self.clientconn.senddata(d)
 
-	def sendstat(self):
-		print("data transfered")
-		self.clientconn.senddata("ST"+self.data.status)
+class SenderThread(threading.Thread):
+	_stop = False
+	def __init__(self, clientconn, data_obj):
+		super(SenderThread,self).__init__()
+		self.clientconn = clientconn
+		self.data_obj = data_obj
+	def stop(self):
+		self._stop = True
+	def run(self):
+		counter = 0
+		while self._stop == False:
+			counter += 1
+			time.sleep(1)
+			if counter ==2:
+				msg = self.data_obj.status
+				print "Send data here" + msg
+				self.clientconn.senddata("ST"+msg)
+				counter = 0
 
 
 

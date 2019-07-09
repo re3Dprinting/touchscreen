@@ -17,7 +17,7 @@ class g_serial(Serial):
 		try:
 			Serial.__init__(self,com, baudrate= 250000)
 			#Set the status of the printer to ON
-			#self.data.status = "ON"
+			self.data.status = "ON"
 			self.setDTR(False)
 			time.sleep(1)
 			self.flushInput()
