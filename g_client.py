@@ -1,3 +1,5 @@
+from socket import *
+import json
 
 class g_client(socket):
 	def __init__(self, host, port):
@@ -11,6 +13,7 @@ class g_client(socket):
 			#Send Connection Confirmation
 			self.senddata("Client Confirmed Connection\n")
 			self.is_conn = True
+
 		except error, exc:
 			print "Error Connecting to Server: ", exc
 			self.is_conn = False

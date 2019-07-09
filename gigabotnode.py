@@ -1,11 +1,11 @@
-from socket import *
 import time
 import serial
 import serial.tools.list_ports
-import g_serial
-import g_client
+from g_serial import * 
+from g_client import *
+from g_data import * 
 import sys
-import json
+import threading
  
 host = "192.168.1.211" 
 port = 63200
@@ -14,58 +14,70 @@ serverconnected = False
 serialconnected = False
 
 class mainhandler():
-	def __init__(self, clientconn, serialconn):
+	def __init__(self, clientconn, serialconn, data_o):
 		self.clientconn = clientconn
 		self.serialconn = serialconn
-	def attempt_transfer_header():
+		self.data = data_o
+		self.statusthread = threading.Timer(1, self.sendstat())
+	
+	def ex_wrap(self, function):
 		try:
-			if client_conn.is_conn and serial_conn.is_open:
-				client_conn.senddata(serial_conn.header)
+			function()
 		except error, exc:
-			client_conn.is_conn = False
+			self.clientconn.is_conn = False
 			print "Server Disconnected!"
 		except IOError:
-			serial_conn.is_open = False
+			self.serialconn.is_open = False
 			print "Serial Disconnected!\n"
+
+	def attempt_transfer_header(self):
+		if self.clientconn.is_conn and self.serialconn.is_open:
+			# d = self.serialconn.readdata()
+			# print(d)
+			self.clientconn.senddata(self.serialconn.header)
+
+	def loop(self):
+		#Conditional statement if one or both of the Server and Serial is disconnected.
+		if(not (self.clientconn.is_conn and self.serialconn.is_open) ):
+			#If either one is disconnected, attempt to connect.
+			if not self.clientconn.is_conn: self.clientconn.attemptconnect("192.168.1.211",63200)
+			if not self.serialconn.is_open: self.serialconn.attemptconnection()
+			#The instant both become connected, send the header to the server.
+			if(self.clientconn.is_conn and self.serialconn.is_open): self.clientconn.senddata(self.serialconn.header)
+
+		if self.clientconn.is_conn and not self.serialconn.is_open:
+			#Set status of the printer to OFF
+			self.data.status = "OF"
+
+		if not self.clientconn.is_conn and self.serialconn.is_open:
+			d = self.serialconn.readdata()
+
+		elif self.clientconn.is_conn and self.serialconn.is_open:
+			d = self.serialconn.readdata()
+			#self.clientconn.senddata(d)
+
+	def sendstat(self):
+		print("data transfered")
+		self.clientconn.senddata("ST"+self.data.status)
+
+
+
+
 
 if __name__ == "__main__":
 	#connect to the server
 	client_conn= g_client("192.168.1.211",63200)
-	serial_conn = g_serial.serialconn()
+	serial_conn = g_serial()
+	data_obj = serial_conn.data
 
-	mainhand = mainhandler(client_conn, serial_conn)
+	mainhand = mainhandler(client_conn, serial_conn, data_obj)
 
 	#Send Header data if both serial and server are connected
-	mainhand.attempt_transfer_header()
+	mainhand.ex_wrap(mainhand.attempt_transfer_header)
 
 	while True:
 		time.sleep(1)
-		try:
-			#Conditional statement if one or both of the Server and Serial is disconnected.
-			if(not (client_conn.is_conn and serial_conn.is_open) ):
-				#If either one is disconnected, attempt to connect.
-				if not client_conn.is_conn: client_conn.attemptconnect("192.168.1.211",63200)
-				if not serial_conn.is_open: serial_conn.attemptconnection()
-				#The instant both become connected, send the header to the server.
-				if(client_conn.is_conn and serial_conn.is_open): glient._connsenddata(serial_conn.header)
-
-			if client_conn.is_conn and not serial_conn.is_open:
-				#Send OFF/Disconnected status to server
-				pass
-
-			if not client_conn.is_conn and serial_conn.is_open:
-
-				d = serial_conn.readdata()
-
-			elif client_conn.is_conn and serial_conn.is_open:
-				d = serial_conn.readdata()
-				client_conn.senddata(d)
-		except error, exc:
-			client_conn.is_conn = False
-			print "Server Disconnected!"
-		except IOError:
-			serial_conn.is_open = False
-			print "Serial Disconnected!\n"
+		mainhand.ex_wrap(mainhand.loop)
 
 	print "program ended"
 

@@ -1,4 +1,5 @@
 from socket import *
+from g_data import *
 import time
 from serial import Serial
 import serial.tools.list_ports
@@ -6,24 +7,26 @@ import json
 
 
 #Inheriting from the Serial class
-class serialconn(Serial):
+class g_serial(Serial):
 	def __init__(self):
 		com = list(serial.tools.list_ports.comports())
+		self.data = g_data()
 		for p in com:
 			if "/dev/ttyUSB" in p.device:
 				com = p.device
 		try:
 			Serial.__init__(self,com, baudrate= 250000)
+			#Set the status of the printer to ON
+			#self.data.status = "ON"
 			self.setDTR(False)
 			time.sleep(1)
 			self.flushInput()
 			self.setDTR(True)
-			self.data = serialdata()
 			time.sleep(3)
 			#Extract Header information from the first few bytes of data
 			self.header = self.readdata()
 			self.en_reporttemperture()
-		except:
+		except ValueError:
 			print "COM port is unavalible/ or run program with root permission."
 			time.sleep(3)
 
@@ -45,49 +48,8 @@ class serialconn(Serial):
 			print "Bytes from Serial: ",insize
 			serial_recv= self.read(insize)
 			print(serial_recv)
-			msg = self.data.parsedata(insize, serial_recv)
+			msg = self.data.parsedata(insize,serial_recv)
 			return msg
-
-		
-
-class serialdata:
-	def __init__(self):
-		self.temp = dict()
-		self.uploaddate= ""
-		self.model = ""
-
-	def extracttemp(self,variable,data):
-		#Extracting temperature data to a tuple in the format (Temp/SetTemp)
-		if variable in data:
-			start = end = data.find(variable) + len(variable)
-			while((ord(data[end]) < 58 and ord(data[end])>45) or ord(data[end]) == 32): end+=1
-			tup = [float(x) for x in data[start:end].split("/")]
-			self.temp[variable[:-1]] = tup
-	def extractheader(self, data):
-		#Searching for last updated timestamp
-		start = end = data.find("Last Updated:") + len("Last Updated:")
-		while(ord(data[end]) != 124): end += 1
-		self.uploaddate = data[start:end].strip()
-		#print self.uploaddate
-		start = end
-		#Increment until you hit "G" for GB
-		while(ord(data[start]) != 66): start += 1
-		end = start
-		while(ord(data[end]) != 86): end += 1
-		modstring = data[start+1:end].strip()
-		self.model = "Regular" if "3" in modstring else modstring
-
-	def parsedata(self,msglen, data):
-		data = data.decode("utf-8")
-		if(msglen <200 and 'T' in data):
-			self.extracttemp("T0:", data)
-			self.extracttemp("T1:", data)
-			self.extracttemp("B:", data)
-			return self.temp
-		if(msglen >200 and "Updated" in data):
-			self.extractheader(data)
-			return self.uploaddate + "||" + self.model
-
 
 # if __name__ == "__main__":
 # 	x = gigabotconnection()
