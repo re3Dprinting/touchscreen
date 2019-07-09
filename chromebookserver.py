@@ -31,10 +31,10 @@ class GigabotThread(Thread):
 
  
     def run(self): 
-        #Second data packet is the header information for the Machine.
-        data = self.recvdata()
-        self.machine.parsedata(data)
-        self.senddata("OK") #ACK 
+        # #Second data packet is the header information for the Machine.
+        # data = self.recvdata()
+        # self.machine.parsedata(data)
+        # self.senddata("OK") #ACK 
 
         while True : 
             c_data = self.recvdata()

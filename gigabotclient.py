@@ -1,10 +1,14 @@
 
+
+
+#Client Status'
+# OF- Off/Disconnected ON- On/Idle UM- Under Maintenence AC- Active/Printing
 class gigabotclient():
 	def __init__(self, ipaddress, status):
 		self.idnum = 999
 		self.model = "default"
 		self.ipaddress = ipaddress
-		self.status = status
+		self.status = "OF"
 		self.btemp = (0,0)
 		self.temp1 = (0,0)
 		self.temp2 = (0,0)
@@ -27,8 +31,10 @@ class gigabotclient():
 			self.temp1 = d_ata["T0"]
 			self.temp2 = d_ata["T1"]
 			self.printtemp()
-		elif ("||" in d_ata):
-			m = d_ata.split("||")
+		# elif ("ST" in d_ata):
+		# 	self.status = d_ata.strip("ST")
+		elif (".." in d_ata):
+			m = d_ata.split("..")
 			self.dateuploaded = m[0]
 			self.model = m[1]
 			self.printdata()
