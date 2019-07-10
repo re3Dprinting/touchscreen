@@ -12,6 +12,7 @@ class gigabotclient():
 		self.btemp = (0,0)
 		self.temp1 = (0,0)
 		self.temp2 = (0,0)
+		self.currentfile = ""
 		self.printtime = 0
 		self.dateuploaded = ""
 	def updatetemp(self, newtemp):
@@ -25,16 +26,25 @@ class gigabotclient():
 		print "Last Updated: " + self.dateuploaded
 		print "IP address:\t" + self.ipaddress
 		print "Total Print Time:\t", self.printtime
+	def printstatus(self):
+	 	if(self.status == "ON"): print "STATUS: Gigabot is Idle/Connected"
+	 	elif(self.status == "OF"): print "STATUS: Gigabot is Off/Disconnected"
+	 	elif(self.status == "AC"): print "STATUS: Gigabot is Active/Printing"
+
 	def parsedata(self, d_ata):
-		if ("B" in d_ata):
-			self.btemp = d_ata["B"]
-			self.temp1 = d_ata["T0"]
-			self.temp2 = d_ata["T1"]
+		if ("ST" in d_ata):
+			self.status = d_ata["ST"]
+			self.printstatus()
+		if ("T" in d_ata):
+			self.btemp = d_ata["T"]["B"]
+			self.temp1 = d_ata["T"]["T0"]
+			self.temp2 = d_ata["T"]["T1"]
 			self.printtemp()
-		# elif ("ST" in d_ata):
-		# 	self.status = d_ata.strip("ST")
-		elif (".." in d_ata):
-			m = d_ata.split("..")
+		if("FI" in d_ata):
+			self.currentfile = d_ata["FI"]
+			print "Current File: " + self.currentfile
+		if ("HD" in d_ata):
+			m = d_ata["HD"].split("..")
 			self.dateuploaded = m[0]
 			self.model = m[1]
 			self.printdata()
