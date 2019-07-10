@@ -8,16 +8,16 @@ import json
 
 #Inheriting from the Serial class
 class g_serial(Serial):
-	def __init__(self):
+	def __init__(self,data_obj):
 		com = list(serial.tools.list_ports.comports())
-		self.data = g_data()
+		self.data = data_obj
 		for p in com:
 			if "/dev/ttyUSB" in p.device:
 				com = p.device
 		try:
 			Serial.__init__(self,com, baudrate= 250000)
 			#Set the status of the printer to ON
-			self.data.status = "ON"
+			self.data.changestatus("ON")
 			self.setDTR(False)
 			time.sleep(1)
 			self.flushInput()
@@ -28,10 +28,11 @@ class g_serial(Serial):
 			self.en_reporttemperture()
 		except ValueError:
 			print "COM port is unavalible/ or run program with root permission."
+			self.data.changestatus("OF")
 			time.sleep(3)
 
-	def attemptconnection(self):
-		self.__init__()
+	def attemptconnection(self,data):
+		self.__init__(data)
 	
 	def en_reporttemperture(self):
 		print("SEND: M155 S5\r")
@@ -39,7 +40,6 @@ class g_serial(Serial):
 		self.write('M155 S5\r'.encode('utf-8'))
 		time.sleep(1)
 		
-
 	def readdata(self):
 		insize = self.inWaiting()
 		if insize: 
