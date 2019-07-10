@@ -1,4 +1,5 @@
 from socket import *
+import time
 
 class g_data:
 	def __init__(self):
@@ -7,18 +8,30 @@ class g_data:
 		self.model = ""
 		self.status = ""
 		self.printtime = ""
+		self.currentfile = ""
+		self.buffer = dict()
 		s = socket(AF_INET, SOCK_DGRAM)
 		s.connect(("8.8.8.8",80))
 		self.ipaddr = s.getsockname()[0]
 		s.close()
 
+	def changestatus(self, stat):
+		self.status = stat
+		self.buffer["ST"] = stat
+
+	def addtobuffer(self, item, val):
+		self.buffer[item] = val
+
 	def extracttemp(self,variable,data):
 		#Extracting temperature data to a tuple in the format (Temp/SetTemp)
 		if variable in data:
-			start = end = data.find(variable) + len(variable)
-			while((ord(data[end]) < 58 and ord(data[end])>45) or ord(data[end]) == 32): end+=1
-			tup = [float(x) for x in data[start:end].split("/")]
-			self.temp[variable[:-1]] = tup
+			start = end = data.rfind(variable) + len(variable)
+			while(((ord(data[end]) < 58 and ord(data[end])>45) or ord(data[end]) == 32) and end<(len(data)-1)): end+=1
+			temptup = data[start:end].split("/")
+			if(len(temptup) > 1):
+				tup = [float(x) for x in temptup]
+				self.temp[variable[:-1]] = tup
+
 	def extractheader(self, data):
 		#Searching for last updated timestamp
 		start = end = data.find("Last Updated:") + len("Last Updated:")
@@ -32,16 +45,37 @@ class g_data:
 		while(ord(data[end]) != 86): end += 1
 		modstring = data[start+1:end].strip()
 		self.model = "Regular" if "3" in modstring else modstring
+	
+	def extractprintfile(self,data_):
+		start = end = data_.find(".gco") + len(".gco")
+		while(ord(data_[start]) != 32): start-=1
+		self.currentfile = data_[start:end]
 
-	def parsedata(self, len, d):
-		msglen = len
-		data = d
-		data = data.decode("utf-8")
-		if(msglen <200 and 'T' in data):
-			self.extracttemp("T0:", data)
-			self.extracttemp("T1:", data)
-			self.extracttemp("B:", data)
+	def check_printing(self):
+		idle = True
+		for t in self.temp:
+			if self.temp[t][1] != 0 : idle = False
+		if(self.status == "ON" and self.currentfile != "" and not idle):
+			self.changestatus("AC")
+		elif(self.status == "AC" and self.currentfile != "" and idle):
+			self.changestatus("ON")
+			self.currentfile = ""
+
+	def parsedata(self, msglen, data):
+		data_ = data.decode("utf-8")
+		if( "M23" in data_ and "M24" in data_):
+			self.extractprintfile(data_)
+			self.buffer["FI"] = self.currentfile
+			time.sleep(4)
+
+		if(msglen <200 and 'T' in data_):
+			self.extracttemp("T0:", data_)
+			self.extracttemp("T1:", data_)
+			self.extracttemp("B:", data_)
+			self.buffer["T"] = self.temp
+			self.check_printing()
 			return self.temp
-		if(msglen >200 and "Updated" in data):
-			self.extractheader(data)
+		if(msglen >200 and "Updated" in data_):
+			self.extractheader(data_)
+			self.buffer["HD"] = self.uploaddate + ".." + self.model
 			return self.uploaddate + ".." + self.model
