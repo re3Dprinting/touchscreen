@@ -4,7 +4,7 @@
 #Client Status'
 # OF- Off/Disconnected ON- On/Idle UM- Under Maintenence AC- Active/Printing
 class gigabotclient():
-	def __init__(self, ipaddress, status):
+	def __init__(self, ipaddress):
 		self.idnum = 999
 		self.model = "default"
 		self.ipaddress = ipaddress

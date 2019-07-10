@@ -1,4 +1,5 @@
 from socket import *
+import select
 from threading import Thread 
 import threading
 from SocketServer import ThreadingMixIn 
@@ -21,25 +22,31 @@ class GigabotThread(Thread):
         Thread.__init__(self) 
         self.conn = conn
         self.senddata("Server Confirmed Connection\n")
-        self.ip = ip 
+        self.ipaddress = ip 
         self.port = port 
-        self.machine = gigabotclient(str(ip), "OFF/Disconnected")
+        self.check_dup()
         print "A new Gigabot Client connected! \n"
         #Recieve first packet which is Client Confirmation
         print self.recvdata()
         self.senddata("OK") #ACK
-
- 
     def run(self): 
-        # #Second data packet is the header information for the Machine.
-        # data = self.recvdata()
-        # self.machine.parsedata(data)
-        # self.senddata("OK") #ACK 
-
+        # print threading.currentThread().getName()
         while True : 
-            c_data = self.recvdata()
-            self.machine.parsedata(c_data)
-            self.senddata("OK")  # echo
+            try:
+                c_data = self.recvdata()
+                self.machine.parsedata(c_data)
+                self.senddata("OK")  # echo
+            except error, exc:
+                print "Client Disconnected! ", exc
+                return
+    def check_dup(self):
+        for bot in gigabots:
+            if bot.ipaddress == self.ipaddress:
+                self.machine = bot
+                return
+        self.machine = gigabotclient(str(ip))
+        gigabots.append(self.machine)
+        return
 
     def senddata(self, msg):
         if(msg):
@@ -70,6 +77,9 @@ if __name__ == "__main__":
         newthread = GigabotThread(conn,ip,port) 
         newthread.start() 
         gigabotthreads.append(newthread) 
+        # print threading.currentThread().getName()
+        # print gigabotthreads
+        # print gigabots
      
     for t in gigabotthreads: 
         t.join()
