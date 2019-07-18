@@ -25,7 +25,7 @@ class g_serial(Serial):
 			time.sleep(3)
 			#Extract Header information from the first few bytes of data
 			self.header = self.readdata()
-			self.en_reporttemperture()
+			self.en_reporttemp_stat()
 		except ValueError:
 			print "COM port is unavalible/ or run program with root permission."
 			self.data.changestatus("OF")
@@ -34,12 +34,14 @@ class g_serial(Serial):
 	def attemptconnection(self,data):
 		self.__init__(data)
 	
-	def en_reporttemperture(self):
+	def en_reporttemp_stat(self):
 		print("SEND: M155 S5\r")
 		#send to serial a M155 code to enable temperture reportings every 5s
 		self.write('M155 S5\r'.encode('utf-8'))
 		time.sleep(1)
-		
+		self.write('M78\r'.encode('utf-8'))
+		time.sleep(1)
+
 	def readdata(self):
 		insize = self.inWaiting()
 		if insize: 
