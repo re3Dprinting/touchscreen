@@ -9,6 +9,7 @@ class g_data:
 		self.status = ""
 		self.printtime = ""
 		self.currentfile = ""
+		self.stats = dict()
 		self.buffer = dict()
 		s = socket(AF_INET, SOCK_DGRAM)
 		s.connect(("8.8.8.8",80))
@@ -51,6 +52,18 @@ class g_data:
 		while(ord(data_[start]) != 32): start-=1
 		self.currentfile = data_[start:end]
 
+#  Sample Stat Data Line from Serial Read
+#  Stats: Prints: 28, Finished: 26, Failed: 2
+#  Stats: Total time: 11d 21h 42m 59s, Longest job: 5d 12h 41m 17s
+#  Stats: Filament used: 628.09m
+	def extractstats(self, data_):
+		d_list = data_.split("\n")
+		for i in range(len(d_list)):
+			d_list[i] = d_list[i].strip("Stats: ").split(",")
+			for j in range(len(d_list[i])):
+				data_component = d_list[i][j].split(":")
+				self.stats[data_component[0].strip()] = data_component[1].strip()
+
 	def check_printing(self):
 		idle = True
 		for t in self.temp:
@@ -67,8 +80,7 @@ class g_data:
 			self.extractprintfile(data_)
 			self.buffer["FI"] = self.currentfile
 			time.sleep(4)
-
-		if(msglen <200 and 'T' in data_):
+		if(msglen <200 and 'T0' in data_):
 			self.extracttemp("T0:", data_)
 			self.extracttemp("T1:", data_)
 			self.extracttemp("B:", data_)
@@ -79,3 +91,7 @@ class g_data:
 			self.extractheader(data_)
 			self.buffer["HD"] = self.uploaddate + ".." + self.model
 			return self.uploaddate + ".." + self.model
+		if("Stats:" in data_):
+			self.extractstats(data_)
+			self.buffer["SS"] = self.stats
+			return self.stats

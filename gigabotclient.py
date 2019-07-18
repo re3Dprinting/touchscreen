@@ -1,6 +1,4 @@
 
-
-
 #Client Status'
 # OF- Off/Disconnected ON- On/Idle UM- Under Maintenence AC- Active/Printing
 class gigabotclient():
@@ -30,7 +28,11 @@ class gigabotclient():
 	 	if(self.status == "ON"): print "STATUS: Gigabot is Idle/Connected"
 	 	elif(self.status == "OF"): print "STATUS: Gigabot is Off/Disconnected"
 	 	elif(self.status == "AC"): print "STATUS: Gigabot is Active/Printing"
-
+	def printstats(self):
+		for key in self.stats:
+			print key, " : ", self.stats[key]
+	def printtemp(self): 
+		print "T1:\t" + str(self.temp1[0]) + "/" + str(self.temp1[1]) + "\t" + "T2:\t" + str(self.temp2[0]) + "/" + str(self.temp2[1]) + "\t" + "B:\t" + str(self.btemp[0]) + "/" +str(self.btemp[1]) 
 	def parsedata(self, d_ata):
 		if ("ST" in d_ata):
 			self.status = d_ata["ST"]
@@ -48,6 +50,6 @@ class gigabotclient():
 			self.dateuploaded = m[0]
 			self.model = m[1]
 			self.printdata()
-	def printtemp(self): 
-		print "T1:\t" + str(self.temp1[0]) + "/" + str(self.temp1[1]) + "\t" + "T2:\t" + str(self.temp2[0]) + "/" + str(self.temp2[1]) + "\t" + "B:\t" + str(self.btemp[0]) + "/" +str(self.btemp[1]) 
-
+		if("SS" in d_ata):
+			self.stats = d_ata["SS"]
+			self.printstats()
