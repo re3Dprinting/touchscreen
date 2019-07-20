@@ -1,10 +1,18 @@
 from socket import *
 import time
+import threading
 
 #	g_data class is a data class that handles parsing data
 #	and a buffer that is periodically sent to the server
-class g_data:
+class g_data(threading.Thread):
 	def __init__(self):
+		super(g_data,self).__init__()
+		self.counter = [0,0]
+		self.reconnflag = False
+		self.sendflag = False
+		self._stop = False
+
+#	Data to be extracted
 		self.temp = dict()
 		self.uploaddate= ""
 		self.model = ""
@@ -15,6 +23,19 @@ class g_data:
 		self.stats = dict()
 		self.buffer = dict()
 		self.ipaddr = self.getipaddress()
+
+	def stop(self):
+		self._stop = True
+	def run(self):
+		while self._stop == False:
+			self.counter = [x+1 for x in self.counter]
+			time.sleep(1)
+			if self.counter[0] >= 5:
+				self.reconnflag = True
+				self.counter[0] = 0
+			if self.counter[1] >= 5:
+				self.sendflag = True
+				self.counter[1] = 0
 
 #	Attempt to get the IP address through connecting to Google DNS to get current ipaddress
 	def getipaddress(self):

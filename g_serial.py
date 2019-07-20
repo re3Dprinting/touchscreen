@@ -29,12 +29,12 @@ class g_serial(Serial):
 			self.en_reporttemp_stat()
 		except ValueError:
 			print "COM port is unavalible/ or run program with root permission."
+			print "Retrying in 5 seconds"
 			self.data.changestatus("OF")
-			time.sleep(3)
 
 #	Attempt to reconnect to Serial Connection.
 	def attemptconnection(self,data):
-		self.__init__(data)
+		if not self.is_open: self.__init__(data)
 
 #	Enable temperature reporting every 5 seconds through M155 S5
 #	Retrieve printer stat through M78 gcode	
