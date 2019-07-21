@@ -5,12 +5,13 @@ from serial import Serial
 import serial.tools.list_ports
 import json
 
-
-#Inheriting from the Serial class
+#	g_serial class inherits from Serial object
 class g_serial(Serial):
 	def __init__(self,data_obj):
-		com = list(serial.tools.list_ports.comports())
+#	If the gigabot is disconnected, keep the data object
+#	Reinitialize the object if the gigabot is the same. 
 		self.data = data_obj
+		com = list(serial.tools.list_ports.comports())
 		for p in com:
 			if "/dev/ttyUSB" in p.device:
 				com = p.device
@@ -24,16 +25,19 @@ class g_serial(Serial):
 			self.setDTR(True)
 			time.sleep(3)
 			#Extract Header information from the first few bytes of data
-			self.header = self.readdata()
+			self.readdata()
 			self.en_reporttemp_stat()
 		except ValueError:
 			print "COM port is unavalible/ or run program with root permission."
 			self.data.changestatus("OF")
 			time.sleep(3)
 
+#	Attempt to reconnect to Serial Connection.
 	def attemptconnection(self,data):
 		self.__init__(data)
-	
+
+#	Enable temperature reporting every 5 seconds through M155 S5
+#	Retrieve printer stat through M78 gcode	
 	def en_reporttemp_stat(self):
 		print("SEND: M155 S5\r")
 		#send to serial a M155 code to enable temperture reportings every 5s
@@ -42,6 +46,9 @@ class g_serial(Serial):
 		self.write('M78\r'.encode('utf-8'))
 		time.sleep(1)
 
+#	Read serial data function
+#	If the insize is detected, wait half a second for the full transmission to come through
+#	After recieving the data, parse it with the data object
 	def readdata(self):
 		insize = self.inWaiting()
 		if insize: 
@@ -51,14 +58,5 @@ class g_serial(Serial):
 			serial_recv= self.read(insize)
 			print(serial_recv)
 			msg = self.data.parsedata(insize,serial_recv)
-			return msg
-
-# if __name__ == "__main__":
-# 	x = gigabotconnection()
-# 	data = b' T:178.41 /180.00 B:59.39 /60.00 T0:178.41 /180.00 T1:26.31 /0.00 @:92 B@:127 @0:92 @1:0\n'
-# 	decode = data.decode('utf-8')
-# 	print(decode)
-# 	x.parsedata(decode)
-# 	print(x.temp)
 
 
