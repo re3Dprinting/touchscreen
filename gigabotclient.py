@@ -1,6 +1,6 @@
 
-#Client Status'
-# OF- Off/Disconnected ON- On/Idle UM- Under Maintenence AC- Active/Printing
+#	gigabotclient instance is created whenever a new client is connected. 
+#	The object is reused if the IP address matches the IP of the connected device
 class gigabotclient():
 	def __init__(self, ipaddress):
 		self.idnum = 999
@@ -11,7 +11,6 @@ class gigabotclient():
 		self.temp1 = (0,0)
 		self.temp2 = (0,0)
 		self.currentfile = ""
-		self.printtime = 0
 		self.dateuploaded = ""
 	def updatetemp(self, newtemp):
 		self.btemp = newtemp[0]
@@ -21,16 +20,16 @@ class gigabotclient():
 		self.printtime += newprint
 	def printdata(self):
 		print "Gigabot #",self.idnum," " + self.model
-		print "Last Updated: " + self.dateuploaded
-		print "IP address:\t" + self.ipaddress
-		print "Total Print Time:\t", self.printtime
+		print "Last Updated: \t" + self.dateuploaded
+		print "IP address:\t" + self.ipaddress + "\n"
+#	OF- Off/Disconnected ON- On/Idle UM- Under Maintenence AC- Active/Printing
 	def printstatus(self):
 	 	if(self.status == "ON"): print "STATUS: Gigabot is Idle/Connected"
 	 	elif(self.status == "OF"): print "STATUS: Gigabot is Off/Disconnected"
 	 	elif(self.status == "AC"): print "STATUS: Gigabot is Active/Printing"
 	def printstats(self):
 		for key in self.stats:
-			print key, " : ", self.stats[key]
+			print key, ":\t", self.stats[key]
 	def printtemp(self): 
 		print "T1:\t" + str(self.temp1[0]) + "/" + str(self.temp1[1]) + "\t" + "T2:\t" + str(self.temp2[0]) + "/" + str(self.temp2[1]) + "\t" + "B:\t" + str(self.btemp[0]) + "/" +str(self.btemp[1]) 
 	def parsedata(self, d_ata):

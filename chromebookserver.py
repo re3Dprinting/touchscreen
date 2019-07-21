@@ -5,40 +5,39 @@ import threading
 from SocketServer import ThreadingMixIn 
 from gigabotclient import *
 import json
+import os
 
 # Multithreaded TCP Server Socket Program Stub
 TCP_IP = '' 
 TCP_PORT = 63200
-BUFFER_SIZE = 20  # Usually 1024, but we need quick response 
-ackmessage = "OK"
 gigabotthreads = []
-#data_lock = threading.Lock()
 gigabots = []
 
-
-# Multithreaded Python server : TCP Server Socket Thread Pool
+#   Multithreaded Python server : TCP Server Socket Thread Pool
 class GigabotThread(Thread): 
     def __init__(self,conn, ip,port): 
         Thread.__init__(self) 
         self.conn = conn
-        self.senddata("Server Confirmed Connection\n")
         self.ipaddress = ip 
         self.port = port 
         self.check_dup()
         print "A new Gigabot Client connected! \n"
-        #Recieve first packet which is Client Confirmation
-        print self.recvdata()
-        self.senddata("OK") #ACK
+
+#   Main while loop of the GigabotThread
     def run(self): 
         # print threading.currentThread().getName()
         while True : 
             try:
                 c_data = self.recvdata()
                 self.machine.parsedata(c_data)
+
                 self.senddata("OK")  # echo
             except error, exc:
                 print "Client Disconnected! ", exc
                 return
+
+#   check_dup function checks if there is already a present Gigabotnode,
+#   with the same ipaddress. Returns that object if it is a match, otherwise, create a new instance. 
     def check_dup(self):
         for bot in gigabots:
             if bot.ipaddress == self.ipaddress:
@@ -48,11 +47,12 @@ class GigabotThread(Thread):
         gigabots.append(self.machine)
         return
 
+#   Send function encodes data and creates a json object to be sent over TCP
+#   Recieve function decodes data and unpacks the json object, then sends a ACK msg to client
     def senddata(self, msg):
         if(msg):
             temp = json.dumps(msg).encode("base64")
             self.conn.send(temp)
-
     def recvdata(self):
         data = self.conn.recv(2048)
         if(data):
@@ -63,7 +63,8 @@ class GigabotThread(Thread):
 
 
 if __name__ == "__main__":
-    print "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+#   Clear the commandline
+    os.system("clear")
     print "Chromebook Gigabot Dashboard Data Server : \nWaiting for connections Gigabot clients..." 
     chromeServer = socket(AF_INET, SOCK_STREAM) 
     chromeServer.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1) 
@@ -71,16 +72,16 @@ if __name__ == "__main__":
     chromeServer.listen(5) 
 
     while True: 
+#       For each gigabot connected, create a new Thread. 
         (conn, (ip,port)) = chromeServer.accept() 
-
-        #Create a new client
+#       Create a new Thread for each new connection
         newthread = GigabotThread(conn,ip,port) 
         newthread.start() 
         gigabotthreads.append(newthread) 
-        # print threading.currentThread().getName()
         # print gigabotthreads
         # print gigabots
-     
+
+#   Kill all thread at the end of the program
     for t in gigabotthreads: 
         t.join()
     gigabots.clear()
