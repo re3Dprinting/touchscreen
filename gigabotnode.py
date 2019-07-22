@@ -6,6 +6,7 @@ from g_client import *
 from g_data import * 
 import sys
 import threading
+import os
  
 
 baudrate = 250000
@@ -40,13 +41,18 @@ class mainhandler():
 				self.datathread.addtobuffer("ST",self.datathread.status)
 				self.send_to_server()
 
-		if self.serialconn.is_open: self.serialconn.readdata()
+		if self.serialconn.is_open: 
+			self.serialconn.readdata()
 		if self.datathread.start_timeout_seq and self.clientconn.is_conn: 
+			print "pinging"
 			self.send_to_server()
 
-		elif self.clientconn.is_conn and self.datathread.sendflag: self.send_to_server()
+		elif self.clientconn.is_conn and self.datathread.sendflag: 
+			print "sendflag"
+			self.send_to_server()
 
 if __name__ == "__main__":
+	os.system("clear")
 #	Attempt to Initialize the Client Connection, Data Object, and Serial Connection.
 	data_thread = g_data()
 	client_conn= g_client(data_thread)

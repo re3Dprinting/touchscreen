@@ -4,7 +4,7 @@ import errno
 import select
 import time
 
-host = "192.168.1.169" 
+host = "192.168.1.49" 
 port = 63200
 
 #	The g_client class inherits from the socket class
@@ -51,7 +51,7 @@ class g_client(socket):
 			socket.__init__(self,AF_INET,SOCK_STREAM)
 			self.setblocking(False)
 			err = self.connect_ex((host,port))
-			time.sleep(.08)
+			time.sleep(.8)
 			err_no = self.getsockopt(SOL_SOCKET,SO_ERROR)
 			# if err_no != 0: print err_no, errno.errorcode[err_no]
 			# else: print err_no
