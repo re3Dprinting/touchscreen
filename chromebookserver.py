@@ -29,7 +29,7 @@ class GigabotThread(Thread):
         while True : 
             try:
                 c_data = self.recvdata()
-                self.machine.parsedata(c_data)
+                if(c_data): self.machine.parsedata(c_data)
 
                 self.senddata("OK")  # echo
             except error, exc:
