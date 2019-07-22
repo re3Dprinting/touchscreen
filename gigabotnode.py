@@ -44,11 +44,11 @@ class mainhandler():
 		if self.serialconn.is_open: 
 			self.serialconn.readdata()
 		if self.datathread.start_timeout_seq and self.clientconn.is_conn: 
-			print "pinging"
+			#print "pinging"
 			self.send_to_server()
 
 		elif self.clientconn.is_conn and self.datathread.sendflag: 
-			print "sendflag"
+			#print "sendflag"
 			self.send_to_server()
 
 if __name__ == "__main__":
