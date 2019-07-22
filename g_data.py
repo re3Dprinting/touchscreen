@@ -2,15 +2,19 @@ from socket import *
 import time
 import threading
 
-#	g_data class is a data class that handles parsing data
-#	and a buffer that is periodically sent to the server
+#	g_data class is derived from the Thread class for timing applicataions.
+#	g_data class also handles parsing data and a buffer that is periodically sent to the server
 class g_data(threading.Thread):
 	def __init__(self):
 		super(g_data,self).__init__()
-		self.counter = [0,0]
+		self.counter = [0,0,0] # Reconnectflag, SendFlag, ServerTimeout
 		self.reconnflag = False
 		self.sendflag = False
 		self._stop = False
+
+#	Flags to determine if server timeout occured
+		self.start_timeout_seq = False
+		self.server_timeout = False
 
 #	Data to be extracted
 		self.temp = dict()
@@ -28,14 +32,29 @@ class g_data(threading.Thread):
 		self._stop = True
 	def run(self):
 		while self._stop == False:
-			self.counter = [x+1 for x in self.counter]
+			if self.start_timeout_seq and not self.server_timeout:
+				self.counter[2]+=1
+			if not self.start_timeout_seq: 
+				self.counter[1]+= 1
+				self.counter[0] +=1
+			
+
+			#self.counter = [self.counter[i]+1 for i in range(len(self.counter)) if i<2] + self.counter[2:]
 			time.sleep(1)
+			print self.counter
 			if self.counter[0] >= 5:
 				self.reconnflag = True
 				self.counter[0] = 0
-			if self.counter[1] >= 5:
+			if self.counter[1] >= 5 and not self.start_timeout_seq:
 				self.sendflag = True
 				self.counter[1] = 0
+			if self.start_timeout_seq and not self.server_timeout:
+				if self.counter[2] > 2: self.sendflag= True
+				print "Time since last response: ", self.counter[2]
+				if self.counter[2] >= 10:
+					self.counter[2] = 0
+					self.server_timeout = True
+					self.start_timeout_seq = False
 
 #	Attempt to get the IP address through connecting to Google DNS to get current ipaddress
 	def getipaddress(self):

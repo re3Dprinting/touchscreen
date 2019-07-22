@@ -8,32 +8,43 @@ import json
 #	g_serial class inherits from Serial object
 class g_serial(Serial):
 	def __init__(self,data_obj):
-#	If the gigabot is disconnected, keep the data object
-#	Reinitialize the object if the gigabot is the same. 
+#	Reuse the dataobj is the same gigabot connects.
 		self.data = data_obj
-		com = list(serial.tools.list_ports.comports())
-		for p in com:
+		self.com = list(serial.tools.list_ports.comports())
+		for p in self.com:
 			if "/dev/ttyUSB" in p.device:
-				com = p.device
+				self.com = p.device
+		self.catch_except(self.connect)	
+
+#	Function to Catch Exceptions for the g_serial 
+	def catch_except(self, function):
 		try:
-			Serial.__init__(self,com, baudrate= 250000)
-			#Set the status of the printer to ON
-			self.data.changestatus("ON")
-			self.setDTR(False)
-			time.sleep(1)
-			self.flushInput()
-			self.setDTR(True)
-			time.sleep(3)
-			#Extract Header information from the first few bytes of data
-			self.readdata()
-			self.en_reporttemp_stat()
+			function()
+		except IOError:
+			self.is_open = False
+			self.data.changestatus("OF")
+			print "Serial Disconnected!\n"
 		except ValueError:
-			print "COM port is unavalible/ or run program with root permission."
-			print "Retrying in 5 seconds"
+			#print "COM port is unavalible/ or run program with root permission."
+			#print "Retrying in 5 seconds"
 			self.data.changestatus("OF")
 
-#	Attempt to reconnect to Serial Connection.
-	def attemptconnection(self,data):
+#	Initial attempt to connect to server			
+	def connect(self):
+		Serial.__init__(self, self.com, baudrate= 250000)
+		#Set the status of the printer to ON
+		self.data.changestatus("ON")
+		self.setDTR(False)
+		time.sleep(1)
+		self.flushInput()
+		self.setDTR(True)
+		time.sleep(3)
+		#Extract Header information from the first few bytes of data
+		self.readdata()
+		self.en_reporttemp_stat()
+
+#	Attempt to reconnect to Serial
+	def attemptconnect(self,data):
 		if not self.is_open: self.__init__(data)
 
 #	Enable temperature reporting every 5 seconds through M155 S5
@@ -50,6 +61,8 @@ class g_serial(Serial):
 #	If the insize is detected, wait half a second for the full transmission to come through
 #	After recieving the data, parse it with the data object
 	def readdata(self):
+		self.catch_except(self.read_d)
+	def read_d(self):
 		insize = self.inWaiting()
 		if insize: 
 			time.sleep(0.5)
