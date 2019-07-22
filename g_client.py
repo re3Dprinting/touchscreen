@@ -21,10 +21,12 @@ class g_client(socket):
 			else: function()
 		except Exception as e:
 			#errno.EAGAIN= 11, errno.EWOULDBLOCK = 11 
+#			Exception for handling server timeout
+#			start timeout sequene, and reset timers. 
 			if e.args[0] == errno.EAGAIN or e.args[0] == errno.EWOULDBLOCK:
-				#print "No Data from Server/ Server not responding"
 				if not self.data.start_timeout_seq: 
-					self.data.counter[2] = 0
+					self.data.counter[1] = 0
+					self.data.counter[0] = 0
 					self.data.start_timeout_seq = True
 				if self.data.server_timeout and self.is_conn:
 					self.is_conn = False
@@ -32,17 +34,18 @@ class g_client(socket):
 					print "Server Timeout Out! Please reset."
 			elif e.args[0] == 32 or e.args[0] == 104:
 				self.is_conn = False
+				self.data.server_timeout = False
 				print "Server Disconnected!"
 			elif e.args[0] == 111:
-				print "Error Connecting to Server: ", e
 				self.data.server_timeout = False
 				self.is_conn = False
+				print "Error Connecting to Server: ", e
 			else:
 				self.is_conn = False
 				print "New error: ", e
 
 #	Initial attempt to connect to server
-#	Non-blocking program 
+#	Non-blocking program using connect_ex and getsockopt to catch errors
 	def connect_client(self):
 		if not self.is_conn:
 			socket.__init__(self,AF_INET,SOCK_STREAM)
@@ -57,8 +60,6 @@ class g_client(socket):
 				self.data.addtobuffer("ST", self.data.status)
 			if err_no == 111: 
 				raise error(111, "Connection refused.")
-
-		#if self.is_conn: self.data.addtobuffer("ST", self.data.status)
 
 #	Attempt to reconnect to Server
 	def attemptconnect(self, data):
