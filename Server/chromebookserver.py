@@ -19,22 +19,24 @@ class GigabotThread(Thread):
         self.port = port 
         self.machine = mach
         self.printstuff = ""
+        self.connected = True
         print "A new Gigabot Client connected! \n"
 
 #   Main while loop of the GigabotThread
     def run(self): 
         # print threading.currentThread().getName()
-        while True : 
-            try:
-                c_data = self.recvdata()
-                if(c_data): 
-                    self.printstuff = self.machine.parsedata(c_data)
-                    print(self.printstuff)
+        while self.connected : 
+            # try:
+            c_data = self.recvdata()
+            if(c_data): 
+                self.printstuff = self.machine.parsedata(c_data)
+                #print(self.printstuff)
 
-                self.senddata("OK")  # echo
-            except error, exc:
-                print "Client Disconnected! ", exc
-                return
+            self.senddata("OK")  # echo
+            # except Exception as exc:
+            #     print "Client Disconnected! ", exc
+            #     self.connected = False
+            #     self.conn.close()
 
 #   Send function encodes data and creates a json object to be sent over TCP
 #   Recieve function decodes data and unpacks the json object, then sends a ACK msg to client

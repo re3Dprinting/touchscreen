@@ -19,12 +19,12 @@ class gigabotclient():
 	def updateprinttime(self, newprint):
 		self.printtime += newprint
 	def printdata(self):
-		return "Gigabot #",self.idnum," " + self.model + "\n" + "Last Updated: \t" + self.dateuploaded + "\n" + "IP address:\t" + self.ipaddress + "\n"
+		return "Gigabot #",self.idnum," \n" + self.model + "\n" + "Last Updated: \t" + self.dateuploaded + "\n" + "IP address:\t" + self.ipaddress + "\n"
 #	OF- Off/Disconnected ON- On/Idle UM- Under Maintenence AC- Active/Printing
 	def printstatus(self):
-	 	if(self.status == "ON"): return "STATUS: Gigabot is Idle/Connected"
-	 	elif(self.status == "OF"): return "STATUS: Gigabot is Off/Disconnected"
-	 	elif(self.status == "AC"): return "STATUS: Gigabot is Active/Printing"
+	 	if(self.status == "ON"): return "STATUS: Gigabot is Idle/Connected\n"
+	 	elif(self.status == "OF"): return "STATUS: Gigabot is Off/Disconnected\n"
+	 	elif(self.status == "AC"): return "STATUS: Gigabot is Active/Printing\n"
 	def printstats(self):
 		st = ""
 		for key in self.stats:
@@ -36,21 +36,21 @@ class gigabotclient():
 		ret_data = ""
 		if ("ST" in d_ata):
 			self.status = d_ata["ST"]
-			ret_data+= self.printstatus()
+			return self.printstatus()
 		if ("T" in d_ata):
 			self.btemp = d_ata["T"]["B"]
 			self.temp1 = d_ata["T"]["T0"]
 			self.temp2 = d_ata["T"]["T1"]
-			ret_data+= self.printtemp()
+			return self.printtemp()
 		if("FI" in d_ata):
 			self.currentfile = d_ata["FI"]
-			ret_data+= "Current File: " + self.currentfile + "\n"
+			return "Current File: " + self.currentfile + "\n"
 		if ("HD" in d_ata):
 			m = d_ata["HD"].split("..")
 			self.dateuploaded = m[0]
 			self.model = m[1]
-			ret_data+= self.printdata()
+			return self.printdata()
 		if("SS" in d_ata):
 			self.stats = d_ata["SS"]
-			ret_data+= self.printstats()
-		return ret_data
+			return self.printstats()
+	
