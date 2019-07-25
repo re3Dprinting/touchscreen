@@ -19,38 +19,36 @@ class gigabotclient():
 	def updateprinttime(self, newprint):
 		self.printtime += newprint
 	def printdata(self):
-		return "Gigabot #",self.idnum," \n" + self.model + "\n" + "Last Updated: \t" + self.dateuploaded + "\n" + "IP address:\t" + self.ipaddress + "\n"
+		print "Gigabot #",self.idnum," \n" + self.model + "\n" + "Last Updated: \t" + self.dateuploaded + "\n" + "IP address:\t" + self.ipaddress + "\n"
 #	OF- Off/Disconnected ON- On/Idle UM- Under Maintenence AC- Active/Printing
 	def printstatus(self):
-	 	if(self.status == "ON"): return "STATUS: Gigabot is Idle/Connected\n"
-	 	elif(self.status == "OF"): return "STATUS: Gigabot is Off/Disconnected\n"
-	 	elif(self.status == "AC"): return "STATUS: Gigabot is Active/Printing\n"
+	 	if(self.status == "ON"): print "STATUS: Gigabot is Idle/Connected\n"
+	 	elif(self.status == "OF"): print "STATUS: Gigabot is Off/Disconnected\n"
+	 	elif(self.status == "AC"): print "STATUS: Gigabot is Active/Printing\n"
 	def printstats(self):
-		st = ""
 		for key in self.stats:
-			st += key, ":\t", self.stats[key], "\n"
-		return st
+			print key, ":\t", self.stats[key]
 	def printtemp(self): 
-		return "T1:\t" + str(self.temp1[0]) + "/" + str(self.temp1[1]) + "\t" + "T2:\t" + str(self.temp2[0]) + "/" + str(self.temp2[1]) + "\t" + "B:\t" + str(self.btemp[0]) + "/" +str(self.btemp[1]) 
+		print "T1:\t" + str(self.temp1[0]) + "/" + str(self.temp1[1]) + "\t" + "T2:\t" + str(self.temp2[0]) + "/" + str(self.temp2[1]) + "\t" + "B:\t" + str(self.btemp[0]) + "/" +str(self.btemp[1]) 
 	def parsedata(self, d_ata):
-		ret_data = ""
+		print d_ata
 		if ("ST" in d_ata):
 			self.status = d_ata["ST"]
-			return self.printstatus()
+			print self.printstatus()
 		if ("T" in d_ata):
 			self.btemp = d_ata["T"]["B"]
 			self.temp1 = d_ata["T"]["T0"]
 			self.temp2 = d_ata["T"]["T1"]
-			return self.printtemp()
+			print self.printtemp()
 		if("FI" in d_ata):
 			self.currentfile = d_ata["FI"]
-			return "Current File: " + self.currentfile + "\n"
+			print "Current File: " + self.currentfile + "\n"
 		if ("HD" in d_ata):
 			m = d_ata["HD"].split("..")
 			self.dateuploaded = m[0]
 			self.model = m[1]
-			return self.printdata()
+			self.printdata()
 		if("SS" in d_ata):
 			self.stats = d_ata["SS"]
-			return self.printstats()
+			self.printstats()
 	
