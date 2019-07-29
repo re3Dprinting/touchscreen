@@ -10,6 +10,7 @@ from addmachine import *
 from Server.server_main import serverhandler
 from Server.gigabotclient import *
 import time
+import threading
 
 #   Server Thread used to handle the blocking server call, listen_for_clients()
 #   This Thread spawns other Threads for each Client connected.
@@ -17,32 +18,30 @@ class server_thread(QtCore.QThread):
     def __init__(self, handler, parent = None):
         QtCore.QThread.__init__(self,parent)
         self.handler= handler
+        self.startflag = False
+        self.stopflag = False
+        self.listen = False
     def run(self):
         while(True):
-            self.handler.listen_for_clients()
+            if self.startflag: 
+                self.handler.startserver()
+                self.listen = True
+                self.startflag = False
+            if self.stopflag:
+                self.handler.stopserver()
+                self.listen = False
+                self.stopflag = False
+            if self.listen: self.handler.listen_for_clients()
 
 #   View Thread, that updates the view whenever new data comes in from the server side.
 class view_thread(QtCore.QThread):
-    def __init__(self, serv_handler, dashboard, parent=None):
+    temps = QtCore.Signal([str],[unicode])
+    def __init__(self, parent=None):
         QtCore.QThread.__init__(self,parent)
-        self.dashboard = dashboard
-        self.serv_handler = serv_handler
     def run(self):
         while(True):
-#            if len(self.serv_handler.gigabotthreads):
-#                serv_handler.message = self.serv_handler.gigabotthreads[0].printstuff
-#                self.serv_handler.gigabotthreads[0].printstuff = ""
-#            if self.serv_handler.message != "":
-#                self.view.refresh_text_box(self.serv_handler.message)
-#                self.serv_handler.message = ""
-                
-            #else: self.view.refresh_text_box("ping")
-            for g in self.dashboard.modules:
-                g.update()
-            QtWidgets.QApplication.processEvents()
-            time.sleep(0.5)
-
-
+            self.temps.emit("updatetemps")
+            time.sleep(1)
 
 #   Gigabot Modules Class
 #   Initalize gigabotmodule
@@ -52,19 +51,13 @@ class GigabotModule(QtWidgets.QWidget , Ui_GigabotModule):
         self.setupUi(self)
         self.gigabot = gigabot
         self.GigabotNum.setText(gigabot.idnum)
-        self.update()
-    def update(self):
+        self.updatetemps()
+    def updatetemps(self):
         self.Nozzle1Text.setText(str(self.gigabot.temp1))
         self.Nozzle2Text.setText(str(self.gigabot.temp2))
         self.BedText.setText(str(self.gigabot.btemp))
+        QtWidgets.QApplication.processEvents()
 
-#    def mousePressEvent(self, event):
-#        self.__mousePressPos = None
-#        self.__mouseMovePos = None
-#        if event.button() == QtCore.Qt.LeftButton:
-#            self.__mousePressPos = event.globalPos()
-#            self.__mouseMovePos = event.globalPos()
-#        super(GigabotModule, self).mousePressEvent(event)
 
 
 class AddMachineWindow(QtWidgets.QWidget, Ui_addmachine):
@@ -89,7 +82,7 @@ class AddMachineWindow(QtWidgets.QWidget, Ui_addmachine):
         header.setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
         rowpos = self.Devices.rowCount()
 
-        self.gigabots.append(gigabotclient("192.168.1.169"))
+#        self.gigabots.append(gigabotclient("192.168.1.169"))
 #        self.gigabots.append(gigabotclient("192.168.1.151"))
 #        self.gigabots.append(gigabotclient("192.168.1.49"))
 #        self.gigabots.append(gigabotclient("192.168.1.12"))
@@ -126,6 +119,14 @@ class MainWindow(QtWidgets.QMainWindow, Ui_DashboardWindow):
         super(MainWindow,self).__init__()
         self.setupUi(self)
         self.modules = []
+        self.viewupdater = view_thread()
+        self.viewupdater.temps.connect(self.updatetemps)
+        self.viewupdater.start()
+        self.handler = handler
+        self.serverthread = server_thread(self.handler)
+        self.serverthread.start()
+
+
 #       Set the Dashboard as a MainWindow Object so a DockWidget can be nested inside.
         self.Dashboard = QtWidgets.QMainWindow()
         self.Dashboard.setDockOptions(QtWidgets.QMainWindow.AllowNestedDocks)
@@ -138,8 +139,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_DashboardWindow):
 #       Add the MainWindow to the grid layout.
         self.gridLayout.addWidget(self.Dashboard, 1, 0, 1, 1)
 
-
-        self.handler = handler
 #       Determine the size of the window
         sizeObject = QtWidgets.QDesktopWidget().screenGeometry(-1)
         wid = sizeObject.width()
@@ -149,6 +148,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_DashboardWindow):
 #       AddModule function connected to the Addmachine menu Option.
         self.AddMachine.triggered.connect(self.add_machine)
         self.Quit.clicked.connect(self.closeall)
+        self.StartServer.clicked.connect(self.startserv)
 
     def closeall(self):
         self.handler.quit()
@@ -158,7 +158,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_DashboardWindow):
     def add_machine(self):
         self.pop =AddMachineWindow(self.handler.gigabots, self)
         self.pop.show()
-
+    def startserv(self):
+        self.serverthread.startflag = True
     def addModule(self, gigabot):
         #self.Dashboard.removeWidget(self.Null)
         mod = GigabotModule(gigabot)
@@ -173,13 +174,13 @@ class MainWindow(QtWidgets.QMainWindow, Ui_DashboardWindow):
         wid.setAttribute(Qt.WA_TranslucentBackground)
         self.Dashboard.addDockWidget(Qt.RightDockWidgetArea,wid)
         wid.setFloating(True)
-        self.modules.append(wid)
+        self.modules.append(mod)
 
 
 
-    def refresh_text_box(self, astring):
-#        self.Serveroutput.append(astring)
-        QtWidgets.QApplication.processEvents()
+    def updatetemps(self):
+        for m in self.modules:
+            m.updatetemps()
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
@@ -190,12 +191,8 @@ if __name__ == "__main__":
 #   Main Dashboard Window
     dashboardwindow = MainWindow(serv_handler)
 
-
-    serv_thread = server_thread(serv_handler)
-    view_thread = view_thread(serv_handler, dashboardwindow)
-
-    serv_thread.start()
-    view_thread.start()
+    # serv_thread = server_thread(serv_handler)
+    # serv_thread.start()
 
     dashboardwindow.show()
 
