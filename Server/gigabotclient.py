@@ -3,7 +3,7 @@
 #	The object is reused if the IP address matches the IP of the connected device
 class gigabotclient():
 	def __init__(self, ipaddress):
-		self.idnum = 999
+		self.idnum = "999"
 		self.model = "default"
 		self.ipaddress = ipaddress
 		self.status = "OF"

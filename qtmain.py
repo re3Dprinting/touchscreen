@@ -45,26 +45,33 @@ class view_thread(QtCore.QThread):
 #   Gigabot Modules Class
 #   Initalize gigabotmodule
 class GigabotModule(QtWidgets.QWidget , Ui_GigabotModule):
-    def __init__(self, num):
+    def __init__(self, gigabot):
         super(GigabotModule,self).__init__()
         self.setupUi(self)
-        self.GigabotNum.setText(num)
-    def mousePressEvent(self, event):
-        self.__mousePressPos = None
-        self.__mouseMovePos = None
-        if event.button() == QtCore.Qt.LeftButton:
-            self.__mousePressPos = event.globalPos()
-            self.__mouseMovePos = event.globalPos()
-        super(GigabotModule, self).mousePressEvent(event)
+        self.gigabot = gigabot
+        self.GigabotNum.setText(gigabot.idnum)
+        self.update()
+    def update(self):
+        self.Nozzle1Text.setText(str(self.gigabot.temp1))
+        self.Nozzle2Text.setText(str(self.gigabot.temp2))
+        self.BedText.setText(str(self.gigabot.btemp))
+
+#    def mousePressEvent(self, event):
+#        self.__mousePressPos = None
+#        self.__mouseMovePos = None
+#        if event.button() == QtCore.Qt.LeftButton:
+#            self.__mousePressPos = event.globalPos()
+#            self.__mouseMovePos = event.globalPos()
+#        super(GigabotModule, self).mousePressEvent(event)
 
 
 class AddMachineWindow(QtWidgets.QWidget, Ui_addmachine):
 #   Pass in the list of gigabotclient objects that contain data on gigabot.
-    def __init__(self, devices, mainwin):
+    def __init__(self, gigabots, mainwin):
         super(AddMachineWindow, self).__init__()
         self.setupUi(self)
         self.main = mainwin
-        self.devices = devices
+        self.gigabots = gigabots
 #       Move Window to Middle of Screen
         qr = self.frameGeometry()
         cp = QtWidgets.QDesktopWidget().availableGeometry().center()
@@ -80,16 +87,19 @@ class AddMachineWindow(QtWidgets.QWidget, Ui_addmachine):
         header.setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
         rowpos = self.Devices.rowCount()
 
-#        self.devices.append(gigabotclient("192.168.1.169"))
-#        self.devices.append(gigabotclient("192.168.1.151"))
-#        self.devices.append(gigabotclient("192.168.1.49"))
-#        self.devices.append(gigabotclient("192.168.1.12"))
+        self.gigabots.append(gigabotclient("192.168.1.169"))
+#        self.gigabots.append(gigabotclient("192.168.1.151"))
+#        self.gigabots.append(gigabotclient("192.168.1.49"))
+#        self.gigabots.append(gigabotclient("192.168.1.12"))
 
-        if len(devices)>0:
-            for g in self.devices:
+        if len(gigabots)>0:
+            for g in self.gigabots:
                 rowpos = self.Devices.rowCount()
                 self.Devices.insertRow(rowpos)
-                self.Devices.setItem(rowpos, 0, QtWidgets.QTableWidgetItem(g.ipaddress))
+                item = QtWidgets.QTableWidgetItem(g.ipaddress)
+                #item.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
+                item.setFlags( Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
+                self.Devices.setItem(rowpos, 0, item)
 
 #       Connect the ok button to retrieving the gigabot.
         ok = self.Button.button(QtWidgets.QDialogButtonBox.Ok)
@@ -100,12 +110,11 @@ class AddMachineWindow(QtWidgets.QWidget, Ui_addmachine):
 
     def add(self):
         selected = self.Devices.currentRow()
-        print self.Devices.item(selected,1).text()
+        gigabotnum = self.Devices.item(selected,1)
+        if gigabotnum and len(gigabotnum.text()) != 0: self.gigabots[selected].idnum= gigabotnum.text()
 
-        if self.Devices.item(selected,0).text():
-            self.main.addModule(selected)
-            #self.devices[selected].idnum
-            self.close()
+        self.main.addModule(self.gigabots[selected])
+        self.close()
 
 
 
@@ -151,21 +160,18 @@ class MainWindow(QtWidgets.QMainWindow, Ui_DashboardWindow):
     def addModule(self, gigabot):
         #self.Dashboard.removeWidget(self.Null)
         mod = GigabotModule(gigabot)
-        self.wid = QtWidgets.QDockWidget(self)
-        self.wid.setWidget(mod)
-        self.wid.setAllowedAreas(QtCore.Qt.NoDockWidgetArea)
+        wid = QtWidgets.QDockWidget(self)
+        wid.setWidget(mod)
+
+        wid.setAllowedAreas(QtCore.Qt.NoDockWidgetArea)
         #self.wid.setFeatures(QtWidgets.QDockWidget.DockWidgetMovable | QtWidgets.QDockWidget.DockWidgetClosable)
         #self.wid.setFeatures(QtWidgets.QDockWidget.DockWidgetMovable)
-        self.wid.setFeatures(QtWidgets.QDockWidget.DockWidgetClosable)
+        wid.setFeatures(QtWidgets.QDockWidget.DockWidgetClosable)
         #wid[i].setWindowFlags(Qt.FramelessWindowHint)
-        self.wid.setAttribute(Qt.WA_TranslucentBackground)
-
-        self.Dashboard.addDockWidget(Qt.RightDockWidgetArea,self.wid)
-        self.wid.setFloating(True)
-
-#    def create_new_widget(self):
-
-#        return wid
+        wid.setAttribute(Qt.WA_TranslucentBackground)
+        self.Dashboard.addDockWidget(Qt.RightDockWidgetArea,wid)
+        wid.setFloating(True)
+        #self.modules.append(wid)
 
 
 

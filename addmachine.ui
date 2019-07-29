@@ -29,7 +29,7 @@
    <item>
     <widget class="QLabel" name="Text">
      <property name="text">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Please make sure the server is connected and listening for clients.&lt;/p&gt;&lt;p&gt;Then choose a device to add.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Please make sure the server is connected and listening for clients.&lt;/p&gt;&lt;p&gt;Choose a Device to add, and insert the Gigabot Number&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
     </widget>
    </item>
