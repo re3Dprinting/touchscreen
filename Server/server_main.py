@@ -14,10 +14,12 @@ class serverhandler():
 		self.server.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1) 
 		self.server.bind((TCP_IP, TCP_PORT)) 
 		self.server.listen(5)
-		self.message = "Chromebook Gigabot Dashboard Data Server : \nWaiting for connections Gigabot clients..."
+		#self.message = "Chromebook Gigabot Dashboard Data Server : \nWaiting for connections Gigabot clients..."
+		return True
 
 	def stopserver(self):
 		self.server.close()
+		return True
 #   check_dup function checks if there is already a present Gigabotnode,
 #   with the same ipaddress. Returns that object if it is a match, otherwise, create a new instance. 
 	def check_dup(self, ip):

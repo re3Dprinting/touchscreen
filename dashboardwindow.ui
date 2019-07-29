@@ -14,8 +14,8 @@
    <string>Gigabot Dashboard</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QVBoxLayout" name="verticalLayout">
-    <item>
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0">
      <layout class="QHBoxLayout" name="Header">
       <item>
        <widget class="QLabel" name="DashboardTitle">
@@ -36,7 +36,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QLabel" name="label">
+       <widget class="QLabel" name="Re3dIcon">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
           <horstretch>0</horstretch>
@@ -65,71 +65,18 @@
       </item>
      </layout>
     </item>
-    <item>
-     <layout class="QGridLayout" name="Dashboard">
-      <item row="1" column="0">
-       <spacer name="VSpace1">
-        <property name="orientation">
-         <enum>Qt::Vertical</enum>
-        </property>
-        <property name="sizeType">
-         <enum>QSizePolicy::Preferred</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>20</width>
-          <height>16777215</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item row="0" column="1">
-       <spacer name="HSpace">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeType">
-         <enum>QSizePolicy::Preferred</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>16777215</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item row="1" column="1">
-       <spacer name="VSpace">
-        <property name="orientation">
-         <enum>Qt::Vertical</enum>
-        </property>
-        <property name="sizeType">
-         <enum>QSizePolicy::Preferred</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>20</width>
-          <height>16777215</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-     </layout>
+    <item row="3" column="0">
+     <layout class="QVBoxLayout" name="Dashboard"/>
     </item>
-    <item>
+    <item row="1" column="0">
      <layout class="QHBoxLayout" name="buttons">
+      <property name="sizeConstraint">
+       <enum>QLayout::SetDefaultConstraint</enum>
+      </property>
       <item>
-       <widget class="QPushButton" name="StartServer">
-        <property name="text">
-         <string>Start Server</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QTextBrowser" name="textBrowser">
+       <widget class="QTextBrowser" name="ServerStatus">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
@@ -140,14 +87,70 @@
           <height>25</height>
          </size>
         </property>
+        <property name="maximumSize">
+         <size>
+          <width>200</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="verticalScrollBarPolicy">
+         <enum>Qt::ScrollBarAlwaysOff</enum>
+        </property>
+        <property name="horizontalScrollBarPolicy">
+         <enum>Qt::ScrollBarAlwaysOff</enum>
+        </property>
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="Quit">
+       <widget class="QPushButton" name="StartServer">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>80</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>100</width>
+          <height>25</height>
+         </size>
+        </property>
         <property name="text">
-         <string>Quit</string>
+         <string>Start Server</string>
         </property>
        </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="StopServer">
+        <property name="maximumSize">
+         <size>
+          <width>100</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>Stop Server</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
       </item>
      </layout>
     </item>
@@ -170,8 +173,9 @@
      <string>Manage</string>
     </property>
     <addaction name="AddMachine"/>
-    <addaction name="DoSomethingElse"/>
-    <addaction name="actionSettings"/>
+    <addaction name="ViewConnected"/>
+    <addaction name="Settings"/>
+    <addaction name="Quit"/>
    </widget>
    <addaction name="Manage"/>
   </widget>
@@ -191,14 +195,19 @@
     <string>Add Machine</string>
    </property>
   </action>
-  <action name="DoSomethingElse">
+  <action name="ViewConnected">
    <property name="text">
     <string>View Connected Devices</string>
    </property>
   </action>
-  <action name="actionSettings">
+  <action name="Settings">
    <property name="text">
     <string>Settings</string>
+   </property>
+  </action>
+  <action name="Quit">
+   <property name="text">
+    <string>Quit</string>
    </property>
   </action>
  </widget>

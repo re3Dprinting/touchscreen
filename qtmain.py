@@ -3,8 +3,7 @@ import sys
 
 from PySide2 import QtCore, QtGui, QtWidgets
 from PySide2.QtCore import Qt
-#from dashboardwindow import *
-from dashboardwindowFRAMETEST import *
+from dashboardwindow import *
 from module_gigabot import *
 from addmachine import *
 from Server.server_main import serverhandler
@@ -15,6 +14,7 @@ import threading
 #   Server Thread used to handle the blocking server call, listen_for_clients()
 #   This Thread spawns other Threads for each Client connected.
 class server_thread(QtCore.QThread):
+    serverstatus = QtCore.Signal([str],[unicode])
     def __init__(self, handler, parent = None):
         QtCore.QThread.__init__(self,parent)
         self.handler= handler
@@ -58,8 +58,6 @@ class GigabotModule(QtWidgets.QWidget , Ui_GigabotModule):
         self.BedText.setText(str(self.gigabot.btemp))
         QtWidgets.QApplication.processEvents()
 
-
-
 class AddMachineWindow(QtWidgets.QWidget, Ui_addmachine):
 #   Pass in the list of gigabotclient objects that contain data on gigabot.
     def __init__(self, gigabots, mainwin):
@@ -98,17 +96,17 @@ class AddMachineWindow(QtWidgets.QWidget, Ui_addmachine):
 
 #       Connect the ok button to retrieving the gigabot.
         ok = self.Button.button(QtWidgets.QDialogButtonBox.Ok)
-        ok.clicked.connect(self.add)
+        ok.clicked.connect(self.addmod)
 #       Connecting the Quit Button to quiting.
         close = self.Button.button(QtWidgets.QDialogButtonBox.Cancel)
         close.clicked.connect(self.close)
 
-    def add(self):
-        selected = self.Devices.currentRow()
-        gigabotnum = self.Devices.item(selected,1)
-        if gigabotnum and len(gigabotnum.text()) != 0: self.gigabots[selected].idnum= gigabotnum.text()
-
-        self.main.addModule(self.gigabots[selected])
+    def addmod(self):
+        if(len(self.gigabots) >0):
+            selected = self.Devices.currentRow()
+            gigabotnum = self.Devices.item(selected,1)
+            if gigabotnum and len(gigabotnum.text()) != 0: self.gigabots[selected].idnum= gigabotnum.text()
+            self.main.addModule(self.gigabots[selected])
         self.close()
 
 
@@ -119,10 +117,12 @@ class MainWindow(QtWidgets.QMainWindow, Ui_DashboardWindow):
         super(MainWindow,self).__init__()
         self.setupUi(self)
         self.modules = []
+#       Thread that updates the modules
         self.viewupdater = view_thread()
         self.viewupdater.temps.connect(self.updatetemps)
         self.viewupdater.start()
         self.handler = handler
+#       Server thread that starts or stops the server
         self.serverthread = server_thread(self.handler)
         self.serverthread.start()
 
@@ -137,7 +137,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_DashboardWindow):
         sizePolicy.setHeightForWidth(self.Dashboard.sizePolicy().hasHeightForWidth())
         self.Dashboard.setSizePolicy(sizePolicy)
 #       Add the MainWindow to the grid layout.
-        self.gridLayout.addWidget(self.Dashboard, 1, 0, 1, 1)
+        self.gridLayout.addWidget(self.Dashboard, 2, 0, 1, 1)
 
 #       Determine the size of the window
         sizeObject = QtWidgets.QDesktopWidget().screenGeometry(-1)
@@ -147,8 +147,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_DashboardWindow):
         self.showMaximized()
 #       AddModule function connected to the Addmachine menu Option.
         self.AddMachine.triggered.connect(self.add_machine)
-        self.Quit.clicked.connect(self.closeall)
+        self.Quit.triggered.connect(self.closeall)
         self.StartServer.clicked.connect(self.startserv)
+        self.StopServer.clicked.connect(self.stopserv)
 
     def closeall(self):
         self.handler.quit()
@@ -160,6 +161,11 @@ class MainWindow(QtWidgets.QMainWindow, Ui_DashboardWindow):
         self.pop.show()
     def startserv(self):
         self.serverthread.startflag = True
+        self.ServerStatus.setText("Server is Running")
+    def stopserv(self):
+        self.serverthread.stopflag = True
+        self.ServerStatus.setText("Server is Disconnected")
+
     def addModule(self, gigabot):
         #self.Dashboard.removeWidget(self.Null)
         mod = GigabotModule(gigabot)
