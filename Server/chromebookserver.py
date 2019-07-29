@@ -31,7 +31,6 @@ class GigabotThread(Thread):
             if(c_data): 
                 self.printstuff = self.machine.parsedata(c_data)
                 #print(self.printstuff)
-
             self.senddata("OK")  # echo
             # except Exception as exc:
             #     print "Client Disconnected! ", exc

@@ -35,10 +35,12 @@ class serverhandler():
 				self.gigabotthreads.remove(t)
 
 
-	def app_kill(self):
+	def quit(self):
 		for t in self.gigabotthreads:
 			t.join()
-		self.gigabots.clear()
+		#self.gigabotthreads.clear()
+		del self.gigabots[:]
+		del self.gigabotthreads[:]
 
 
 # if __name__ == "__main__":
