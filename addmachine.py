@@ -3,7 +3,7 @@
 # Form implementation generated from reading ui file 'addmachine.ui',
 # licensing of 'addmachine.ui' applies.
 #
-# Created: Mon Jul 29 15:29:28 2019
+# Created: Mon Jul 29 15:44:15 2019
 #      by: pyside2-uic  running on PySide2 5.13.0
 #
 # WARNING! All changes made in this file will be lost!
@@ -30,6 +30,10 @@ class Ui_addmachine(object):
         item = QtWidgets.QTableWidgetItem()
         self.Devices.setHorizontalHeaderItem(1, item)
         self.verticalLayout.addWidget(self.Devices)
+        self.buttonBox = QtWidgets.QDialogButtonBox(addmachine)
+        self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel|QtWidgets.QDialogButtonBox.Ok)
+        self.buttonBox.setObjectName("buttonBox")
+        self.verticalLayout.addWidget(self.buttonBox)
 
         self.retranslateUi(addmachine)
         QtCore.QMetaObject.connectSlotsByName(addmachine)

@@ -95,10 +95,10 @@ class AddMachineWindow(QtWidgets.QWidget, Ui_addmachine):
                 self.Devices.setItem(rowpos, 0, item)
 
 #       Connect the ok button to retrieving the gigabot.
-        ok = self.Button.button(QtWidgets.QDialogButtonBox.Ok)
+        ok = self.buttonBox.button(QtWidgets.QDialogButtonBox.Ok)
         ok.clicked.connect(self.addmod)
 #       Connecting the Quit Button to quiting.
-        close = self.Button.button(QtWidgets.QDialogButtonBox.Cancel)
+        close = self.buttonBox.button(QtWidgets.QDialogButtonBox.Cancel)
         close.clicked.connect(self.close)
 
     def addmod(self):
