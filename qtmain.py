@@ -23,20 +23,22 @@ class server_thread(QtCore.QThread):
 
 #   View Thread, that updates the view whenever new data comes in from the server side.
 class view_thread(QtCore.QThread):
-    def __init__(self, serv_handler, view, parent=None):
+    def __init__(self, serv_handler, dashboard, parent=None):
         QtCore.QThread.__init__(self,parent)
-        self.view = view
+        self.dashboard = dashboard
         self.serv_handler = serv_handler
     def run(self):
         while(True):
-            if len(self.serv_handler.gigabotthreads): 
-                serv_handler.message = self.serv_handler.gigabotthreads[0].printstuff
-                self.serv_handler.gigabotthreads[0].printstuff = ""
-            if self.serv_handler.message != "":
-                self.view.refresh_text_box(self.serv_handler.message)
-                self.serv_handler.message = ""
+#            if len(self.serv_handler.gigabotthreads):
+#                serv_handler.message = self.serv_handler.gigabotthreads[0].printstuff
+#                self.serv_handler.gigabotthreads[0].printstuff = ""
+#            if self.serv_handler.message != "":
+#                self.view.refresh_text_box(self.serv_handler.message)
+#                self.serv_handler.message = ""
                 
             #else: self.view.refresh_text_box("ping")
+            for g in self.dashboard.modules:
+                g.update()
             QtWidgets.QApplication.processEvents()
             time.sleep(0.5)
 
@@ -171,7 +173,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_DashboardWindow):
         wid.setAttribute(Qt.WA_TranslucentBackground)
         self.Dashboard.addDockWidget(Qt.RightDockWidgetArea,wid)
         wid.setFloating(True)
-        #self.modules.append(wid)
+        self.modules.append(wid)
 
 
 
@@ -190,10 +192,10 @@ if __name__ == "__main__":
 
 
     serv_thread = server_thread(serv_handler)
-    view_object = view_thread(serv_handler, dashboardwindow)
+    view_thread = view_thread(serv_handler, dashboardwindow)
 
     serv_thread.start()
-    view_object.start()
+    view_thread.start()
 
     dashboardwindow.show()
 
