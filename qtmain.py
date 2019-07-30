@@ -32,13 +32,22 @@ class server_thread(QtCore.QThread):
 
 #   View Thread, that updates the view whenever new data comes in from the server side.
 class view_thread(QtCore.QThread):
-    temps = QtCore.Signal([str],[unicode])
+    update = QtCore.Signal([str],[unicode])
+    checkvisible = QtCore.Signal([str],[unicode])
     def __init__(self, parent=None):
         QtCore.QThread.__init__(self,parent)
+        self.count = [0,0]
     def run(self):
         while(True):
-            self.temps.emit("updatetemps")
-            time.sleep(1)
+            self.count[0] +=1
+            self.count[1] +=1
+            if self.count[1] >= 10: 
+                self.update.emit("updateall")
+                self.count[1] = 0
+            if self.count[0] >= 2: 
+                self.checkvisible.emit("checkvisible")
+                self.count[0] = 0
+            time.sleep(0.2)
 
 
 

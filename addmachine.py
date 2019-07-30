@@ -26,7 +26,7 @@ class AddMachineWindow(QtWidgets.QWidget, Ui_addmachine):
         header.setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
         rowpos = self.Devices.rowCount()
 
-        self.gigabots.append(gigabotclient("192.168.1.169"))
+#        self.gigabots.append(gigabotclient("192.168.1.169"))
 #        self.gigabots.append(gigabotclient("192.168.1.151"))
 #        self.gigabots.append(gigabotclient("192.168.1.49"))
 #        self.gigabots.append(gigabotclient("192.168.1.12"))
@@ -46,6 +46,7 @@ class AddMachineWindow(QtWidgets.QWidget, Ui_addmachine):
 #       Connecting the Quit Button to quiting.
         close = self.buttonBox.button(QtWidgets.QDialogButtonBox.Cancel)
         close.clicked.connect(self.close)
+
     def addmod(self):
         if(len(self.gigabots) >0):
             selected = self.Devices.currentRow()

@@ -12,6 +12,9 @@ class gigabotclient():
 		self.temp2 = (0,0)
 		self.currentfile = ""
 		self.dateuploaded = ""
+		self.modulelinked = False
+		self.module = None
+		self.moduleshow = False
 	def updatetemp(self, newtemp):
 		self.btemp = newtemp[0]
 		self.temp1 = newtemp [1]
@@ -29,9 +32,12 @@ class gigabotclient():
 	def getstats(self):
 		for key in self.stats:
 			return key, ":\t", self.stats[key]
-	def gettemp(self): 
-		return "T1:\t" + str(self.temp1[0]) + "/" + str(self.temp1[1]) + "\t" + "T2:\t" + str(self.temp2[0]) + "/" + str(self.temp2[1]) + "\t" + "B:\t" + str(self.btemp[0]) + "/" +str(self.btemp[1]) 
-
+	def gettemp1(self): 
+		return self.temp1[0], " / ", self.temp1[1]
+	def gettemp2(self): 
+		return self.temp2[0], " / ", self.temp2[1]
+	def getbtemp(self): 
+		return self.btemp[0], " / ", self.btemp[1]
 
 	def printdata(self):
 		print "Gigabot #",self.idnum," \n" + self.model + "\n" + "Last Updated: \t" + self.dateuploaded + "\n" + "IP address:\t" + self.ipaddress + "\n"

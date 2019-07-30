@@ -39,6 +39,7 @@ class mainhandler():
 				self.datathread.addtobuffer("HD",self.datathread.header)
 				self.datathread.addtobuffer("SS",self.datathread.stats)
 				self.datathread.addtobuffer("ST",self.datathread.status)
+				self.datathread.addtobuffer("FI", self.datathread.currentfile)
 				self.send_to_server()
 
 		if self.serialconn.is_open: 

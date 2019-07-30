@@ -10,14 +10,13 @@ class DashboardWindow(QtWidgets.QMainWindow, Ui_DashboardWindow):
         self.modules = []
 #       Thread that updates the modules
         self.viewupdater = view_thread
-        self.viewupdater.temps.connect(self.updatetemps)
+        self.viewupdater.update.connect(self.updateall)
+        self.viewupdater.checkvisible.connect(self.checkvisible)
         self.viewupdater.start()
 #       Server thread that starts or stops the server
         self.serverthread = server_thread
         self.serverthread.start()
         self.handler = self.serverthread.handler
-
-
 
 #       Set the Dashboard as a MainWindow Object so a DockWidget can be nested inside.
         self.Dashboard = QtWidgets.QMainWindow()
@@ -60,20 +59,29 @@ class DashboardWindow(QtWidgets.QMainWindow, Ui_DashboardWindow):
 
     def addModule(self, gigabot):
         #self.Dashboard.removeWidget(self.Null)
-        mod = ModuleGigabot(gigabot)
-        wid = QtWidgets.QDockWidget(self)
-        wid.setWidget(mod)
+        if not gigabot.modulelinked:
+            mod = ModuleGigabot(gigabot)
+            wid = QtWidgets.QDockWidget(self)
+            wid.setWidget(mod)
+            gigabot.module = wid
+            gigabot.modulelinked = True
+            self.modules.append(mod)
 
-        wid.setAllowedAreas(QtCore.Qt.NoDockWidgetArea)
-        #self.wid.setFeatures(QtWidgets.QDockWidget.DockWidgetMovable | QtWidgets.QDockWidget.DockWidgetClosable)
-        #self.wid.setFeatures(QtWidgets.QDockWidget.DockWidgetMovable)
-        wid.setFeatures(QtWidgets.QDockWidget.DockWidgetClosable)
-        #wid[i].setWindowFlags(Qt.FramelessWindowHint)
-        wid.setAttribute(Qt.WA_TranslucentBackground)
-        self.Dashboard.addDockWidget(Qt.RightDockWidgetArea,wid)
-        wid.setFloating(True)
-        self.modules.append(mod)
+            gigabot.module.setAllowedAreas(QtCore.Qt.NoDockWidgetArea)
+            #self.wid.setFeatures(QtWidgets.QDockWidget.DockWidgetMovable | QtWidgets.QDockWidget.DockWidgetClosable)
+            #self.wid.setFeatures(QtWidgets.QDockWidget.DockWidgetMovable)
+            gigabot.module.setFeatures(QtWidgets.QDockWidget.DockWidgetClosable)
+            #wid[i].setWindowFlags(Qt.FramelessWindowHint)
+            gigabot.module.setAttribute(Qt.WA_TranslucentBackground)
+            self.Dashboard.addDockWidget(Qt.RightDockWidgetArea,gigabot.module)
+            gigabot.module.setFloating(True)
+            gigabot.moduleshow = True
+        if not gigabot.moduleshow:
+            gigabot.module.show()
 
-    def updatetemps(self):
+    def updateall(self):
         for m in self.modules:
-            m.updatetemps()
+            m.updateall()
+    def checkvisible(self):
+        for m in self.modules:
+            m.checkvisible()
