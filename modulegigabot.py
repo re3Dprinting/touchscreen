@@ -18,6 +18,7 @@ class ModuleGigabot(QtWidgets.QWidget , Ui_GigabotModule):
         self.Nozzle2Img.changepix("img/nozzle2.png")
         self.BedImg.changepix("img/bed_unheated.png")
         self.StatusImg.changepix("img/idle.png")
+        #self.setallpix()
         self.updateall()
 
 
@@ -40,7 +41,7 @@ class ModuleGigabot(QtWidgets.QWidget , Ui_GigabotModule):
         elif self.gigabot.status == "OF":
             self.StatusImg.changepix("img/off.png")
             self.CurrentFile.setText("~~~~~")
-     
+        
 
 
     def checkvisible(self):

@@ -3,7 +3,7 @@
 # Form implementation generated from reading ui file 'qt/module_gigabot.ui',
 # licensing of 'qt/module_gigabot.ui' applies.
 #
-# Created: Tue Jul 30 11:58:10 2019
+# Created: Tue Jul 30 15:21:36 2019
 #      by: pyside2-uic  running on PySide2 5.13.0
 #
 # WARNING! All changes made in this file will be lost!

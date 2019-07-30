@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>450</width>
-    <height>280</height>
+    <width>320</width>
+    <height>187</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -76,7 +76,7 @@ p, li { white-space: pre-wrap; }
       <widget class="QTextBrowser" name="ModelType">
        <property name="minimumSize">
         <size>
-         <width>0</width>
+         <width>50</width>
          <height>35</height>
         </size>
        </property>
@@ -98,7 +98,7 @@ p, li { white-space: pre-wrap; }
        </property>
        <property name="minimumSize">
         <size>
-         <width>0</width>
+         <width>50</width>
          <height>35</height>
         </size>
        </property>
@@ -210,14 +210,14 @@ p, li { white-space: pre-wrap; }
       <widget class="ScaledLabel" name="StatusImg">
        <property name="minimumSize">
         <size>
-         <width>0</width>
-         <height>25</height>
+         <width>35</width>
+         <height>35</height>
         </size>
        </property>
        <property name="maximumSize">
         <size>
-         <width>30</width>
-         <height>35</height>
+         <width>40</width>
+         <height>40</height>
         </size>
        </property>
        <property name="text">

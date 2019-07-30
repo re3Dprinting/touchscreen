@@ -13,3 +13,4 @@ class ScaledLabel(QtWidgets.QLabel):
     def changepix(self, file):
         self.setPixmap(QtGui.QPixmap(file))
         self.setpix()
+        self.resizeEvent(self)
