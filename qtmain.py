@@ -41,7 +41,7 @@ class view_thread(QtCore.QThread):
         while(True):
             self.count[0] +=1
             self.count[1] +=1
-            if self.count[1] >= 10: 
+            if self.count[1] >= 5: 
                 self.update.emit("updateall")
                 self.count[1] = 0
             if self.count[0] >= 2: 

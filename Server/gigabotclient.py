@@ -33,11 +33,11 @@ class gigabotclient():
 		for key in self.stats:
 			return key, ":\t", self.stats[key]
 	def gettemp1(self): 
-		return self.temp1[0], " / ", self.temp1[1]
+		return str(self.temp1[0])+ " / "+ str(self.temp1[1])
 	def gettemp2(self): 
-		return self.temp2[0], " / ", self.temp2[1]
+		return str(self.temp2[0])+ " / "+ str(self.temp2[1])
 	def getbtemp(self): 
-		return self.btemp[0], " / ", self.btemp[1]
+		return str(self.btemp[0])+ " / "+ str(self.btemp[1])
 
 	def printdata(self):
 		print "Gigabot #",self.idnum," \n" + self.model + "\n" + "Last Updated: \t" + self.dateuploaded + "\n" + "IP address:\t" + self.ipaddress + "\n"

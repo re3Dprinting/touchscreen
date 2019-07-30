@@ -11,6 +11,7 @@ class ModuleGigabot(QtWidgets.QWidget , Ui_GigabotModule):
         self.setupUi(self)
         self.gigabot = gigabot
         self.activeflash = True
+        self.bedflash = 0
 
         self.GigabotNum.setText(gigabot.idnum)
         #self.Nozzle1Img.setScaledContents(False)
@@ -26,9 +27,9 @@ class ModuleGigabot(QtWidgets.QWidget , Ui_GigabotModule):
         self.ModelType.setText(str(self.gigabot.model))
         self.StatusText.setText(str(self.gigabot.getstatus()))
         self.CurrentFile.setText(str(self.gigabot.currentfile))
-        self.Nozzle1Text.setText(str(self.gigabot.temp1))
-        self.Nozzle2Text.setText(str(self.gigabot.temp2))
-        self.BedText.setText(str(self.gigabot.btemp))
+        self.Nozzle1Text.setText(self.gigabot.gettemp1())
+        self.Nozzle2Text.setText(self.gigabot.gettemp2())
+        self.BedText.setText(self.gigabot.getbtemp())
         if self.gigabot.status == "ON":
             self.StatusImg.changepix("img/idle.png")
             self.CurrentFile.setText("~~~~~")
@@ -37,10 +38,22 @@ class ModuleGigabot(QtWidgets.QWidget , Ui_GigabotModule):
                 self.StatusImg.changepix("img/active.png")
             else: 
                 self.StatusImg.changepix("img/off.png")
+            if self.bedflash == 2:
+                self.BedImg.changepix("img/bed_unheated.png")
+            elif self.bedflash == 4:
+                self.BedImg.changepix("img/bed_heated1.png")
+            elif self.bedflash == 6:
+                self.BedImg.changepix("img/bed_heated2.png")
+                self.bedflash = 0
+            self.bedflash += 1
             self.activeflash = not self.activeflash
         elif self.gigabot.status == "OF":
             self.StatusImg.changepix("img/off.png")
             self.CurrentFile.setText("~~~~~")
+            self.CurrentFile.setText("~~ / ~~")
+            self.Nozzle1Text.setText("~~ / ~~")
+            self.Nozzle2Text.setText("~~ / ~~")
+            self.BedText.setText("~~ / ~~")
         
 
 
