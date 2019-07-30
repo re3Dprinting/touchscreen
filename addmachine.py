@@ -1,46 +1,55 @@
-# -*- coding: utf-8 -*-
+from qt.addmachinewindow import *
+from Server.gigabotclient import *
+from PySide2.QtCore import Qt
 
-# Form implementation generated from reading ui file 'addmachine.ui',
-# licensing of 'addmachine.ui' applies.
-#
-# Created: Mon Jul 29 15:44:15 2019
-#      by: pyside2-uic  running on PySide2 5.13.0
-#
-# WARNING! All changes made in this file will be lost!
 
-from PySide2 import QtCore, QtGui, QtWidgets
+#   AddMachineWindow implemented the QtDesigner generated class, Ui_addmachine
+class AddMachineWindow(QtWidgets.QWidget, Ui_addmachine):
+#   Pass in the list of gigabotclient objects that contain data on gigabot.
+    def __init__(self, gigabots, mainwin):
+        super(AddMachineWindow, self).__init__()
+        self.setupUi(self)
+        self.main = mainwin
+        self.gigabots = gigabots
+#       Move Window to Middle of Screen
+        qr = self.frameGeometry()
+        cp = QtWidgets.QDesktopWidget().availableGeometry().center()
+        qr.moveCenter(cp)
+        self.move(qr.topLeft())
+#       Make the selection Behavior as selecting the entire row
+        self.Devices.setSelectionBehavior(QtWidgets.QTableView.SelectRows)
+#       Hide the vertical header which contains the Index of the row.
+        self.Devices.verticalHeader().hide()
+#       Stretch out the horizontal header to take up the entire view
+        header = self.Devices.horizontalHeader()
+        header.setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
+        header.setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
+        rowpos = self.Devices.rowCount()
 
-class Ui_addmachine(object):
-    def setupUi(self, addmachine):
-        addmachine.setObjectName("addmachine")
-        addmachine.resize(470, 240)
-        addmachine.setMinimumSize(QtCore.QSize(470, 240))
-        addmachine.setMaximumSize(QtCore.QSize(470, 240))
-        self.verticalLayout = QtWidgets.QVBoxLayout(addmachine)
-        self.verticalLayout.setObjectName("verticalLayout")
-        self.Text = QtWidgets.QLabel(addmachine)
-        self.Text.setObjectName("Text")
-        self.verticalLayout.addWidget(self.Text)
-        self.Devices = QtWidgets.QTableWidget(addmachine)
-        self.Devices.setObjectName("Devices")
-        self.Devices.setColumnCount(2)
-        self.Devices.setRowCount(0)
-        item = QtWidgets.QTableWidgetItem()
-        self.Devices.setHorizontalHeaderItem(0, item)
-        item = QtWidgets.QTableWidgetItem()
-        self.Devices.setHorizontalHeaderItem(1, item)
-        self.verticalLayout.addWidget(self.Devices)
-        self.buttonBox = QtWidgets.QDialogButtonBox(addmachine)
-        self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel|QtWidgets.QDialogButtonBox.Ok)
-        self.buttonBox.setObjectName("buttonBox")
-        self.verticalLayout.addWidget(self.buttonBox)
+        self.gigabots.append(gigabotclient("192.168.1.169"))
+#        self.gigabots.append(gigabotclient("192.168.1.151"))
+#        self.gigabots.append(gigabotclient("192.168.1.49"))
+#        self.gigabots.append(gigabotclient("192.168.1.12"))
 
-        self.retranslateUi(addmachine)
-        QtCore.QMetaObject.connectSlotsByName(addmachine)
+        if len(gigabots)>0:
+            for g in self.gigabots:
+                rowpos = self.Devices.rowCount()
+                self.Devices.insertRow(rowpos)
+                item = QtWidgets.QTableWidgetItem(g.ipaddress)
+                #item.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
+                item.setFlags( Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
+                self.Devices.setItem(rowpos, 0, item)
 
-    def retranslateUi(self, addmachine):
-        addmachine.setWindowTitle(QtWidgets.QApplication.translate("addmachine", "Dialog", None, -1))
-        self.Text.setText(QtWidgets.QApplication.translate("addmachine", "<html><head/><body><p>Please make sure the server is connected and listening for clients.</p><p>Choose a Device to add, and insert the Gigabot Number</p></body></html>", None, -1))
-        self.Devices.horizontalHeaderItem(0).setText(QtWidgets.QApplication.translate("addmachine", "IP Address", None, -1))
-        self.Devices.horizontalHeaderItem(1).setText(QtWidgets.QApplication.translate("addmachine", "Gigabot Num", None, -1))
-
+#       Connect the ok button to retrieving the gigabot.
+        ok = self.buttonBox.button(QtWidgets.QDialogButtonBox.Ok)
+        ok.clicked.connect(self.addmod)
+#       Connecting the Quit Button to quiting.
+        close = self.buttonBox.button(QtWidgets.QDialogButtonBox.Cancel)
+        close.clicked.connect(self.close)
+    def addmod(self):
+        if(len(self.gigabots) >0):
+            selected = self.Devices.currentRow()
+            gigabotnum = self.Devices.item(selected,1)
+            if gigabotnum and len(gigabotnum.text()) != 0: self.gigabots[selected].idnum= gigabotnum.text()
+            self.main.addModule(self.gigabots[selected])
+        self.close()

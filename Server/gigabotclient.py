@@ -18,6 +18,21 @@ class gigabotclient():
 		self.temp2 = newtemp [2]
 	def updateprinttime(self, newprint):
 		self.printtime += newprint
+
+	def getdata(self):
+		return "Gigabot #",self.idnum," \n" + self.model + "\n" + "Last Updated: \t" + self.dateuploaded + "\n" + "IP address:\t" + self.ipaddress + "\n"
+#	OF- Off/Disconnected ON- On/Idle UM- Under Maintenence AC- Active/Printing
+	def getstatus(self):
+	 	if(self.status == "ON"): return "Idle/Connected\n"
+	 	elif(self.status == "OF"): return "Off/Disconnected\n"
+	 	elif(self.status == "AC"): return "Active/Printing\n"
+	def getstats(self):
+		for key in self.stats:
+			return key, ":\t", self.stats[key]
+	def gettemp(self): 
+		return "T1:\t" + str(self.temp1[0]) + "/" + str(self.temp1[1]) + "\t" + "T2:\t" + str(self.temp2[0]) + "/" + str(self.temp2[1]) + "\t" + "B:\t" + str(self.btemp[0]) + "/" +str(self.btemp[1]) 
+
+
 	def printdata(self):
 		print "Gigabot #",self.idnum," \n" + self.model + "\n" + "Last Updated: \t" + self.dateuploaded + "\n" + "IP address:\t" + self.ipaddress + "\n"
 #	OF- Off/Disconnected ON- On/Idle UM- Under Maintenence AC- Active/Printing
