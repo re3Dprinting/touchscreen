@@ -26,12 +26,25 @@ class AddMachineWindow(QtWidgets.QWidget, Ui_addmachine):
         header.setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
         rowpos = self.Devices.rowCount()
 
-#        self.gigabots.append(gigabotclient("192.168.1.169"))
+        self.gigabots.append(gigabotclient("192.168.1.169"))
 #        self.gigabots.append(gigabotclient("192.168.1.151"))
 #        self.gigabots.append(gigabotclient("192.168.1.49"))
 #        self.gigabots.append(gigabotclient("192.168.1.12"))
 
-        if len(gigabots)>0:
+#       Populate the Qtable with the avalible gigabots. 
+        self.refreshtable()
+
+#       Connect the ok button to retrieving the gigabot.
+        ok = self.Button.button(QtWidgets.QDialogButtonBox.Ok)
+        ok.clicked.connect(self.addmod)
+#       Connecting the Quit Button to quiting.
+        close = self.Button.button(QtWidgets.QDialogButtonBox.Cancel)
+        close.clicked.connect(self.close)
+        self.Refresh.clicked.connect(self.refreshtable)
+
+    def refreshtable(self):
+        self.Devices.setRowCount(0)
+        if len(self.gigabots)>0:
             for g in self.gigabots:
                 rowpos = self.Devices.rowCount()
                 self.Devices.insertRow(rowpos)
@@ -39,14 +52,6 @@ class AddMachineWindow(QtWidgets.QWidget, Ui_addmachine):
                 #item.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
                 item.setFlags( Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
                 self.Devices.setItem(rowpos, 0, item)
-
-#       Connect the ok button to retrieving the gigabot.
-        ok = self.buttonBox.button(QtWidgets.QDialogButtonBox.Ok)
-        ok.clicked.connect(self.addmod)
-#       Connecting the Quit Button to quiting.
-        close = self.buttonBox.button(QtWidgets.QDialogButtonBox.Cancel)
-        close.clicked.connect(self.close)
-
     def addmod(self):
         if(len(self.gigabots) >0):
             selected = self.Devices.currentRow()

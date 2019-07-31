@@ -3,8 +3,9 @@
 #	The object is reused if the IP address matches the IP of the connected device
 class gigabotclient():
 	def __init__(self, ipaddress):
-		self.idnum = "999"
-		self.model = "default"
+		self.idnum = ""
+		self.version = ""
+		self.model = ""
 		self.ipaddress = ipaddress
 		self.status = "OF"
 		self.btemp = (0,0)
@@ -14,7 +15,9 @@ class gigabotclient():
 		self.dateuploaded = ""
 		self.modulelinked = False
 		self.module = None
+		self.stats = {}
 		self.moduleshow = False
+
 	def updatetemp(self, newtemp):
 		self.btemp = newtemp[0]
 		self.temp1 = newtemp [1]
@@ -38,6 +41,11 @@ class gigabotclient():
 		return str(self.temp2[0])+ " / "+ str(self.temp2[1])
 	def getbtemp(self): 
 		return str(self.btemp[0])+ " / "+ str(self.btemp[1])
+	def getstats(self):
+		allstats = ""
+		for key in self.stats:
+			allstats += str(key) + ":\t" + str(self.stats[key])
+		return allstats
 
 	def printdata(self):
 		print "Gigabot #",self.idnum," \n" + self.model + "\n" + "Last Updated: \t" + self.dateuploaded + "\n" + "IP address:\t" + self.ipaddress + "\n"

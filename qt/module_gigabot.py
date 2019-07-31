@@ -3,7 +3,7 @@
 # Form implementation generated from reading ui file 'qt/module_gigabot.ui',
 # licensing of 'qt/module_gigabot.ui' applies.
 #
-# Created: Tue Jul 30 15:21:36 2019
+# Created: Tue Jul 30 17:46:48 2019
 #      by: pyside2-uic  running on PySide2 5.13.0
 #
 # WARNING! All changes made in this file will be lost!
@@ -13,7 +13,7 @@ from PySide2 import QtCore, QtGui, QtWidgets
 class Ui_GigabotModule(object):
     def setupUi(self, GigabotModule):
         GigabotModule.setObjectName("GigabotModule")
-        GigabotModule.resize(450, 280)
+        GigabotModule.resize(320, 187)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -25,21 +25,21 @@ class Ui_GigabotModule(object):
         self.verticalLayout.setObjectName("verticalLayout")
         self.horizontalLayout_4 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_4.setObjectName("horizontalLayout_4")
-        self.GigabotText = QtWidgets.QTextBrowser(GigabotModule)
+        self.GigabotVersion = QtWidgets.QTextBrowser(GigabotModule)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.GigabotText.sizePolicy().hasHeightForWidth())
-        self.GigabotText.setSizePolicy(sizePolicy)
-        self.GigabotText.setMinimumSize(QtCore.QSize(50, 35))
-        self.GigabotText.setMaximumSize(QtCore.QSize(200, 50))
-        self.GigabotText.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
-        self.GigabotText.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
-        self.GigabotText.setDocumentTitle("")
-        self.GigabotText.setObjectName("GigabotText")
-        self.horizontalLayout_4.addWidget(self.GigabotText)
+        sizePolicy.setHeightForWidth(self.GigabotVersion.sizePolicy().hasHeightForWidth())
+        self.GigabotVersion.setSizePolicy(sizePolicy)
+        self.GigabotVersion.setMinimumSize(QtCore.QSize(50, 35))
+        self.GigabotVersion.setMaximumSize(QtCore.QSize(200, 50))
+        self.GigabotVersion.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+        self.GigabotVersion.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+        self.GigabotVersion.setDocumentTitle("")
+        self.GigabotVersion.setObjectName("GigabotVersion")
+        self.horizontalLayout_4.addWidget(self.GigabotVersion)
         self.ModelType = QtWidgets.QTextBrowser(GigabotModule)
-        self.ModelType.setMinimumSize(QtCore.QSize(0, 35))
+        self.ModelType.setMinimumSize(QtCore.QSize(50, 35))
         self.ModelType.setMaximumSize(QtCore.QSize(100, 50))
         self.ModelType.setObjectName("ModelType")
         self.horizontalLayout_4.addWidget(self.ModelType)
@@ -49,7 +49,7 @@ class Ui_GigabotModule(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.GigabotNum.sizePolicy().hasHeightForWidth())
         self.GigabotNum.setSizePolicy(sizePolicy)
-        self.GigabotNum.setMinimumSize(QtCore.QSize(0, 35))
+        self.GigabotNum.setMinimumSize(QtCore.QSize(50, 35))
         self.GigabotNum.setMaximumSize(QtCore.QSize(100, 50))
         self.GigabotNum.setObjectName("GigabotNum")
         self.horizontalLayout_4.addWidget(self.GigabotNum)
@@ -89,8 +89,8 @@ class Ui_GigabotModule(object):
         self.StatusText.setObjectName("StatusText")
         self.horizontalLayout.addWidget(self.StatusText)
         self.StatusImg = ScaledLabel(GigabotModule)
-        self.StatusImg.setMinimumSize(QtCore.QSize(0, 25))
-        self.StatusImg.setMaximumSize(QtCore.QSize(30, 35))
+        self.StatusImg.setMinimumSize(QtCore.QSize(35, 35))
+        self.StatusImg.setMaximumSize(QtCore.QSize(40, 40))
         self.StatusImg.setText("")
         self.StatusImg.setPixmap(QtGui.QPixmap("../img/idle.png"))
         self.StatusImg.setScaledContents(False)
@@ -206,7 +206,7 @@ class Ui_GigabotModule(object):
 
     def retranslateUi(self, GigabotModule):
         GigabotModule.setWindowTitle(QtWidgets.QApplication.translate("GigabotModule", "Form", None, -1))
-        self.GigabotText.setHtml(QtWidgets.QApplication.translate("GigabotModule", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+        self.GigabotVersion.setHtml(QtWidgets.QApplication.translate("GigabotModule", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:\'Ubuntu\'; font-size:11pt; font-weight:400; font-style:normal;\">\n"

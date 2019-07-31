@@ -1,8 +1,7 @@
 from PySide2 import QtCore, QtGui, QtWidgets
 from qt.module_gigabot import *
 
-
-
+from moreinfowindow import *
 #   Gigabot Modules Class
 #   Initalize gigabotmodule
 class ModuleGigabot(QtWidgets.QWidget , Ui_GigabotModule):
@@ -13,7 +12,7 @@ class ModuleGigabot(QtWidgets.QWidget , Ui_GigabotModule):
         self.activeflash = True
         self.bedflash = 0
 
-        self.GigabotNum.setText(gigabot.idnum)
+        self.update_ver_num
         #self.Nozzle1Img.setScaledContents(False)
         self.Nozzle1Img.changepix("img/nozzle1.png")
         self.Nozzle2Img.changepix("img/nozzle2.png")
@@ -21,7 +20,17 @@ class ModuleGigabot(QtWidgets.QWidget , Ui_GigabotModule):
         self.StatusImg.changepix("img/idle.png")
         #self.setallpix()
         self.updateall()
+        self.ViewMachineInfo.clicked.connect(self.moreinfo)
 
+
+    def moreinfo(self):
+        self.pop = MoreInfoWindow(self.gigabot)
+        self.pop.show()
+        self.pop.update_ver_num.connect(self.update_ver_num)
+
+    def update_ver_num(self):
+        self.GigabotVersion.setText(self.gigabot.version)
+        self.GigabotNum.setText(self.gigabot.idnum)
 
     def updateall(self):
         self.ModelType.setText(str(self.gigabot.model))
@@ -54,18 +63,13 @@ class ModuleGigabot(QtWidgets.QWidget , Ui_GigabotModule):
             self.Nozzle1Text.setText("~~ / ~~")
             self.Nozzle2Text.setText("~~ / ~~")
             self.BedText.setText("~~ / ~~")
-        
-
 
     def checkvisible(self):
-        self.checkvisibility()
-
-    def setallpix(self):
-        self.Nozzle1Img.setpix()
-        self.Nozzle2Img.setpix()
-        self.BedImg.setpix()
-        self.StatusImg.setpix()
-
-    def checkvisibility(self):
         if self.gigabot.modulelinked and not self.gigabot.module.isVisible():
             self.gigabot.moduleshow = False
+
+    # def setallpix(self):
+    #     self.Nozzle1Img.setpix()
+    #     self.Nozzle2Img.setpix()
+    #     self.BedImg.setpix()
+    #     self.StatusImg.setpix()
