@@ -4,7 +4,7 @@
 class gigabotclient():
 	def __init__(self, ipaddress):
 		self.idnum = ""
-		self.version = ""
+		self.version = "Gigabot 3+"
 		self.model = ""
 		self.ipaddress = ipaddress
 		self.status = "OF"
@@ -26,15 +26,12 @@ class gigabotclient():
 		self.printtime += newprint
 
 	def getdata(self):
-		return "Gigabot #",self.idnum," \n" + self.model + "\n" + "Last Updated: \t" + self.dateuploaded + "\n" + "IP address:\t" + self.ipaddress + "\n"
+		return "Gigabot #" +self.idnum+" " + self.model + "\n" + "Last Updated: " + self.dateuploaded + "\n" + "IP address:\t" + self.ipaddress + "\n"
 #	OF- Off/Disconnected ON- On/Idle UM- Under Maintenence AC- Active/Printing
 	def getstatus(self):
 	 	if(self.status == "ON"): return "Idle/Connected\n"
 	 	elif(self.status == "OF"): return "Off/Disconnected\n"
 	 	elif(self.status == "AC"): return "Active/Printing\n"
-	def getstats(self):
-		for key in self.stats:
-			return key, ":\t", self.stats[key]
 	def gettemp1(self): 
 		return str(self.temp1[0])+ " / "+ str(self.temp1[1])
 	def gettemp2(self): 
@@ -43,8 +40,9 @@ class gigabotclient():
 		return str(self.btemp[0])+ " / "+ str(self.btemp[1])
 	def getstats(self):
 		allstats = ""
+		allstats += self.getdata()
 		for key in self.stats:
-			allstats += str(key) + ":\t" + str(self.stats[key])
+			allstats += str(key) + ":\t" + str(self.stats[key]) + "\n"
 		return allstats
 
 	def printdata(self):

@@ -12,7 +12,7 @@ class ModuleGigabot(QtWidgets.QWidget , Ui_GigabotModule):
         self.activeflash = True
         self.bedflash = 0
 
-        self.update_ver_num
+        self.update_ver_num()
         #self.Nozzle1Img.setScaledContents(False)
         self.Nozzle1Img.changepix("img/nozzle1.png")
         self.Nozzle2Img.changepix("img/nozzle2.png")
@@ -24,7 +24,7 @@ class ModuleGigabot(QtWidgets.QWidget , Ui_GigabotModule):
 
 
     def moreinfo(self):
-        self.pop = MoreInfoWindow(self.gigabot)
+        self.pop = MoreInfoWindow(self.gigabot, self)
         self.pop.show()
         self.pop.update_ver_num.connect(self.update_ver_num)
 
@@ -41,6 +41,7 @@ class ModuleGigabot(QtWidgets.QWidget , Ui_GigabotModule):
         self.BedText.setText(self.gigabot.getbtemp())
         if self.gigabot.status == "ON":
             self.StatusImg.changepix("img/idle.png")
+            self.BedImg.changepix("img/bed_unheated.png")
             self.CurrentFile.setText("~~~~~")
         elif self.gigabot.status == "AC":
             if self.activeflash: 
@@ -57,6 +58,7 @@ class ModuleGigabot(QtWidgets.QWidget , Ui_GigabotModule):
             self.bedflash += 1
             self.activeflash = not self.activeflash
         elif self.gigabot.status == "OF":
+            self.BedImg.changepix("img/bed_unheated.png")
             self.StatusImg.changepix("img/off.png")
             self.CurrentFile.setText("~~~~~")
             self.CurrentFile.setText("~~ / ~~")

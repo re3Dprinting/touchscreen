@@ -26,7 +26,7 @@ class AddMachineWindow(QtWidgets.QWidget, Ui_addmachine):
         header.setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
         rowpos = self.Devices.rowCount()
 
-        self.gigabots.append(gigabotclient("192.168.1.169"))
+#       self.gigabots.append(gigabotclient("192.168.1.169"))
 #        self.gigabots.append(gigabotclient("192.168.1.151"))
 #        self.gigabots.append(gigabotclient("192.168.1.49"))
 #        self.gigabots.append(gigabotclient("192.168.1.12"))
