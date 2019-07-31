@@ -1,6 +1,8 @@
 from qt.dashboardwindow import *
 from addmachine import *
 from modulegigabot import *
+from Server.gigabotclient import *
+
 
 #   DashboardWindow class
 class DashboardWindow(QtWidgets.QMainWindow, Ui_DashboardWindow):
@@ -8,7 +10,7 @@ class DashboardWindow(QtWidgets.QMainWindow, Ui_DashboardWindow):
         super(DashboardWindow,self).__init__()
         self.setupUi(self)
 #       List of module widgets to be stored
-        self.modules = []
+
 #       Thread that updates the modules
 #       connects the two sinals to two functions, updateall and checkvisible
         self.viewupdater = view_thread
@@ -18,7 +20,14 @@ class DashboardWindow(QtWidgets.QMainWindow, Ui_DashboardWindow):
 #       Server thread that starts or stops the server
         self.serverthread = server_thread
         self.serverthread.start()
+
         self.handler = self.serverthread.handler
+        self.gigabots = self.handler.gigabots
+
+        self.gigabots.append(gigabotclient("192.168.1.169"))
+#       self.gigabots.append(gigabotclient("192.168.1.151"))
+#       self.gigabots.append(gigabotclient("192.168.1.49"))
+#       self.gigabots.append(gigabotclient("192.168.1.12"))
 
 #       Set the Dashboard as a MainWindow Object so a DockWidget can be nested inside.
         self.Dashboard = QtWidgets.QMainWindow()
@@ -31,9 +40,9 @@ class DashboardWindow(QtWidgets.QMainWindow, Ui_DashboardWindow):
         self.Dashboard.setSizePolicy(sizePolicy)
 #       Add the MainWindow back into the layout
         self.gridLayout.addWidget(self.Dashboard, 2, 0, 1, 1)
-
         self.showMaximized()
-#       AddModule function connected to the Addmachine menu Option.
+
+#       Connect the Menu Items to the appropriate functions
         self.AddMachine.triggered.connect(self.add_machine)
         self.Quit.triggered.connect(self.closeall)
         self.StartServer.clicked.connect(self.startserv)
@@ -43,9 +52,8 @@ class DashboardWindow(QtWidgets.QMainWindow, Ui_DashboardWindow):
         self.handler.quit()
         #send all data to database
         self.close()
-
     def add_machine(self):
-        self.pop =AddMachineWindow(self.handler.gigabots, self)
+        self.pop = AddMachineWindow(self.gigabots, self)
         self.pop.show()
     def startserv(self):
         self.serverthread.startflag = True
@@ -55,15 +63,13 @@ class DashboardWindow(QtWidgets.QMainWindow, Ui_DashboardWindow):
         self.ServerStatus.setText("Server is Disconnected")
 
     def addModule(self, gigabot):
-        #self.Dashboard.removeWidget(self.Null)
         if not gigabot.widgetlinked:
             mod = ModuleGigabot(gigabot)
             wid = QtWidgets.QDockWidget(self)
             wid.setWidget(mod)
-            wid.mod = mod
             gigabot.widget = wid
+            gigabot.mod = mod
             gigabot.widgetlinked = True
-            self.modules.append(mod)
 
             gigabot.widget.setAllowedAreas(QtCore.Qt.NoDockWidgetArea)
             #self.wid.setFeatures(QtWidgets.QDockWidget.DockWidgetMovable | QtWidgets.QDockWidget.DockWidgetClosable)
@@ -77,12 +83,15 @@ class DashboardWindow(QtWidgets.QMainWindow, Ui_DashboardWindow):
         if not gigabot.widgetshow:
             gigabot.widget.show()
 
+#   Slots that are called periodically by view thread in qtmain.py
     def updateall(self):
-        for m in self.modules:
-            m.update_all()
+        for g in self.gigabots:
+            if g.widget != None:
+                g.mod.update_all()
     def checkvisible(self):
-        for m in self.modules:
-            m.checkvisible()
+        for g in self.gigabots:
+            if g.widget != None and not g.widget.isVisible():
+                g.widgetshow = False
 
 
        # Determine the size of the window

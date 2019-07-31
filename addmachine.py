@@ -6,13 +6,15 @@ from PySide2.QtCore import Qt
 #   AddMachineWindow implemented the QtDesigner generated class, Ui_addmachine
 class AddMachineWindow(QtWidgets.QWidget, Ui_addmachine):
 #   Pass in the list of gigabotclient objects that contain data on gigabot.
+#   Pass in the parent so that the addmachinewindow can be set as a Qt.Tool
     def __init__(self, gigabots, parent = None):
         super(AddMachineWindow, self).__init__()
         self.setupUi(self)
         self.setWindowFlags(Qt.Tool)
-        
+
         self.main = parent
         self.gigabots = gigabots
+
 #       Move Window to Middle of Screen
         qr = self.frameGeometry()
         cp = QtWidgets.QDesktopWidget().availableGeometry().center()
@@ -30,12 +32,7 @@ class AddMachineWindow(QtWidgets.QWidget, Ui_addmachine):
         header.setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
         rowpos = self.Devices.rowCount()
 
-        self.gigabots.append(gigabotclient("192.168.1.169"))
-#        self.gigabots.append(gigabotclient("192.168.1.151"))
-#        self.gigabots.append(gigabotclient("192.168.1.49"))
-#        self.gigabots.append(gigabotclient("192.168.1.12"))
-
-#       Populate the Qtable with the avalible gigabots. 
+#       Populate the QTable with the avalible gigabots. 
         self.refreshtable()
 
 #       Connect the ok button to retrieving the gigabot.
@@ -46,6 +43,7 @@ class AddMachineWindow(QtWidgets.QWidget, Ui_addmachine):
         close.clicked.connect(self.close)
         self.Refresh.clicked.connect(self.refreshtable)
 
+#   Given the list of gigabots, display each IP address.
     def refreshtable(self):
         self.Devices.setRowCount(0)
         if len(self.gigabots)>0:
@@ -53,9 +51,11 @@ class AddMachineWindow(QtWidgets.QWidget, Ui_addmachine):
                 rowpos = self.Devices.rowCount()
                 self.Devices.insertRow(rowpos)
                 item = QtWidgets.QTableWidgetItem(g.ipaddress)
-                #item.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
                 item.setFlags( Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
                 self.Devices.setItem(rowpos, 0, item)
+
+#   Add a Module after a row is selected
+#   If the Gigabotnumber is inputted, link the number to the gigabot object. 
     def addmod(self):
         if(len(self.gigabots) >0):
             selected = self.Devices.currentRow()

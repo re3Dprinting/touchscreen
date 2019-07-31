@@ -3,21 +3,26 @@ from socket import *
 from gigabotclient import *
 
 
-
+#	Serverhandler class that manages the start/stop of the server. 
+#	The server also prevents duplicate devices from getting produced by checking ip addresses
 class serverhandler():
 	def __init__(self):
 		self.gigabotthreads = []
 		self.gigabots = []
 		self.server = socket(AF_INET, SOCK_STREAM) 
 
+#	Called by the server thread, when the startserver button is clicked
 	def startserver(self):
 		self.server.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1) 
 		self.server.bind((TCP_IP, TCP_PORT)) 
 		self.server.listen(5)
 		#self.message = "Chromebook Gigabot Dashboard Data Server : \nWaiting for connections Gigabot clients..."
 		return True
-
+#	Called by the server thread, to shut down the server
 	def stopserver(self):
+		for t in self.gigabotthreads:
+			t.join()
+		del self.gigabotthreads[:]
 		self.server.close()
 		return True
 #   check_dup function checks if there is already a present Gigabotnode,
@@ -29,7 +34,7 @@ class serverhandler():
 		new_g = gigabotclient(str(ip))
 		self.gigabots.append(new_g)
 		return new_g
-
+#	Blocking function that waits for a client to accept connect.
 	def listen_for_clients(self):
 		(connection, (ip,port)) = self.server.accept()
 		machine = self.check_dup(ip)
@@ -40,19 +45,3 @@ class serverhandler():
 			if not t.isAlive():
 				self.gigabotthreads.remove(t)
 
-
-	def quit(self):
-		for t in self.gigabotthreads:
-			t.join()
-		#self.gigabotthreads.clear()
-		del self.gigabots[:]
-		del self.gigabotthreads[:]
-
-
-# if __name__ == "__main__":
-# 	man = serverhandler()
-# 	print "Chromebook Gigabot Dashboard Data Server : \nWaiting for connections Gigabot clients..." 
-# 	while(True):
-# 		man.listen_for_clients()
-# 		print man.gigabotthreads
-# 	man.app_kill()

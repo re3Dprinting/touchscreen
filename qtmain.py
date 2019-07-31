@@ -12,13 +12,13 @@ import threading
 #   This Thread spawns other Threads for each Client connected.
 #   Also handles when to start and stop the server. 
 class server_thread(QtCore.QThread):
-    serverstatus = QtCore.Signal([str],[unicode])
     def __init__(self, handler, parent = None):
         QtCore.QThread.__init__(self,parent)
         self.handler= handler
         self.startflag = False
         self.stopflag = False
         self.listen = False
+        self.newclientconnected = False
     def run(self):
         while(True):
             if self.startflag: 
@@ -29,7 +29,8 @@ class server_thread(QtCore.QThread):
                 self.handler.stopserver()
                 self.listen = False
                 self.stopflag = False
-            if self.listen: self.handler.listen_for_clients()
+            if self.listen: 
+                self.handler.listen_for_clients()
 
 #   View Thread, that updates the view whenever new data comes in from the server side.
 #   Contains two counters, one to handle updating the modules
