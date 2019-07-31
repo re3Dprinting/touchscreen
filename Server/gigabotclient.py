@@ -13,10 +13,10 @@ class gigabotclient():
 		self.temp2 = (0,0)
 		self.currentfile = ""
 		self.dateuploaded = ""
-		self.modulelinked = False
-		self.module = None
+		self.widgetlinked = False
+		self.widget = None
 		self.stats = {}
-		self.moduleshow = False
+		self.widgetshow = False
 
 	def updatetemp(self, newtemp):
 		self.btemp = newtemp[0]
@@ -29,9 +29,9 @@ class gigabotclient():
 		return "Gigabot #" +self.idnum+" " + self.model + "\n" + "Last Updated: " + self.dateuploaded + "\n" + "IP address:\t" + self.ipaddress + "\n"
 #	OF- Off/Disconnected ON- On/Idle UM- Under Maintenence AC- Active/Printing
 	def getstatus(self):
-	 	if(self.status == "ON"): return "Idle/Connected\n"
-	 	elif(self.status == "OF"): return "Off/Disconnected\n"
-	 	elif(self.status == "AC"): return "Active/Printing\n"
+	 	if(self.status == "ON"): return "Idle\n"
+	 	elif(self.status == "OF"): return "Off\n"
+	 	elif(self.status == "AC"): return "Active\n"
 	def gettemp1(self): 
 		return str(self.temp1[0])+ " / "+ str(self.temp1[1])
 	def gettemp2(self): 

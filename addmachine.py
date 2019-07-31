@@ -6,16 +6,20 @@ from PySide2.QtCore import Qt
 #   AddMachineWindow implemented the QtDesigner generated class, Ui_addmachine
 class AddMachineWindow(QtWidgets.QWidget, Ui_addmachine):
 #   Pass in the list of gigabotclient objects that contain data on gigabot.
-    def __init__(self, gigabots, mainwin):
+    def __init__(self, gigabots, parent = None):
         super(AddMachineWindow, self).__init__()
         self.setupUi(self)
-        self.main = mainwin
+        self.setWindowFlags(Qt.Tool)
+        
+        self.main = parent
         self.gigabots = gigabots
 #       Move Window to Middle of Screen
         qr = self.frameGeometry()
         cp = QtWidgets.QDesktopWidget().availableGeometry().center()
         qr.moveCenter(cp)
         self.move(qr.topLeft())
+        
+
 #       Make the selection Behavior as selecting the entire row
         self.Devices.setSelectionBehavior(QtWidgets.QTableView.SelectRows)
 #       Hide the vertical header which contains the Index of the row.
@@ -26,7 +30,7 @@ class AddMachineWindow(QtWidgets.QWidget, Ui_addmachine):
         header.setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
         rowpos = self.Devices.rowCount()
 
-#       self.gigabots.append(gigabotclient("192.168.1.169"))
+        self.gigabots.append(gigabotclient("192.168.1.169"))
 #        self.gigabots.append(gigabotclient("192.168.1.151"))
 #        self.gigabots.append(gigabotclient("192.168.1.49"))
 #        self.gigabots.append(gigabotclient("192.168.1.12"))

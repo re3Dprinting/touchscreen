@@ -10,6 +10,7 @@ import threading
 
 #   Server Thread used to handle the blocking server call, listen_for_clients()
 #   This Thread spawns other Threads for each Client connected.
+#   Also handles when to start and stop the server. 
 class server_thread(QtCore.QThread):
     serverstatus = QtCore.Signal([str],[unicode])
     def __init__(self, handler, parent = None):
@@ -31,6 +32,8 @@ class server_thread(QtCore.QThread):
             if self.listen: self.handler.listen_for_clients()
 
 #   View Thread, that updates the view whenever new data comes in from the server side.
+#   Contains two counters, one to handle updating the modules
+#   second to handle checking if the modules are visible. 
 class view_thread(QtCore.QThread):
     update = QtCore.Signal([str],[unicode])
     checkvisible = QtCore.Signal([str],[unicode])
@@ -56,32 +59,13 @@ if __name__ == "__main__":
 
 #   Start Server Handler
     serv_handler = serverhandler()
-
+#   The ViewThread created to update the mainwindow
     viewthread = view_thread()
+#   The ServerThread created to handle server calls
     serverthread = server_thread(serv_handler)
 #   Main Dashboard Window
     dashboardwindow = DashboardWindow(viewthread, serverthread)
 
-    # serv_thread = server_thread(serv_handler)
-    # serv_thread.start()
-
     dashboardwindow.show()
 
     app.exec_()
-    #sys.exit(app.exec_())
-
-
-    #        mods = []
-    #        dockwids = []
-    #        for i in range(6):
-    #            mods.append(GigabotModule(str(i)))
-    #            dockwids.append(QtWidgets.QDockWidget(self))
-    #        for i in range(6):
-    #            dockwids[i].setWidget(mods[i])
-    #            dockwids[i].setFeatures(QtWidgets.QDockWidget.DockWidgetMovable | QtWidgets.QDockWidget.DockWidgetClosable)
-    #            dockwids[i].setAllowedAreas(QtCore.Qt.NoDockWidgetArea)
-    #            #dockwids[i].setWindowFlags(Qt.FramelessWindowHint)
-    #            dockwids[i].setAttribute(Qt.WA_TranslucentBackground)
-    #            dockwids[i].setFloating(True)
-    #        for i in range(6):
-    #            self.Dashboard.addDockWidget(Qt.NoDockWidgetArea,dockwids[i])
