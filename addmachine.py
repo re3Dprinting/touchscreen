@@ -48,18 +48,29 @@ class AddMachineWindow(QtWidgets.QWidget, Ui_addmachine):
         self.Devices.setRowCount(0)
         if len(self.gigabotthreads)>0:
             for t in self.gigabotthreads:
-                rowpos = self.Devices.rowCount()
-                self.Devices.insertRow(rowpos)
-                item = QtWidgets.QTableWidgetItem(t.gigabot.ipaddress)
-                item.setFlags( Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
-                self.Devices.setItem(rowpos, 0, item)
+                #print t.ipaddress+ " : widgetlinked:", t.widgetlinked, " connected: ", t.connected, " Widget show: ", t.widgetshow
+                if t.widget == None or (t.connected and not t.widget.isVisible()):
+                #show up on table if a widget is not linked, or (is connected and widgetshow)
+                    rowpos = self.Devices.rowCount()
+                    self.Devices.insertRow(rowpos)
+                    ip= QtWidgets.QTableWidgetItem(t.gigabot.ipaddress)
+                    ip.setFlags( Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
+                    num= QtWidgets.QTableWidgetItem(t.gigabot.idnum)
+                    self.Devices.setItem(rowpos, 0, ip)
+                    self.Devices.setItem(rowpos, 1, num)
 
 #   Add a Module after a row is selected
 #   If the Gigabotnumber is inputted, link the number to the gigabot object. 
     def addmod(self):
         if(len(self.gigabotthreads) >0):
             selected = self.Devices.currentRow()
+            selectedip = self.Devices.item(selected,0)
+            gigabot = None
+            for t in self.gigabotthreads:
+                if t.ipaddress == selectedip.text():
+                    thread = t
             gigabotnum = self.Devices.item(selected,1)
-            if gigabotnum and len(gigabotnum.text()) != 0: self.gigabotthreads.gigabot[selected].idnum= gigabotnum.text()
-            self.main.addModule(self.gigabotthreads[selected])
+            if gigabotnum and len(gigabotnum.text()) != 0: thread.gigabot.idnum= gigabotnum.text()
+
+            self.main.addModule(thread)
         self.close()

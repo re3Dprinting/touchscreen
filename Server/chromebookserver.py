@@ -23,8 +23,6 @@ class GigabotThread(Thread):
         self.gigabot = gigabot
         self.printstuff = ""
         self.connected = True
-        self.widgetlinked = False
-        self.widgetshow = False
         self.widget = self.mod = None
         print "A new Device connected: "+ ip 
 

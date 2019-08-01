@@ -63,13 +63,12 @@ class DashboardWindow(QtWidgets.QMainWindow, Ui_DashboardWindow):
         self.ServerStatus.setText("Server is Disconnected")
 
     def addModule(self, gigabotthread):
-        if not gigabotthread.widgetlinked:
+        if gigabotthread.widget == None:
             mod = ModuleGigabot(gigabotthread.gigabot)
             wid = QtWidgets.QDockWidget(self)
             wid.setWidget(mod)
             gigabotthread.widget = wid
             gigabotthread.mod = mod
-            gigabotthread.widgetlinked = True
 
             gigabotthread.widget.setAllowedAreas(QtCore.Qt.NoDockWidgetArea)
             #self.wid.setFeatures(QtWidgets.QDockWidget.DockWidgetMovable | QtWidgets.QDockWidget.DockWidgetClosable)
@@ -79,8 +78,7 @@ class DashboardWindow(QtWidgets.QMainWindow, Ui_DashboardWindow):
             gigabotthread.widget.setAttribute(Qt.WA_TranslucentBackground)
             self.Dashboard.addDockWidget(Qt.RightDockWidgetArea,gigabotthread.widget)
             gigabotthread.widget.setFloating(True)
-            gigabotthread.widgetshow = True
-        if not gigabotthread.widgetshow:
+        if not gigabotthread.widget.isVisible():
             gigabotthread.widget.show()
 
 #   Slots that are called periodically by view thread in qtmain.py
@@ -92,6 +90,9 @@ class DashboardWindow(QtWidgets.QMainWindow, Ui_DashboardWindow):
         for t in self.handler.gigabotthreads:
             if t.widget != None and not t.widget.isVisible():
                 t.widgetshow = False
+            if not t.connected:
+                t.widget.close()
+                t.mod = t.widget = None
 
 
        # Determine the size of the window

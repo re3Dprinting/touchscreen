@@ -101,6 +101,6 @@ class ModuleGigabot(QtWidgets.QWidget , Ui_GigabotModule):
             self.BedText.changeText("~~ / ~~")
 
     #Upon resize, update the labels and all of the text. 
-    # def resizeEvent(self, event):
-    #     self.update_labels()
-    #     self.update_all()
+    def resizeEvent(self, event):
+        self.update_labels()
+        self.update_all()

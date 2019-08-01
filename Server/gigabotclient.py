@@ -5,7 +5,7 @@ class gigabotclient():
 	def __init__(self, ipaddress):
 		self.idnum = ""
 		self.version = "Gigabot 3+"
-		self.model = ""
+		self.model = "N/A"
 		self.ipaddress = ipaddress
 		self.status = "OF"
 		self.btemp = (0,0)

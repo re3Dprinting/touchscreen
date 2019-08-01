@@ -22,6 +22,7 @@ class serverhandler():
 #	Called by the server thread, to shut down the server
 	def stopserver(self):
 		for t in self.gigabotthreads:
+			t.conn.close()
 			t.join()
 		del self.gigabotthreads[:]
 		self.server.close()
