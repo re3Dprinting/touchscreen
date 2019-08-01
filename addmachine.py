@@ -30,6 +30,7 @@ class AddMachineWindow(QtWidgets.QWidget, Ui_addmachine):
         header = self.Devices.horizontalHeader()
         header.setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
         header.setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
+        header.setSectionResizeMode(2, QtWidgets.QHeaderView.Stretch)
         rowpos = self.Devices.rowCount()
 
 #       Populate the QTable with the avalible gigabots. 
