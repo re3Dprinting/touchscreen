@@ -100,7 +100,7 @@ class ModuleGigabot(QtWidgets.QWidget , Ui_GigabotModule):
             self.Nozzle2Text.changeText("~~ / ~~")
             self.BedText.changeText("~~ / ~~")
 
-#   Upon resize, update the labels and all of the text. 
+    #Upon resize, update the labels and all of the text. 
     # def resizeEvent(self, event):
     #     self.update_labels()
     #     self.update_all()

@@ -11,7 +11,7 @@ class ScaledLabelImg(QtWidgets.QLabel):
         self._pixmap = QtGui.QPixmap(self.pixmap())
 #   upon resizing, scale the image while maintaining the aspect ratio
     def resizeEvent(self, event):
-        self.setPixmap(self._pixmap.scaled(self.width(), self.height(),QtCore.Qt.KeepAspectRatio))
+        self.setPixmap(self._pixmap.scaled(self.width(), self.height(),QtCore.Qt.KeepAspectRatio, QtCore.Qt.FastTransformation))
 #   changepix function replaces setPixmap. 
 #   sets the new pixmap, redefines the _pixmap value, then resizes. 
     def changepix(self, file):

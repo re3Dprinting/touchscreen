@@ -2,7 +2,10 @@
 from threading import Thread 
 import threading
 from SocketServer import ThreadingMixIn 
+from server_main import *
 # from gigabotclient import *
+import select
+import time
 import json
 import os
 
@@ -12,30 +15,36 @@ TCP_PORT = 63200
 
 #   Multithreaded Python server : TCP Server Socket Thread Pool
 class GigabotThread(Thread): 
-    def __init__(self,conn, ip,port, mach): 
+    def __init__(self,conn, ip,port, gigabot = None): 
         Thread.__init__(self) 
         self.conn = conn
         self.ipaddress = ip 
         self.port = port 
-        self.machine = mach
+        self.gigabot = gigabot
         self.printstuff = ""
         self.connected = True
-        print "A new Gigabot Client connected! \n"
+        self.widgetlinked = False
+        self.widgetshow = False
+        self.widget = self.mod = None
+        print "A new Device connected: "+ ip 
 
 #   Main while loop of the GigabotThread
     def run(self): 
-        # print threading.currentThread().getName()
-        while self.connected : 
-            # try:
-            c_data = self.recvdata()
-            if(c_data): 
-                self.printstuff = self.machine.parsedata(c_data)
-                #print(self.printstuff)
-            self.senddata("OK")  # echo
-            # except Exception as exc:
-            #     print "Client Disconnected! ", exc
-            #     self.connected = False
-            #     self.conn.close()
+        while(True):
+            try:
+                while self.connected : 
+                    rd, wt, er = select.select([self.conn],[self.conn],[self.conn])
+                    if rd:
+                        c_data = self.recvdata()
+                        if(c_data): 
+                            self.gigabot.parsedata(c_data)
+                        if wt:
+                            self.senddata("OK")  # echo
+            except Exception, e:
+                print e
+                self.connected = False
+                time.sleep(3)
+
 
 #   Send function encodes data and creates a json object to be sent over TCP
 #   Recieve function decodes data and unpacks the json object, then sends a ACK msg to client
@@ -51,7 +60,25 @@ class GigabotThread(Thread):
             return m_data
 
 
+# if __name__ == "__main__":
+#     os.system("clear")
+#     handler = serverhandler()
 
+#     handler.startserver()
+
+#     while True:
+#         handler.listen_for_clients()
+
+#     for t in handler.gigabotthreads:
+#         t.join()
+
+
+
+
+
+
+
+# gigabotthreads = []
 # if __name__ == "__main__":
 # #   Clear the commandline
 #     os.system("clear")

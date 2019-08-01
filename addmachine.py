@@ -7,13 +7,13 @@ from PySide2.QtCore import Qt
 class AddMachineWindow(QtWidgets.QWidget, Ui_addmachine):
 #   Pass in the list of gigabotclient objects that contain data on gigabot.
 #   Pass in the parent so that the addmachinewindow can be set as a Qt.Tool
-    def __init__(self, gigabots, parent = None):
+    def __init__(self, gigabotthreads, parent = None):
         super(AddMachineWindow, self).__init__()
         self.setupUi(self)
         self.setWindowFlags(Qt.Tool)
 
         self.main = parent
-        self.gigabots = gigabots
+        self.gigabotthreads = gigabotthreads
 
 #       Move Window to Middle of Screen
         qr = self.frameGeometry()
@@ -46,20 +46,20 @@ class AddMachineWindow(QtWidgets.QWidget, Ui_addmachine):
 #   Given the list of gigabots, display each IP address.
     def refreshtable(self):
         self.Devices.setRowCount(0)
-        if len(self.gigabots)>0:
-            for g in self.gigabots:
+        if len(self.gigabotthreads)>0:
+            for t in self.gigabotthreads:
                 rowpos = self.Devices.rowCount()
                 self.Devices.insertRow(rowpos)
-                item = QtWidgets.QTableWidgetItem(g.ipaddress)
+                item = QtWidgets.QTableWidgetItem(t.gigabot.ipaddress)
                 item.setFlags( Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
                 self.Devices.setItem(rowpos, 0, item)
 
 #   Add a Module after a row is selected
 #   If the Gigabotnumber is inputted, link the number to the gigabot object. 
     def addmod(self):
-        if(len(self.gigabots) >0):
+        if(len(self.gigabotthreads) >0):
             selected = self.Devices.currentRow()
             gigabotnum = self.Devices.item(selected,1)
-            if gigabotnum and len(gigabotnum.text()) != 0: self.gigabots[selected].idnum= gigabotnum.text()
-            self.main.addModule(self.gigabots[selected])
+            if gigabotnum and len(gigabotnum.text()) != 0: self.gigabotthreads.gigabot[selected].idnum= gigabotnum.text()
+            self.main.addModule(self.gigabotthreads[selected])
         self.close()

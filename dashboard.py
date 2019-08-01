@@ -24,7 +24,7 @@ class DashboardWindow(QtWidgets.QMainWindow, Ui_DashboardWindow):
         self.handler = self.serverthread.handler
         self.gigabots = self.handler.gigabots
 
-        self.gigabots.append(gigabotclient("192.168.1.169"))
+#        self.gigabots.append(gigabotclient("192.168.1.169"))
 #       self.gigabots.append(gigabotclient("192.168.1.151"))
 #       self.gigabots.append(gigabotclient("192.168.1.49"))
 #       self.gigabots.append(gigabotclient("192.168.1.12"))
@@ -53,7 +53,7 @@ class DashboardWindow(QtWidgets.QMainWindow, Ui_DashboardWindow):
         #send all data to database
         self.close()
     def add_machine(self):
-        self.pop = AddMachineWindow(self.gigabots, self)
+        self.pop = AddMachineWindow(self.handler.gigabotthreads, self)
         self.pop.show()
     def startserv(self):
         self.serverthread.startflag = True
@@ -62,36 +62,36 @@ class DashboardWindow(QtWidgets.QMainWindow, Ui_DashboardWindow):
         self.serverthread.stopflag = True
         self.ServerStatus.setText("Server is Disconnected")
 
-    def addModule(self, gigabot):
-        if not gigabot.widgetlinked:
-            mod = ModuleGigabot(gigabot)
+    def addModule(self, gigabotthread):
+        if not gigabotthread.widgetlinked:
+            mod = ModuleGigabot(gigabotthread.gigabot)
             wid = QtWidgets.QDockWidget(self)
             wid.setWidget(mod)
-            gigabot.widget = wid
-            gigabot.mod = mod
-            gigabot.widgetlinked = True
+            gigabotthread.widget = wid
+            gigabotthread.mod = mod
+            gigabotthread.widgetlinked = True
 
-            gigabot.widget.setAllowedAreas(QtCore.Qt.NoDockWidgetArea)
+            gigabotthread.widget.setAllowedAreas(QtCore.Qt.NoDockWidgetArea)
             #self.wid.setFeatures(QtWidgets.QDockWidget.DockWidgetMovable | QtWidgets.QDockWidget.DockWidgetClosable)
             #self.wid.setFeatures(QtWidgets.QDockWidget.DockWidgetMovable)
-            gigabot.widget.setFeatures(QtWidgets.QDockWidget.DockWidgetClosable)
+            gigabotthread.widget.setFeatures(QtWidgets.QDockWidget.DockWidgetClosable)
             #wid[i].setWindowFlags(Qt.FramelessWindowHint)
-            gigabot.widget.setAttribute(Qt.WA_TranslucentBackground)
-            self.Dashboard.addDockWidget(Qt.RightDockWidgetArea,gigabot.widget)
-            gigabot.widget.setFloating(True)
-            gigabot.widgetshow = True
-        if not gigabot.widgetshow:
-            gigabot.widget.show()
+            gigabotthread.widget.setAttribute(Qt.WA_TranslucentBackground)
+            self.Dashboard.addDockWidget(Qt.RightDockWidgetArea,gigabotthread.widget)
+            gigabotthread.widget.setFloating(True)
+            gigabotthread.widgetshow = True
+        if not gigabotthread.widgetshow:
+            gigabotthread.widget.show()
 
 #   Slots that are called periodically by view thread in qtmain.py
     def updateall(self):
-        for g in self.gigabots:
-            if g.widget != None:
-                g.mod.update_all()
+        for t in self.handler.gigabotthreads:
+            if t.widget != None:
+                t.mod.update_all()
     def checkvisible(self):
-        for g in self.gigabots:
-            if g.widget != None and not g.widget.isVisible():
-                g.widgetshow = False
+        for t in self.handler.gigabotthreads:
+            if t.widget != None and not t.widget.isVisible():
+                t.widgetshow = False
 
 
        # Determine the size of the window

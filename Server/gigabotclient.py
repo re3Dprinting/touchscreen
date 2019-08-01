@@ -13,9 +13,6 @@ class gigabotclient():
 		self.temp2 = (0,0)
 		self.currentfile = ""
 		self.dateuploaded = ""
-		self.widgetlinked = False
-		self.widgetshow = False
-		self.widget = self.mod = None
 		self.stats = {}
 
 	def updatetemp(self, newtemp):

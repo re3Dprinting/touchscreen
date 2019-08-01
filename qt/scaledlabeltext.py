@@ -28,5 +28,5 @@ class ScaledLabelText(QtWidgets.QLabel):
             self.format = self.formatSM
         elif self.parent.height() >=220:
             self.format = self.formatLG
-        self.parent.update_labels()
-        self.parent.update_all()
+        # self.parent.update_labels()
+        # self.parent.update_all()
