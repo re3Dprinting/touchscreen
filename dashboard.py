@@ -90,8 +90,8 @@ class DashboardWindow(QtWidgets.QMainWindow, Ui_DashboardWindow):
                 t.mod.update_all()
     def checkvisible(self):
         for t in self.handler.gigabotthreads:
-            if t.widget != None and not t.widget.isVisible():
-                t.widgetshow = False
+            # if t.widget != None and not t.widget.isVisible():
+            #     t.widgetshow = False
             if not t.connected:
                 if t.widget != None: t.widget.close()
                 t.mod = t.widget = None

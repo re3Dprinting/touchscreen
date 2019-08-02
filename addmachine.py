@@ -50,7 +50,8 @@ class AddMachineWindow(QtWidgets.QWidget, Ui_addmachine):
         if len(self.gigabotthreads)>0:
             for t in self.gigabotthreads:
                 #print t.ipaddress+ " : widgetlinked:", t.widgetlinked, " connected: ", t.connected, " Widget show: ", t.widgetshow
-                if (t.widget == None and t.connected) or (t.connected and not t.widget.isVisible()):
+                #if (t.connected and t.widget == None) or (t.connected and not t.widget.isVisible()):
+                if t.connected and (t.widget == None or not t.widget.isVisible()):
                 #show up on table if a widget is not linked, or (is connected and widgetshow)
                     rowpos = self.Devices.rowCount()
                     self.Devices.insertRow(rowpos)
