@@ -1,5 +1,5 @@
 from qt.touchdisplaywindow import *
-from PySide2.QtCore import Qt
+from PyQt5.QtCore import Qt
 import sys
 
 class TouchDisplay(QtWidgets.QWidget, Ui_TouchDisplay):

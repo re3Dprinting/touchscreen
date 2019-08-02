@@ -1,14 +1,12 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'qt/touchdisplay.ui',
-# licensing of 'qt/touchdisplay.ui' applies.
+# Form implementation generated from reading ui file 'qt/touchdisplaywindow.ui'
 #
-# Created: Fri Aug  2 14:36:56 2019
-#      by: pyside2-uic  running on PySide2 5.13.0
+# Created by: PyQt5 UI code generator 5.5.1
 #
 # WARNING! All changes made in this file will be lost!
 
-from PySide2 import QtCore, QtGui, QtWidgets
+from PyQt5 import QtCore, QtGui, QtWidgets
 
 class Ui_TouchDisplay(object):
     def setupUi(self, TouchDisplay):
@@ -38,8 +36,9 @@ class Ui_TouchDisplay(object):
         QtCore.QMetaObject.connectSlotsByName(TouchDisplay)
 
     def retranslateUi(self, TouchDisplay):
-        TouchDisplay.setWindowTitle(QtWidgets.QApplication.translate("TouchDisplay", "Form", None, -1))
-        self.pushButton.setText(QtWidgets.QApplication.translate("TouchDisplay", "Hello World", None, -1))
-        self.pushButton_2.setText(QtWidgets.QApplication.translate("TouchDisplay", "Does This", None, -1))
-        self.pushButton_3.setText(QtWidgets.QApplication.translate("TouchDisplay", "Work?", None, -1))
+        _translate = QtCore.QCoreApplication.translate
+        TouchDisplay.setWindowTitle(_translate("TouchDisplay", "Form"))
+        self.pushButton.setText(_translate("TouchDisplay", "Hello World"))
+        self.pushButton_2.setText(_translate("TouchDisplay", "Does This"))
+        self.pushButton_3.setText(_translate("TouchDisplay", "Work?"))
 
