@@ -10,10 +10,12 @@ class serverhandler():
 	def __init__(self):
 		self.gigabotthreads = []
 		self.gigabots = []
-		self.server = socket(AF_INET, SOCK_STREAM) 
+		#self.server = socket(AF_INET, SOCK_STREAM) 
+		self.server = None
 
 #	Called by the server thread, when the startserver button is clicked
 	def startserver(self):
+		self.server = socket(AF_INET, SOCK_STREAM) 
 		self.server.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1) 
 		self.server.bind((TCP_IP, TCP_PORT)) 
 		self.server.listen(5)
@@ -22,10 +24,13 @@ class serverhandler():
 #	Called by the server thread, to shut down the server
 	def stopserver(self):
 		for t in self.gigabotthreads:
+			if t.widget != None: 
+				t.widget.close()
 			t.conn.close()
-			t.join()
-		del self.gigabotthreads[:]
-		self.server.close()
+			t.connected = False
+		#del self.gigabotthreads[:]
+		if self.server != None: self.server.close()
+		self.server = None 
 		return True
 
 	def check_dup_thread(self,conn,ip,port):
@@ -41,14 +46,15 @@ class serverhandler():
 		return (newthread, True)
 #	Blocking function that waits for a client to accept connect.
 	def listen_for_clients(self):
-		(connection, (ip,port)) = self.server.accept()
-#		Check if there exists a thread that was a stopped because of a connection.
-		(thread, isnewthread) = self.check_dup_thread(connection,ip,port)
-		if isnewthread: thread.start()
-		else: thread.connected = True
-		# for t in self.gigabotthreads:
-		# 	if not t.isAlive():
-		# 		self.gigabotthreads.remove(t)
+		self.server.setblocking(0)
+		try:
+			(connection, (ip,port)) = self.server.accept()
+	#		Check if there exists a thread that was a stopped because of a connection.
+			(thread, isnewthread) = self.check_dup_thread(connection,ip,port)
+			if isnewthread: thread.start()
+			else: thread.connected = True
+		except Exception, e:
+			pass
 
 
 #   check_dup function checks if there is already a present Gigabotnode,

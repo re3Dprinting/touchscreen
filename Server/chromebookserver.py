@@ -21,7 +21,6 @@ class GigabotThread(Thread):
         self.ipaddress = ip 
         self.port = port 
         self.gigabot = gigabot
-        self.printstuff = ""
         self.connected = True
         self.widget = self.mod = None
         print "A new Device connected: "+ ip 

@@ -8,6 +8,7 @@ class ModuleGigabot(QtWidgets.QWidget , Ui_GigabotModule):
     def __init__(self, gigabot):
         super(ModuleGigabot,self).__init__()
         self.setupUi(self)
+        self.resize(430,280)
         self.gigabot = gigabot
         self.activeflash = True
         self.bedflash = 0

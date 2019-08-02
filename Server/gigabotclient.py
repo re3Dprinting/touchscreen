@@ -54,19 +54,21 @@ class gigabotclient():
 			print key, ":\t", self.stats[key]
 	def printtemp(self): 
 		print "T1:\t" + str(self.temp1[0]) + "/" + str(self.temp1[1]) + "\t" + "T2:\t" + str(self.temp2[0]) + "/" + str(self.temp2[1]) + "\t" + "B:\t" + str(self.btemp[0]) + "/" +str(self.btemp[1]) 
+	def printcurrentfile(self):
+		print "Current File: " + self.currentfile + "\n"
 	def parsedata(self, d_ata):
-		print d_ata
+		#print d_ata
 		if ("ST" in d_ata):
 			self.status = d_ata["ST"]
-			print self.printstatus()
+			self.printstatus()
 		if ("T" in d_ata):
 			self.btemp = d_ata["T"]["B"]
 			self.temp1 = d_ata["T"]["T0"]
 			self.temp2 = d_ata["T"]["T1"]
-			print self.printtemp()
+			self.printtemp()
 		if("FI" in d_ata):
 			self.currentfile = d_ata["FI"]
-			print "Current File: " + self.currentfile + "\n"
+			self.printcurrentfile()
 		if ("HD" in d_ata):
 			m = d_ata["HD"].split("..")
 			self.dateuploaded = m[0]

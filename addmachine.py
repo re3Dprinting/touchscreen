@@ -50,27 +50,29 @@ class AddMachineWindow(QtWidgets.QWidget, Ui_addmachine):
         if len(self.gigabotthreads)>0:
             for t in self.gigabotthreads:
                 #print t.ipaddress+ " : widgetlinked:", t.widgetlinked, " connected: ", t.connected, " Widget show: ", t.widgetshow
-                if t.widget == None or (t.connected and not t.widget.isVisible()):
+                if (t.widget == None and t.connected) or (t.connected and not t.widget.isVisible()):
                 #show up on table if a widget is not linked, or (is connected and widgetshow)
                     rowpos = self.Devices.rowCount()
                     self.Devices.insertRow(rowpos)
                     ip= QtWidgets.QTableWidgetItem(t.gigabot.ipaddress)
                     ip.setFlags( Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
                     num= QtWidgets.QTableWidgetItem(t.gigabot.idnum)
-                    self.Devices.setItem(rowpos, 0, ip)
-                    self.Devices.setItem(rowpos, 1, num)
+                    model = QtWidgets.QTableWidgetItem(t.gigabot.model)
+                    self.Devices.setItem(rowpos, 0, model)
+                    self.Devices.setItem(rowpos, 1, ip)
+                    self.Devices.setItem(rowpos, 2, num)
 
 #   Add a Module after a row is selected
 #   If the Gigabotnumber is inputted, link the number to the gigabot object. 
     def addmod(self):
         if(len(self.gigabotthreads) >0):
             selected = self.Devices.currentRow()
-            selectedip = self.Devices.item(selected,0)
+            selectedip = self.Devices.item(selected,1)
             gigabot = None
             for t in self.gigabotthreads:
                 if t.ipaddress == selectedip.text():
                     thread = t
-            gigabotnum = self.Devices.item(selected,1)
+            gigabotnum = self.Devices.item(selected,2)
             if gigabotnum and len(gigabotnum.text()) != 0: thread.gigabot.idnum= gigabotnum.text()
 
             self.main.addModule(thread)

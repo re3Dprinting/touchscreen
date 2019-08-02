@@ -56,10 +56,12 @@ class DashboardWindow(QtWidgets.QMainWindow, Ui_DashboardWindow):
         self.pop = AddMachineWindow(self.handler.gigabotthreads, self)
         self.pop.show()
     def startserv(self):
-        self.serverthread.startflag = True
+        self.handler.startserver()
+        self.serverthread.listen = True
         self.ServerStatus.setText("Server is Running...")
     def stopserv(self):
-        self.serverthread.stopflag = True
+        self.serverthread.listen = False
+        self.handler.stopserver()
         self.ServerStatus.setText("Server is Disconnected")
 
     def addModule(self, gigabotthread):
@@ -91,7 +93,7 @@ class DashboardWindow(QtWidgets.QMainWindow, Ui_DashboardWindow):
             if t.widget != None and not t.widget.isVisible():
                 t.widgetshow = False
             if not t.connected:
-                t.widget.close()
+                if t.widget != None: t.widget.close()
                 t.mod = t.widget = None
 
 

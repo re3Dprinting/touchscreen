@@ -15,23 +15,12 @@ class server_thread(QtCore.QThread):
     def __init__(self, handler, parent = None):
         QtCore.QThread.__init__(self,parent)
         self.handler= handler
-        self.startflag = False
-        self.stopflag = False
         self.listen = False
-        self.newclientconnected = False
     def run(self):
         while(True):
-            if self.startflag: 
-                self.handler.startserver()
-                self.listen = True
-                self.startflag = False
-            if self.stopflag:
-                self.handler.stopserver()
-                self.listen = False
-                self.stopflag = False
             if self.listen: 
-                self.handler.listen_for_clients()
-
+                self.handler.listen_for_clients() 
+            time.sleep(0.1)
 #   View Thread, that updates the view whenever new data comes in from the server side.
 #   Contains two counters, one to handle updating the modules
 #   second to handle checking if the modules are visible. 
