@@ -20,7 +20,7 @@ class TouchDisplay(QtWidgets.QWidget, Ui_TouchDisplay):
         self.con_pop = ControlWindow(self)
         self.con_pop.show()
     def setbuttonstyle(self,obj):
-        obj.setStyleSheet("QPushButton{background: rgba(255,255,255,0); outline: none; border: none;} QPushButton:checked{background: rgba(255,255,255,0); outline: none; border: none;} QPushButton:pressed {background: rgba(255,255,255,0); outline: none; border: none;}")
+        obj.setStyleSheet("QPushButton{background: rgba(255,255,255,0); outline: none; border: none;} QPushButton:checked{background: rgba(255,255,255,0); outline: none; border: none;} QPushButton:pressed {background: rgba(0,0,0,0.08); outline: none; border: none;}")
 
 if __name__ == '__main__':
 

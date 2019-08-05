@@ -8,7 +8,7 @@ class ControlWindow(QtWidgets.QWidget, Ui_ControlWindow):
 		self.setupUi(self)
 		self.parent = parent
 		self.setWindowFlags(Qt.Tool)
-
+		self.showFullScreen()
 		self.parent.setbuttonstyle(self.Back)
 		self.xbutton = self.AddButtontoGroup("x")
 		self.ybutton = self.AddButtontoGroup("y")
@@ -19,6 +19,7 @@ class ControlWindow(QtWidgets.QWidget, Ui_ControlWindow):
 		self.SetButtonSettings(self.E2)
 		self.extruder.addButton(self.E1)
 		self.extruder.addButton(self.E2)
+		self.Back.clicked.connect(self.close)
 
 
 	def AddButtontoGroup(self, axis):
