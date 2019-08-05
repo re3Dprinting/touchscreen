@@ -8,10 +8,10 @@ class TouchDisplay(QtWidgets.QWidget, Ui_TouchDisplay):
         self.setupUi(self)
         #self.showFullScreen()
         self.Control.setCheckable(False)
-        self.Control.setStyleSheet("QPushButton{background: transparent; outline: none;}")
+        self.Control.setStyleSheet("QPushButton{background: rgba(255,255,255,0); outline: none} QPushButton:checked{background-color: red} QPushButton:pressed {background: rgba(255,255,255,0); outline: none}");
         
-        self.Print.setStyleSheet("QPushButton{background: transparent; outline: none;}");
-        self.Settings.setStyleSheet("QPushButton{background: transparent; outline: none;}");
+        self.Print.setStyleSheet("QPushButton{background: rgba(255,255,255,0); outline: none} QPushButton:checked{background-color: red} QPushButton:pressed {background: rgba(255,255,255,0); outline: none}");
+        self.Settings.setStyleSheet("QPushButton{background: rgba(255,255,255,0); outline: none} QPushButton:checked{background-color: red} QPushButton:pressed {background: rgba(255,255,255,0); outline: none}");
         #self.pushButton.clicked.connect(self.printsomething)
 
 if __name__ == '__main__':
