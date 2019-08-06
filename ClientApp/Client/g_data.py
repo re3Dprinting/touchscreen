@@ -7,14 +7,11 @@ import threading
 class g_data(threading.Thread):
 	def __init__(self):
 		super(g_data,self).__init__()
-		self.counter = [0,0] # Reconnectflag, SendFlag, ServerTimeout
-		self.reconnflag = False
+		self.counter = [0,0] # Reconnectflag, SendFlag
 		self.sendflag = False
-		self._stop = False
+		self.serial = None
 
-#	Flags to determine if server timeout occured
-		self.start_timeout_seq = False
-		self.server_timeout = False
+		#self.start = False
 
 #	Data to be extracted
 		self.temp = dict()
@@ -29,30 +26,27 @@ class g_data(threading.Thread):
 		self.ipaddr = self.getipaddress()
 
 	def stop(self):
-		self._stop = True
+		self.start = False
 #	Mainthread for timers
-#	counter list consists of [reconnflag/sendflag, servertimeoutflag]
+#	counter list consists of reconnflag/sendflag
 	def run(self):
-		while self._stop == False:
-			if self.start_timeout_seq and not self.server_timeout:
-				self.counter[1]+=1
-			if not self.start_timeout_seq: 
-				self.counter[0] +=1
-			
+		while True:
 			time.sleep(1)
-			#print self.counter
-			if self.counter[0] >= 5 and not self.start_timeout_seq:
-				self.reconnflag = True
-				self.sendflag = True
-				self.counter[0] = 0
-
-			if self.start_timeout_seq and not self.server_timeout:
-				if self.counter[1] > 2: self.sendflag= True
-				print "Time since last response: ", self.counter[1]
-				if self.counter[1] >= 10:
-					self.counter[1] = 0
-					self.server_timeout = True
-					self.start_timeout_seq = False
+			if self.serial.is_open:
+			#Wait three seconds after connection:
+			#- read initial header
+			#- Send gcode to enable periodic temperature reading
+				if self.counter[0] >= 10:
+					self.counter[0] += 1
+					if self.counter[0] >= 13:
+						print "here"
+						self.serial.initserial()
+						self.counter[0] = 0
+				else:
+					self.counter[0] +=1 
+					if self.counter[0] >= 5:
+						self.counter[0] = 0
+						self.serial.readdata()
 
 #	Attempt to get the IP address through connecting to Google DNS to get current ipaddress
 	def getipaddress(self):

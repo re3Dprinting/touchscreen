@@ -10,42 +10,62 @@ class g_serial(Serial):
 	def __init__(self,data_obj):
 #	Reuse the dataobj is the same gigabot connects.
 		self.data = data_obj
-		self.com = list(serial.tools.list_ports.comports())
-		for p in self.com:
-			if "/dev/ttyUSB" in p.device:
-				self.com = p.device
-		self.catch_except(self.connect)	
+		self.data.serial = self
+		self.com = None
+		self.is_open = False
 
 #	Function to Catch Exceptions for the g_serial 
 	def catch_except(self, function):
 		try:
 			function()
-		except IOError:
+			return
+		except IOError, e:
 			self.is_open = False
 			self.data.changestatus("OF")
-			print "Serial Disconnected!\n"
+			return e
 		except ValueError:
 			#print "COM port is unavalible/ or run program with root permission."
 			#print "Retrying in 5 seconds"
+			return "ValueError :", e
 			self.data.changestatus("OF")
+		except Exception, e:
+			return "Exception Error :", e
+
+#	COM list consists of attributes, device and description
+	def scan(self):
+		return list(serial.tools.list_ports.comports())
+
+#	Attempt to reconnect to Serial
+	def attemptconnect(self):
+		err = self.catch_except(self.connect)
+		if not err: return "Connection to"+ self.com+ " successful"
+		else: return err
 
 #	Initial attempt to connect to server			
 	def connect(self):
 		Serial.__init__(self, self.com, baudrate= 250000)
 		#Set the status of the printer to ON
-		self.data.changestatus("ON")
 		self.setDTR(False)
-		time.sleep(1)
+		time.sleep(0.1)
 		self.flushInput()
 		self.setDTR(True)
-		time.sleep(3)
+		self.data.changestatus("ON")
+		self.is_open = True
+		self.data.ser_conn = True
+		self.data.counter[0] = 10
+		#time.sleep(3)
+
+	def disconnect(self):
+		if self.is_open:
+			self.close()
+			self.is_open = False
+			return self.com+ " Disconnected!"
+		else: return "No connected device"
+
+	def initserial(self):
 		#Extract Header information from the first few bytes of data
 		self.readdata()
 		self.en_reporttemp_stat()
-
-#	Attempt to reconnect to Serial
-	def attemptconnect(self,data):
-		if not self.is_open: self.__init__(data)
 
 #	Enable temperature reporting every 5 seconds through M155 S5
 #	Retrieve printer stat through M78 gcode	
@@ -53,9 +73,7 @@ class g_serial(Serial):
 		print("SEND: M155 S5\r")
 		#send to serial a M155 code to enable temperture reportings every 5s
 		self.write('M155 S5\r'.encode('utf-8'))
-		time.sleep(1)
 		self.write('M78\r'.encode('utf-8'))
-		time.sleep(1)
 
 #	Read serial data function
 #	If the insize is detected, wait half a second for the full transmission to come through
