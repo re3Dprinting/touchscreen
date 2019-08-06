@@ -23,7 +23,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string>TouchDisplay</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -59,7 +59,7 @@
         <string/>
        </property>
        <property name="pixmap">
-        <pixmap>../img/re3d.png</pixmap>
+        <pixmap>img/re3d.png</pixmap>
        </property>
        <property name="scaledContents">
         <bool>true</bool>
@@ -95,7 +95,7 @@
        </property>
        <property name="icon">
         <iconset>
-         <normaloff>../img/print.png</normaloff>../img/print.png</iconset>
+         <normaloff>img/print.png</normaloff>img/print.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -130,7 +130,42 @@
        </property>
        <property name="icon">
         <iconset>
-         <normaloff>../img/control.png</normaloff>../img/control.png</iconset>
+         <normaloff>img/control.png</normaloff>img/control.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>150</width>
+         <height>150</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="Temperature">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>150</width>
+         <height>150</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>150</width>
+         <height>300</height>
+        </size>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>img/temperature.png</normaloff>img/temperature.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -165,7 +200,7 @@
        </property>
        <property name="icon">
         <iconset>
-         <normaloff>../img/settings.png</normaloff>../img/settings.png</iconset>
+         <normaloff>img/settings.png</normaloff>img/settings.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -187,14 +222,23 @@
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>75</height>
+        </size>
+       </property>
        <property name="maximumSize">
         <size>
          <width>16777215</width>
-         <height>20</height>
+         <height>50</height>
         </size>
        </property>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::Expanding</enum>
        </property>
        <property name="sizeHint" stdset="0">
         <size>
@@ -212,10 +256,16 @@
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>70</height>
+        </size>
+       </property>
        <property name="maximumSize">
         <size>
          <width>16777215</width>
-         <height>20</height>
+         <height>70</height>
         </size>
        </property>
        <property name="text">

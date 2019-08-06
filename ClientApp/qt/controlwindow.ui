@@ -17,7 +17,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>ControlWindow</string>
   </property>
   <widget class="QPushButton" name="YPos">
    <property name="geometry">
@@ -269,7 +269,7 @@
     <rect>
      <x>360</x>
      <y>180</y>
-     <width>31</width>
+     <width>41</width>
      <height>31</height>
     </rect>
    </property>
@@ -293,9 +293,9 @@
   <widget class="QLabel" name="label_4">
    <property name="geometry">
     <rect>
-     <x>200</x>
+     <x>190</x>
      <y>10</y>
-     <width>31</width>
+     <width>41</width>
      <height>31</height>
     </rect>
    </property>
@@ -319,9 +319,9 @@
   <widget class="QLabel" name="label_6">
    <property name="geometry">
     <rect>
-     <x>490</x>
+     <x>480</x>
      <y>10</y>
-     <width>31</width>
+     <width>41</width>
      <height>31</height>
     </rect>
    </property>
@@ -345,9 +345,9 @@
   <widget class="QLabel" name="label_8">
    <property name="geometry">
     <rect>
-     <x>620</x>
+     <x>610</x>
      <y>10</y>
-     <width>31</width>
+     <width>41</width>
      <height>31</height>
     </rect>
    </property>
@@ -397,12 +397,12 @@
     </size>
    </property>
   </widget>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
-     <x>410</x>
+     <x>430</x>
      <y>300</y>
-     <width>384</width>
+     <width>361</width>
      <height>171</height>
     </rect>
    </property>
@@ -420,13 +420,13 @@
        <widget class="QPushButton" name="xm01">
         <property name="minimumSize">
          <size>
-          <width>60</width>
+          <width>70</width>
           <height>30</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>80</width>
+          <width>70</width>
           <height>30</height>
          </size>
         </property>
@@ -443,15 +443,21 @@
       </item>
       <item>
        <widget class="QPushButton" name="xm1">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="minimumSize">
          <size>
-          <width>60</width>
+          <width>70</width>
           <height>30</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>80</width>
+          <width>70</width>
           <height>30</height>
          </size>
         </property>
@@ -468,15 +474,21 @@
       </item>
       <item>
        <widget class="QPushButton" name="xm10">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="minimumSize">
          <size>
-          <width>60</width>
+          <width>70</width>
           <height>30</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>80</width>
+          <width>70</width>
           <height>30</height>
          </size>
         </property>
@@ -493,15 +505,21 @@
       </item>
       <item>
        <widget class="QPushButton" name="xm100">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="minimumSize">
          <size>
-          <width>60</width>
+          <width>70</width>
           <height>30</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>80</width>
+          <width>70</width>
           <height>30</height>
          </size>
         </property>
@@ -531,13 +549,13 @@
        <widget class="QPushButton" name="ym01">
         <property name="minimumSize">
          <size>
-          <width>60</width>
+          <width>70</width>
           <height>30</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>80</width>
+          <width>70</width>
           <height>30</height>
          </size>
         </property>
@@ -554,15 +572,21 @@
       </item>
       <item>
        <widget class="QPushButton" name="ym1">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="minimumSize">
          <size>
-          <width>60</width>
+          <width>70</width>
           <height>30</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>80</width>
+          <width>70</width>
           <height>30</height>
          </size>
         </property>
@@ -579,15 +603,21 @@
       </item>
       <item>
        <widget class="QPushButton" name="ym10">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="minimumSize">
          <size>
-          <width>60</width>
+          <width>70</width>
           <height>30</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>80</width>
+          <width>70</width>
           <height>30</height>
          </size>
         </property>
@@ -604,15 +634,21 @@
       </item>
       <item>
        <widget class="QPushButton" name="ym100">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="minimumSize">
          <size>
-          <width>60</width>
+          <width>70</width>
           <height>30</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>80</width>
+          <width>70</width>
           <height>30</height>
          </size>
         </property>
@@ -642,13 +678,13 @@
        <widget class="QPushButton" name="zm01">
         <property name="minimumSize">
          <size>
-          <width>60</width>
+          <width>70</width>
           <height>30</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>80</width>
+          <width>70</width>
           <height>30</height>
          </size>
         </property>
@@ -665,15 +701,21 @@
       </item>
       <item>
        <widget class="QPushButton" name="zm1">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="minimumSize">
          <size>
-          <width>60</width>
+          <width>70</width>
           <height>30</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>80</width>
+          <width>70</width>
           <height>30</height>
          </size>
         </property>
@@ -690,15 +732,21 @@
       </item>
       <item>
        <widget class="QPushButton" name="zm10">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="minimumSize">
          <size>
-          <width>60</width>
+          <width>70</width>
           <height>30</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>80</width>
+          <width>70</width>
           <height>30</height>
          </size>
         </property>
@@ -715,15 +763,21 @@
       </item>
       <item>
        <widget class="QPushButton" name="zm100">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="minimumSize">
          <size>
-          <width>60</width>
+          <width>70</width>
           <height>30</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>80</width>
+          <width>70</width>
           <height>30</height>
          </size>
         </property>
@@ -753,13 +807,13 @@
        <widget class="QPushButton" name="em01">
         <property name="minimumSize">
          <size>
-          <width>60</width>
+          <width>70</width>
           <height>30</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>80</width>
+          <width>70</width>
           <height>30</height>
          </size>
         </property>
@@ -776,15 +830,21 @@
       </item>
       <item>
        <widget class="QPushButton" name="em1">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="minimumSize">
          <size>
-          <width>60</width>
+          <width>70</width>
           <height>30</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>80</width>
+          <width>70</width>
           <height>30</height>
          </size>
         </property>
@@ -801,15 +861,21 @@
       </item>
       <item>
        <widget class="QPushButton" name="em10">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="minimumSize">
          <size>
-          <width>60</width>
+          <width>70</width>
           <height>30</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>80</width>
+          <width>70</width>
           <height>30</height>
          </size>
         </property>
@@ -826,15 +892,21 @@
       </item>
       <item>
        <widget class="QPushButton" name="em100">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="minimumSize">
          <size>
-          <width>60</width>
+          <width>70</width>
           <height>30</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>80</width>
+          <width>70</width>
           <height>30</height>
          </size>
         </property>
@@ -853,7 +925,7 @@
     </item>
    </layout>
   </widget>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>730</x>
@@ -926,6 +998,148 @@
      </widget>
     </item>
    </layout>
+  </widget>
+  <widget class="QPushButton" name="HomeXY">
+   <property name="geometry">
+    <rect>
+     <x>50</x>
+     <y>60</y>
+     <width>50</width>
+     <height>50</height>
+    </rect>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>100</width>
+     <height>100</height>
+    </size>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="icon">
+    <iconset>
+     <normaloff>img/home.png</normaloff>img/home.png</iconset>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>50</width>
+     <height>50</height>
+    </size>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="DisableMotors">
+   <property name="geometry">
+    <rect>
+     <x>350</x>
+     <y>400</y>
+     <width>71</width>
+     <height>71</height>
+    </rect>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>100</width>
+     <height>100</height>
+    </size>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="icon">
+    <iconset>
+     <normaloff>img/disable_motor.png</normaloff>img/disable_motor.png</iconset>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>70</width>
+     <height>70</height>
+    </size>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="HomeZ">
+   <property name="geometry">
+    <rect>
+     <x>360</x>
+     <y>60</y>
+     <width>50</width>
+     <height>50</height>
+    </rect>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>100</width>
+     <height>100</height>
+    </size>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="icon">
+    <iconset>
+     <normaloff>img/home.png</normaloff>img/home.png</iconset>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>50</width>
+     <height>50</height>
+    </size>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="HomeAll">
+   <property name="geometry">
+    <rect>
+     <x>280</x>
+     <y>400</y>
+     <width>71</width>
+     <height>71</height>
+    </rect>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>100</width>
+     <height>100</height>
+    </size>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="icon">
+    <iconset>
+     <normaloff>img/home.png</normaloff>img/home.png</iconset>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>55</width>
+     <height>55</height>
+    </size>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_10">
+   <property name="geometry">
+    <rect>
+     <x>50</x>
+     <y>20</y>
+     <width>81</width>
+     <height>39</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Home XY</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_11">
+   <property name="geometry">
+    <rect>
+     <x>360</x>
+     <y>20</y>
+     <width>61</width>
+     <height>39</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Home Z</string>
+   </property>
   </widget>
  </widget>
  <resources/>
