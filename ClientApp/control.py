@@ -39,4 +39,4 @@ class ControlWindow(QtWidgets.QWidget, Ui_ControlWindow):
 	def SetButtonSettings(self,obj):
 		obj.setCheckable(True)
 		obj.setStyleSheet("QPushButton{font: 14pt 'Ubuntu';} \
-			QPushButton:checked {background: rgba(0,0,0,.3); font: 14pt 'Ubuntu'; outline: none;}")
+			QPushButton:checked {background: rgba(255,255,255,0); font: 14pt 'Ubuntu'; outline: none;}")
