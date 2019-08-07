@@ -21,7 +21,8 @@ class SerialWindow(QtWidgets.QWidget, Ui_SerialWindow):
 		header.setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
 		header.setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
 
-
+		self.scan_serial()
+		self.connect_serial()
 		#print(type(self.serial))
 		self.Back.clicked.connect(self.close)
 		self.ScanSerial.clicked.connect(self.scan_serial)
@@ -61,3 +62,6 @@ class SerialWindow(QtWidgets.QWidget, Ui_SerialWindow):
 
 			self.COMlist.setItem(rowpos, 0, device)
 			self.COMlist.setItem(rowpos, 1, descrip)
+
+			if '/dev/ttyUSB' in p.device:
+				self.COMlist.selectRow(rowpos)

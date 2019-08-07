@@ -6,10 +6,13 @@ class Axis():
 		self.Ax = ax.capitalize()
 		self.parent = parent
 		self.inc = ""
-		self.position = float(0)
 		self.gcode = ""
+#		Not needed if using relative position
+#		Could be implemented to prevent crashing the bed
+#		But the soft limits should be on the firmware level. 
 		self.maxx = maxx
 		self.home = home
+		self.position = float(0)
 
 		self.init_movement()
 		self.init_increment()
@@ -28,11 +31,14 @@ class Axis():
 	def travel_limits(self):
 		if self.maxx != None and self.position > self.maxx: self.position = self.maxx
 		if self.position < 0 and self.ax != 'e': self.position = 0
+
 	def movepos(self):
-		self.position += float(self.inc)
-		self.travel_limits()
-		self.parent.serial.send_serial('G0 '+ self.Ax+ str(self.position))
+		# self.position += float(self.inc)
+		# self.travel_limits()
+		self.parent.serial.send_serial('G91')
+		self.parent.serial.send_serial('G1 '+ self.Ax+ str(self.inc) + ' F4500')
 	def moveneg(self):
-		self.position -= float(self.inc)
-		self.travel_limits()
-		self.parent.serial.send_serial('G0 '+ self.Ax+ str(self.position))
+		# self.position -= float(self.inc)
+		# self.travel_limits()
+		self.parent.serial.send_serial('G91')
+		self.parent.serial.send_serial('G1 '+ self.Ax+ '-' +str(self.inc) + ' F4500')

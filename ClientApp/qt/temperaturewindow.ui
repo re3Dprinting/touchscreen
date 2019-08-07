@@ -77,9 +77,9 @@
   <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
-     <x>180</x>
+     <x>160</x>
      <y>340</y>
-     <width>451</width>
+     <width>431</width>
      <height>131</height>
     </rect>
    </property>
@@ -476,7 +476,7 @@
   <widget class="QLabel" name="bedlabel">
    <property name="geometry">
     <rect>
-     <x>600</x>
+     <x>620</x>
      <y>0</y>
      <width>81</width>
      <height>61</height>
@@ -489,10 +489,10 @@
   <widget class="QLabel" name="e2img">
    <property name="geometry">
     <rect>
-     <x>360</x>
+     <x>340</x>
      <y>100</y>
-     <width>111</width>
-     <height>111</height>
+     <width>131</width>
+     <height>131</height>
     </rect>
    </property>
    <property name="text">
@@ -508,10 +508,10 @@
   <widget class="QLabel" name="e1img">
    <property name="geometry">
     <rect>
-     <x>130</x>
+     <x>100</x>
      <y>100</y>
-     <width>111</width>
-     <height>111</height>
+     <width>131</width>
+     <height>131</height>
     </rect>
    </property>
    <property name="text">
@@ -527,10 +527,10 @@
   <widget class="QLabel" name="bedimg">
    <property name="geometry">
     <rect>
-     <x>580</x>
+     <x>590</x>
      <y>100</y>
-     <width>111</width>
-     <height>111</height>
+     <width>131</width>
+     <height>131</height>
     </rect>
    </property>
    <property name="text">
@@ -543,52 +543,13 @@
     <bool>true</bool>
    </property>
   </widget>
-  <widget class="QPushButton" name="e1setbutton">
-   <property name="geometry">
-    <rect>
-     <x>130</x>
-     <y>300</y>
-     <width>89</width>
-     <height>25</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Set</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="e2setbutton">
-   <property name="geometry">
-    <rect>
-     <x>360</x>
-     <y>300</y>
-     <width>89</width>
-     <height>25</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Set</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="bedsetbutton">
-   <property name="geometry">
-    <rect>
-     <x>590</x>
-     <y>300</y>
-     <width>89</width>
-     <height>25</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Set</string>
-   </property>
-  </widget>
   <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>30</x>
-     <y>210</y>
+     <y>240</y>
      <width>751</width>
-     <height>81</height>
+     <height>91</height>
     </rect>
    </property>
    <layout class="QHBoxLayout" name="horizontalLayout_7">
@@ -768,9 +729,9 @@
   <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
-     <x>140</x>
+     <x>120</x>
      <y>50</y>
-     <width>521</width>
+     <width>561</width>
      <height>51</height>
     </rect>
    </property>
@@ -845,6 +806,35 @@
    <property name="icon">
     <iconset>
      <normaloff>img/cooldown.png</normaloff>img/cooldown.png</iconset>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>65</width>
+     <height>65</height>
+    </size>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="Fan">
+   <property name="geometry">
+    <rect>
+     <x>610</x>
+     <y>390</y>
+     <width>75</width>
+     <height>75</height>
+    </rect>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>75</width>
+     <height>75</height>
+    </size>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="icon">
+    <iconset>
+     <normaloff>img/fanoff.png</normaloff>img/fanoff.png</iconset>
    </property>
    <property name="iconSize">
     <size>

@@ -14,7 +14,6 @@ class ControlWindow(QtWidgets.QWidget, Ui_ControlWindow):
 		if self.fullscreen: self.showFullScreen()
 		self.parent = parent
 		self.setWindowFlags(Qt.Tool)
-		self.showFullScreen()
 		self.serial = serial
 
 		self.xinc = None
@@ -38,6 +37,7 @@ class ControlWindow(QtWidgets.QWidget, Ui_ControlWindow):
 		self.SetButtonSettings(self.E1)
 		self.SetButtonSettings(self.E2)
 		self.extruder.addButton(self.E1)
+		self.E1.setChecked(False)
 		self.E1.setChecked(True)
 		self.extruder.addButton(self.E2)
 		self.currentextruder = self.extruder.checkedButton().text()
@@ -60,18 +60,18 @@ class ControlWindow(QtWidgets.QWidget, Ui_ControlWindow):
 	def homexy(self):
 		self.serial.send_serial('G28 XY')
 		#self.serial.send_serial('M114')
-		self.xaxis.position = self.xaxis.home
-		self.yaxis.position = self.yaxis.home
+		# self.xaxis.position = self.xaxis.home
+		# self.yaxis.position = self.yaxis.home
 	def homez(self):
 		self.serial.send_serial('G28 Z')
 		#self.serial.send_serial('M114')
-		self.zaxis.position = self.zaxis.home
+		# self.zaxis.position = self.zaxis.home
 	def homeall(self):
 		self.serial.send_serial('G28')
 		# self.serial.send_serial('M114')
-		self.xaxis.position = self.xaxis.home
-		self.yaxis.position = self.yaxis.home
-		self.zaxis.position = self.zaxis.home
+		# self.xaxis.position = self.xaxis.home
+		# self.yaxis.position = self.yaxis.home
+		# self.zaxis.position = self.zaxis.home
 
 	def updatecurrentextruder(self):
 		self.currentextruder = self.extruder.checkedButton().text()

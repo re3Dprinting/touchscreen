@@ -5,6 +5,7 @@ class Material():
 		self.e1 = e1
 		self.e2 = e2
 		self.bed = bed
+		
 	def e1set(self):
 		self.parent.sete1(self.e1)
 	def e2set(self):

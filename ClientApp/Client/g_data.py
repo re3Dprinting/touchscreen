@@ -31,7 +31,7 @@ class g_data(threading.Thread):
 #	counter list consists of reconnflag/sendflag
 	def run(self):
 		while True:
-			time.sleep(1)
+			time.sleep(0.5)
 			if self.serial.is_open:
 			#Wait three seconds after connection:
 			#- read initial header
@@ -75,7 +75,6 @@ class g_data(threading.Thread):
 			self.extracttemp("B:", data_)
 			self.addtobuffer("T", self.temp)
 			self.check_printing()
-			print self.temp
 		if(msglen >200 and "Updated" in data_):
 			self.extractheader(data_)
 			self.addtobuffer("HD", self.header)

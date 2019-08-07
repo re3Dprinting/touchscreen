@@ -48,66 +48,81 @@
     </size>
    </property>
   </widget>
-  <widget class="QWidget" name="layoutWidget">
+  <widget class="QWidget" name="">
    <property name="geometry">
     <rect>
-     <x>20</x>
-     <y>80</y>
-     <width>341</width>
-     <height>211</height>
+     <x>50</x>
+     <y>70</y>
+     <width>711</width>
+     <height>261</height>
     </rect>
    </property>
-   <layout class="QHBoxLayout" name="horizontalLayout_4">
+   <layout class="QHBoxLayout" name="horizontalLayout">
     <item>
-     <layout class="QVBoxLayout" name="verticalLayout">
+     <layout class="QHBoxLayout" name="horizontalLayout_4">
       <item>
-       <widget class="QPushButton" name="ScanSerial">
-        <property name="text">
-         <string>Scan</string>
-        </property>
-       </widget>
+       <layout class="QVBoxLayout" name="verticalLayout">
+        <item>
+         <widget class="QPushButton" name="ScanSerial">
+          <property name="maximumSize">
+           <size>
+            <width>100</width>
+            <height>100</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>Scan</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="ConnectSerial">
+          <property name="maximumSize">
+           <size>
+            <width>100</width>
+            <height>100</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>Connect</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="DisconnectSerial">
+          <property name="maximumSize">
+           <size>
+            <width>100</width>
+            <height>100</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>Disconnect</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </item>
       <item>
-       <widget class="QPushButton" name="ConnectSerial">
-        <property name="text">
-         <string>Connect</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="DisconnectSerial">
-        <property name="text">
-         <string>Disconnect</string>
-        </property>
+       <widget class="QTableWidget" name="COMlist">
+        <column>
+         <property name="text">
+          <string>Device</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Description</string>
+         </property>
+        </column>
        </widget>
       </item>
      </layout>
     </item>
     <item>
-     <widget class="QTableWidget" name="COMlist">
-      <column>
-       <property name="text">
-        <string>Device</string>
-       </property>
-      </column>
-      <column>
-       <property name="text">
-        <string>Description</string>
-       </property>
-      </column>
-     </widget>
+     <widget class="QTextBrowser" name="SerialOutput"/>
     </item>
    </layout>
-  </widget>
-  <widget class="QTextBrowser" name="SerialOutput">
-   <property name="geometry">
-    <rect>
-     <x>390</x>
-     <y>80</y>
-     <width>376</width>
-     <height>301</height>
-    </rect>
-   </property>
   </widget>
  </widget>
  <resources/>

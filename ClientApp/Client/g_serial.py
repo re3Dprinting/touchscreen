@@ -70,10 +70,11 @@ class g_serial(Serial):
 #	Enable temperature reporting every 5 seconds through M155 S5
 #	Retrieve printer stat through M78 gcode	
 	def en_reporttemp_stat(self):
-		print("SEND: M155 S5\r")
 		#send to serial a M155 code to enable temperture reportings every 5s
 		self.send_serial('M155 S1')
+		#Print Job status
 		self.send_serial('M78')
+		#Get current position 
 		self.send_serial('M114')
 
 	def send_serial(self, gcode):
