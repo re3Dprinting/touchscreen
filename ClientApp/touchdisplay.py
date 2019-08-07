@@ -9,7 +9,7 @@ class TouchDisplay(QtWidgets.QWidget, Ui_TouchDisplay):
     def __init__(self, client, serial, parent = None):
         super(TouchDisplay, self).__init__()
         self.setupUi(self)
-        self.fullscreen = True
+        self.fullscreen = False
         if self.fullscreen: self.showFullScreen()
         self.client = client
         self.serial = serial
@@ -29,7 +29,7 @@ class TouchDisplay(QtWidgets.QWidget, Ui_TouchDisplay):
         self.con_pop = ControlWindow(self.serial, self)
         self.con_pop.show()
     def temperaturepop(self):
-        self.temp_pop = TemperatureWindow(self)
+        self.temp_pop = TemperatureWindow(self.serial, self)
         self.temp_pop.show()
     def settingspop(self):
         self.set_pop = SettingsWindow(self.client, self.serial, self)

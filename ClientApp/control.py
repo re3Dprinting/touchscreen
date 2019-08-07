@@ -1,16 +1,16 @@
 from qt.controlwindow import *
 from PyQt5.QtCore import Qt
+from axis import *
 
 increments_str = ["01", "1","10","100"]
 increments_int = ['0.1', '1', '10', '100']
-axis = ['x', 'y', 'z', 'e']
-Axis = ['X', 'Y', 'Z', 'E']
 
 class ControlWindow(QtWidgets.QWidget, Ui_ControlWindow):
 	def __init__(self, serial, parent = None):
 		super(ControlWindow, self).__init__()
 		self.setupUi(self)
 		if parent.fullscreen: self.fullscreen = True
+		else: self.fullscreen = False
 		if self.fullscreen: self.showFullScreen()
 		self.parent = parent
 		self.setWindowFlags(Qt.Tool)
@@ -43,36 +43,36 @@ class ControlWindow(QtWidgets.QWidget, Ui_ControlWindow):
 		self.currentextruder = self.extruder.checkedButton().text()
 		self.extruder.buttonClicked.connect(self.updatecurrentextruder)
 
-		self.init_increment()
+		self.xaxis = Axis("x", self, 508, 508)
+		self.yaxis = Axis("y", self, 463, 0)
+		self.zaxis = Axis("z", self, 550, 0)
+		self.eaxis = Axis("e", self)
+		# self.init_increment()
+		self.HomeXY.clicked.connect(self.homexy)
+		self.HomeZ.clicked.connect(self.homez)
+		self.HomeAll.clicked.connect(self.homeall)
 		self.Back.clicked.connect(self.close)
+		self.DisableMotors.clicked.connect(self.disablemotors)
 		
+	def disablemotors(self):
+		self.serial.send_serial('M18')
 
-		#print self.xbutton.buttonClicked.connect(self.checkincrement)
+	def homexy(self):
+		self.serial.send_serial('G28 XY')
+		#self.serial.send_serial('M114')
+		self.xaxis.position = self.xaxis.home
+		self.yaxis.position = self.yaxis.home
+	def homez(self):
+		self.serial.send_serial('G28 Z')
+		#self.serial.send_serial('M114')
+		self.zaxis.position = self.zaxis.home
+	def homeall(self):
+		self.serial.send_serial('G28')
+		# self.serial.send_serial('M114')
+		self.xaxis.position = self.xaxis.home
+		self.yaxis.position = self.yaxis.home
+		self.zaxis.position = self.zaxis.home
 
-
-	def init_movement(self):
-		for ax in Axis:
-			getattr(self, ax + "Pos").buttonClicked.connect()
-			getattr(self, ax + "Neg").buttonClicked.connect()
-
-#	for all button groups, initialize the increment values 
-#	self.xbutton.checkedButton().text()
-#	initializes attributes: self.xinc, self.yinc, self.zinc, self.einc
-	def init_increment(self):
-		for ax in axis:
-			inc = getattr(self,ax +"button").checkedButton().text()
-			setattr(self, ax + "inc", inc)
-			getattr(self, ax + "button").buttonClicked.connect(getattr(self,"updateincrement"+ax))
-
-	def updateincrementx(self):
-		self.xinc = self.xbutton.checkedButton().text()
-		print self.xinc
-	def updateincrementy(self):
-		self.yinc = self.ybutton.checkedButton().text()
-	def updateincrementz(self):
-		self.zinc = self.zbutton.checkedButton().text()
-	def updateincremente(self):
-		self.einc = self.ebutton.checkedButton().text()
 	def updatecurrentextruder(self):
 		self.currentextruder = self.extruder.checkedButton().text()
 

@@ -23,7 +23,7 @@ class Ui_SerialWindow(object):
         self.Back.setIconSize(QtCore.QSize(100, 100))
         self.Back.setObjectName("Back")
         self.layoutWidget = QtWidgets.QWidget(SerialWindow)
-        self.layoutWidget.setGeometry(QtCore.QRect(20, 180, 341, 81))
+        self.layoutWidget.setGeometry(QtCore.QRect(20, 80, 341, 211))
         self.layoutWidget.setObjectName("layoutWidget")
         self.horizontalLayout_4 = QtWidgets.QHBoxLayout(self.layoutWidget)
         self.horizontalLayout_4.setObjectName("horizontalLayout_4")

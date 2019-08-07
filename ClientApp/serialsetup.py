@@ -7,6 +7,7 @@ class SerialWindow(QtWidgets.QWidget, Ui_SerialWindow):
 		super(SerialWindow, self).__init__()
 		self.setupUi(self)
 		if parent.fullscreen: self.fullscreen = True
+		else: self.fullscreen = False
 		if self.fullscreen: self.showFullScreen()
 		self.serial = serial
 
@@ -36,9 +37,10 @@ class SerialWindow(QtWidgets.QWidget, Ui_SerialWindow):
 	def connect_serial(self):
 		selected = self.COMlist.currentRow()
 		selected_device = self.COMlist.item(selected,0)
-		if selected_device.text():
+		if selected_device != None:
 			self.serial.com = selected_device.text()
-			self.output_serial(self.serial.attemptconnect())
+			response = str(self.serial.attemptconnect())
+			self.output_serial(response)
 		else:
 			self.output_serial("Please select a device")
 

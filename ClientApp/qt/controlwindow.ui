@@ -135,7 +135,7 @@
     </size>
    </property>
   </widget>
-  <widget class="QPushButton" name="ZNeg">
+  <widget class="QPushButton" name="ZPos">
    <property name="geometry">
     <rect>
      <x>460</x>
@@ -164,7 +164,7 @@
     </size>
    </property>
   </widget>
-  <widget class="QPushButton" name="ZPos">
+  <widget class="QPushButton" name="ZNeg">
    <property name="geometry">
     <rect>
      <x>460</x>
@@ -193,7 +193,7 @@
     </size>
    </property>
   </widget>
-  <widget class="QPushButton" name="EPos">
+  <widget class="QPushButton" name="ENeg">
    <property name="geometry">
     <rect>
      <x>590</x>
@@ -222,7 +222,7 @@
     </size>
    </property>
   </widget>
-  <widget class="QPushButton" name="ENeg">
+  <widget class="QPushButton" name="EPos">
    <property name="geometry">
     <rect>
      <x>590</x>
@@ -308,20 +308,7 @@
     <rect>
      <x>490</x>
      <y>260</y>
-     <width>31</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:20pt;&quot;&gt;-Z&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_6">
-   <property name="geometry">
-    <rect>
-     <x>480</x>
-     <y>10</y>
-     <width>41</width>
+     <width>51</width>
      <height>31</height>
     </rect>
    </property>
@@ -329,30 +316,43 @@
     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:20pt;&quot;&gt;+Z&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_7">
+  <widget class="QLabel" name="label_6">
    <property name="geometry">
     <rect>
-     <x>620</x>
-     <y>260</y>
-     <width>31</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:20pt;&quot;&gt;-E&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_8">
-   <property name="geometry">
-    <rect>
-     <x>610</x>
+     <x>490</x>
      <y>10</y>
      <width>41</width>
      <height>31</height>
     </rect>
    </property>
    <property name="text">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:20pt;&quot;&gt;-Z&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_7">
+   <property name="geometry">
+    <rect>
+     <x>620</x>
+     <y>260</y>
+     <width>51</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:20pt;&quot;&gt;+E&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_8">
+   <property name="geometry">
+    <rect>
+     <x>620</x>
+     <y>10</y>
+     <width>41</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:20pt;&quot;&gt;-E&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_9">

@@ -11,10 +11,8 @@ class g_data(threading.Thread):
 		self.sendflag = False
 		self.serial = None
 
-		#self.start = False
-
 #	Data to be extracted
-		self.temp = dict()
+		self.temp = {'T0': [0,0], 'T1': [0,0], 'B': [0,0]}
 		self.uploaddate= ""
 		self.model = ""
 		self.header = ""
@@ -24,7 +22,9 @@ class g_data(threading.Thread):
 		self.stats = dict()
 		self.buffer = dict()
 		self.ipaddr = self.getipaddress()
-
+		self.position = {'X': 0, 'Y': 0, 'Z':0, 'E':0}
+		self.homeposition = {'X': 508, 'Y': 0, 'Z':0}
+		self.maxposition = {'X': 508, 'Y': 463, 'Z':600}
 	def stop(self):
 		self.start = False
 #	Mainthread for timers
@@ -39,12 +39,11 @@ class g_data(threading.Thread):
 				if self.counter[0] >= 10:
 					self.counter[0] += 1
 					if self.counter[0] >= 13:
-						print "here"
 						self.serial.initserial()
 						self.counter[0] = 0
 				else:
 					self.counter[0] +=1 
-					if self.counter[0] >= 5:
+					if self.counter[0] >= 1:
 						self.counter[0] = 0
 						self.serial.readdata()
 
@@ -76,12 +75,15 @@ class g_data(threading.Thread):
 			self.extracttemp("B:", data_)
 			self.addtobuffer("T", self.temp)
 			self.check_printing()
+			print self.temp
 		if(msglen >200 and "Updated" in data_):
 			self.extractheader(data_)
 			self.addtobuffer("HD", self.header)
 		if("Stats:" in data_):
 			self.extractstats(data_)
 			self.addtobuffer("SS", self.stats)
+		if("Count" in data_):
+			self.extractposition(data_)
 
 #	Check if Print was stopped
 #	If printer's status is Idle, and there is a current file and the heaters are on, change to Active
@@ -115,6 +117,20 @@ class g_data(threading.Thread):
 			if(len(temptup) > 1):
 				tup = [float(x) for x in temptup]
 				self.temp[variable[:-1]] = tup
+
+#	X:508.00 Y:0.00 Z:5.00 E:0.00 Count X:60208 Y:0 Z:20158
+	def extractposition(self, data):
+		data_ = data.split("\n")
+		tmp = ""
+		for d in data_: 
+			if "Count" in d: 
+				tmp = d.split(" Count ")
+				pos = tmp[0].split(" ")
+				for ax in pos:
+					temp = ax.split(":")
+					self.position[temp[0]] = float(temp[1])
+				break
+
 #	Header Data Sample
 #	start
 #	echo:Marlin bugfix-2.0.x
@@ -155,3 +171,7 @@ class g_data(threading.Thread):
 				for j in range(len(d_list[i])):
 					data_component = d_list[i][j].split(":")
 					self.stats[data_component[0].strip()] = data_component[1].strip()
+
+# x = "X:508.00 Y:0.00 Z:5.00 E:0.00 Count X:60208 Y:0 Z:20158"
+# dataclass = g_data()
+# dataclass.extractposition(x)

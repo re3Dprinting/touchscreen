@@ -72,8 +72,16 @@ class g_serial(Serial):
 	def en_reporttemp_stat(self):
 		print("SEND: M155 S5\r")
 		#send to serial a M155 code to enable temperture reportings every 5s
-		self.write('M155 S5\r'.encode('utf-8'))
-		self.write('M78\r'.encode('utf-8'))
+		self.send_serial('M155 S1')
+		self.send_serial('M78')
+		self.send_serial('M114')
+
+	def send_serial(self, gcode):
+		if self.is_open:
+			print "SEND: " + gcode
+			self.write((gcode+'\r').encode('utf-8'))
+		else:
+			print "Serial port is not open"
 
 #	Read serial data function
 #	If the insize is detected, wait half a second for the full transmission to come through
