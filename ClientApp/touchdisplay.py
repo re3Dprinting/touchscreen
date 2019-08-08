@@ -9,8 +9,11 @@ class TouchDisplay(QtWidgets.QWidget, Ui_TouchDisplay):
     def __init__(self, client, serial, parent = None):
         super(TouchDisplay, self).__init__()
         self.setupUi(self)
-        self.fullscreen = False
-        if self.fullscreen: self.showFullScreen()
+
+        self.fullscreen = True
+        if self.fullscreen: 
+            self.setWindowState(self.windowState() | Qt.WindowFullScreen)
+
         self.client = client
         self.serial = serial
 

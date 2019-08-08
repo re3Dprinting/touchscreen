@@ -1,4 +1,4 @@
-from qt.temperaturewindow import *
+from qt.temperaturewindow2 import *
 from PyQt5.QtCore import Qt
 from temp import *
 
@@ -9,9 +9,11 @@ class TemperatureWindow(QtWidgets.QWidget, Ui_TemperatureWindow):
 	def __init__(self, serial, parent = None):
 		super(TemperatureWindow, self).__init__()
 		self.setupUi(self)
+		
 		if parent.fullscreen: self.fullscreen = True
 		else: self.fullscreen = False
-		if self.fullscreen: self.showFullScreen()
+		if self.fullscreen: 
+			self.setWindowState(self.windowState() | Qt.WindowFullScreen)
 
 		self.serial = serial
 		self.parent = parent

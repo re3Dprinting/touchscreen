@@ -9,9 +9,12 @@ class ControlWindow(QtWidgets.QWidget, Ui_ControlWindow):
 	def __init__(self, serial, parent = None):
 		super(ControlWindow, self).__init__()
 		self.setupUi(self)
+
 		if parent.fullscreen: self.fullscreen = True
 		else: self.fullscreen = False
-		if self.fullscreen: self.showFullScreen()
+		if self.fullscreen: 
+			self.setWindowState(self.windowState() | Qt.WindowFullScreen)
+		
 		self.parent = parent
 		self.setWindowFlags(Qt.Tool)
 		self.serial = serial

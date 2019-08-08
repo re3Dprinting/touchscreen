@@ -6,11 +6,12 @@ class SerialWindow(QtWidgets.QWidget, Ui_SerialWindow):
 	def __init__(self, serial, parent = None):
 		super(SerialWindow, self).__init__()
 		self.setupUi(self)
-		if parent.fullscreen: self.fullscreen = True
-		else: self.fullscreen = False
-		if self.fullscreen: self.showFullScreen()
 		self.serial = serial
 
+		if parent.fullscreen: self.fullscreen = True
+		else: self.fullscreen = False
+		if self.fullscreen: 
+			self.setWindowState(self.windowState() | Qt.WindowFullScreen)
 
 		#Make the selection Behavior as selecting the entire row
 		self.COMlist.setSelectionBehavior(QtWidgets.QTableView.SelectRows)
