@@ -10,7 +10,7 @@ class SettingsWindow(QtWidgets.QWidget, Ui_SettingsWindow):
 		self.client_obj = client_obj
 		self.serial_obj = serial_obj
 		if parent.fullscreen: self.fullscreen = True
-		# else: self.fullscreen = False
+		else: self.fullscreen = False
 		# if self.fullscreen: 
 		# 	self.setWindowState(self.windowState() | Qt.WindowFullScreen)
 		self.parent = parent

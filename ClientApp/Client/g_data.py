@@ -1,15 +1,17 @@
 from socket import *
 import time
 import threading
-
+from PyQt5 import QtCore
 #	g_data class is derived from the Thread class for timing applicataions.
 #	g_data class also handles parsing data and a buffer that is periodically sent to the server
-class g_data(threading.Thread):
+class g_data(QtCore.QThread):
+	checkserial = QtCore.pyqtSignal([str],[unicode])
 	def __init__(self):
 		super(g_data,self).__init__()
 		self.counter = [0,0] # Reconnectflag, SendFlag
 		self.sendflag = False
 		self.serial = None
+		self.serial_err = None
 
 #	Data to be extracted
 		self.temp = {'T0': [0,0], 'T1': [0,0], 'B': [0,0]}
@@ -45,7 +47,10 @@ class g_data(threading.Thread):
 					self.counter[0] +=1 
 					if self.counter[0] >= 1:
 						self.counter[0] = 0
-						self.serial.readdata()
+						err = self.serial.readdata()
+						if err != None:
+							self.serial_err = err
+							self.checkserial.emit("checkserial")
 
 #	Attempt to get the IP address through connecting to Google DNS to get current ipaddress
 	def getipaddress(self):

@@ -4,6 +4,7 @@ import time
 from serial import Serial
 import serial.tools.list_ports
 import json
+import threading
 
 #	g_serial class inherits from Serial object
 class g_serial(Serial):
@@ -22,14 +23,16 @@ class g_serial(Serial):
 		except IOError, e:
 			self.is_open = False
 			self.data.changestatus("OF")
-			return e
-		except ValueError:
+			return(self.com+ " Disconnected: "+ str(e))
+		except ValueError,e:
 			#print "COM port is unavalible/ or run program with root permission."
 			#print "Retrying in 5 seconds"
-			return "ValueError :", e
+			self.is_open = False
 			self.data.changestatus("OF")
+			return("ValueError :"+ str(e))
 		except Exception, e:
-			return "Exception Error :", e
+			self.is_open = False
+			return("Exception Error :"+ str(e))
 
 #	COM list consists of attributes, device and description
 	def scan(self):
@@ -88,7 +91,7 @@ class g_serial(Serial):
 #	If the insize is detected, wait half a second for the full transmission to come through
 #	After recieving the data, parse it with the data object
 	def readdata(self):
-		self.catch_except(self.read_d)
+		 return self.catch_except(self.read_d)
 	def read_d(self):
 		insize = self.inWaiting()
 		if insize: 

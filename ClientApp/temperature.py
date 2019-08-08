@@ -34,6 +34,7 @@ class TemperatureWindow(QtWidgets.QWidget, Ui_TemperatureWindow):
 		self.setbuttonstyle(self.bedimg)
 
 		self.initpreheatbuttons()
+		self.initposnegbuttons()
 
 		self.Back.clicked.connect(self.close)
 		self.CoolDown.clicked.connect(self.cool)
@@ -44,19 +45,25 @@ class TemperatureWindow(QtWidgets.QWidget, Ui_TemperatureWindow):
 		self.fanonicon.addPixmap(QtGui.QPixmap("img/fanon.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
 		self.Fan.clicked.connect(self.fan)
 
+	def initposnegbuttons(self):
+		for p in periphs:
+			if p == "all": continue
+			getattr(self, p+ "pos").clicked.connect(getattr(self.temphandler, "increment_"+p))
+			getattr(self, p+ "neg").clicked.connect(getattr(self.temphandler, "decrement_"+p))
+
 	def initpreheatbuttons(self):
 		for m in mats:
 			for p in periphs:
 				getattr(self, m+p).clicked.connect(getattr(getattr(self.temphandler, m), p +'set'))
 
-				#getattr(self.temphandler, m+p).clicked.connect()
-		# getattr(self.temphandler, attr+'pre')
 	def fan(self):
 		if self.fanon:
+			self.parent.serial.send_serial('M106 S255')
 			self.Fan.setIcon(self.fanofficon)
 			self.Fan.setIconSize(QtCore.QSize(65, 65))
 			self.fanon = False
 		elif not self.fanon:
+			self.parent.serial.send_serial('M106 S255')
 			self.Fan.setIcon(self.fanonicon)
 			self.Fan.setIconSize(QtCore.QSize(65, 65))
 			self.fanon = True
@@ -77,8 +84,9 @@ class TemperatureWindow(QtWidgets.QWidget, Ui_TemperatureWindow):
 		# self.changeText(self.bedset, str(self.serial.data.temp["B"][1]))
 
 	def changeText(self, label, text):
-		tmp = QtWidgets.QApplication.translate("TemperatureWindow",label.format[0]+text+label.format[1],None,-1)
-		label.setText(tmp)
+		if self.serial.is_open: 
+			tmp = QtWidgets.QApplication.translate("TemperatureWindow",label.format[0]+text+label.format[1],None,-1)
+			label.setText(tmp)
 	def inittextformat(self,label):
 		label.format = label.text()
 		label.format = label.format.encode("utf-8").split("-----")

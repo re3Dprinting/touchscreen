@@ -24,20 +24,45 @@ class temphandler(threading.Thread):
 
 	def sete1(self, num):
 		self.sete1temp = num
-		if self.parent.serial.is_open: self.parent.changeText(self.parent.e1set, str(self.sete1temp))
+		self.parent.changeText(self.parent.e1set, str(self.sete1temp))
 		self.sende1temp = True
 	def sete2(self, num):
 		self.sete2temp = num
-		if self.parent.serial.is_open: self.parent.changeText(self.parent.e2set, str(self.sete2temp))
+		self.parent.changeText(self.parent.e2set, str(self.sete2temp))
 		self.sende2temp = True
 	def setb(self, num):
 		self.setbedtemp = num
-		if self.parent.serial.is_open: self.parent.changeText(self.parent.bedset, str(self.setbedtemp))
+		self.parent.changeText(self.parent.bedset, str(self.setbedtemp))
 		self.sendbedtemp = True
+	def increment_e1(self):
+		self.sete1temp +=1
+		self.parent.changeText(self.parent.e1set, str(self.sete1temp))
+		self.sende1temp = True
+	def increment_e2(self):
+		self.sete2temp +=1
+		self.parent.changeText(self.parent.e2set, str(self.sete2temp))
+		self.sende2temp = True
+	def increment_bed(self):
+		self.setbedtemp +=1
+		self.parent.changeText(self.parent.bedset, str(self.setbedtemp))
+		self.sendbedtemp = True
+	def decrement_e1(self):
+		self.sete1temp -=1
+		self.parent.changeText(self.parent.e1set, str(self.sete1temp))
+		self.sende1temp = True
+	def decrement_e2(self):
+		self.sete2temp -=1
+		self.parent.changeText(self.parent.e2set, str(self.sete2temp))
+		self.sende2temp = True
+	def decrement_bed(self):
+		self.setbedtemp -=1
+		self.parent.changeText(self.parent.bedset, str(self.setbedtemp))
+		self.sendbedtemp = True
+
 
 	def run(self):
 		while(True):
-			time.sleep(1)
+			time.sleep(0.5)
 			self.parent.updatetemperatures()
 			if self.sende1temp:
 				self.parent.serial.send_serial('M104 T0 S'+str(self.sete1temp))
@@ -48,3 +73,5 @@ class temphandler(threading.Thread):
 			if self.sendbedtemp:
 				self.parent.serial.send_serial('M140 S'+str(self.setbedtemp))
 				self.sendbedtemp = False
+
+			#count+=1 
