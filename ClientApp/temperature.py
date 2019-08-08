@@ -1,12 +1,11 @@
-from qt.temperaturewindow2 import *
+from qt.temperaturewindow import *
 from PyQt5.QtCore import Qt
-from temp import *
 
 mats = ['m1', 'm2', 'm3']
 periphs = ['e1', 'e2', 'bed', 'all']
 
 class TemperatureWindow(QtWidgets.QWidget, Ui_TemperatureWindow):
-	def __init__(self, serial, parent = None):
+	def __init__(self, serial, temphandler, parent = None):
 		super(TemperatureWindow, self).__init__()
 		self.setupUi(self)
 		
@@ -17,8 +16,8 @@ class TemperatureWindow(QtWidgets.QWidget, Ui_TemperatureWindow):
 
 		self.serial = serial
 		self.parent = parent
-		self.temphandler = temphandler(serial, self)
-		self.temphandler.start()
+		self.temphandler = temphandler
+		#self.temphandler.updatetemperatures.connect(self.updatetemperatures)
 		self.inittextformat(self.e1temp)
 		self.inittextformat(self.e2temp)
 		self.inittextformat(self.bedtemp)
@@ -45,6 +44,13 @@ class TemperatureWindow(QtWidgets.QWidget, Ui_TemperatureWindow):
 		self.fanonicon.addPixmap(QtGui.QPixmap("img/fanon.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
 		self.Fan.clicked.connect(self.fan)
 
+		self.unheated = QtGui.QIcon()
+		self.bedheated1 = QtGui.QIcon()
+		self.bedheated2 = QtGui.QIcon()
+		self.unheated.addPixmap(QtGui.QPixmap("img/bed_unheated.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+		self.bedheated1.addPixmap(QtGui.QPixmap("img/bed_heated1.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+		self.bedheated2.addPixmap(QtGui.QPixmap("img/bed_heated2.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+
 	def initposnegbuttons(self):
 		for p in periphs:
 			if p == "all": continue
@@ -58,7 +64,7 @@ class TemperatureWindow(QtWidgets.QWidget, Ui_TemperatureWindow):
 
 	def fan(self):
 		if self.fanon:
-			self.parent.serial.send_serial('M106 S255')
+			self.parent.serial.send_serial('M106 S0')
 			self.Fan.setIcon(self.fanofficon)
 			self.Fan.setIconSize(QtCore.QSize(65, 65))
 			self.fanon = False
@@ -67,6 +73,7 @@ class TemperatureWindow(QtWidgets.QWidget, Ui_TemperatureWindow):
 			self.Fan.setIcon(self.fanonicon)
 			self.Fan.setIconSize(QtCore.QSize(65, 65))
 			self.fanon = True
+
 	def cool(self):
 		self.serial.send_serial('M140 S0')
 		self.serial.send_serial('M104 T0 S0')
@@ -79,9 +86,6 @@ class TemperatureWindow(QtWidgets.QWidget, Ui_TemperatureWindow):
 		self.changeText(self.e1temp, str(int(self.serial.data.temp["T0"][0])))
 		self.changeText(self.e2temp, str(int(self.serial.data.temp["T1"][0])))
 		self.changeText(self.bedtemp, str(int(self.serial.data.temp["B"][0])))
-		# self.changeText(self.e1set, str(self.serial.data.temp["T0"][1]))
-		# self.changeText(self.e2set, str(self.serial.data.temp["T1"][1]))
-		# self.changeText(self.bedset, str(self.serial.data.temp["B"][1]))
 
 	def changeText(self, label, text):
 		if self.serial.is_open: 

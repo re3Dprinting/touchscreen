@@ -6,6 +6,7 @@ from PyQt5 import QtCore
 #	g_data class also handles parsing data and a buffer that is periodically sent to the server
 class g_data(QtCore.QThread):
 	checkserial = QtCore.pyqtSignal([str],[unicode])
+	updatefiles = QtCore.pyqtSignal([str],[unicode])
 	def __init__(self):
 		super(g_data,self).__init__()
 		self.counter = [0,0] # Reconnectflag, SendFlag
@@ -21,6 +22,7 @@ class g_data(QtCore.QThread):
 		self.status = ""
 		self.printtime = ""
 		self.currentfile = ""
+		self.files = dict()
 		self.stats = dict()
 		self.buffer = dict()
 		self.ipaddr = self.getipaddress()
@@ -33,14 +35,14 @@ class g_data(QtCore.QThread):
 #	counter list consists of reconnflag/sendflag
 	def run(self):
 		while True:
-			time.sleep(0.5)
+			time.sleep(0.1)
 			if self.serial.is_open:
 			#Wait three seconds after connection:
 			#- read initial header
 			#- Send gcode to enable periodic temperature reading
 				if self.counter[0] >= 10:
 					self.counter[0] += 1
-					if self.counter[0] >= 13:
+					if self.counter[0] >= 20:
 						self.serial.initserial()
 						self.counter[0] = 0
 				else:
@@ -88,6 +90,9 @@ class g_data(QtCore.QThread):
 			self.addtobuffer("SS", self.stats)
 		if("Count" in data_):
 			self.extractposition(data_)
+		if("Begin file" in data_ or "End file" in data_):
+			self.extractfiles(data_)
+			self.updatefiles.emit("updatefiles")
 
 #	Check if Print was stopped
 #	If printer's status is Idle, and there is a current file and the heaters are on, change to Active
@@ -109,6 +114,15 @@ class g_data(QtCore.QThread):
 		if(self.status != stat):
 			self.status = stat
 			self.addtobuffer("ST", stat)
+#	Begin file list
+#	GUITAR~1.GCO 5335491
+#	End file list
+	def extractfiles(self,data):
+		data_ = data.split('\n')
+		for d in data_:
+			if ".GCO" in d:
+				tmp = d.split(" ")
+				self.files[tmp[0]] = tmp[1]
 
 #	Temperature Data Sample
 #	T:140.69 /0.00' B:52.00 /0.00 T0:140.69 /0.00 T1:24.41 /0.00 @:0 B@:0 @0:0 @1:0
