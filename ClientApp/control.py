@@ -10,10 +10,10 @@ class ControlWindow(QtWidgets.QWidget, Ui_ControlWindow):
 		super(ControlWindow, self).__init__()
 		self.setupUi(self)
 
-		if parent.fullscreen: self.fullscreen = True
-		else: self.fullscreen = False
-		if self.fullscreen: 
-			self.setWindowState(self.windowState() | Qt.WindowFullScreen)
+		# if parent.fullscreen: self.fullscreen = True
+		# else: self.fullscreen = False
+		# if self.fullscreen: 
+		# 	self.setWindowState(self.windowState() | Qt.WindowFullScreen)
 		
 		self.parent = parent
 		self.setWindowFlags(Qt.Tool)

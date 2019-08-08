@@ -10,10 +10,10 @@ class TemperatureWindow(QtWidgets.QWidget, Ui_TemperatureWindow):
 		super(TemperatureWindow, self).__init__()
 		self.setupUi(self)
 		
-		if parent.fullscreen: self.fullscreen = True
-		else: self.fullscreen = False
-		if self.fullscreen: 
-			self.setWindowState(self.windowState() | Qt.WindowFullScreen)
+		# if parent.fullscreen: self.fullscreen = True
+		# else: self.fullscreen = False
+		# if self.fullscreen: 
+		# 	self.setWindowState(self.windowState() | Qt.WindowFullScreen)
 
 		self.serial = serial
 		self.parent = parent

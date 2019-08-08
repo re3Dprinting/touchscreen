@@ -10,9 +10,9 @@ class SettingsWindow(QtWidgets.QWidget, Ui_SettingsWindow):
 		self.client_obj = client_obj
 		self.serial_obj = serial_obj
 		if parent.fullscreen: self.fullscreen = True
-		else: self.fullscreen = False
-		if self.fullscreen: 
-			self.setWindowState(self.windowState() | Qt.WindowFullScreen)
+		# else: self.fullscreen = False
+		# if self.fullscreen: 
+		# 	self.setWindowState(self.windowState() | Qt.WindowFullScreen)
 		self.parent = parent
 		self.parent.setbuttonstyle(self.Serial)
 		self.parent.setbuttonstyle(self.Server)
@@ -22,4 +22,5 @@ class SettingsWindow(QtWidgets.QWidget, Ui_SettingsWindow):
 		self.Back.clicked.connect(self.close)
 
 	def serialpop(self):
-		self.ser_pop.show()
+		if self.fullscreen: self.ser_pop.showFullScreen()
+		else: self.ser_pop.show()

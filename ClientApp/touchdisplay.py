@@ -34,11 +34,14 @@ class TouchDisplay(QtWidgets.QWidget, Ui_TouchDisplay):
         self.Temperature.clicked.connect(self.temperaturepop)
         self.Settings.clicked.connect(self.settingspop)
     def controlpop(self):
-        self.con_pop.show()
+        if self.fullscreen: self.con_pop.showFullScreen()
+        else: self.con_pop.show()
     def temperaturepop(self):
-        self.temp_pop.show()
+        if self.fullscreen: self.temp_pop.showFullScreen()
+        else: self.temp_pop.show()
     def settingspop(self): 
-        self.set_pop.show()
+        if self.fullscreen: self.set_pop.showFullScreen()
+        else: self.set_pop.show()
     def setbuttonstyle(self,obj):
         obj.setStyleSheet("QPushButton{background: rgba(255,255,255,0); outline: none; border: none;} QPushButton:checked{background: rgba(255,255,255,0); outline: none; border: none;} QPushButton:pressed {background: rgba(0,0,0,0.08); outline: none; border: none;}")
 
