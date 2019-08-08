@@ -29,6 +29,10 @@ class TemperatureWindow(QtWidgets.QWidget, Ui_TemperatureWindow):
 		self.changeText(self.e2set, '0')
 		self.changeText(self.bedset, '0')
 
+		self.setbuttonstyle(self.e1img)
+		self.setbuttonstyle(self.e2img)
+		self.setbuttonstyle(self.bedimg)
+
 		self.initpreheatbuttons()
 
 		self.Back.clicked.connect(self.close)
@@ -78,3 +82,6 @@ class TemperatureWindow(QtWidgets.QWidget, Ui_TemperatureWindow):
 	def inittextformat(self,label):
 		label.format = label.text()
 		label.format = label.format.encode("utf-8").split("-----")
+	def setbuttonstyle(self,obj):
+		obj.setStyleSheet("QPushButton{background: rgba(255,255,255,0); outline: none; border: none;}")
+
