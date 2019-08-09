@@ -18,6 +18,7 @@ class TemperatureWindow(QtWidgets.QWidget, Ui_TemperatureWindow):
 		# 	self.setWindowState(self.windowState() | Qt.WindowFullScreen)
 
 		self.serial = serial
+
 		self.parent = parent
 		self.temphandler = temphandler(serial, self)
 		self.temphandler.start()
@@ -110,16 +111,37 @@ class TemperatureWindow(QtWidgets.QWidget, Ui_TemperatureWindow):
 		self.temphandler.sete1(0)
 		self.temphandler.sete2(0)
 		self.temphandler.setb(0)
-		
+	
+	# def checkserial(self):
+	# 	print self.data.serial_err
+	# 	if "Disconnected" in self.serial.data.serial_err:
+	# 		self.cool()
+	# 		self.changeText(self.e1temp, "-----")
+	# 		self.changeText(self.e2temp, "-----")
+	# 		self.changeText(self.bedtemp, "-----")
+
+
 	def updatetemperatures(self):
-		self.changeText(self.e1temp, str(int(self.serial.data.temp["T0"][0])))
-		self.changeText(self.e2temp, str(int(self.serial.data.temp["T1"][0])))
-		self.changeText(self.bedtemp, str(int(self.serial.data.temp["B"][0])))
+		if self.serial.is_open:
+			self.changeText(self.e1temp, str(int(self.serial.data.temp["T0"][0])))
+			self.changeText(self.e2temp, str(int(self.serial.data.temp["T1"][0])))
+			self.changeText(self.bedtemp, str(int(self.serial.data.temp["B"][0])))
+		else:
+			self.changeText(self.e1temp, "-----")
+			self.changeText(self.e2temp, "-----")
+			self.changeText(self.bedtemp, "-----")
+			self.changeText(self.e1set, "-----")
+			self.changeText(self.e2set, "-----")
+			self.changeText(self.bedset, "-----")
+			self.temphandler.sete1temp = 0
+			self.temphandler.sete2temp = 0
+			self.temphandler.setbedtemp = 0
+			self.serial.data.resettemps()
+
 
 	def changeText(self, label, text):
-		if self.serial.is_open: 
-			tmp = QtWidgets.QApplication.translate("TemperatureWindow",label.format[0]+text+label.format[1],None,-1)
-			label.setText(tmp)
+		tmp = QtWidgets.QApplication.translate("TemperatureWindow",label.format[0]+text+label.format[1],None,-1)
+		label.setText(tmp)
 	def inittextformat(self,label):
 		label.format = label.text()
 		label.format = label.format.encode("utf-8").split("-----")

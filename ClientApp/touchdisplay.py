@@ -30,7 +30,7 @@ class TouchDisplay(QtWidgets.QWidget, Ui_TouchDisplay):
         self.set_pop = SettingsWindow(self.client, self.serial, self)
         self.temp_pop = TemperatureWindow(self.serial, self)
         self.con_pop = ControlWindow(self.serial, self)
-        self.print_pop = PrintWindow(self.serial, self)
+        self.print_pop = PrintWindow(self.serial, self.temp_pop, self)
         #self.activeprint_pop = ActivePrintWindow(self.serial, self.temphandler, self.print_pop)
 
         self.Control.clicked.connect(self.controlpop)

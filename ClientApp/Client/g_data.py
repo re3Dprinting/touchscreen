@@ -7,6 +7,7 @@ from PyQt5 import QtCore
 class g_data(QtCore.QThread):
 	checkserial = QtCore.pyqtSignal([str],[unicode])
 	updatefiles = QtCore.pyqtSignal([str],[unicode])
+	printcancelled = QtCore.pyqtSignal([str],[unicode])
 	def __init__(self):
 		super(g_data,self).__init__()
 		self.counter = [0,0] # Reconnectflag, SendFlag
@@ -53,6 +54,9 @@ class g_data(QtCore.QThread):
 						if err != None:
 							self.serial_err = err
 							self.checkserial.emit("checkserial")
+
+	def resettemps(self):
+		self.temp = {'T0': [0,0], 'T1': [0,0], 'B': [0,0]}
 
 #	Attempt to get the IP address through connecting to Google DNS to get current ipaddress
 	def getipaddress(self):
@@ -105,6 +109,7 @@ class g_data(QtCore.QThread):
 			self.changestatus("AC")
 		elif(self.status == "AC" and self.currentfile != "" and idle):
 			print "Print Cancelled!"
+			self.printcancelled.emit("printcancelled")
 			self.changestatus("ON")
 			self.currentfile = ""
 

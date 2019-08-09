@@ -2,11 +2,12 @@ from qt.printwindow import *
 from PyQt5.QtCore import Qt
 
 class PrintWindow(QtWidgets.QWidget, Ui_PrintWindow):
-	def __init__(self, serial, parent = None):
+	def __init__(self, serial, temp_pop, parent = None):
 		super(PrintWindow, self).__init__()
 		self.setupUi(self)
 		self.serial = serial
 		self.serial.data.updatefiles.connect(self.updatefiles)
+		self.temp_pop = temp_pop
 		self.parent = parent
 
 		if parent.fullscreen: self.fullscreen = True
@@ -15,9 +16,9 @@ class PrintWindow(QtWidgets.QWidget, Ui_PrintWindow):
 		self.Back.clicked.connect(self.close)
 		self.ScanSD.clicked.connect(self.scansd)
 		self.StartPrint.clicked.connect(self.startprint)
-		#self.ActivePrint.clicked.connect(self.activeprintpop)
+		self.ActivePrint.clicked.connect(self.activeprintpop)
 		self.ActivePrint.setEnabled(False)
-		# self.activeprint_pop = None
+		self.serial.data.printcancelled.connect(self.cancelled)
 
 
 		self.FileList.setSelectionBehavior(QtWidgets.QTableView.SelectRows)
@@ -48,6 +49,10 @@ class PrintWindow(QtWidgets.QWidget, Ui_PrintWindow):
 
 			self.FileList.setItem(rowpos, 0, file)
 			self.FileList.setItem(rowpos, 1, size)
+	
+	def cancelled(self):
+		self.temp_pop.notactiveprint()
+
 	def startprint(self):
 		selected = self.FileList.currentRow()
 		selected_file = self.FileList.item(selected,0)
@@ -56,10 +61,12 @@ class PrintWindow(QtWidgets.QWidget, Ui_PrintWindow):
 			self.serial.send_serial("M23 "+  selected_file.text())
 			self.serial.send_serial("M24 \r")
 			self.ActivePrint.setEnabled(True)
+		self.temp_pop.activeprint()
+
 
 	def activeprintpop(self):
-		if self.fullscreen: self.activeprint_pop.showFullScreen()
-		else: self.activeprint_pop.show()		
+		if self.fullscreen: self.temp_pop.showFullScreen()
+		else: self.temp_pop.show()		
 
 	def stopprint(self):
 		self.serial.send_serial("M22 \r")
