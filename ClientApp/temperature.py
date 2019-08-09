@@ -1,11 +1,14 @@
 from qt.temperaturewindow import *
+from notactiveprint_wid import *
+from activeprint_wid import *
 from PyQt5.QtCore import Qt
+from temp import *
 
 mats = ['m1', 'm2', 'm3']
 periphs = ['e1', 'e2', 'bed', 'all']
 
 class TemperatureWindow(QtWidgets.QWidget, Ui_TemperatureWindow):
-	def __init__(self, serial, temphandler, parent = None):
+	def __init__(self, serial, parent = None):
 		super(TemperatureWindow, self).__init__()
 		self.setupUi(self)
 		
@@ -16,7 +19,15 @@ class TemperatureWindow(QtWidgets.QWidget, Ui_TemperatureWindow):
 
 		self.serial = serial
 		self.parent = parent
-		self.temphandler = temphandler
+		self.temphandler = temphandler(serial, self)
+		self.temphandler.start()
+
+		self.ActivePrintWid = ActivePrintWidget(self)
+		self.NotActivePrintWid = NotActivePrintWidget(self)
+		self.gridLayout.addWidget(self.NotActivePrintWid, 2, 0, 1, 1)
+		self.gridLayout.addWidget(self.ActivePrintWid,2,0,1,1)
+		self.ActivePrintWid.hide()
+
 		#self.temphandler.updatetemperatures.connect(self.updatetemperatures)
 		self.inittextformat(self.e1temp)
 		self.inittextformat(self.e2temp)
@@ -32,17 +43,16 @@ class TemperatureWindow(QtWidgets.QWidget, Ui_TemperatureWindow):
 		self.setbuttonstyle(self.e2img)
 		self.setbuttonstyle(self.bedimg)
 
-		self.initpreheatbuttons()
 		self.initposnegbuttons()
 
-		self.Back.clicked.connect(self.close)
-		self.CoolDown.clicked.connect(self.cool)
+#		Dynamic Icons
 		self.fanon = False
 		self.fanofficon = QtGui.QIcon()
 		self.fanofficon.addPixmap(QtGui.QPixmap("img/fanoff.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
 		self.fanonicon = QtGui.QIcon()
 		self.fanonicon.addPixmap(QtGui.QPixmap("img/fanon.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-		self.Fan.clicked.connect(self.fan)
+		self.ActivePrintWid.Fan.clicked.connect(self.fan)
+		self.NotActivePrintWid.Fan.clicked.connect(self.fan)
 
 		self.unheated = QtGui.QIcon()
 		self.bedheated1 = QtGui.QIcon()
@@ -50,6 +60,23 @@ class TemperatureWindow(QtWidgets.QWidget, Ui_TemperatureWindow):
 		self.unheated.addPixmap(QtGui.QPixmap("img/bed_unheated.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
 		self.bedheated1.addPixmap(QtGui.QPixmap("img/bed_heated1.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
 		self.bedheated2.addPixmap(QtGui.QPixmap("img/bed_heated2.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+
+
+#		Initilization for Printing and Not-Printing Widgets.
+		
+		self.ActivePrintWid.Back.clicked.connect(self.close)
+
+		self.initpreheatbuttons()
+		self.NotActivePrintWid.Back.clicked.connect(self.close)
+		self.NotActivePrintWid.CoolDown.clicked.connect(self.cool)
+
+	def activeprint(self):
+		self.NotActivePrintWid.hide()
+		self.ActivePrintWid.show()
+
+	def notactiveprint(self):
+		self.NotActivePrintWid.show()
+		self.ActivePrintWid.hide()
 
 	def initposnegbuttons(self):
 		for p in periphs:
@@ -60,7 +87,7 @@ class TemperatureWindow(QtWidgets.QWidget, Ui_TemperatureWindow):
 	def initpreheatbuttons(self):
 		for m in mats:
 			for p in periphs:
-				getattr(self, m+p).clicked.connect(getattr(getattr(self.temphandler, m), p +'set'))
+				getattr(self.NotActivePrintWid, m+p).clicked.connect(getattr(getattr(self.temphandler, m), p +'set'))
 
 	def fan(self):
 		if self.fanon:

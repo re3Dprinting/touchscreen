@@ -4,7 +4,6 @@ from control import *
 from temperature import *
 from settings import *
 from printfile import *
-from temp import *
 import sys
 
 class TouchDisplay(QtWidgets.QWidget, Ui_TouchDisplay):
@@ -12,7 +11,7 @@ class TouchDisplay(QtWidgets.QWidget, Ui_TouchDisplay):
         super(TouchDisplay, self).__init__()
         self.setupUi(self)
 
-        self.fullscreen = False
+        self.fullscreen = True
         if self.fullscreen: 
             self.setWindowState(self.windowState() | Qt.WindowFullScreen)
 
@@ -28,14 +27,11 @@ class TouchDisplay(QtWidgets.QWidget, Ui_TouchDisplay):
         #self.Print.setStyleSheet("QPushButton{background: rgba(255,255,255,0); outline: none; border: none;} QPushButton:checked{background: rgba(255,255,255,0); outline: none; border: none;} QPushButton:pressed {background: rgba(255,255,255,0); outline: none; border: none;}")
         #self.Settings.setStyleSheet("QPushButton{background: rgba(255,255,255,0); outline: none; border: none;} QPushButton:checked{background: rgba(255,255,255,0); outline: none; border: none;} QPushButton:pressed {background: rgba(255,255,255,0); outline: none; border: none;}")
         
-        self.temphandler = temphandler(serial, self)
         self.set_pop = SettingsWindow(self.client, self.serial, self)
-        self.temp_pop = TemperatureWindow(self.serial, self.temphandler, self)
+        self.temp_pop = TemperatureWindow(self.serial, self)
         self.con_pop = ControlWindow(self.serial, self)
-        self.print_pop = PrintWindow(self.serial,self.temphandler, self)
-        self.activeprint_pop = ActivePrintWindow(self.serial, self.temphandler, self.print_pop)
-        self.temphandler.parent = self.temp_pop
-        self.temphandler.start()
+        self.print_pop = PrintWindow(self.serial, self)
+        #self.activeprint_pop = ActivePrintWindow(self.serial, self.temphandler, self.print_pop)
 
         self.Control.clicked.connect(self.controlpop)
         self.Temperature.clicked.connect(self.temperaturepop)
