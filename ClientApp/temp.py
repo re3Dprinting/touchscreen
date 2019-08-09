@@ -79,7 +79,7 @@ class temphandler(QtCore.QThread):
 			self.parent.serial.send_serial('M140 S'+str(self.setbedtemp))
 			self.sendbedtemp = False
 	def flashbedicon(self):
-		if self.setbedtemp > 50:
+		if self.setbedtemp >= 50:
 			self.bedflash += 1
 			if self.bedflash == 2:
 			    self.parent.bedimg.setIcon(self.parent.unheated)

@@ -90,25 +90,27 @@ class TemperatureWindow(QtWidgets.QWidget, Ui_TemperatureWindow):
 				getattr(self.NotActivePrintWid, m+p).clicked.connect(getattr(getattr(self.temphandler, m), p +'set'))
 
 	def fan(self):
-		if self.fanon:
-			self.parent.serial.send_serial('M106 S0')
-			self.Fan.setIcon(self.fanofficon)
-			self.Fan.setIconSize(QtCore.QSize(65, 65))
-			self.fanon = False
-		elif not self.fanon:
-			self.parent.serial.send_serial('M106 S255')
-			self.Fan.setIcon(self.fanonicon)
-			self.Fan.setIconSize(QtCore.QSize(65, 65))
-			self.fanon = True
+		if self.serial.is_open:
+			if self.fanon:
+				self.serial.send_serial('M106 S0')
+				self.ActivePrintWid.Fan.setIcon(self.fanofficon)
+				self.ActivePrintWid.Fan.setIconSize(QtCore.QSize(65, 65))
+				self.NotActivePrintWid.Fan.setIcon(self.fanofficon)
+				self.NotActivePrintWid.Fan.setIconSize(QtCore.QSize(65, 65))
+				self.fanon = False
+			elif not self.fanon:
+				self.serial.send_serial('M106 S255')
+				self.ActivePrintWid.Fan.setIcon(self.fanonicon)
+				self.ActivePrintWid.Fan.setIconSize(QtCore.QSize(65, 65))
+				self.NotActivePrintWid.Fan.setIcon(self.fanonicon)
+				self.NotActivePrintWid.Fan.setIconSize(QtCore.QSize(65, 65))
+				self.fanon = True
 
 	def cool(self):
-		self.serial.send_serial('M140 S0')
-		self.serial.send_serial('M104 T0 S0')
-		self.serial.send_serial('M104 T1 S0')
-		self.changeText(self.e1set, '0')
-		self.changeText(self.e2set, '0')
-		self.changeText(self.bedset, '0')
-
+		self.temphandler.sete1(0)
+		self.temphandler.sete2(0)
+		self.temphandler.setb(0)
+		
 	def updatetemperatures(self):
 		self.changeText(self.e1temp, str(int(self.serial.data.temp["T0"][0])))
 		self.changeText(self.e2temp, str(int(self.serial.data.temp["T1"][0])))

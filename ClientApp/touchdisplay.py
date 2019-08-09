@@ -11,7 +11,7 @@ class TouchDisplay(QtWidgets.QWidget, Ui_TouchDisplay):
         super(TouchDisplay, self).__init__()
         self.setupUi(self)
 
-        self.fullscreen = True
+        self.fullscreen = False
         if self.fullscreen: 
             self.setWindowState(self.windowState() | Qt.WindowFullScreen)
 
