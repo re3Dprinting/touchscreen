@@ -77,4 +77,4 @@ class AddMachineWindow(QtWidgets.QWidget, Ui_addmachine):
             if gigabotnum and len(gigabotnum.text()) != 0: thread.gigabot.idnum= gigabotnum.text()
 
             self.main.addModule(thread)
-        self.close()
+        #self.close()
