@@ -47,15 +47,15 @@ class temphandler(QtCore.QThread):
 		self.parent.changeText(self.parent.bedset, str(self.setbedtemp))
 		self.sendbedtemp = True
 	def decrement_e1(self):
-		if self.sete1temp >= 0: self.sete1temp -=1
+		if self.sete1temp > 0: self.sete1temp -=1
 		self.parent.changeText(self.parent.e1set, str(self.sete1temp))
 		self.sende1temp = True
 	def decrement_e2(self):
-		if self.sete2temp >= 0: self.sete2temp -=1
+		if self.sete2temp > 0: self.sete2temp -=1
 		self.parent.changeText(self.parent.e2set, str(self.sete2temp))
 		self.sende2temp = True
 	def decrement_bed(self):
-		if self.setbedtemp >= 0: self.setbedtemp -=1
+		if self.setbedtemp > 0: self.setbedtemp -=1
 		self.parent.changeText(self.parent.bedset, str(self.setbedtemp))
 		self.sendbedtemp = True
 

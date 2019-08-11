@@ -7,22 +7,24 @@ class ServerWindow(QtWidgets.QWidget, Ui_ServerWindow):
 		self.client = client
 		self.setupUi(self)
 
-
-		self.client.data.checkserver.connect(self.checkserver)
+		self.IPText.setText(self.client.host)
+		self.client.data.checkserver_msg.connect(self.checkserver_msg)
 		self.Back.clicked.connect(self.close)
 		self.ConnectServer.clicked.connect(self.connect_server)
+		self.DisconnectServer.clicked.connect(self.disconnect_server)
+
 		#self.DisconnectServer.clicked.connect(self.disconnect_server)
 
 	def connect_server(self):
 		err = self.client.attemptconnect()
 		if err != None: self.outputserver(err)
 
+	def disconnect_server(self):
+		err = self.client.disconnect()
+		if err != None: self.outputserver(err)
 
-	# def disconnect_server(self):
-	# 	self.
-
-	def checkserver(self):
-		self.outputserver(self.client.data.client_err)
+	def checkserver_msg(self):
+		self.outputserver(self.client.data.client_msg)
 
 	def outputserver(self, text):
 		self.ServerOutput.moveCursor(QtGui.QTextCursor.End)

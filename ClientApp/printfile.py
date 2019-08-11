@@ -63,6 +63,7 @@ class PrintWindow(QtWidgets.QWidget, Ui_PrintWindow):
 		selected_file = self.FileList.item(selected,0)
 		if selected_file != None:
 			self.serial.data.currentfile = selected_file.text()
+			self.serial.data.addtobuffer("FI", self.serial.data.currentfile)
 			self.serial.send_serial("M23 "+  selected_file.text())
 			self.serial.send_serial("M24 \r")
 			self.StartPrint.setEnabled(False)

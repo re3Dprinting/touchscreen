@@ -5,17 +5,17 @@ from PyQt5 import QtCore
 #	g_data class is derived from the Thread class for timing applicataions.
 #	g_data class also handles parsing data and a buffer that is periodically sent to the server
 class g_data(QtCore.QThread):
-	checkserial = QtCore.pyqtSignal([str],[unicode])
-	checkserver = QtCore.pyqtSignal([str],[unicode])
+	checkserial_msg = QtCore.pyqtSignal([str],[unicode])
+	checkserver_msg = QtCore.pyqtSignal([str],[unicode])
 	updatefiles = QtCore.pyqtSignal([str],[unicode])
 	printcancelled = QtCore.pyqtSignal([str],[unicode])
 	def __init__(self):
 		super(g_data,self).__init__()
 		self.counter = [0,0] # Serial Counter, Server Counter
 		self.serial = None
-		self.serial_err = None
+		self.serial_msg = None
 		self.client = None
-		self.client_err = None
+		self.client_msg = None
 
 #	Data to be extracted
 		self.temp = {'T0': [0,0], 'T1': [0,0], 'B': [0,0]}
@@ -54,27 +54,28 @@ class g_data(QtCore.QThread):
 						self.counter[0] = 0
 						err = self.serial.readdata()
 						if err != None:
-							self.serial_err = err
-							self.checkserial.emit("checkserial")
+							self.serial_msg = err
+							self.checkserial_msg.emit("checkserial")
 							self.printcancelled.emit("printcancelled")
 			if self.client.is_conn:
-				if self.client.justconnected:
-					self.data.buffer.clear()
-					self.data.addtobuffer("HD",self.datathread.header)
-					self.data.addtobuffer("SS",self.datathread.stats)
-					self.data.addtobuffer("ST",self.datathread.status)
-					self.data.addtobuffer("FI", self.datathread.currentfile)
-					self.server_err = self.client.senddata()
-					if server_err != None:
-						self.checkserver.emit("checkserver")
-					self.client.justconnected = False
+				if self.client.just_conn and self.serial.is_open:
+					self.buffer.clear()
+					self.addtobuffer("HD",self.header)
+					self.addtobuffer("SS",self.stats)
+					self.addtobuffer("ST",self.status)
+					self.addtobuffer("FI", self.currentfile)
+					self.client_msg = self.client.senddata()
+					if self.client_msg != None:
+						self.checkserver_msg.emit("checkserver_msg")
+					self.client.just_conn = False
 					self.buffer.clear()
 				if self.counter[1] >= 50:
-					self.server_err = self.client.senddata()
-					if server_err != None:
-						self.checkserver.emit("checkserver")
+					self.client_msg = self.client.senddata()
+					if self.client_msg != None:
+						self.checkserver_msg.emit("checkserver_msg")
 					self.buffer.clear()
 					self.counter[1] = 0
+				self.counter[1]+= 1
 
 	def resettemps(self):
 		self.temp = {'T0': [0,0], 'T1': [0,0], 'B': [0,0]}

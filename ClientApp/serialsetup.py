@@ -7,7 +7,7 @@ class SerialWindow(QtWidgets.QWidget, Ui_SerialWindow):
 		super(SerialWindow, self).__init__()
 		self.setupUi(self)
 		self.serial = serial
-		self.serial.data.checkserial.connect(self.checkserial)
+		self.serial.data.checkserial_msg.connect(self.checkserial_msg)
 
 
 		# if parent.fullscreen: self.fullscreen = True
@@ -33,8 +33,8 @@ class SerialWindow(QtWidgets.QWidget, Ui_SerialWindow):
 		self.DisconnectSerial.clicked.connect(self.disconnect_serial)
 
 
-	def checkserial(self):
-		self.output_serial(self.serial.data.serial_err)
+	def checkserial_msg(self):
+		self.output_serial(self.serial.data.serial_msg)
 		self.scan_serial()
 
 	def output_serial(self, text):

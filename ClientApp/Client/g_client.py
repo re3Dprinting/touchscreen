@@ -44,6 +44,10 @@ class g_client(socket):
 	def attemptconnect(self):
 		if not self.is_conn: 
 			return self.catch_except(self.conn_client)
+	def disconnect(self):
+		self.is_conn = False
+		self.close()
+		return "Server Disconnected"
 		
 	def conn_client(self):
 		if not self.is_conn:
@@ -52,9 +56,10 @@ class g_client(socket):
 			self.setblocking(False)
 			err_no = self.getsockopt(SOL_SOCKET,SO_ERROR)
 			if(err == 0 and err_no == 0):
-				return "Connected to Server"
 				self.just_conn = True
 				self.is_conn = True
+				if not self.data.serial.is_open: self.data.changestatus("OF")
+				return "Connected to Server"
 			else:
 				if err != 0: raise error(err, os.strerror(err))
 				if err_no != 0: raise error( err_no, os.strerror(err_no))
@@ -62,7 +67,10 @@ class g_client(socket):
 #	senddata function converts data into json string then encodes it
 #	If no data, send "None" msg to ping server. 
 	def senddata(self):
-		return self.catch_except(self.send_d, self.data.buffer)
+		msg = self.catch_except(self.send_d, self.data.buffer)
+		if msg == None:
+			return "SENT: " + str(self.data.buffer)
+		return msg
 
 	def send_d(self, msg):
 		temp = json.dumps(msg).encode("base64")
