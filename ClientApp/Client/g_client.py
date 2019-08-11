@@ -45,10 +45,9 @@ class g_client(socket):
 	def conn_client(self):
 		if not self.is_conn:
 			socket.__init__(self,AF_INET,SOCK_STREAM)
-			self.setblocking(False)
 			err = self.connect_ex((host,port))
+			self.setblocking(False)
 			err_no = self.getsockopt(SOL_SOCKET,SO_ERROR)
-			print "got here"
 			if(err == 0 and err_no == 0):
 				return "Connected to Server"
 				self.is_conn = True
