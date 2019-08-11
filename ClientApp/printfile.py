@@ -52,6 +52,8 @@ class PrintWindow(QtWidgets.QWidget, Ui_PrintWindow):
 	
 	def cancelled(self):
 		self.temp_pop.notactiveprint()
+		self.ActivePrint.setEnabled(False)
+		self.StartPrint.setEnabled(True)
 
 	def startprint(self):
 		selected = self.FileList.currentRow()
@@ -60,6 +62,7 @@ class PrintWindow(QtWidgets.QWidget, Ui_PrintWindow):
 			self.serial.data.currentfile = selected_file.text()
 			self.serial.send_serial("M23 "+  selected_file.text())
 			self.serial.send_serial("M24 \r")
+			self.StartPrint.setEnabled(False)
 			self.ActivePrint.setEnabled(True)
 		self.temp_pop.activeprint()
 
