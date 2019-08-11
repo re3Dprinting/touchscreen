@@ -7,6 +7,8 @@ class ServerWindow(QtWidgets.QWidget, Ui_ServerWindow):
 		self.client = client
 		self.setupUi(self)
 
+
+		self.client.data.checkserver.connect(self.checkserver)
 		self.Back.clicked.connect(self.close)
 		self.ConnectServer.clicked.connect(self.connect_server)
 		#self.DisconnectServer.clicked.connect(self.disconnect_server)
@@ -18,6 +20,9 @@ class ServerWindow(QtWidgets.QWidget, Ui_ServerWindow):
 
 	# def disconnect_server(self):
 	# 	self.
+
+	def checkserver(self):
+		self.outputserver(self.client.data.client_err)
 
 	def outputserver(self, text):
 		self.ServerOutput.moveCursor(QtGui.QTextCursor.End)

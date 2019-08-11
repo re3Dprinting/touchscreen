@@ -6,14 +6,16 @@ from PyQt5 import QtCore
 #	g_data class also handles parsing data and a buffer that is periodically sent to the server
 class g_data(QtCore.QThread):
 	checkserial = QtCore.pyqtSignal([str],[unicode])
+	checkserver = QtCore.pyqtSignal([str],[unicode])
 	updatefiles = QtCore.pyqtSignal([str],[unicode])
 	printcancelled = QtCore.pyqtSignal([str],[unicode])
 	def __init__(self):
 		super(g_data,self).__init__()
 		self.counter = [0,0] # Serial Counter, Server Counter
-		self.sendflag = False
 		self.serial = None
 		self.serial_err = None
+		self.client = None
+		self.client_err = None
 
 #	Data to be extracted
 		self.temp = {'T0': [0,0], 'T1': [0,0], 'B': [0,0]}
@@ -55,6 +57,24 @@ class g_data(QtCore.QThread):
 							self.serial_err = err
 							self.checkserial.emit("checkserial")
 							self.printcancelled.emit("printcancelled")
+			if self.client.is_conn:
+				if self.client.justconnected:
+					self.data.buffer.clear()
+					self.data.addtobuffer("HD",self.datathread.header)
+					self.data.addtobuffer("SS",self.datathread.stats)
+					self.data.addtobuffer("ST",self.datathread.status)
+					self.data.addtobuffer("FI", self.datathread.currentfile)
+					self.server_err = self.client.senddata()
+					if server_err != None:
+						self.checkserver.emit("checkserver")
+					self.client.justconnected = False
+					self.buffer.clear()
+				if self.counter[1] >= 50:
+					self.server_err = self.client.senddata()
+					if server_err != None:
+						self.checkserver.emit("checkserver")
+					self.buffer.clear()
+					self.counter[1] = 0
 
 	def resettemps(self):
 		self.temp = {'T0': [0,0], 'T1': [0,0], 'B': [0,0]}

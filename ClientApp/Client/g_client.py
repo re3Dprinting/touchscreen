@@ -10,8 +10,12 @@ port = 63200
 
 #	The g_client class inherits from the socket class
 class g_client(socket):
-	def __init__(self):
-		#self.data = data_obj
+	def __init__(self, data_obj):
+		self.data = data_obj
+		self.data.client = self
+		self.host = "192.168.1.49"
+		self.port = 63200
+		self.just_conn = False
 		self.is_conn = False
 		
 #	Main exception handling wrapper function
@@ -39,7 +43,6 @@ class g_client(socket):
 #	Non-blocking program using connect_ex and getsockopt to catch errors
 	def attemptconnect(self):
 		if not self.is_conn: 
-			self.__init__()
 			return self.catch_except(self.conn_client)
 		
 	def conn_client(self):
@@ -50,6 +53,7 @@ class g_client(socket):
 			err_no = self.getsockopt(SOL_SOCKET,SO_ERROR)
 			if(err == 0 and err_no == 0):
 				return "Connected to Server"
+				self.just_conn = True
 				self.is_conn = True
 			else:
 				if err != 0: raise error(err, os.strerror(err))
@@ -57,8 +61,8 @@ class g_client(socket):
 
 #	senddata function converts data into json string then encodes it
 #	If no data, send "None" msg to ping server. 
-	def senddata(self, msg):
-		self.catch_except(self.send_d, msg)
+	def senddata(self):
+		return self.catch_except(self.send_d, self.data.buffer)
 
 	def send_d(self, msg):
 		temp = json.dumps(msg).encode("base64")
