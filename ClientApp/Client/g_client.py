@@ -10,47 +10,48 @@ port = 63200
 
 #	The g_client class inherits from the socket class
 class g_client(socket):
-	def __init__(self, data_obj):
-		self.data = data_obj
+	def __init__(self):
+		#self.data = data_obj
 		self.is_conn = False
 		
 #	Main exception handling wrapper function
 	def catch_except(self,function, arg1 = ""):
 		try:
-			if arg1 != "": function(arg1)
-			else: function()
+			if arg1 != "": return function(arg1)
+			else: return function()
 		except Exception as e:
 #			Exception for handling server timeout
 			if e.args[0] == errno.EAGAIN or e.args[0] == errno.EWOULDBLOCK:
-				print "Server Timeout Out! Please reset.", e
+				return "Server Timeout Out! Please reset." + str(e)
 			elif e.args[0] == 32 or e.args[0] == 104:
 				self.is_conn = False
-				self.data.server_timeout = False
-				print "Server Disconnected!", e
+				# self.data.server_timeout = False
+				return "Server Disconnected!" + str(e)
 			elif e.args[0] == 111:
-				self.data.server_timeout = False
+				# self.data.server_timeout = False
 				self.is_conn = False
-				print "Error Connecting to Server: ", e
+				return "Error Connecting to Server: " + str(e)
 			else:
 				self.is_conn = False
-				print "New error: ", e
+				return "New error: " + str(e)
 
 #	Initial attempt to connect to server
 #	Non-blocking program using connect_ex and getsockopt to catch errors
-	def attemptconnect(self, data):
+	def attemptconnect(self):
 		if not self.is_conn: 
-			self.__init__(data)
-			self.catch_except(self.conn_client)
+			self.__init__()
+			return self.catch_except(self.conn_client)
 		
 	def conn_client(self):
 		if not self.is_conn:
 			socket.__init__(self,AF_INET,SOCK_STREAM)
+			self.setblocking(False)
 			err = self.connect_ex((host,port))
 			err_no = self.getsockopt(SOL_SOCKET,SO_ERROR)
+			print "got here"
 			if(err == 0 and err_no == 0):
-				print "Connected to Server"
+				return "Connected to Server"
 				self.is_conn = True
-				self.setblocking(False)
 			else:
 				if err != 0: raise error(err, os.strerror(err))
 				if err_no != 0: raise error( err_no, os.strerror(err_no))

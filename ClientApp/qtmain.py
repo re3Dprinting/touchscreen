@@ -14,7 +14,7 @@ import os
 if __name__ == "__main__":
 
 	data_thread = g_data()
-	client_conn = g_client(data_thread)
+	client_conn = g_client()
 	serial_conn = g_serial(data_thread)
 	data_thread.start()
 

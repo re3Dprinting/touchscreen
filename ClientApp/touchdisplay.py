@@ -31,12 +31,12 @@ class TouchDisplay(QtWidgets.QWidget, Ui_TouchDisplay):
         self.temp_pop = TemperatureWindow(self.serial, self)
         self.con_pop = ControlWindow(self.serial, self)
         self.print_pop = PrintWindow(self.serial, self.temp_pop, self)
-        #self.activeprint_pop = ActivePrintWindow(self.serial, self.temphandler, self.print_pop)
 
         self.Control.clicked.connect(self.controlpop)
         self.Temperature.clicked.connect(self.temperaturepop)
         self.Settings.clicked.connect(self.settingspop)
         self.Print.clicked.connect(self.printpop)
+
     def controlpop(self):
         if self.fullscreen: self.con_pop.showFullScreen()
         else: self.con_pop.show()

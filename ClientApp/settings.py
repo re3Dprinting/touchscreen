@@ -1,6 +1,7 @@
 from qt.settingswindow import *
 from PyQt5.QtCore import Qt
 from serialsetup import *
+from server import *
 
 
 class SettingsWindow(QtWidgets.QWidget, Ui_SettingsWindow):
@@ -17,10 +18,17 @@ class SettingsWindow(QtWidgets.QWidget, Ui_SettingsWindow):
 		self.parent.setbuttonstyle(self.Serial)
 		self.parent.setbuttonstyle(self.Server)
 
-		self.ser_pop = SerialWindow(self.serial_obj, self)
-		self.Serial.clicked.connect(self.serialpop)
+		self.server_pop = ServerWindow(self.client_obj, self)
+		self.serial_pop = SerialWindow(self.serial_obj, self)
+		self.Server.clicked.connect(self.serialpop)
+		self.Server.clicked.connect(self.serverpop)
 		self.Back.clicked.connect(self.close)
 
+
 	def serialpop(self):
-		if self.fullscreen: self.ser_pop.showFullScreen()
-		else: self.ser_pop.show()
+		if self.fullscreen: self.serial_pop.showFullScreen()
+		else: self.serial_pop.show()
+	def serverpop(self):
+		if self.fullscreen: self.server_pop.showFullScreen()
+		else: self.server_pop.show()
+	

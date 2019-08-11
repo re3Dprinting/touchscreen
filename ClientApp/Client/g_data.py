@@ -10,7 +10,7 @@ class g_data(QtCore.QThread):
 	printcancelled = QtCore.pyqtSignal([str],[unicode])
 	def __init__(self):
 		super(g_data,self).__init__()
-		self.counter = [0,0] # Reconnectflag, SendFlag
+		self.counter = [0,0] # Serial Counter, Server Counter
 		self.sendflag = False
 		self.serial = None
 		self.serial_err = None
@@ -54,6 +54,7 @@ class g_data(QtCore.QThread):
 						if err != None:
 							self.serial_err = err
 							self.checkserial.emit("checkserial")
+							self.printcancelled.emit("printcancelled")
 
 	def resettemps(self):
 		self.temp = {'T0': [0,0], 'T1': [0,0], 'B': [0,0]}
