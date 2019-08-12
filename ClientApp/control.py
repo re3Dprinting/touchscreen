@@ -16,7 +16,6 @@ class ControlWindow(QtWidgets.QWidget, Ui_ControlWindow):
 		# 	self.setWindowState(self.windowState() | Qt.WindowFullScreen)
 		
 		self.parent = parent
-		self.setWindowFlags(Qt.Tool)
 		self.serial = serial
 
 		self.xinc = None
