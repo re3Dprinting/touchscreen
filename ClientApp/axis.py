@@ -36,9 +36,11 @@ class Axis():
 		# self.position += float(self.inc)
 		# self.travel_limits()
 		self.parent.serial.send_serial('G91')
-		self.parent.serial.send_serial('G1 '+ self.Ax+ str(self.inc) + ' F4500')
+		if self.ax == "e": self.parent.serial.send_serial('G1 '+ self.Ax+ str(self.inc) + ' F60')
+		else: self.parent.serial.send_serial('G1 '+ self.Ax+ str(self.inc) + ' F4500')
 	def moveneg(self):
 		# self.position -= float(self.inc)
 		# self.travel_limits()
 		self.parent.serial.send_serial('G91')
-		self.parent.serial.send_serial('G1 '+ self.Ax+ '-' +str(self.inc) + ' F4500')
+		if self.ax == "e": self.parent.serial.send_serial('G1 '+ self.Ax+ '-'+ str(self.inc) + ' F60')
+		else: self.parent.serial.send_serial('G1 '+ self.Ax+ '-'+str(self.inc) + ' F4500')
