@@ -2,13 +2,13 @@ from qt.temperaturewindow import *
 from notactiveprint_wid import *
 from activeprint_wid import *
 from PyQt5.QtCore import Qt
-from temp import *
+from event_hand import *
 
 mats = ['m1', 'm2', 'm3']
 periphs = ['e1', 'e2', 'bed', 'all']
 
 class TemperatureWindow(QtWidgets.QWidget, Ui_TemperatureWindow):
-	def __init__(self, serial, parent = None):
+	def __init__(self, serial, event_handler, parent = None):
 		super(TemperatureWindow, self).__init__()
 		self.setupUi(self)
 		
@@ -18,10 +18,8 @@ class TemperatureWindow(QtWidgets.QWidget, Ui_TemperatureWindow):
 		# 	self.setWindowState(self.windowState() | Qt.WindowFullScreen)
 
 		self.serial = serial
-
 		self.parent = parent
-		self.temphandler = temphandler(serial, self)
-		self.temphandler.start()
+		self.event_handler = event_handler
 
 		self.ActivePrintWid = ActivePrintWidget(self)
 		self.NotActivePrintWid = NotActivePrintWidget(self)
@@ -29,7 +27,7 @@ class TemperatureWindow(QtWidgets.QWidget, Ui_TemperatureWindow):
 		self.gridLayout.addWidget(self.ActivePrintWid,2,0,1,1)
 		self.ActivePrintWid.hide()
 
-		#self.temphandler.updatetemperatures.connect(self.updatetemperatures)
+		#self.event_handler.updatetemperatures.connect(self.updatetemperatures)
 		self.inittextformat(self.e1temp)
 		self.inittextformat(self.e2temp)
 		self.inittextformat(self.bedtemp)
@@ -82,13 +80,13 @@ class TemperatureWindow(QtWidgets.QWidget, Ui_TemperatureWindow):
 	def initposnegbuttons(self):
 		for p in periphs:
 			if p == "all": continue
-			getattr(self, p+ "pos").clicked.connect(getattr(self.temphandler, "increment_"+p))
-			getattr(self, p+ "neg").clicked.connect(getattr(self.temphandler, "decrement_"+p))
+			getattr(self, p+ "pos").clicked.connect(getattr(self.event_handler, "increment_"+p))
+			getattr(self, p+ "neg").clicked.connect(getattr(self.event_handler, "decrement_"+p))
 
 	def initpreheatbuttons(self):
 		for m in mats:
 			for p in periphs:
-				getattr(self.NotActivePrintWid, m+p).clicked.connect(getattr(getattr(self.temphandler, m), p +'set'))
+				getattr(self.NotActivePrintWid, m+p).clicked.connect(getattr(getattr(self.event_handler, m), p +'set'))
 
 	def fan(self):
 		if self.serial.is_open:
@@ -108,9 +106,9 @@ class TemperatureWindow(QtWidgets.QWidget, Ui_TemperatureWindow):
 				self.fanon = True
 
 	def cool(self):
-		self.temphandler.sete1(0)
-		self.temphandler.sete2(0)
-		self.temphandler.setb(0)
+		self.event_handler.sete1(0)
+		self.event_handler.sete2(0)
+		self.event_handler.setb(0)
 	
 	# def checkserial(self):
 	# 	print self.data.serial_err
@@ -133,9 +131,9 @@ class TemperatureWindow(QtWidgets.QWidget, Ui_TemperatureWindow):
 			self.changeText(self.e1set, "-----")
 			self.changeText(self.e2set, "-----")
 			self.changeText(self.bedset, "-----")
-			self.temphandler.sete1temp = 0
-			self.temphandler.sete2temp = 0
-			self.temphandler.setbedtemp = 0
+			self.event_handler.sete1temp = 0
+			self.event_handler.sete2temp = 0
+			self.event_handler.setbedtemp = 0
 			self.serial.data.resettemps()
 
 

@@ -49,7 +49,7 @@ class ControlWindow(QtWidgets.QWidget, Ui_ControlWindow):
 		self.yaxis = Axis("y", self, 463, 0)
 		self.zaxis = Axis("z", self, 550, 0)
 		self.eaxis = Axis("e", self)
-		# self.init_increment()
+
 		self.HomeXY.clicked.connect(self.homexy)
 		self.HomeZ.clicked.connect(self.homez)
 		self.HomeAll.clicked.connect(self.homeall)

@@ -3,10 +3,12 @@ from PyQt5.QtCore import Qt
 
 
 class SerialWindow(QtWidgets.QWidget, Ui_SerialWindow):
-	def __init__(self, serial, parent = None):
+	def __init__(self, serial, event_handler, parent = None):
 		super(SerialWindow, self).__init__()
 		self.setupUi(self)
 		self.serial = serial
+		self.event_handler = event_handler
+		self.event_handler.reconnect_serial.connect(self.reconnect_serial)
 		self.serial.data.checkserial_msg.connect(self.checkserial_msg)
 
 
@@ -32,6 +34,9 @@ class SerialWindow(QtWidgets.QWidget, Ui_SerialWindow):
 		self.ConnectSerial.clicked.connect(self.connect_serial)
 		self.DisconnectSerial.clicked.connect(self.disconnect_serial)
 
+	def reconnect_serial(self):
+		if self.scan_serial():
+			self.connect_serial()
 
 	def checkserial_msg(self):
 		self.output_serial(self.serial.data.serial_msg)
@@ -72,3 +77,4 @@ class SerialWindow(QtWidgets.QWidget, Ui_SerialWindow):
 
 			if '/dev/ttyUSB' in p.device:
 				self.COMlist.selectRow(rowpos)
+				return True

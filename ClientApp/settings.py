@@ -18,8 +18,6 @@ class SettingsWindow(QtWidgets.QWidget, Ui_SettingsWindow):
 		self.parent.setbuttonstyle(self.Serial)
 		self.parent.setbuttonstyle(self.Server)
 
-		self.server_pop = ServerWindow(self.client_obj, self)
-		self.serial_pop = SerialWindow(self.serial_obj, self)
 		self.Serial.clicked.connect(self.serialpop)
 		self.Server.clicked.connect(self.serverpop)
 		self.Back.clicked.connect(self.close)
