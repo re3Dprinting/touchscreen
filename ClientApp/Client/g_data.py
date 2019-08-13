@@ -40,23 +40,25 @@ class g_data(QtCore.QThread):
 		while True:
 			time.sleep(0.1)
 			if self.serial.is_open:
-			#Wait three seconds after connection:
+			#Wait five seconds after connection:
 			#- read initial header
 			#- Send gcode to enable periodic temperature reading
+				self.counter[0] += 1
+				print self.counter[0]
 				if self.counter[0] >= 10:
-					self.counter[0] += 1
-					if self.counter[0] >= 20:
+					if self.counter[0] >= 100:
 						self.serial.initserial()
 						self.counter[0] = 0
-				else:
-					self.counter[0] +=1 
-					if self.counter[0] >= 1:
-						self.counter[0] = 0
+				elif self.counter[0] < 10:
+					if self.counter[0] == 1:
 						err = self.serial.readdata()
 						if err != None:
 							self.serial_msg = err
 							self.checkserial_msg.emit("checkserial")
 							self.printcancelled.emit("printcancelled")
+					if self.counter[0] >= 2 and self.counter[0] < 10 :
+						if self.status != "AC": self.serial.send_serial('M105')
+						self.counter[0] = 0
 			if self.client.is_conn:
 				if self.client.just_conn and self.serial.is_open:
 					self.buffer.clear()
@@ -79,6 +81,8 @@ class g_data(QtCore.QThread):
 
 	def resettemps(self):
 		self.temp = {'T0': [0,0], 'T1': [0,0], 'B': [0,0]}
+	def resetsettemps(self):
+		for t in self.temp: self.temp[t][1] = 0
 
 #	Attempt to get the IP address through connecting to Google DNS to get current ipaddress
 	def getipaddress(self):
@@ -107,7 +111,7 @@ class g_data(QtCore.QThread):
 			self.extracttemp("T1:", data_)
 			self.extracttemp("B:", data_)
 			self.addtobuffer("T", self.temp)
-			self.check_printing()
+			#self.check_printing()
 		if(msglen >200 and "Updated" in data_):
 			self.extractheader(data_)
 			self.addtobuffer("HD", self.header)
@@ -123,17 +127,18 @@ class g_data(QtCore.QThread):
 #	Check if Print was stopped
 #	If printer's status is Idle, and there is a current file and the heaters are on, change to Active
 #	If printer's status is Active, and there is a current file, and the heaters are off, change to Idle
-	def check_printing(self):
-		idle = True
-		for t in self.temp:
-			if self.temp[t][1] != 0 : idle = False
-		if(self.status == "ON" and self.currentfile != "" and not idle):
-			self.changestatus("AC")
-		elif(self.status == "AC" and self.currentfile != "" and idle):
-			print "Print Cancelled!"
-			self.printcancelled.emit("printcancelled")
-			self.changestatus("ON")
-			self.currentfile = ""
+	
+	# def check_printing(self):
+	# 	idle = True
+	# 	for t in self.temp:
+	# 		if self.temp[t][1] != 0 : idle = False
+	# 	if(self.status == "ON" and self.currentfile != "" and not idle):
+	# 		self.changestatus("AC")
+	# 	elif(self.status == "AC" and self.currentfile != "" and idle):
+	# 		print "Print Cancelled!"
+	# 		self.printcancelled.emit("printcancelled")
+	# 		self.changestatus("ON")
+	# 		self.currentfile = ""
 
 #	Change the status of the printer
 #	ON: Idle/Connected, OF: Off/Disconnected, AC: Active/Printing, UM: Under Maintanence  

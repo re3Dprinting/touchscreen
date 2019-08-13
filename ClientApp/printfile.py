@@ -32,6 +32,7 @@ class PrintWindow(QtWidgets.QWidget, Ui_PrintWindow):
 		tabWidth = (self.tabWidget.width()/2)-24
 		self.tabWidget.setStyleSheet(self.tabWidget.styleSheet() +"QTabBar::tab { width: " + str(tabWidth) + "px; }")
 
+
 	def scansd(self):
 		self.serial.send_serial("M22 \r")
 		self.serial.send_serial("M21 \r")
@@ -68,7 +69,10 @@ class PrintWindow(QtWidgets.QWidget, Ui_PrintWindow):
 			self.serial.send_serial("M24 \r")
 			self.StartPrint.setEnabled(False)
 			self.ActivePrint.setEnabled(True)
+			self.serial.data.changestatus("AC")
+			self.serial.send_serial("M155 S1")
 			self.temp_pop.activeprint()
+			self.temp_pop.update_parameters()
 
 
 	def activeprintpop(self):

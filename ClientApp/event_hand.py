@@ -15,87 +15,99 @@ class event_handler(QtCore.QThread):
 		self.serialwindow = serialwindow
 		self.serial = serial
 
+		self.feedrate = 100
+		self.fr_key = "All"
+		self.flowrate = {"All": 100, "E1": 100, "E2": 100}
+		self.fr_text = ["All", "E1", "E2"]
+		self.babystep = 0
+
+
 #		Setting up temperature Sets, and material preheats
 		self.sete1temp = 0
 		self.sete2temp = 0
 		self.setbedtemp = 0
-
 		self.m1 = Material(180,180,60,self)
 		self.m2 = Material(215,215,115,self)
 		self.m3 = Material(200,200,60,self)
+		self.sendtempcount = 0
 
 		self.bedflash = 0
-		self.sende1temp = False
-		self.sende2temp = False
-		self.sendbedtemp = False
+
 
 	def run(self):
 		while(True):
-			time.sleep(0.5)
+			time.sleep(0.1)
+			if self.sendtempcount >= 0: self.sendtempcount += 1
+			if self.sendtempcount >= 10: 
+				self.tempwindow.updatesettemperatures()
+				self.sendtempcount = 0
 			self.tempwindow.updatetemperatures()
-			self.sendperiphtemps()
 			self.flashbedicon()
 			if(not self.serial.is_open):
 				self.reconnect_serial.emit("reconnectserial")
 
 
-
+#Used for preheating temperatures
 	def sete1(self, num):
 		self.sete1temp = num
 		self.tempwindow.changeText(self.tempwindow.e1set, str(self.sete1temp))
-		self.sende1temp = True
+		self.sendperiphtemps("e1")
 	def sete2(self, num):
 		self.sete2temp = num
 		self.tempwindow.changeText(self.tempwindow.e2set, str(self.sete2temp))
-		self.sende2temp = True
+		self.sendperiphtemps("e2")
 	def setb(self, num):
 		self.setbedtemp = num
 		self.tempwindow.changeText(self.tempwindow.bedset, str(self.setbedtemp))
-		self.sendbedtemp = True
+		self.sendperiphtemps("bed")
+
+#	Incrementing temperature through the non-printing menu.
 	def increment_e1(self):
 		self.sete1temp +=1
 		self.tempwindow.changeText(self.tempwindow.e1set, str(self.sete1temp))
-		self.sende1temp = True
+		# self.tempwindow.changeText(self.tempwindow.e1set, str(int(self.serial.data.temp["T0"][1])))
+		self.sendperiphtemps("e1")
 	def increment_e2(self):
 		self.sete2temp +=1
 		self.tempwindow.changeText(self.tempwindow.e2set, str(self.sete2temp))
-		self.sende2temp = True
+		# self.tempwindow.changeText(self.tempwindow.e2set, str(int(self.serial.data.temp["T1"][1])))
+		self.sendperiphtemps("e2")
 	def increment_bed(self):
 		self.setbedtemp +=1
 		self.tempwindow.changeText(self.tempwindow.bedset, str(self.setbedtemp))
-		self.sendbedtemp = True
+		# self.tempwindow.changeText(self.tempwindow.bedset, str(int(self.serial.data.temp["B"][1])))
+		self.sendperiphtemps("bed")
 	def decrement_e1(self):
 		if self.sete1temp > 0: self.sete1temp -=1
 		self.tempwindow.changeText(self.tempwindow.e1set, str(self.sete1temp))
-		self.sende1temp = True
+		# self.tempwindow.changeText(self.tempwindow.e1set, str(int(self.serial.data.temp["T0"][1])))
+		self.sendperiphtemps("e1")
 	def decrement_e2(self):
 		if self.sete2temp > 0: self.sete2temp -=1
 		self.tempwindow.changeText(self.tempwindow.e2set, str(self.sete2temp))
-		self.sende2temp = True
+		# self.tempwindow.changeText(self.tempwindow.e2set, str(int(self.serial.data.temp["T1"][1])))
+		self.sendperiphtemps("e2")
 	def decrement_bed(self):
 		if self.setbedtemp > 0: self.setbedtemp -=1
 		self.tempwindow.changeText(self.tempwindow.bedset, str(self.setbedtemp))
-		self.sendbedtemp = True
+		# self.tempwindow.changeText(self.tempwindow.bedset, str(int(self.serial.data.temp["B"][1])))
+		self.sendperiphtemps("bed")
 
 
-	def sendperiphtemps(self):
-		if self.sende1temp:
-			self.tempwindow.serial.send_serial('M104 T0 S'+str(self.sete1temp))
-			self.sende1temp = False
-		if self.sende2temp:
-			self.tempwindow.serial.send_serial('M104 T1 S'+str(self.sete2temp))
-			self.sende2temp = False
-		if self.sendbedtemp:
-			self.tempwindow.serial.send_serial('M140 S'+str(self.setbedtemp))
-			self.sendbedtemp = False
+	def sendperiphtemps(self, periph):
+		if periph == "e1": self.tempwindow.serial.send_serial('M104 T0 S'+str(self.sete1temp))
+		elif periph == "e2": self.tempwindow.serial.send_serial('M104 T1 S'+str(self.sete2temp))
+		elif periph == "bed": self.tempwindow.serial.send_serial('M140 S'+str(self.setbedtemp))
+		self.sendtempcount = 0
+
 	def flashbedicon(self):
 		if self.setbedtemp >= 50:
 			self.bedflash += 1
-			if self.bedflash == 2:
+			if self.bedflash == 6:
 			    self.tempwindow.bedimg.setIcon(self.tempwindow.unheated)
-			elif self.bedflash == 4:
+			elif self.bedflash == 12:
 			    self.tempwindow.bedimg.setIcon(self.tempwindow.bedheated1)
-			elif self.bedflash == 6:
+			elif self.bedflash == 18:
 			    self.tempwindow.bedimg.setIcon(self.tempwindow.bedheated2)
 			    self.bedflash = 0
 		else:

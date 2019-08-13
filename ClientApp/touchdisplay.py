@@ -54,7 +54,6 @@ class TouchDisplay(QtWidgets.QWidget, Ui_TouchDisplay):
         if self.fullscreen: self.con_pop.showFullScreen()
         else: self.con_pop.show()
     def temperaturepop(self):
-        self.serial.send_serial('M155 S1')
         if self.fullscreen: self.temp_pop.showFullScreen()
         else: self.temp_pop.show()
     def settingspop(self): 

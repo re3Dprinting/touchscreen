@@ -50,9 +50,7 @@ class TemperatureWindow(QtWidgets.QWidget, Ui_TemperatureWindow):
 		self.fanofficon.addPixmap(QtGui.QPixmap("img/fanoff.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
 		self.fanonicon = QtGui.QIcon()
 		self.fanonicon.addPixmap(QtGui.QPixmap("img/fanon.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-		self.ActivePrintWid.Fan.clicked.connect(self.fan)
-		self.NotActivePrintWid.Fan.clicked.connect(self.fan)
-
+		
 		self.unheated = QtGui.QIcon()
 		self.bedheated1 = QtGui.QIcon()
 		self.bedheated2 = QtGui.QIcon()
@@ -61,21 +59,59 @@ class TemperatureWindow(QtWidgets.QWidget, Ui_TemperatureWindow):
 		self.bedheated2.addPixmap(QtGui.QPixmap("img/bed_heated2.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
 
 
-#		Initilization for Printing and Not-Printing Widgets.
-		
-		self.ActivePrintWid.Back.clicked.connect(self.close)
+#		Initilization for Not-Printing Widget.
 
 		self.initpreheatbuttons()
 		self.NotActivePrintWid.Back.clicked.connect(self.close)
 		self.NotActivePrintWid.CoolDown.clicked.connect(self.cool)
+		self.NotActivePrintWid.Fan.clicked.connect(self.fan)
+
+
+#		Initilization for Printing Widget.
+
+		self.ActivePrintWid.Back.clicked.connect(self.close)
+		self.ActivePrintWid.Fan.clicked.connect(self.fan)
+		self.ActivePrintWid.ResumePrint.setEnabled(False)
+		# self.ActivePrintWid.FileProgress.
+		self.ActivePrintWid.StopPrint.clicked.connect(self.stopprint)
+		self.ActivePrintWid.PausePrint.clicked.connect(self.pauseprint)
+		self.ActivePrintWid.ResumePrint.clicked.connect(self.resumeprint)
+		# self.ActivePrintWid.FlowrateLabel.
+		self.inittextformat(self.ActivePrintWid.FileName)
+		self.inittextformat(self.ActivePrintWid.FlowrateVal)
+		self.inittextformat(self.ActivePrintWid.FeedrateVal)
+		self.inittextformat(self.ActivePrintWid.BabysteppingVal)
+		self.setbuttonstyle(self.ActivePrintWid.FileLabel)
+		self.setbuttonstyle(self.ActivePrintWid.FeedrateLabel)
+		self.setbuttonstyle(self.ActivePrintWid.BabysteppingLabel)
+
+
+	def update_parameters(self):
+		self.changeText(self.ActivePrintWid.FileName, str(self.serial.data.currentfile))
+		self.changeText(self.ActivePrintWid.FeedrateVal, str(self.event_handler.feedrate))
+		self.changeText(self.ActivePrintWid.BabysteppingVal, str(self.event_handler.babystep))
+		self.changeText(self.ActivePrintWid.FlowrateVal, str(self.event_handler.flowrate[self.event_handler.fr_key]))
 
 	def activeprint(self):
 		self.NotActivePrintWid.hide()
 		self.ActivePrintWid.show()
+	def pauseprint(self):
+		self.serial.send_serial("M25")
+		self.ActivePrintWid.ResumePrint.setEnabled(True)
+		self.ActivePrintWid.PausePrint.setEnabled(False)
+	def resumeprint(self):
+		self.serial.send_serial("M24")
+		self.ActivePrintWid.ResumePrint.setEnabled(False)
+		self.ActivePrintWid.PausePrint.setEnabled(True)
 
 	def notactiveprint(self):
 		self.NotActivePrintWid.show()
 		self.ActivePrintWid.hide()
+
+	def stopprint(self):
+		self.serial.reset()
+		self.parent.print_pop.cancelled()
+		self.serial.data.resetsettemps()
 
 	def initposnegbuttons(self):
 		for p in periphs:
@@ -135,6 +171,16 @@ class TemperatureWindow(QtWidgets.QWidget, Ui_TemperatureWindow):
 			self.event_handler.sete2temp = 0
 			self.event_handler.setbedtemp = 0
 			self.serial.data.resettemps()
+
+	def updatesettemperatures(self):
+		if self.serial.is_open:
+			self.changeText(self.e1set, str(int(self.serial.data.temp["T0"][1])))
+			self.changeText(self.e2set, str(int(self.serial.data.temp["T1"][1])))
+			self.changeText(self.bedset, str(int(self.serial.data.temp["B"][1])))
+			self.event_handler.sete1temp = int(self.serial.data.temp["T0"][1])
+			self.event_handler.sete2temp = int(self.serial.data.temp["T1"][1])
+			self.event_handler.setbedtemp = int(self.serial.data.temp["B"][1])
+
 
 
 	def changeText(self, label, text):

@@ -48,15 +48,18 @@ class g_serial(Serial):
 	def connect(self):
 		Serial.__init__(self, self.com, baudrate= 250000)
 		#Set the status of the printer to ON
+		self.reset()
+		self.is_open = True
+		
+		#time.sleep(3)
+	def reset(self):
 		self.setDTR(False)
-		time.sleep(0.1)
+		time.sleep(0.4)
 		self.flushInput()
 		self.setDTR(True)
-		self.data.changestatus("ON")
-		self.is_open = True
-		self.data.ser_conn = True
 		self.data.counter[0] = 10
-		#time.sleep(3)
+		self.data.changestatus("ON")
+
 
 	def disconnect(self):
 		if self.is_open:
@@ -74,7 +77,7 @@ class g_serial(Serial):
 #	Retrieve printer stat through M78 gcode	
 	def en_reporttemp_stat(self):
 		#send to serial a M155 code to enable temperture reportings every 5s
-		self.send_serial('M155 S1')
+		#self.send_serial('M155 S0.2')
 		#Print Job status
 		self.send_serial('M78')
 		#Get current position 
