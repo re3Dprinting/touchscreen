@@ -16,10 +16,11 @@ class event_handler(QtCore.QThread):
 		self.serial = serial
 
 		self.feedrate = 100
-		self.fr_key = "All"
-		self.flowrate = {"All": 100, "E1": 100, "E2": 100}
+		self.fr_index = 0
+		self.flowrate = [100, 100, 100]
 		self.fr_text = ["All", "E1", "E2"]
-		self.babystep = 0
+		self.babystep = float(0)
+		self.babystepinc = float(0.05)
 
 
 #		Setting up temperature Sets, and material preheats
@@ -37,8 +38,8 @@ class event_handler(QtCore.QThread):
 	def run(self):
 		while(True):
 			time.sleep(0.1)
-			if self.sendtempcount >= 0: self.sendtempcount += 1
-			if self.sendtempcount >= 10: 
+			self.sendtempcount += 1
+			if self.sendtempcount >= 20: 
 				self.tempwindow.updatesettemperatures()
 				self.sendtempcount = 0
 			self.tempwindow.updatetemperatures()
@@ -46,6 +47,18 @@ class event_handler(QtCore.QThread):
 			if(not self.serial.is_open):
 				self.reconnect_serial.emit("reconnectserial")
 
+	def sendbabystep(self):
+		self.tempwindow.serial.send_serial("M290 Z "+ str(self.babystep))
+
+	def sendflowrate(self):
+		if self.fr_index == 0: 
+			self.tempwindow.serial.send_serial("M221 S" + str(self.flowrate[self.fr_index]) + " T0")
+			self.tempwindow.serial.send_serial("M221 S" + str(self.flowrate[self.fr_index]) + " T1")
+			self.flowrate[1] = self.flowrate[2] = self.flowrate[0]
+		else:
+			if self.fr_index == 1: t = " T0"
+			else: t = " T1"
+			self.tempwindow.serial.send_serial("M221 S" + str(self.flowrate[self.fr_index]) + t)
 
 #Used for preheating temperatures
 	def sete1(self, num):

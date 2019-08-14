@@ -14,6 +14,7 @@ class g_serial(Serial):
 		self.data.serial = self
 		self.com = None
 		self.is_open = False
+		self.just_open = True
 
 #	Function to Catch Exceptions for the g_serial 
 	def catch_except(self, function):
@@ -48,17 +49,18 @@ class g_serial(Serial):
 	def connect(self):
 		Serial.__init__(self, self.com, baudrate= 250000)
 		#Set the status of the printer to ON
-		self.reset()
 		self.is_open = True
+		self.reset()
 		
 		#time.sleep(3)
 	def reset(self):
-		self.setDTR(False)
-		time.sleep(0.4)
-		self.flushInput()
-		self.setDTR(True)
-		self.data.counter[0] = 10
-		self.data.changestatus("ON")
+		if self.is_open:
+			self.setDTR(False)
+			time.sleep(0.4)
+			self.flushInput()
+			self.setDTR(True)
+			self.just_open = True
+			self.data.changestatus("ON")
 
 
 	def disconnect(self):

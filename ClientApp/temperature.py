@@ -25,7 +25,8 @@ class TemperatureWindow(QtWidgets.QWidget, Ui_TemperatureWindow):
 		self.NotActivePrintWid = NotActivePrintWidget(self)
 		self.gridLayout.addWidget(self.NotActivePrintWid, 2, 0, 1, 1)
 		self.gridLayout.addWidget(self.ActivePrintWid,2,0,1,1)
-		self.ActivePrintWid.hide()
+		self.notactiveprint()
+		self.serial.data.updateprogress.connect(self.updateprogress)
 
 		#self.event_handler.updatetemperatures.connect(self.updatetemperatures)
 		self.inittextformat(self.e1temp)
@@ -76,6 +77,12 @@ class TemperatureWindow(QtWidgets.QWidget, Ui_TemperatureWindow):
 		self.ActivePrintWid.StopPrint.clicked.connect(self.stopprint)
 		self.ActivePrintWid.PausePrint.clicked.connect(self.pauseprint)
 		self.ActivePrintWid.ResumePrint.clicked.connect(self.resumeprint)
+		self.ActivePrintWid.FlowrateLabel.clicked.connect(self.flowratelabel)
+		self.ActivePrintWid.FlowratePos.clicked.connect(self.flowratepos)
+		self.ActivePrintWid.FlowrateNeg.clicked.connect(self.flowrateneg)
+		self.ActivePrintWid.BabysteppingNeg.clicked.connect(self.babystepneg)
+		self.ActivePrintWid.BabysteppingPos.clicked.connect(self.babysteppos)
+
 		# self.ActivePrintWid.FlowrateLabel.
 		self.inittextformat(self.ActivePrintWid.FileName)
 		self.inittextformat(self.ActivePrintWid.FlowrateVal)
@@ -90,7 +97,42 @@ class TemperatureWindow(QtWidgets.QWidget, Ui_TemperatureWindow):
 		self.changeText(self.ActivePrintWid.FileName, str(self.serial.data.currentfile))
 		self.changeText(self.ActivePrintWid.FeedrateVal, str(self.event_handler.feedrate))
 		self.changeText(self.ActivePrintWid.BabysteppingVal, str(self.event_handler.babystep))
-		self.changeText(self.ActivePrintWid.FlowrateVal, str(self.event_handler.flowrate[self.event_handler.fr_key]))
+		self.changeText(self.ActivePrintWid.FlowrateVal, str(self.event_handler.flowrate[self.event_handler.fr_index]))
+
+
+	def babystepneg(self):
+		self.event_handler.babystep -= self.event_handler.babystepinc
+		self.changeText(self.ActivePrintWid.BabysteppingVal, str(self.event_handler.babystep))
+		self.event_handler.sendbabystep()
+	def babysteppos(self):
+		self.event_handler.babystep += self.event_handler.babystepinc
+		self.changeText(self.ActivePrintWid.BabysteppingVal, str(self.event_handler.babystep))
+		self.event_handler.sendbabystep()
+
+	def updateprogress(self):
+		prog = float(self.serial.data.progress[0]/self.serial.data.progress[1]) *100
+		print prog
+		self.ActivePrintWid.FileProgress.setValue(50)
+
+	def updateflowlabel(self):
+		flow_button_text = "Flowrate: " + self.event_handler.fr_text[self.event_handler.fr_index]
+		self.ActivePrintWid.FlowrateLabel.setText(flow_button_text)
+		self.changeText(self.ActivePrintWid.FlowrateVal, str(self.event_handler.flowrate[self.event_handler.fr_index]))
+
+	def flowratelabel(self):
+		if self.event_handler.fr_index < 2: self.event_handler.fr_index+=1
+		elif self.event_handler.fr_index == 2: self.event_handler.fr_index = 0
+		self.updateflowlabel()
+
+	def flowratepos(self):
+		self.event_handler.flowrate[self.event_handler.fr_index] += 1
+		self.event_handler.sendflowrate()
+		self.updateflowlabel()
+	def flowrateneg(self):
+		self.event_handler.flowrate[self.event_handler.fr_index] -= 1
+		self.event_handler.sendflowrate()
+		self.updateflowlabel()
+
 
 	def activeprint(self):
 		self.NotActivePrintWid.hide()
