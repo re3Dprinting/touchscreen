@@ -148,10 +148,12 @@ class TemperatureWindow(QtWidgets.QWidget, Ui_TemperatureWindow):
 		self.serial.send_serial("M25")
 		self.ActivePrintWid.ResumePrint.setEnabled(True)
 		self.ActivePrintWid.PausePrint.setEnabled(False)
+		self.parent.Control.setEnabled(True)
 	def resumeprint(self):
 		self.serial.send_serial("M24")
 		self.ActivePrintWid.ResumePrint.setEnabled(False)
 		self.ActivePrintWid.PausePrint.setEnabled(True)
+		self.parent.Control.setEnabled(False)
 
 	def notactiveprint(self):
 		self.NotActivePrintWid.show()

@@ -58,7 +58,7 @@ class PrintWindow(QtWidgets.QWidget, Ui_PrintWindow):
 		self.ActivePrint.setEnabled(False)
 		self.StartPrint.setEnabled(True)
 		self.FileList.setRowCount(0)
-		self.parent.con_pop.setEnabled(True)
+		self.parent.Control.setEnabled(True)
 
 	def startprint(self):
 		selected = self.FileList.currentRow()
@@ -75,7 +75,7 @@ class PrintWindow(QtWidgets.QWidget, Ui_PrintWindow):
 			self.serial.send_serial("M27 S5")
 			self.temp_pop.activeprint()
 			self.temp_pop.update_parameters()
-			self.parent.con_pop.setEnabled(False)
+			self.parent.Control.setEnabled(False)
 
 
 	def activeprintpop(self):
