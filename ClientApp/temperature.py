@@ -25,7 +25,7 @@ class TemperatureWindow(QtWidgets.QWidget, Ui_TemperatureWindow):
 		self.NotActivePrintWid = NotActivePrintWidget(self)
 		self.gridLayout.addWidget(self.NotActivePrintWid, 2, 0, 1, 1)
 		self.gridLayout.addWidget(self.ActivePrintWid,2,0,1,1)
-		self.notactiveprint()
+		self.activeprint()
 		self.serial.data.updateprogress.connect(self.updateprogress)
 
 		#self.event_handler.updatetemperatures.connect(self.updatetemperatures)
@@ -82,6 +82,8 @@ class TemperatureWindow(QtWidgets.QWidget, Ui_TemperatureWindow):
 		self.ActivePrintWid.FlowrateNeg.clicked.connect(self.flowrateneg)
 		self.ActivePrintWid.BabysteppingNeg.clicked.connect(self.babystepneg)
 		self.ActivePrintWid.BabysteppingPos.clicked.connect(self.babysteppos)
+		self.ActivePrintWid.FeedrateSlider.valueChanged.connect(self.feedrateslider)
+		self.ActivePrintWid.FeedrateSlider.sliderReleased.connect(self.sendfeedrate)
 
 		# self.ActivePrintWid.FlowrateLabel.
 		self.inittextformat(self.ActivePrintWid.FileName)
@@ -99,6 +101,12 @@ class TemperatureWindow(QtWidgets.QWidget, Ui_TemperatureWindow):
 		self.changeText(self.ActivePrintWid.BabysteppingVal, str(self.event_handler.babystep))
 		self.changeText(self.ActivePrintWid.FlowrateVal, str(self.event_handler.flowrate[self.event_handler.fr_index]))
 
+	def sendfeedrate(self):
+		self.serial.send_serial("M220 S" + str(self.ActivePrintWid.FeedrateSlider.value()))
+
+	def feedrateslider(self):
+		val = self.ActivePrintWid.FeedrateSlider.value()
+		self.changeText(self.ActivePrintWid.FeedrateVal, str(val))
 
 	def babystepneg(self):
 		self.event_handler.babystep -= self.event_handler.babystepinc
@@ -111,8 +119,7 @@ class TemperatureWindow(QtWidgets.QWidget, Ui_TemperatureWindow):
 
 	def updateprogress(self):
 		prog = float(self.serial.data.progress[0]/self.serial.data.progress[1]) *100
-		print prog
-		self.ActivePrintWid.FileProgress.setValue(50)
+		self.ActivePrintWid.FileProgress.setValue(prog)
 
 	def updateflowlabel(self):
 		flow_button_text = "Flowrate: " + self.event_handler.fr_text[self.event_handler.fr_index]

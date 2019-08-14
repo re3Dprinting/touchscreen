@@ -72,7 +72,7 @@ class PrintWindow(QtWidgets.QWidget, Ui_PrintWindow):
 			self.ActivePrint.setEnabled(True)
 			self.serial.data.changestatus("AC")
 			self.serial.send_serial("M155 S1")
-			self.serial.send_serial("M27 S4")
+			self.serial.send_serial("M27 S5")
 			self.temp_pop.activeprint()
 			self.temp_pop.update_parameters()
 			self.parent.con_pop.setEnabled(False)

@@ -65,7 +65,7 @@ class g_data(QtCore.QThread):
 							if not self.waittemp: self.serial.send_serial('M105')
 							self.counter[0] = 0
 					elif self.status == "AC":
-						if self.counter[0] >= 30:
+						if self.counter[0] >= 200:
 							if not self.waitprogress: self.serial.send_serial("M27")
 							self.counter[0] = 0
 
