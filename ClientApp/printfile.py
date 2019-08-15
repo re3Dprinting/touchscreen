@@ -70,7 +70,6 @@ class PrintWindow(QtWidgets.QWidget, Ui_PrintWindow):
 	def stopprint(self):
 		self.serial.reset()
 		self.notprinting()
-		self.FileList.setRowCount(0)
 		self.serial.data.resetsettemps()
 
 	def notprinting(self):
@@ -78,6 +77,7 @@ class PrintWindow(QtWidgets.QWidget, Ui_PrintWindow):
 		self.ActivePrint.setEnabled(False)
 		self.StopPrint.setEnabled(False)
 		self.StartPrint.setEnabled(True)
+		self.FileList.setRowCount(0)
 		self.parent.Control.setEnabled(True)
 
 	def startprint(self):

@@ -14,6 +14,7 @@ class Ui_ActivePrintWidget(object):
         ActivePrintWidget.resize(800, 219)
         ActivePrintWidget.setMaximumSize(QtCore.QSize(800, 600))
         self.gridLayout = QtWidgets.QGridLayout(ActivePrintWidget)
+        self.gridLayout.setContentsMargins(0, 0, 0, 0)
         self.gridLayout.setObjectName("gridLayout")
         self.horizontalLayout = QtWidgets.QHBoxLayout()
         self.horizontalLayout.setObjectName("horizontalLayout")

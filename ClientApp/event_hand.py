@@ -19,8 +19,9 @@ class event_handler(QtCore.QThread):
 		self.fr_index = 0
 		self.flowrate = [100, 100, 100]
 		self.fr_text = ["All", "E1", "E2"]
-		self.babystep = float(0)
-		self.babystepinc = float(0.01)
+		self.babystep = 0
+		self.babystepx10 = 0
+		self.babystepinc = 1
 
 
 #		Setting up temperature Sets, and material preheats

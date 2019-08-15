@@ -111,11 +111,13 @@ class TemperatureWindow(QtWidgets.QWidget, Ui_TemperatureWindow):
 		self.changeText(self.ActivePrintWid.FeedrateVal, str(val))
 
 	def babystepneg(self):
-		self.event_handler.babystep -= self.event_handler.babystepinc
+		self.event_handler.babystepx10 -= self.event_handler.babystepinc
+		self.event_handler.babystep = float(self.event_handler.babystepx10)/ float(100)
 		self.changeText(self.ActivePrintWid.BabysteppingVal, str(self.event_handler.babystep))
 		self.event_handler.sendbabystep()
 	def babysteppos(self):
-		self.event_handler.babystep += self.event_handler.babystepinc
+		self.event_handler.babystepx10 += self.event_handler.babystepinc
+		self.event_handler.babystep = float(self.event_handler.babystepx10)/ float(100)
 		self.changeText(self.ActivePrintWid.BabysteppingVal, str(self.event_handler.babystep))
 		self.event_handler.sendbabystep()
 
