@@ -48,16 +48,42 @@
     </size>
    </property>
   </widget>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
-     <x>80</x>
-     <y>110</y>
+     <x>90</x>
+     <y>90</y>
      <width>131</width>
-     <height>221</height>
+     <height>271</height>
     </rect>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QPushButton" name="Ping">
+      <property name="maximumSize">
+       <size>
+        <width>100</width>
+        <height>100</height>
+       </size>
+      </property>
+      <property name="text">
+       <string>Ping</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="StopPing">
+      <property name="maximumSize">
+       <size>
+        <width>100</width>
+        <height>100</height>
+       </size>
+      </property>
+      <property name="text">
+       <string>Stop Ping</string>
+      </property>
+     </widget>
+    </item>
     <item>
      <widget class="QPushButton" name="ConnectServer">
       <property name="maximumSize">
@@ -89,8 +115,8 @@
   <widget class="QTextBrowser" name="ServerOutput">
    <property name="geometry">
     <rect>
-     <x>230</x>
-     <y>110</y>
+     <x>240</x>
+     <y>90</y>
      <width>500</width>
      <height>281</height>
     </rect>
@@ -108,11 +134,11 @@
     </size>
    </property>
   </widget>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
-     <x>240</x>
-     <y>50</y>
+     <x>260</x>
+     <y>20</y>
      <width>391</width>
      <height>51</height>
     </rect>

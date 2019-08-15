@@ -8,7 +8,7 @@ class g_data(QtCore.QThread):
 	checkserial_msg = QtCore.pyqtSignal([str],[unicode])
 	checkserver_msg = QtCore.pyqtSignal([str],[unicode])
 	updatefiles = QtCore.pyqtSignal([str],[unicode])
-	printcancelled = QtCore.pyqtSignal([str],[unicode])
+	notprinting = QtCore.pyqtSignal([str],[unicode])
 	updateprogress = QtCore.pyqtSignal([str],[unicode])
 	updateposition = QtCore.pyqtSignal([str],[unicode])
 	printfinished = QtCore.pyqtSignal([str],[unicode])
@@ -61,7 +61,7 @@ class g_data(QtCore.QThread):
 					if err != None:
 						self.serial_msg = err
 						self.checkserial_msg.emit("checkserial")
-						self.printcancelled.emit("printcancelled")
+						self.notprinting.emit("notprinting")
 					if not self.status == "AC" and not self.serial.just_open:
 						#print "Reset?: ", self.serial.just_open, " Status: ",self.status
 						if self.counter[0] >= 10:
@@ -72,23 +72,6 @@ class g_data(QtCore.QThread):
 							if not self.waitprogress: self.serial.send_serial("M27")
 							self.counter[0] = 0
 
-				# print self.counter[0]
-				# if self.counter[0] >= 10:
-				# 	if self.counter[0] >= 100:
-				# 		self.serial.initserial()
-				# 		self.counter[0] = 0
-
-				# elif self.counter[0] < 10:
-				# 	if self.counter[0] == 1:
-				# 		err = self.serial.readdata()
-				# 		if err != None:
-				# 			self.serial_msg = err
-				# 			self.checkserial_msg.emit("checkserial")
-				# 			self.printcancelled.emit("printcancelled")
-				# 	if self.counter[0] >= 2 and self.counter[0] < 10 :
-				# 		if not self.waittemp and not self.status == "AC": self.serial.send_serial('M105')
-				# 		if not self.waitprogress and self.status == "AC": self.serial.send_serial("M27")
-				# 		self.counter[0] = 0
 
 			if self.client.is_conn:
 				if self.client.just_conn and self.serial.is_open:

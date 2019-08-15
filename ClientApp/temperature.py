@@ -74,8 +74,7 @@ class TemperatureWindow(QtWidgets.QWidget, Ui_TemperatureWindow):
 		self.ActivePrintWid.Back.clicked.connect(self.close)
 		self.ActivePrintWid.Fan.clicked.connect(self.fan)
 		self.ActivePrintWid.ResumePrint.setEnabled(False)
-		# self.ActivePrintWid.FileProgress.
-		self.ActivePrintWid.StopPrint.clicked.connect(self.stopprint)
+		# self.ActivePrintWid.StopPrint.clicked.connect(self.stopprint)
 		self.ActivePrintWid.PausePrint.clicked.connect(self.pauseprint)
 		self.ActivePrintWid.ResumePrint.clicked.connect(self.resumeprint)
 		self.ActivePrintWid.FlowrateLabel.clicked.connect(self.flowratelabel)
@@ -168,10 +167,10 @@ class TemperatureWindow(QtWidgets.QWidget, Ui_TemperatureWindow):
 		self.NotActivePrintWid.show()
 		self.ActivePrintWid.hide()
 
-	def stopprint(self):
-		self.serial.reset()
-		self.parent.print_pop.cancelled()
-		self.serial.data.resetsettemps()
+	# def stopprint(self):
+	# 	self.serial.reset()
+	# 	self.parent.print_pop.cancelled()
+	# 	self.serial.data.resetsettemps()
 
 	def initposnegbuttons(self):
 		for p in periphs:

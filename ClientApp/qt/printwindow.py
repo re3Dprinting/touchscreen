@@ -72,6 +72,11 @@ class Ui_PrintWindow(object):
         self.horizontalLayout_2.addWidget(self.Back)
         spacerItem = QtWidgets.QSpacerItem(0, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_2.addItem(spacerItem)
+        self.StopPrint = QtWidgets.QPushButton(self.widget)
+        self.StopPrint.setMinimumSize(QtCore.QSize(100, 0))
+        self.StopPrint.setMaximumSize(QtCore.QSize(100, 100))
+        self.StopPrint.setObjectName("StopPrint")
+        self.horizontalLayout_2.addWidget(self.StopPrint)
         self.ActivePrint = QtWidgets.QPushButton(self.widget)
         self.ActivePrint.setMinimumSize(QtCore.QSize(100, 0))
         self.ActivePrint.setMaximumSize(QtCore.QSize(100, 100))
@@ -93,5 +98,6 @@ class Ui_PrintWindow(object):
         self.StartPrint.setText(_translate("PrintWindow", "Start Print"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.SD), _translate("PrintWindow", "SD"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.USB), _translate("PrintWindow", "USB"))
+        self.StopPrint.setText(_translate("PrintWindow", "Stop Print"))
         self.ActivePrint.setText(_translate("PrintWindow", "Active Print"))
 

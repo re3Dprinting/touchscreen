@@ -60,6 +60,7 @@ class g_serial(Serial):
 		self.flushInput()
 		self.setDTR(True)
 		self.data.changestatus("ON")
+		self.data.notprinting.emit("notprinting")
 		print "RESET: ", self.just_open, " status: ", self.data.status
 		# print "Reset?: ", self.just_open
 		# print self.data.status

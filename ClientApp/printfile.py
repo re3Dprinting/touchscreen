@@ -17,9 +17,11 @@ class PrintWindow(QtWidgets.QWidget, Ui_PrintWindow):
 		self.ScanSD.clicked.connect(self.scansd)
 		self.StartPrint.clicked.connect(self.startprint)
 		self.ActivePrint.clicked.connect(self.activeprintpop)
+		self.StopPrint.clicked.connect(self.stopprint)
 		self.ActivePrint.setEnabled(False)
+		self.StopPrint.setEnabled(False)
 		self.StartPrint.setEnabled(False)
-		self.serial.data.printcancelled.connect(self.cancelled)
+		self.serial.data.notprinting.connect(self.notprinting)
 		self.serial.data.printfinished.connect(self.finished)
 
 
@@ -61,14 +63,21 @@ class PrintWindow(QtWidgets.QWidget, Ui_PrintWindow):
 	def finished(self):
 		self.temp_pop.notactiveprint()
 		self.ActivePrint.setEnabled(False)
+		self.StopPrint.setEnabled(False)
 		self.StartPrint.setEnabled(True)
 		self.parent.Control.setEnabled(True)
 
-	def cancelled(self):
+	def stopprint(self):
+		self.serial.reset()
+		self.notprinting()
+		self.FileList.setRowCount(0)
+		self.serial.data.resetsettemps()
+
+	def notprinting(self):
 		self.temp_pop.notactiveprint()
 		self.ActivePrint.setEnabled(False)
+		self.StopPrint.setEnabled(False)
 		self.StartPrint.setEnabled(True)
-		self.FileList.setRowCount(0)
 		self.parent.Control.setEnabled(True)
 
 	def startprint(self):
@@ -81,6 +90,7 @@ class PrintWindow(QtWidgets.QWidget, Ui_PrintWindow):
 			self.serial.send_serial("M24 \r")
 			self.StartPrint.setEnabled(False)
 			self.ActivePrint.setEnabled(True)
+			self.StopPrint.setEnabled(True)
 			self.serial.data.changestatus("AC")
 			self.serial.send_serial("M155 S1")
 			self.serial.send_serial("M27 S5")
@@ -93,11 +103,6 @@ class PrintWindow(QtWidgets.QWidget, Ui_PrintWindow):
 	def activeprintpop(self):
 		if self.fullscreen: self.temp_pop.showFullScreen()
 		else: self.temp_pop.show()		
-
-	def stopprint(self):
-		self.serial.send_serial("M22 \r")
-	#def activeprint(self):
-
 
 
 		# else:
