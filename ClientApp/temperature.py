@@ -123,7 +123,7 @@ class TemperatureWindow(QtWidgets.QWidget, Ui_TemperatureWindow):
 
 	def updateposition(self):
 		pos = self.serial.data.position
-		tmp = "X: "+str(pos["X"])+ " Y: "+str(pos["Y"])+ " Z: "+str(pos["Z"])+ " E: "+str(pos["E"])
+		tmp = "X: "+str(pos["X"])+ " Y: "+str(pos["Y"])+ " Z: "+str(pos["Z"])
 		self.changeText(self.ActivePrintWid.PositionLabel, tmp)
 
 

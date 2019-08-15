@@ -21,7 +21,7 @@ class g_data(QtCore.QThread):
 		self.client_msg = None
 
 #	Data to be extracted
-		self.waittemp = False
+		self.busy = False
 		self.waitprogress = False
 		self.temp = {'T0': [0,0], 'T1': [0,0], 'B': [0,0]}
 		self.uploaddate= ""
@@ -65,7 +65,9 @@ class g_data(QtCore.QThread):
 					if not self.status == "AC" and not self.serial.just_open:
 						#print "Reset?: ", self.serial.just_open, " Status: ",self.status
 						if self.counter[0] >= 10:
-							if not self.waittemp: self.serial.send_serial('M105')
+							if not self.busy: 
+								self.serial.send_serial('M105')
+								self.serial.send_serial('M114')
 							self.counter[0] = 0
 					elif self.status == "AC" and not self.serial.just_open:
 						if self.counter[0] >= 150:
@@ -117,10 +119,10 @@ class g_data(QtCore.QThread):
 	def parsedata(self, msglen, serialdata):
 		data_ = serialdata.decode("utf-8")
 		if ("busy:" in data_): 
-			self.waittemp = True
+			self.busy = True
 			self.waitprogress = True
 		else: 
-			self.waitemp = False
+			self.busy = False
 			self.waitprogress = False
 		if( "M23" in data_ and "M24" in data_):
 			self.extractprintfile(data_)
@@ -131,7 +133,7 @@ class g_data(QtCore.QThread):
 			self.extracttemp("T1:", data_)
 			self.extracttemp("B:", data_)
 			self.addtobuffer("T", self.temp)
-			self.waittemp = False
+			self.busy = False
 			#self.check_printing()
 		if(msglen >200 and "Updated" in data_):
 			self.extractheader(data_)
