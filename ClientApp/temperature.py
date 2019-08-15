@@ -118,7 +118,8 @@ class TemperatureWindow(QtWidgets.QWidget, Ui_TemperatureWindow):
 		self.event_handler.sendbabystep()
 
 	def updateprogress(self):
-		prog = float(self.serial.data.progress[0]/self.serial.data.progress[1]) *100
+		print self.serial.data.progress
+		prog = ( float(self.serial.data.progress[0])/float(self.serial.data.progress[1]) ) * 100
 		self.ActivePrintWid.FileProgress.setValue(prog)
 
 	def updateflowlabel(self):

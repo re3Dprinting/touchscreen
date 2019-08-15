@@ -20,6 +20,7 @@ class PrintWindow(QtWidgets.QWidget, Ui_PrintWindow):
 		self.ActivePrint.setEnabled(False)
 		self.StartPrint.setEnabled(False)
 		self.serial.data.printcancelled.connect(self.cancelled)
+		self.serial.data.printfinished.connect(self.finished)
 
 
 		self.FileList.setSelectionBehavior(QtWidgets.QTableView.SelectRows)
@@ -53,6 +54,12 @@ class PrintWindow(QtWidgets.QWidget, Ui_PrintWindow):
 			self.FileList.setItem(rowpos, 1, size)
 		self.StartPrint.setEnabled(True)
 	
+	def finished(self):
+		self.temp_pop.notactiveprint()
+		self.ActivePrint.setEnabled(False)
+		self.StartPrint.setEnabled(True)
+		self.parent.Control.setEnabled(True)
+
 	def cancelled(self):
 		self.temp_pop.notactiveprint()
 		self.ActivePrint.setEnabled(False)
