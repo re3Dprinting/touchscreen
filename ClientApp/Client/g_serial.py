@@ -55,6 +55,7 @@ class g_serial(Serial):
 		#time.sleep(3)
 	def reset(self):
 		self.just_open = True
+		self.data.counter[0] = 0
 		self.setDTR(False)
 		time.sleep(0.4)
 		self.flushInput()
