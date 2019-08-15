@@ -98,6 +98,7 @@ class TemperatureWindow(QtWidgets.QWidget, Ui_TemperatureWindow):
 
 
 	def update_parameters(self):
+		self.event_handler.resetparameters()
 		self.changeText(self.ActivePrintWid.FileName, str(self.serial.data.currentfile))
 		self.changeText(self.ActivePrintWid.FeedrateVal, str(self.event_handler.feedrate))
 		self.changeText(self.ActivePrintWid.BabysteppingVal, str(self.event_handler.babystep))

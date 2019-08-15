@@ -20,7 +20,7 @@ class event_handler(QtCore.QThread):
 		self.flowrate = [100, 100, 100]
 		self.fr_text = ["All", "E1", "E2"]
 		self.babystep = float(0)
-		self.babystepinc = float(0.05)
+		self.babystepinc = float(0.01)
 
 
 #		Setting up temperature Sets, and material preheats
@@ -39,13 +39,17 @@ class event_handler(QtCore.QThread):
 		while(True):
 			time.sleep(0.1)
 			self.sendtempcount += 1
-			if self.sendtempcount >= 20: 
+			if self.sendtempcount >= 30: 
 				self.tempwindow.updatesettemperatures()
 				self.sendtempcount = 0
 			self.tempwindow.updatetemperatures()
 			self.flashbedicon()
 			if(not self.serial.is_open):
 				self.reconnect_serial.emit("reconnectserial")
+	def resetparameters(self):
+		self.feedrate = 100
+		self.flowrate = [100, 100, 100]
+		self.babystep = float(0)
 
 	def sendbabystep(self):
 		self.tempwindow.serial.send_serial("M290 Z "+ str(self.babystep))

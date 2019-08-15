@@ -86,6 +86,7 @@ class PrintWindow(QtWidgets.QWidget, Ui_PrintWindow):
 			self.serial.send_serial("M27 S5")
 			self.temp_pop.activeprint()
 			self.temp_pop.update_parameters()
+			self.temp_pop.ActivePrintWid.FileProgress.setValue(0)
 			self.parent.Control.setEnabled(False)
 
 

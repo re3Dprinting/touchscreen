@@ -32,7 +32,6 @@ class g_serial(Serial):
 			self.data.changestatus("OF")
 			return("ValueError :"+ str(e))
 		except Exception, e:
-			self.is_open = False
 			return("Exception Error :"+ str(e))
 
 #	COM list consists of attributes, device and description
