@@ -54,15 +54,15 @@ class g_serial(Serial):
 		
 		#time.sleep(3)
 	def reset(self):
-		print "RESET"
-		if self.is_open:
-			self.setDTR(False)
-			time.sleep(0.4)
-			self.flushInput()
-			self.setDTR(True)
-			self.just_open = True
-			self.data.changestatus("ON")
-
+		self.just_open = True
+		self.setDTR(False)
+		time.sleep(0.4)
+		self.flushInput()
+		self.setDTR(True)
+		self.data.changestatus("ON")
+		print "RESET: ", self.just_open, " status: ", self.data.status
+		# print "Reset?: ", self.just_open
+		# print self.data.status
 
 	def disconnect(self):
 		if self.is_open:

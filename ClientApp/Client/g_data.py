@@ -52,7 +52,7 @@ class g_data(QtCore.QThread):
 				#print self.counter[0], " Reset? ",self.serial.just_open
 				self.counter[0] += 1
 				if self.serial.just_open:
-					if self.counter[0] >= 100:
+					if self.counter[0] >= 110:
 						self.serial.initserial()
 						self.serial.just_open = False
 						self.counter[0] = 0
@@ -63,6 +63,7 @@ class g_data(QtCore.QThread):
 						self.checkserial_msg.emit("checkserial")
 						self.printcancelled.emit("printcancelled")
 					if not self.status == "AC" and not self.serial.just_open:
+						#print "Reset?: ", self.serial.just_open, " Status: ",self.status
 						if self.counter[0] >= 10:
 							if not self.waittemp: self.serial.send_serial('M105')
 							self.counter[0] = 0

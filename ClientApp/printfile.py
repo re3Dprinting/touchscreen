@@ -31,7 +31,8 @@ class PrintWindow(QtWidgets.QWidget, Ui_PrintWindow):
 		header.setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
 		header.setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
 		self.FileList.verticalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Fixed)
-		self.FileList.verticalHeader().setDefaultSectionSize(35)
+		self.FileList.verticalHeader().setDefaultSectionSize(50)
+		self.FileList.verticalScrollBar().setStyleSheet("QScrollBar::vertical{ width: 40px; }")
 
 
 		tabWidth = (self.tabWidget.width()/2)-24
