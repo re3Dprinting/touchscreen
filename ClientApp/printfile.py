@@ -24,15 +24,18 @@ class PrintWindow(QtWidgets.QWidget, Ui_PrintWindow):
 
 
 		self.FileList.setSelectionBehavior(QtWidgets.QTableView.SelectRows)
+		self.FileList.setSelectionMode(QtWidgets.QTableView.SingleSelection)
 		self.FileList.verticalHeader().hide()
 		#Stretch out the horizontal header to take up the entire view
 		header = self.FileList.horizontalHeader()
 		header.setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
 		header.setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
+		self.FileList.verticalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Fixed)
+		self.FileList.verticalHeader().setDefaultSectionSize(35)
+
 
 		tabWidth = (self.tabWidget.width()/2)-24
-		self.tabWidget.setStyleSheet(self.tabWidget.styleSheet() +"QTabBar::tab { width: " + str(tabWidth) + "px; }")
-
+		self.tabWidget.setStyleSheet(self.tabWidget.styleSheet() +"QTabBar::tab { width: " + str(tabWidth) + "px; height: 35px; font-size: 12pt;}")
 
 	def scansd(self):
 		self.serial.send_serial("M22 \r")

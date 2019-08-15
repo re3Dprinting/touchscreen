@@ -25,8 +25,9 @@ class TemperatureWindow(QtWidgets.QWidget, Ui_TemperatureWindow):
 		self.NotActivePrintWid = NotActivePrintWidget(self)
 		self.gridLayout.addWidget(self.NotActivePrintWid, 2, 0, 1, 1)
 		self.gridLayout.addWidget(self.ActivePrintWid,2,0,1,1)
-		self.activeprint()
+		self.notactiveprint()
 		self.serial.data.updateprogress.connect(self.updateprogress)
+		self.serial.data.updateposition.connect(self.updateposition)
 
 		#self.event_handler.updatetemperatures.connect(self.updatetemperatures)
 		self.inittextformat(self.e1temp)
@@ -90,6 +91,7 @@ class TemperatureWindow(QtWidgets.QWidget, Ui_TemperatureWindow):
 		self.inittextformat(self.ActivePrintWid.FlowrateVal)
 		self.inittextformat(self.ActivePrintWid.FeedrateVal)
 		self.inittextformat(self.ActivePrintWid.BabysteppingVal)
+		self.inittextformat(self.ActivePrintWid.PositionLabel)
 		self.setbuttonstyle(self.ActivePrintWid.FileLabel)
 		self.setbuttonstyle(self.ActivePrintWid.FeedrateLabel)
 		self.setbuttonstyle(self.ActivePrintWid.BabysteppingLabel)
@@ -117,8 +119,13 @@ class TemperatureWindow(QtWidgets.QWidget, Ui_TemperatureWindow):
 		self.changeText(self.ActivePrintWid.BabysteppingVal, str(self.event_handler.babystep))
 		self.event_handler.sendbabystep()
 
+	def updateposition(self):
+		pos = self.serial.data.position
+		tmp = "X: "+str(pos["X"])+ " Y: "+str(pos["Y"])+ " Z: "+str(pos["Z"])+ " E: "+str(pos["E"])
+		self.changeText(self.ActivePrintWid.PositionLabel, tmp)
+
+
 	def updateprogress(self):
-		print self.serial.data.progress
 		prog = ( float(self.serial.data.progress[0])/float(self.serial.data.progress[1]) ) * 100
 		self.ActivePrintWid.FileProgress.setValue(prog)
 

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>800</width>
-    <height>214</height>
+    <height>219</height>
    </rect>
   </property>
   <property name="maximumSize">
@@ -20,24 +20,6 @@
    <string>TemperatureWindow</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <property name="leftMargin">
-    <number>0</number>
-   </property>
-   <property name="topMargin">
-    <number>8</number>
-   </property>
-   <property name="rightMargin">
-    <number>0</number>
-   </property>
-   <property name="bottomMargin">
-    <number>0</number>
-   </property>
-   <property name="horizontalSpacing">
-    <number>6</number>
-   </property>
-   <property name="verticalSpacing">
-    <number>0</number>
-   </property>
    <item row="0" column="0">
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
@@ -79,73 +61,6 @@
       </widget>
      </item>
     </layout>
-   </item>
-   <item row="0" column="1">
-    <layout class="QHBoxLayout" name="horizontalLayout_5">
-     <item>
-      <widget class="QPushButton" name="FeedrateLabel">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="minimumSize">
-        <size>
-         <width>120</width>
-         <height>0</height>
-        </size>
-       </property>
-       <property name="text">
-        <string>Feedrate:</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="FeedrateVal">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="minimumSize">
-        <size>
-         <width>0</width>
-         <height>30</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>200</width>
-         <height>16777215</height>
-        </size>
-       </property>
-       <property name="text">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:14pt;&quot;&gt;-----&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </item>
-   <item row="1" column="0">
-    <widget class="QProgressBar" name="FileProgress">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>280</width>
-       <height>0</height>
-      </size>
-     </property>
-     <property name="value">
-      <number>0</number>
-     </property>
-    </widget>
    </item>
    <item row="1" column="1">
     <layout class="QVBoxLayout" name="verticalLayout">
@@ -239,126 +154,7 @@
      </item>
     </layout>
    </item>
-   <item row="2" column="0">
-    <layout class="QHBoxLayout" name="horizontalLayout_2">
-     <item>
-      <widget class="QPushButton" name="Back">
-       <property name="maximumSize">
-        <size>
-         <width>100</width>
-         <height>100</height>
-        </size>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-       <property name="icon">
-        <iconset>
-         <normaloff>img/back.png</normaloff>img/back.png</iconset>
-       </property>
-       <property name="iconSize">
-        <size>
-         <width>100</width>
-         <height>100</height>
-        </size>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="StopPrint">
-       <property name="maximumSize">
-        <size>
-         <width>65</width>
-         <height>65</height>
-        </size>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-       <property name="icon">
-        <iconset>
-         <normaloff>img/stop.png</normaloff>img/stop.png</iconset>
-       </property>
-       <property name="iconSize">
-        <size>
-         <width>55</width>
-         <height>55</height>
-        </size>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="PausePrint">
-       <property name="maximumSize">
-        <size>
-         <width>65</width>
-         <height>65</height>
-        </size>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-       <property name="icon">
-        <iconset>
-         <normaloff>img/pause.png</normaloff>img/pause.png</iconset>
-       </property>
-       <property name="iconSize">
-        <size>
-         <width>55</width>
-         <height>55</height>
-        </size>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="ResumePrint">
-       <property name="maximumSize">
-        <size>
-         <width>65</width>
-         <height>65</height>
-        </size>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-       <property name="icon">
-        <iconset>
-         <normaloff>img/resume.png</normaloff>img/resume.png</iconset>
-       </property>
-       <property name="iconSize">
-        <size>
-         <width>55</width>
-         <height>55</height>
-        </size>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="Fan">
-       <property name="maximumSize">
-        <size>
-         <width>65</width>
-         <height>65</height>
-        </size>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-       <property name="icon">
-        <iconset>
-         <normaloff>img/fanoff.png</normaloff>img/fanoff.png</iconset>
-       </property>
-       <property name="iconSize">
-        <size>
-         <width>55</width>
-         <height>55</height>
-        </size>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </item>
-   <item row="2" column="1">
+   <item row="3" column="1">
     <layout class="QHBoxLayout" name="horizontalLayout_3">
      <item>
       <widget class="QPushButton" name="FlowrateNeg">
@@ -499,6 +295,209 @@
          <width>50</width>
          <height>50</height>
         </size>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="0" column="1">
+    <layout class="QHBoxLayout" name="horizontalLayout_5">
+     <item>
+      <widget class="QPushButton" name="FeedrateLabel">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>120</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Feedrate:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="FeedrateVal">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>30</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>200</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:14pt;&quot;&gt;-----&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="3" column="0">
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <widget class="QPushButton" name="Back">
+       <property name="maximumSize">
+        <size>
+         <width>100</width>
+         <height>100</height>
+        </size>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>img/back.png</normaloff>img/back.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>100</width>
+         <height>100</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="StopPrint">
+       <property name="maximumSize">
+        <size>
+         <width>65</width>
+         <height>65</height>
+        </size>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>img/stop.png</normaloff>img/stop.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>55</width>
+         <height>55</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="PausePrint">
+       <property name="maximumSize">
+        <size>
+         <width>65</width>
+         <height>65</height>
+        </size>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>img/pause.png</normaloff>img/pause.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>55</width>
+         <height>55</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="ResumePrint">
+       <property name="maximumSize">
+        <size>
+         <width>65</width>
+         <height>65</height>
+        </size>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>img/resume.png</normaloff>img/resume.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>55</width>
+         <height>55</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="Fan">
+       <property name="maximumSize">
+        <size>
+         <width>65</width>
+         <height>65</height>
+        </size>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>img/fanoff.png</normaloff>img/fanoff.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>55</width>
+         <height>55</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="1" column="0">
+    <layout class="QVBoxLayout" name="verticalLayout_2">
+     <item>
+      <widget class="QProgressBar" name="FileProgress">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>280</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="value">
+        <number>0</number>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="PositionLabel">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;-----&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
       </widget>
      </item>

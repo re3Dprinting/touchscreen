@@ -10,6 +10,7 @@ class g_data(QtCore.QThread):
 	updatefiles = QtCore.pyqtSignal([str],[unicode])
 	printcancelled = QtCore.pyqtSignal([str],[unicode])
 	updateprogress = QtCore.pyqtSignal([str],[unicode])
+	updateposition = QtCore.pyqtSignal([str],[unicode])
 	printfinished = QtCore.pyqtSignal([str],[unicode])
 	def __init__(self):
 		super(g_data,self).__init__()
@@ -156,12 +157,16 @@ class g_data(QtCore.QThread):
 			self.addtobuffer("SS", self.stats)
 		if("Count" in data_):
 			self.extractposition(data_)
+			self.updateposition.emit("updateposition")
 		if("Begin file" in data_ or "End file" in data_):
 			self.extractfiles(data_)
 			self.updatefiles.emit("updatefiles")
 		if ("SD printing" in data_):
 			self.extractprogress(data_)
 			self.waitprogress = False
+		if ("Done printing file" in data_):
+			self.status = "ON"
+			self.printfinished.emit("printfinished")
 
 #	Check if Print was stopped
 #	If printer's status is Idle, and there is a current file and the heaters are on, change to Active
@@ -187,14 +192,6 @@ class g_data(QtCore.QThread):
 		if(self.status != stat):
 			self.status = stat
 			self.addtobuffer("ST", stat)
-
-#	Done printing file
-	def checkfinishprinting(self, data):
-		data = data.split("\n")
-		for d in data:
-			if "Done printing file" in d:
-				self.status = "ON"
-				self.printfinished.emit("printfinished")
 
 #	SD printing byte 6327/5335491
 	def extractprogress(self, data):

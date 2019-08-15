@@ -54,6 +54,7 @@ class g_serial(Serial):
 		
 		#time.sleep(3)
 	def reset(self):
+		print "RESET"
 		if self.is_open:
 			self.setDTR(False)
 			time.sleep(0.4)
