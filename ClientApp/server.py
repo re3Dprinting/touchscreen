@@ -47,6 +47,7 @@ class ServerWindow(QtWidgets.QWidget, Ui_ServerWindow):
 		self.pingthread.stop()
 		self.pingthread.count = 0
 		self.pingthread = serverping()
+		self.pingthread.checkreturnmsg.connect(self.checkping)
 		self.outputserver("Pinging stopped!\n")
 
 	def checkping(self):
