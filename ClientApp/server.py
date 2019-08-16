@@ -11,6 +11,7 @@ class serverping(QtCore.QThread):
 		super(serverping, self).__init__()
 		self.response = None
 		self._stop = False
+		self.count = 0
 	def run(self):
 		while(not self._stop):
 			self.response = os.system("ping -c 1 "+ hostname)
@@ -40,17 +41,21 @@ class ServerWindow(QtWidgets.QWidget, Ui_ServerWindow):
 		#self.DisconnectServer.clicked.connect(self.disconnect_server)
 
 	def ping(self):
+		self.outputserver("Pinging started!\n")
 		self.pingthread.start()
 	def stopping(self):
 		self.pingthread.stop()
+		self.pingthread.count = 0
 		self.pingthread = serverping()
+		self.outputserver("Pinging stopped!\n")
 
 	def checkping(self):
 		if self.pingthread.response == 0:
 			self.outputserver("Server is reachable, click connect\n")
 			self.stopping()
 		else:
-			self.outputserver("Server is unreachable, ping again\n")
+			self.pingthread.count += 1
+			self.outputserver("Server is unreachable, ping count: "+ str(self.pingthread.count)+"\n")
 
 
 	def connect_server(self):
