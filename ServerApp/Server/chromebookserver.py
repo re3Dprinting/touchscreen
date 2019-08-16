@@ -39,7 +39,6 @@ class GigabotThread(Thread):
                             self.senddata("OK")  # echo
             except Exception, e:
                 print e
-                self.connected = False
                 time.sleep(3)
 
 
