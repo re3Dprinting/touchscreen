@@ -43,6 +43,7 @@ class ServerWindow(QtWidgets.QWidget, Ui_ServerWindow):
 		self.pingthread.start()
 	def stopping(self):
 		self.pingthread.stop()
+		self.pingthread = serverping()
 
 	def checkping(self):
 		if self.pingthread.response == 0:
