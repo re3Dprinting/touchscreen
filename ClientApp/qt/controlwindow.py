@@ -335,7 +335,7 @@ class Ui_ControlWindow(object):
         self.HomeXY.setIconSize(QtCore.QSize(50, 50))
         self.HomeXY.setObjectName("HomeXY")
         self.DisableMotors = QtWidgets.QPushButton(ControlWindow)
-        self.DisableMotors.setGeometry(QtCore.QRect(350, 400, 71, 71))
+        self.DisableMotors.setGeometry(QtCore.QRect(350, 350, 71, 71))
         self.DisableMotors.setMaximumSize(QtCore.QSize(100, 100))
         self.DisableMotors.setText("")
         icon6 = QtGui.QIcon()
@@ -351,7 +351,7 @@ class Ui_ControlWindow(object):
         self.HomeZ.setIconSize(QtCore.QSize(50, 50))
         self.HomeZ.setObjectName("HomeZ")
         self.HomeAll = QtWidgets.QPushButton(ControlWindow)
-        self.HomeAll.setGeometry(QtCore.QRect(280, 400, 71, 71))
+        self.HomeAll.setGeometry(QtCore.QRect(280, 350, 71, 71))
         self.HomeAll.setMaximumSize(QtCore.QSize(100, 100))
         self.HomeAll.setText("")
         self.HomeAll.setIcon(icon5)
@@ -363,6 +363,9 @@ class Ui_ControlWindow(object):
         self.label_11 = QtWidgets.QLabel(ControlWindow)
         self.label_11.setGeometry(QtCore.QRect(360, 20, 61, 39))
         self.label_11.setObjectName("label_11")
+        self.PositionLabel = QtWidgets.QLabel(ControlWindow)
+        self.PositionLabel.setGeometry(QtCore.QRect(210, 430, 211, 31))
+        self.PositionLabel.setObjectName("PositionLabel")
 
         self.retranslateUi(ControlWindow)
         QtCore.QMetaObject.connectSlotsByName(ControlWindow)
@@ -421,4 +424,5 @@ class Ui_ControlWindow(object):
         self.E1.setText(_translate("ControlWindow", "E2"))
         self.label_10.setText(_translate("ControlWindow", "Home XY"))
         self.label_11.setText(_translate("ControlWindow", "Home Z"))
+        self.PositionLabel.setText(_translate("ControlWindow", "<html><head/><body><p align=\"right\"><span style=\" font-size:16pt;\">-----</span></p></body></html>"))
 

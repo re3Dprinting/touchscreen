@@ -16,7 +16,6 @@ class ControlWindow(QtWidgets.QWidget, Ui_ControlWindow):
 		# 	self.setWindowState(self.windowState() | Qt.WindowFullScreen)
 		
 		self.parent = parent
-		self.setWindowFlags(Qt.Tool)
 		self.serial = serial
 
 		self.xinc = None
@@ -50,13 +49,22 @@ class ControlWindow(QtWidgets.QWidget, Ui_ControlWindow):
 		self.yaxis = Axis("y", self, 463, 0)
 		self.zaxis = Axis("z", self, 550, 0)
 		self.eaxis = Axis("e", self)
-		# self.init_increment()
+
+		self.inittextformat(self.PositionLabel)
+		self.serial.data.updateposition.connect(self.updateposition)
+
+
 		self.HomeXY.clicked.connect(self.homexy)
 		self.HomeZ.clicked.connect(self.homez)
 		self.HomeAll.clicked.connect(self.homeall)
 		self.Back.clicked.connect(self.close)
 		self.DisableMotors.clicked.connect(self.disablemotors)
-		
+	
+	def updateposition(self):
+		pos = self.serial.data.position
+		tmp = "X: "+str(pos["X"])+ " Y: "+str(pos["Y"])+ " Z: "+str(pos["Z"])
+		self.changeText(self.PositionLabel, tmp)
+
 	def disablemotors(self):
 		self.serial.send_serial('M18')
 
@@ -93,3 +101,9 @@ class ControlWindow(QtWidgets.QWidget, Ui_ControlWindow):
 		obj.setCheckable(True)
 		obj.setStyleSheet("QPushButton:checked {background: rgba(255,255,255,1); font: 14pt 'Ubuntu'; border: 2px solid #888} \
 			QPushButton{background: rgba(255,255,255,0); font: 14pt 'Ubuntu'; outline: none;}")
+	def changeText(self, label, text):
+		tmp = QtWidgets.QApplication.translate("TemperatureWindow",label.format[0]+text+label.format[1],None,-1)
+		label.setText(tmp)
+	def inittextformat(self,label):
+		label.format = label.text()
+		label.format = label.format.encode("utf-8").split("-----")

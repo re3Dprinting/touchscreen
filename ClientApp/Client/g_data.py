@@ -5,16 +5,24 @@ from PyQt5 import QtCore
 #	g_data class is derived from the Thread class for timing applicataions.
 #	g_data class also handles parsing data and a buffer that is periodically sent to the server
 class g_data(QtCore.QThread):
-	checkserial = QtCore.pyqtSignal([str],[unicode])
+	checkserial_msg = QtCore.pyqtSignal([str],[unicode])
+	checkserver_msg = QtCore.pyqtSignal([str],[unicode])
 	updatefiles = QtCore.pyqtSignal([str],[unicode])
+	notprinting = QtCore.pyqtSignal([str],[unicode])
+	updateprogress = QtCore.pyqtSignal([str],[unicode])
+	updateposition = QtCore.pyqtSignal([str],[unicode])
+	printfinished = QtCore.pyqtSignal([str],[unicode])
 	def __init__(self):
 		super(g_data,self).__init__()
-		self.counter = [0,0] # Reconnectflag, SendFlag
-		self.sendflag = False
+		self.counter = [0,0] # Serial Counter, Server Counter
 		self.serial = None
-		self.serial_err = None
+		self.serial_msg = None
+		self.client = None
+		self.client_msg = None
 
 #	Data to be extracted
+		self.busy = False
+		self.waitprogress = False
 		self.temp = {'T0': [0,0], 'T1': [0,0], 'B': [0,0]}
 		self.uploaddate= ""
 		self.model = ""
@@ -22,6 +30,7 @@ class g_data(QtCore.QThread):
 		self.status = ""
 		self.printtime = ""
 		self.currentfile = ""
+		self.progress = []
 		self.files = dict()
 		self.stats = dict()
 		self.buffer = dict()
@@ -37,22 +46,59 @@ class g_data(QtCore.QThread):
 		while True:
 			time.sleep(0.1)
 			if self.serial.is_open:
-			#Wait three seconds after connection:
+			#Wait five seconds after connection:
 			#- read initial header
 			#- Send gcode to enable periodic temperature reading
-				if self.counter[0] >= 10:
-					self.counter[0] += 1
-					if self.counter[0] >= 20:
+				#print self.counter[0], " Reset? ",self.serial.just_open
+				self.counter[0] += 1
+				if self.serial.just_open:
+					if self.counter[0] >= 110:
 						self.serial.initserial()
+						self.serial.just_open = False
 						self.counter[0] = 0
 				else:
-					self.counter[0] +=1 
-					if self.counter[0] >= 1:
-						self.counter[0] = 0
-						err = self.serial.readdata()
-						if err != None:
-							self.serial_err = err
-							self.checkserial.emit("checkserial")
+					err = self.serial.readdata()
+					if err != None:
+						self.serial_msg = err
+						self.checkserial_msg.emit("checkserial")
+						self.notprinting.emit("notprinting")
+					if not self.status == "AC" and not self.serial.just_open:
+						#print "Reset?: ", self.serial.just_open, " Status: ",self.status
+						if self.counter[0] >= 10:
+							if not self.busy: 
+								self.serial.send_serial('M105')
+								self.serial.send_serial('M114')
+							self.counter[0] = 0
+					elif self.status == "AC" and not self.serial.just_open:
+						if self.counter[0] >= 150:
+							if not self.waitprogress: self.serial.send_serial("M27")
+							self.counter[0] = 0
+
+
+			if self.client.is_conn:
+				if self.client.just_conn and self.serial.is_open:
+					self.buffer.clear()
+					self.addtobuffer("HD",self.header)
+					self.addtobuffer("SS",self.stats)
+					self.addtobuffer("ST",self.status)
+					self.addtobuffer("FI", self.currentfile)
+					self.client_msg = self.client.senddata()
+					if self.client_msg != None:
+						self.checkserver_msg.emit("checkserver_msg")
+					self.client.just_conn = False
+					self.buffer.clear()
+				if self.counter[1] >= 50:
+					self.client_msg = self.client.senddata()
+					if self.client_msg != None:
+						self.checkserver_msg.emit("checkserver_msg")
+					self.buffer.clear()
+					self.counter[1] = 0
+				self.counter[1]+= 1
+
+	def resettemps(self):
+		self.temp = {'T0': [0,0], 'T1': [0,0], 'B': [0,0]}
+	def resetsettemps(self):
+		for t in self.temp: self.temp[t][1] = 0
 
 #	Attempt to get the IP address through connecting to Google DNS to get current ipaddress
 	def getipaddress(self):
@@ -72,16 +118,23 @@ class g_data(QtCore.QThread):
 #	Main Data Handling Function
 	def parsedata(self, msglen, serialdata):
 		data_ = serialdata.decode("utf-8")
+		if ("busy:" in data_): 
+			self.busy = True
+			self.waitprogress = True
+		else: 
+			self.busy = False
+			self.waitprogress = False
 		if( "M23" in data_ and "M24" in data_):
 			self.extractprintfile(data_)
 			self.addtobuffer("FI", self.currentfile)
 			time.sleep(4)
-		if(msglen <200 and 'T0' in data_):
+		if('T0' in data_):
 			self.extracttemp("T0:", data_)
 			self.extracttemp("T1:", data_)
 			self.extracttemp("B:", data_)
 			self.addtobuffer("T", self.temp)
-			self.check_printing()
+			self.busy = False
+			#self.check_printing()
 		if(msglen >200 and "Updated" in data_):
 			self.extractheader(data_)
 			self.addtobuffer("HD", self.header)
@@ -90,23 +143,34 @@ class g_data(QtCore.QThread):
 			self.addtobuffer("SS", self.stats)
 		if("Count" in data_):
 			self.extractposition(data_)
+			self.updateposition.emit("updateposition")
 		if("Begin file" in data_ or "End file" in data_):
 			self.extractfiles(data_)
 			self.updatefiles.emit("updatefiles")
+		if ("SD printing" in data_):
+			self.extractprogress(data_)
+			self.waitprogress = False
+		if ("Done printing file" in data_):
+			self.status = "ON"
+			self.printfinished.emit("printfinished")
 
 #	Check if Print was stopped
 #	If printer's status is Idle, and there is a current file and the heaters are on, change to Active
-#	If printer's status is Active, and there is a current file, and the heaters are off, change to Idle
-	def check_printing(self):
-		idle = True
-		for t in self.temp:
-			if self.temp[t][1] != 0 : idle = False
-		if(self.status == "ON" and self.currentfile != "" and not idle):
-			self.changestatus("AC")
-		elif(self.status == "AC" and self.currentfile != "" and idle):
-			print "Print Cancelled!"
-			self.changestatus("ON")
-			self.currentfile = ""
+#	If printer's status is Active, and there is a current file, and the heaters are off, change to Idle	
+	# def check_printing(self):
+	# 	idle = True
+	# 	for t in self.temp:
+	# 		if self.temp[t][1] != 0 : idle = False
+	# 	if(self.status == "ON" and self.currentfile != "" and not idle):
+	# 		self.changestatus("AC")
+	# 	elif(self.status == "AC" and self.currentfile != "" and idle):
+	# 		print "Print Cancelled!"
+	# 		self.printcancelled.emit("printcancelled")
+	# 		self.changestatus("ON")
+	# 		self.currentfile = ""
+
+
+
 
 #	Change the status of the printer
 #	ON: Idle/Connected, OF: Off/Disconnected, AC: Active/Printing, UM: Under Maintanence  
@@ -114,6 +178,21 @@ class g_data(QtCore.QThread):
 		if(self.status != stat):
 			self.status = stat
 			self.addtobuffer("ST", stat)
+
+#	SD printing byte 6327/5335491
+	def extractprogress(self, data):
+		data = data.split("\n")
+		for d in data:
+			if "SD printing" in d:
+				tmp = d.split(" ")[-1]
+				tmp = tmp.split("/")
+				if (tmp[0].isdigit() and tmp[1].isdigit()):
+					self.progress = [int(tmp[0]), int(tmp[1])]
+					self.updateprogress.emit("updateprogress")
+				break
+
+
+
 #	Begin file list
 #	GUITAR~1.GCO 5335491
 #	End file list

@@ -12,53 +12,65 @@ port = 63200
 class g_client(socket):
 	def __init__(self, data_obj):
 		self.data = data_obj
+		self.data.client = self
+		self.host = "192.168.1.49"
+		self.port = 63200
+		self.just_conn = False
 		self.is_conn = False
 		
 #	Main exception handling wrapper function
 	def catch_except(self,function, arg1 = ""):
 		try:
-			if arg1 != "": function(arg1)
-			else: function()
+			if arg1 != "": return function(arg1)
+			else: return function()
 		except Exception as e:
 #			Exception for handling server timeout
 			if e.args[0] == errno.EAGAIN or e.args[0] == errno.EWOULDBLOCK:
-				print "Server Timeout Out! Please reset.", e
+				return "Server Timeout Out! Please reset." + str(e)
 			elif e.args[0] == 32 or e.args[0] == 104:
 				self.is_conn = False
-				self.data.server_timeout = False
-				print "Server Disconnected!", e
+				# self.data.server_timeout = False
+				return "Server Disconnected!" + str(e)
 			elif e.args[0] == 111:
-				self.data.server_timeout = False
+				# self.data.server_timeout = False
 				self.is_conn = False
-				print "Error Connecting to Server: ", e
+				return "Error Connecting to Server: " + str(e)
 			else:
 				self.is_conn = False
-				print "New error: ", e
+				return "New error: " + str(e)
 
 #	Initial attempt to connect to server
 #	Non-blocking program using connect_ex and getsockopt to catch errors
-	def attemptconnect(self, data):
+	def attemptconnect(self):
 		if not self.is_conn: 
-			self.__init__(data)
-			self.catch_except(self.conn_client)
+			return self.catch_except(self.conn_client)
+	def disconnect(self):
+		self.is_conn = False
+		self.close()
+		return "Server Disconnected"
 		
 	def conn_client(self):
 		if not self.is_conn:
 			socket.__init__(self,AF_INET,SOCK_STREAM)
 			err = self.connect_ex((host,port))
+			self.setblocking(False)
 			err_no = self.getsockopt(SOL_SOCKET,SO_ERROR)
 			if(err == 0 and err_no == 0):
-				print "Connected to Server"
+				self.just_conn = True
 				self.is_conn = True
-				self.setblocking(False)
+				if not self.data.serial.is_open: self.data.changestatus("OF")
+				return "Connected to Server"
 			else:
 				if err != 0: raise error(err, os.strerror(err))
 				if err_no != 0: raise error( err_no, os.strerror(err_no))
 
 #	senddata function converts data into json string then encodes it
 #	If no data, send "None" msg to ping server. 
-	def senddata(self, msg):
-		self.catch_except(self.send_d, msg)
+	def senddata(self):
+		msg = self.catch_except(self.send_d, self.data.buffer)
+		if msg == None:
+			return "SENT: " + str(self.data.buffer)
+		return msg
 
 	def send_d(self, msg):
 		temp = json.dumps(msg).encode("base64")
