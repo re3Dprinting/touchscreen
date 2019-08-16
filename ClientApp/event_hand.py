@@ -47,6 +47,7 @@ class event_handler(QtCore.QThread):
 			self.flashbedicon()
 			if(not self.serial.is_open):
 				self.reconnect_serial.emit("reconnectserial")
+
 	def resetparameters(self):
 		self.feedrate = 100
 		self.flowrate = [100, 100, 100]

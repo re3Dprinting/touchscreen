@@ -10,13 +10,12 @@ class SettingsWindow(QtWidgets.QWidget, Ui_SettingsWindow):
 		self.setupUi(self)
 		self.client_obj = client_obj
 		self.serial_obj = serial_obj
-		if parent.fullscreen: self.fullscreen = True
-		else: self.fullscreen = False
-		# if self.fullscreen: 
-		# 	self.setWindowState(self.windowState() | Qt.WindowFullScreen)
 		self.parent = parent
 		self.parent.setbuttonstyle(self.Serial)
 		self.parent.setbuttonstyle(self.Server)
+
+		if parent.fullscreen: self.fullscreen = True
+		else: self.fullscreen = False
 
 		self.Serial.clicked.connect(self.serialpop)
 		self.Server.clicked.connect(self.serverpop)

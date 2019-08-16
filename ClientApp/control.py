@@ -17,6 +17,7 @@ class ControlWindow(QtWidgets.QWidget, Ui_ControlWindow):
 		
 		self.parent = parent
 		self.serial = serial
+		self.timer = QTimer()
 
 		self.xinc = None
 		self.yinc = None
@@ -39,9 +40,9 @@ class ControlWindow(QtWidgets.QWidget, Ui_ControlWindow):
 		self.SetButtonSettings(self.E1)
 		self.SetButtonSettings(self.E2)
 		self.extruder.addButton(self.E1)
+		self.extruder.addButton(self.E2)
 		self.E1.setChecked(False)
 		self.E1.setChecked(True)
-		self.extruder.addButton(self.E2)
 		self.currentextruder = self.extruder.checkedButton().text()
 		self.extruder.buttonClicked.connect(self.updatecurrentextruder)
 
@@ -70,22 +71,17 @@ class ControlWindow(QtWidgets.QWidget, Ui_ControlWindow):
 
 	def homexy(self):
 		self.serial.send_serial('G28 XY')
-		#self.serial.send_serial('M114')
-		# self.xaxis.position = self.xaxis.home
-		# self.yaxis.position = self.yaxis.home
+
 	def homez(self):
 		self.serial.send_serial('G28 Z')
-		#self.serial.send_serial('M114')
-		# self.zaxis.position = self.zaxis.home
+
 	def homeall(self):
 		self.serial.send_serial('G28')
-		# self.serial.send_serial('M114')
-		# self.xaxis.position = self.xaxis.home
-		# self.yaxis.position = self.yaxis.home
-		# self.zaxis.position = self.zaxis.home
 
 	def updatecurrentextruder(self):
 		self.currentextruder = self.extruder.checkedButton().text()
+		if self.currentextruder == "E1": self.serial.send_serial("T0")
+		elif self.currentextruder == "E2": self.serial.send_serial("T1")
 
 	def AddButtontoGroup(self, axis):
 		group = QtWidgets.QButtonGroup(self)
@@ -97,6 +93,7 @@ class ControlWindow(QtWidgets.QWidget, Ui_ControlWindow):
 		getattr(self, axis+ "m"+"10").setChecked(False)
 		getattr(self, axis+ "m"+"10").setChecked(True)
 		return group
+
 	def SetButtonSettings(self,obj):
 		obj.setCheckable(True)
 		obj.setStyleSheet("QPushButton:checked {background: rgba(255,255,255,1); font: 14pt 'Ubuntu'; border: 2px solid #888} \

@@ -11,6 +11,7 @@ class TouchDisplay(QtWidgets.QWidget, Ui_TouchDisplay):
         super(TouchDisplay, self).__init__()
         self.setupUi(self)
 
+#       Change fullscreen to True if uploading to Raspberrypi
         self.fullscreen = True
         if self.fullscreen: 
             self.setWindowState(self.windowState() | Qt.WindowFullScreen)
@@ -18,16 +19,12 @@ class TouchDisplay(QtWidgets.QWidget, Ui_TouchDisplay):
         self.client = client
         self.serial = serial
 
-        self.Control.setCheckable(False)
-        #self.Control.setStyleSheet("QPushButton{background: rgba(255,255,255,0); outline: none; border: none;} QPushButton:checked{background: rgba(255,255,255,0); outline: none; border: none;} QPushButton:pressed {background: rgba(255,255,255,0); outline: none; border: none;}")
         self.setbuttonstyle(self.Print)
         self.setbuttonstyle(self.Settings)
         self.setbuttonstyle(self.Control)
         self.setbuttonstyle(self.Temperature)
-        #self.Print.setStyleSheet("QPushButton{background: rgba(255,255,255,0); outline: none; border: none;} QPushButton:checked{background: rgba(255,255,255,0); outline: none; border: none;} QPushButton:pressed {background: rgba(255,255,255,0); outline: none; border: none;}")
-        #self.Settings.setStyleSheet("QPushButton{background: rgba(255,255,255,0); outline: none; border: none;} QPushButton:checked{background: rgba(255,255,255,0); outline: none; border: none;} QPushButton:pressed {background: rgba(255,255,255,0); outline: none; border: none;}")
-        
 
+#       Event handler object that handles temperature materials, flowrate, etc. 
         self.event_handler = event_handler(self.serial)
 
         self.set_pop = SettingsWindow(self.client, self.serial, self)
@@ -62,6 +59,7 @@ class TouchDisplay(QtWidgets.QWidget, Ui_TouchDisplay):
     def printpop(self): 
         if self.fullscreen: self.print_pop.showFullScreen()
         else: self.print_pop.show()
+
     def setbuttonstyle(self,obj):
         obj.setStyleSheet("QPushButton{background: rgba(255,255,255,0); outline: none; border: none;} QPushButton:checked{background: rgba(255,255,255,0); outline: none; border: none;} QPushButton:pressed {background: rgba(0,0,0,0.08); outline: none; border: none;}")
 
