@@ -72,6 +72,7 @@ class g_serial(Serial):
 		if self.is_open:
 			self.close()
 			self.is_open = False
+			self.data.changestatus("OF")
 			return self.com+ " Disconnected!"
 		else: return "No connected device"
 

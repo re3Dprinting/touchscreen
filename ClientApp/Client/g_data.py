@@ -30,7 +30,7 @@ class g_data(QtCore.QThread):
 		self.uploaddate= ""
 		self.model = ""
 		self.header = ""
-		self.status = ""
+		self.status = "OF"
 		self.printtime = ""
 		self.currentfile = ""
 		self.files = dict()
