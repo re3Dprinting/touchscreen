@@ -7,11 +7,11 @@ class Material():
 		self.bed = bed
 		
 	def e1set(self):
-		self.parent.sete1(self.e1)
+		self.parent.extruder1.setandsend(self.e1)
 	def e2set(self):
-		self.parent.sete2(self.e2)
+		self.parent.extruder2.setandsend(self.e2)
 	def bedset(self):
-		self.parent.setb(self.bed)
+		self.parent.heatedbed.setandsend(self.bed)
 	def allset(self):
 		self.e1set()
 		self.e2set()

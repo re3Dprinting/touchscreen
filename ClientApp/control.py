@@ -17,8 +17,9 @@ class ControlWindow(QtWidgets.QWidget, Ui_ControlWindow):
 		
 		self.parent = parent
 		self.serial = serial
-		self.timer = QTimer()
 
+
+		# self.timer.timeout.connect(lambda: self.button_event_check())
 		self.xinc = None
 		self.yinc = None
 		self.zinc = None
@@ -46,10 +47,10 @@ class ControlWindow(QtWidgets.QWidget, Ui_ControlWindow):
 		self.currentextruder = self.extruder.checkedButton().text()
 		self.extruder.buttonClicked.connect(self.updatecurrentextruder)
 
-		self.xaxis = Axis("x", self, 508, 508)
-		self.yaxis = Axis("y", self, 463, 0)
-		self.zaxis = Axis("z", self, 550, 0)
-		self.eaxis = Axis("e", self)
+		self.xaxis = Axis("x", "4500", self, 25 )
+		self.yaxis = Axis("y", "4500", self, 25 )
+		self.zaxis = Axis("z", "4500", self, 2 )
+		self.eaxis = Axis("e", "60", self)
 
 		self.inittextformat(self.PositionLabel)
 		self.serial.data.updateposition.connect(self.updateposition)
@@ -61,6 +62,7 @@ class ControlWindow(QtWidgets.QWidget, Ui_ControlWindow):
 		self.Back.clicked.connect(self.close)
 		self.DisableMotors.clicked.connect(self.disablemotors)
 	
+
 	def updateposition(self):
 		pos = self.serial.data.position
 		tmp = "X: "+str(pos["X"])+ " Y: "+str(pos["Y"])+ " Z: "+str(pos["Z"])

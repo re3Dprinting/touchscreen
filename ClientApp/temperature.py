@@ -2,7 +2,10 @@ from qt.temperaturewindow import *
 from notactiveprint_wid import *
 from activeprint_wid import *
 from PyQt5.QtCore import Qt
+import PyQt5.QtCore
 from event_hand import *
+from preheatmaterial import *
+from periph import *
 
 mats = ['m1', 'm2', 'm3']
 periphs = ['e1', 'e2', 'bed', 'all']
@@ -44,7 +47,12 @@ class TemperatureWindow(QtWidgets.QWidget, Ui_TemperatureWindow):
 		self.setbuttonstyle(self.e2img)
 		self.setbuttonstyle(self.bedimg)
 
-		self.initposnegbuttons()
+		self.extruder1 = Periph("e1", 'M104 T0 S', self)
+		self.extruder2 = Periph("e2", 'M104 T1 S', self)
+		self.heatedbed = Periph("bed", 'M140 S', self)
+		self.m1 = Material(180,180,60,self)
+		self.m2 = Material(215,215,115,self)
+		self.m3 = Material(200,200,60,self)
 
 #		Dynamic Icons
 		self.fanon = False
@@ -174,48 +182,40 @@ class TemperatureWindow(QtWidgets.QWidget, Ui_TemperatureWindow):
 	# 	self.parent.print_pop.cancelled()
 	# 	self.serial.data.resetsettemps()
 
-	def initposnegbuttons(self):
-		for p in periphs:
-			if p == "all": continue
-			getattr(self, p+ "pos").clicked.connect(getattr(self.event_handler, "increment_"+p))
-			getattr(self, p+ "neg").clicked.connect(getattr(self.event_handler, "decrement_"+p))
+	# def initposnegbuttons(self):
+	# 	for p in periphs:
+	# 		if p == "all": continue
+	# 		setattr(self,p+ "timer", QTimer())
+	# 		getattr(self, p+ "pos").clicked.connect(getattr(self.event_handler, "increment_"+p))
+	# 		getattr(self, p+ "neg").clicked.connect(getattr(self.event_handler, "decrement_"+p))
 
 	def initpreheatbuttons(self):
 		for m in mats:
 			for p in periphs:
-				getattr(self.NotActivePrintWid, m+p).clicked.connect(getattr(getattr(self.event_handler, m), p +'set'))
+				getattr(self.NotActivePrintWid, m+p).clicked.connect(getattr(getattr(self, m), p +'set'))
 
 	def fan(self):
 		if self.serial.is_open:
 			if self.fanon:
 				self.serial.send_serial('M106 S0')
 				self.ActivePrintWid.Fan.setIcon(self.fanofficon)
-				self.ActivePrintWid.Fan.setIconSize(QtCore.QSize(65, 65))
+				self.ActivePrintWid.Fan.setIconSize(QtCore.QSize(55, 55))
 				self.NotActivePrintWid.Fan.setIcon(self.fanofficon)
-				self.NotActivePrintWid.Fan.setIconSize(QtCore.QSize(65, 65))
+				self.NotActivePrintWid.Fan.setIconSize(QtCore.QSize(55, 55))
 				self.fanon = False
 			elif not self.fanon:
 				self.serial.send_serial('M106 S255')
 				self.ActivePrintWid.Fan.setIcon(self.fanonicon)
-				self.ActivePrintWid.Fan.setIconSize(QtCore.QSize(65, 65))
+				self.ActivePrintWid.Fan.setIconSize(QtCore.QSize(55, 55))
 				self.NotActivePrintWid.Fan.setIcon(self.fanonicon)
-				self.NotActivePrintWid.Fan.setIconSize(QtCore.QSize(65, 65))
+				self.NotActivePrintWid.Fan.setIconSize(QtCore.QSize(55, 55))
 				self.fanon = True
 
 	def cool(self):
-		self.event_handler.sete1(0)
-		self.event_handler.sete2(0)
-		self.event_handler.setb(0)
+		self.extruder1.setandsend(0)
+		self.extruder2.setandsend(0)
+		self.heatedbed.setandsend(0)
 	
-	# def checkserial(self):
-	# 	print self.data.serial_err
-	# 	if "Disconnected" in self.serial.data.serial_err:
-	# 		self.cool()
-	# 		self.changeText(self.e1temp, "-----")
-	# 		self.changeText(self.e2temp, "-----")
-	# 		self.changeText(self.bedtemp, "-----")
-
-
 	def updatetemperatures(self):
 		if self.serial.is_open:
 			self.changeText(self.e1temp, str(int(self.serial.data.temp["T0"][0])))
@@ -228,9 +228,9 @@ class TemperatureWindow(QtWidgets.QWidget, Ui_TemperatureWindow):
 			self.changeText(self.e1set, "-----")
 			self.changeText(self.e2set, "-----")
 			self.changeText(self.bedset, "-----")
-			self.event_handler.sete1temp = 0
-			self.event_handler.sete2temp = 0
-			self.event_handler.setbedtemp = 0
+			self.extruder1.settemp = 0
+			self.extruder2.settemp = 0
+			self.heatedbed.settemp = 0
 			self.serial.data.resettemps()
 
 	def updatesettemperatures(self):
@@ -238,9 +238,9 @@ class TemperatureWindow(QtWidgets.QWidget, Ui_TemperatureWindow):
 			self.changeText(self.e1set, str(int(self.serial.data.temp["T0"][1])))
 			self.changeText(self.e2set, str(int(self.serial.data.temp["T1"][1])))
 			self.changeText(self.bedset, str(int(self.serial.data.temp["B"][1])))
-			self.event_handler.sete1temp = int(self.serial.data.temp["T0"][1])
-			self.event_handler.sete2temp = int(self.serial.data.temp["T1"][1])
-			self.event_handler.setbedtemp = int(self.serial.data.temp["B"][1])
+			self.extruder1.settemp = int(self.serial.data.temp["T0"][1])
+			self.extruder2.settemp = int(self.serial.data.temp["T1"][1])
+			self.heatedbed.settemp = int(self.serial.data.temp["B"][1])
 
 
 
