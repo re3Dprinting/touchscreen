@@ -47,7 +47,7 @@ class g_client(socket):
 	def conn_client(self):
 		if not self.is_conn:
 			socket.__init__(self,AF_INET,SOCK_STREAM)
-			err = self.connect_ex((self.host,port))
+			err = self.connect_ex((self.host, self.port))
 			self.setblocking(False)
 			err_no = self.getsockopt(SOL_SOCKET,SO_ERROR)
 			if(err == 0 and err_no == 0):
