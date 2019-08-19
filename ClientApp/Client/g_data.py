@@ -129,7 +129,7 @@ class g_data(QtCore.QThread):
 	def parsedata(self, msg, data):
 		try: self.parse_d(msg, data)
 		except Exception, e: 
-			err = "Exception occured in g_data: ", e
+			err = "Exception occured in g_data: ", e, " ", data
 			self.serial_msg = err
 			self.checkserial_msg.emit("checkserial")
 			pass
