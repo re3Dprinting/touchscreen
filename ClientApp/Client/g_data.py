@@ -61,10 +61,11 @@ class g_data(QtCore.QThread):
 						self.counter[0] = 0
 				else:
 					err = self.serial.readdata()
-					if err != None:
-						self.serial_msg = err
-						self.checkserial_msg.emit("checkserial")
-						self.notprinting.emit("notprinting")
+					if err != None :
+						if "Disconnected" in err:
+							self.serial_msg = err
+							self.checkserial_msg.emit("checkserial")
+							self.notprinting.emit("notprinting")
 					if not self.status == "AC" and not self.serial.just_open:
 						#print "Reset?: ", self.serial.just_open, " Status: ",self.status
 						if self.counter[0] >= 20:
@@ -129,7 +130,7 @@ class g_data(QtCore.QThread):
 	def parsedata(self, msg, data):
 		try: self.parse_d(msg, data)
 		except Exception, e: 
-			err = "Exception occured in g_data: ", e, " ", data
+			err = "Exception occured in g_data: "+ str(e)+ " " + str(data)
 			self.serial_msg = err
 			self.checkserial_msg.emit("checkserial")
 			pass
@@ -150,6 +151,7 @@ class g_data(QtCore.QThread):
 			self.updatefiles.emit("updatefiles")
 
 		if( "M23" in data_ and "M24" in data_):
+			self.files.clear()
 			self.extractprintfile(data_)
 			self.addtobuffer("FI", self.currentfile)
 			time.sleep(4)

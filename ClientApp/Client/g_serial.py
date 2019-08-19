@@ -24,6 +24,7 @@ class g_serial(Serial):
 		except IOError, e:
 			self.is_open = False
 			self.data.changestatus("OF")
+			print e.args[0]
 			return(self.com+ " Disconnected: "+ str(e))
 		except ValueError,e:
 			#print "COM port is unavalible/ or run program with root permission."
