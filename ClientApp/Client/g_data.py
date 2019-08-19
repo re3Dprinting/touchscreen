@@ -128,7 +128,11 @@ class g_data(QtCore.QThread):
 #	Parsedata is a helper function to catch exceptions
 	def parsedata(self, msg, data):
 		try: self.parse_d(msg, data)
-		except Exception, e: raise e
+		except Exception, e: 
+			err = "Exception occured in g_data: ", e
+			self.serial_msg = err
+			self.checkserial_msg.emit("checkserial")
+			pass
 #	Parsedata handles incoming data coming from serial
 	def parse_d(self, msglen, serialdata):
 		data_ = serialdata.decode("utf-8")
