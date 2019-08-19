@@ -23,6 +23,7 @@ class event_handler(QtCore.QThread):
 		self.babystepinc = 1
 
 		self.sendtempcount = 0
+		self.rescanserial_count = 0
 
 		self.bedflash = 0
 
@@ -31,13 +32,17 @@ class event_handler(QtCore.QThread):
 		while(True):
 			time.sleep(0.1)
 			self.sendtempcount += 1
+			self.rescanserial_count += 1
 			if self.sendtempcount >= 40: 
 				self.tempwindow.updatesettemperatures()
 				self.sendtempcount = 0
 			self.tempwindow.updatetemperatures()
 			self.flashbedicon()
-			if(not self.serial.is_open):
-				self.reconnect_serial.emit("reconnectserial")
+
+			if self.rescanserial_count >= 20:
+				if(not self.serial.is_open):
+					self.reconnect_serial.emit("reconnectserial")
+				self.rescanserial_count = 0
 
 	def resetparameters(self):
 		self.feedrate = 100

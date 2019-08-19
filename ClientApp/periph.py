@@ -1,10 +1,11 @@
 import PyQt5
 
 class Periph():
-	def __init__(self, periph, command, parent):
+	def __init__(self, periph, command, maxtemp, parent):
 		self.periph = periph
-		self.parent = parent
 		self.command = command
+		self.maxtemp = maxtemp
+		self.parent = parent
 
 		self.timer = PyQt5.QtCore.QTimer()
 		self.timer.timeout.connect(self.button_event_check)
@@ -47,7 +48,7 @@ class Periph():
 			elif self.direction == "dec": self.decrement()
 
 	def increment(self):
-		self.settemp += 1
+		if self.settemp < self.maxtemp: self.settemp += 1
 		self.parent.changeText(getattr(self.parent, self.periph+ "set"), str(self.settemp))
 	def decrement(self):
 		if self.settemp > 0: self.settemp -= 1

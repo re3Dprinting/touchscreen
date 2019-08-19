@@ -47,9 +47,9 @@ class TemperatureWindow(QtWidgets.QWidget, Ui_TemperatureWindow):
 		self.setbuttonstyle(self.e2img)
 		self.setbuttonstyle(self.bedimg)
 
-		self.extruder1 = Periph("e1", 'M104 T0 S', self)
-		self.extruder2 = Periph("e2", 'M104 T1 S', self)
-		self.heatedbed = Periph("bed", 'M140 S', self)
+		self.extruder1 = Periph("e1", 'M104 T0 S', 345, self)
+		self.extruder2 = Periph("e2", 'M104 T1 S', 345, self)
+		self.heatedbed = Periph("bed", 'M140 S', 125, self)
 		self.m1 = Material(180,180,60,self)
 		self.m2 = Material(215,215,115,self)
 		self.m3 = Material(200,200,60,self)
