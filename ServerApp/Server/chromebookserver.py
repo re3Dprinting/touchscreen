@@ -15,7 +15,7 @@ TCP_PORT = 63200
 
 #   Multithreaded Python server : TCP Server Socket Thread Pool
 class GigabotThread(Thread): 
-    def __init__(self,conn = None, ip = None, port = None, gigabot = None): 
+    def __init__(self,conn , ip , port , gigabot = None): 
         Thread.__init__(self) 
         self.conn = conn
         self.ipaddress = ip 
