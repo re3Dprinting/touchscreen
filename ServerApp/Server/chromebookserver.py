@@ -37,8 +37,11 @@ class GigabotThread(Thread):
                             self.gigabot.parsedata(c_data)
                         if wt:
                             self.senddata("OK")  # echo
-            except Exception, e:
-                print e
+            except Exception as e:
+                print "Exception Occured!", e.args[0]
+                if e.args[0] == 32 or e.args[0] == 104:
+                    self.connected = False
+                    # break
                 time.sleep(3)
 
 
