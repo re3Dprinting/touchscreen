@@ -3,7 +3,7 @@
 # Form implementation generated from reading ui file 'qt/module_gigabot.ui',
 # licensing of 'qt/module_gigabot.ui' applies.
 #
-# Created: Tue Aug 20 06:13:52 2019
+# Created: Tue Aug 20 06:31:53 2019
 #      by: pyside2-uic  running on PySide2 5.13.0
 #
 # WARNING! All changes made in this file will be lost!
@@ -255,12 +255,12 @@ class Ui_GigabotModule(object):
         self.StatusText.setText(QtWidgets.QApplication.translate("GigabotModule", "<html><head/><body><p align=\"center\"><span style=\" font-size:16pt;\">-----</span></p></body></html>", None, -1))
         self.FileLabel.setText(QtWidgets.QApplication.translate("GigabotModule", "<html><head/><body><p><span style=\" font-size:16pt;\">-----</span></p></body></html>", None, -1))
         self.FileText.setText(QtWidgets.QApplication.translate("GigabotModule", "<html><head/><body><p align=\"center\"><span style=\" font-size:16pt;\">-----</span></p></body></html>", None, -1))
-        self.Nozzle1Text.setText(QtWidgets.QApplication.translate("GigabotModule", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">-----</span></p></body></html>", None, -1))
-        self.SetNozzle1Text.setText(QtWidgets.QApplication.translate("GigabotModule", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">-----</span></p></body></html>", None, -1))
-        self.Nozzle2Text.setText(QtWidgets.QApplication.translate("GigabotModule", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">-----</span></p></body></html>", None, -1))
-        self.SetNozzle2Text.setText(QtWidgets.QApplication.translate("GigabotModule", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">-----</span></p></body></html>", None, -1))
-        self.BedText.setText(QtWidgets.QApplication.translate("GigabotModule", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">-----</span></p></body></html>", None, -1))
-        self.SetBedText.setText(QtWidgets.QApplication.translate("GigabotModule", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">-----</span></p></body></html>", None, -1))
+        self.Nozzle1Text.setText(QtWidgets.QApplication.translate("GigabotModule", "<html><head/><body><p align=\"center\"><span style=\" font-size:18pt;\">-----</span></p></body></html>", None, -1))
+        self.SetNozzle1Text.setText(QtWidgets.QApplication.translate("GigabotModule", "<html><head/><body><p align=\"center\"><span style=\" font-size:18pt;\">-----</span></p></body></html>", None, -1))
+        self.Nozzle2Text.setText(QtWidgets.QApplication.translate("GigabotModule", "<html><head/><body><p align=\"center\"><span style=\" font-size:18pt;\">-----</span></p></body></html>", None, -1))
+        self.SetNozzle2Text.setText(QtWidgets.QApplication.translate("GigabotModule", "<html><head/><body><p align=\"center\"><span style=\" font-size:18pt;\">-----</span></p></body></html>", None, -1))
+        self.BedText.setText(QtWidgets.QApplication.translate("GigabotModule", "<html><head/><body><p align=\"center\"><span style=\" font-size:18pt;\">-----</span></p></body></html>", None, -1))
+        self.SetBedText.setText(QtWidgets.QApplication.translate("GigabotModule", "<html><head/><body><p align=\"center\"><span style=\" font-size:18pt;\">-----</span></p></body></html>", None, -1))
 
 from scaledlabeltext import ScaledLabelText
 from scaledlabelimg import ScaledLabelImg
