@@ -24,6 +24,7 @@ class g_serial(Serial):
 		except IOError, e:
 			self.is_open = False
 			self.data.changestatus("OF")
+			print e.args[0]
 			return(self.com+ " Disconnected: "+ str(e))
 		except ValueError,e:
 			#print "COM port is unavalible/ or run program with root permission."
@@ -51,7 +52,9 @@ class g_serial(Serial):
 		self.is_open = True
 		self.reset()
 		
-		#time.sleep(3)
+#	Reset the machine, triggers the setDTR pin, 
+#	Changes the status back to "ON"
+#	Resets the Temperature window to not printing
 	def reset(self):
 		self.just_open = True
 		self.data.counter[0] = 0
@@ -65,15 +68,18 @@ class g_serial(Serial):
 		# print "Reset?: ", self.just_open
 		# print self.data.status
 
+#	Disconnect closes the serial port
 	def disconnect(self):
 		if self.is_open:
 			self.close()
 			self.is_open = False
+			self.data.changestatus("OF")
 			return self.com+ " Disconnected!"
 		else: return "No connected device"
 
+#	Called after 10 seconds resetting the machine.
+#	Extract Header information from the first few bytes of data
 	def initserial(self):
-		#Extract Header information from the first few bytes of data
 		self.readdata()
 		self.en_reporttemp_stat()
 

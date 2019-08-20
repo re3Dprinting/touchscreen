@@ -3,6 +3,7 @@ from addmachine import *
 from modulegigabot import *
 from Server.gigabotclient import *
 from addlabel import *
+from Server.chromebookserver import *
 
 
 #   DashboardWindow class
@@ -25,7 +26,10 @@ class DashboardWindow(QtWidgets.QMainWindow, Ui_DashboardWindow):
         self.handler = self.serverthread.handler
         self.gigabots = self.handler.gigabots
 
-#        self.gigabots.append(gigabotclient("192.168.1.169"))
+        # new_giga = gigabotclient("192.168.1.169")
+        # self.gigabots.append(new_giga)
+        # newthread = GigabotThread(ip = "192.168.1.169", gigabot = new_giga)
+        # self.handler.gigabotthreads.append(newthread)
 #       self.gigabots.append(gigabotclient("192.168.1.151"))
 #       self.gigabots.append(gigabotclient("192.168.1.49"))
 #       self.gigabots.append(gigabotclient("192.168.1.12"))

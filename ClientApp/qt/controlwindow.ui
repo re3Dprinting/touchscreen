@@ -936,7 +936,7 @@
    </property>
    <layout class="QVBoxLayout" name="verticalLayout_2">
     <item>
-     <widget class="QPushButton" name="E2">
+     <widget class="QPushButton" name="E1">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Expanding" vsizetype="MinimumExpanding">
         <horstretch>0</horstretch>
@@ -967,7 +967,7 @@
      </widget>
     </item>
     <item>
-     <widget class="QPushButton" name="E1">
+     <widget class="QPushButton" name="E2">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Expanding" vsizetype="MinimumExpanding">
         <horstretch>0</horstretch>
@@ -1144,9 +1144,9 @@
   <widget class="QLabel" name="PositionLabel">
    <property name="geometry">
     <rect>
-     <x>210</x>
+     <x>130</x>
      <y>430</y>
-     <width>211</width>
+     <width>291</width>
      <height>31</height>
     </rect>
    </property>

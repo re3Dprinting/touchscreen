@@ -11,14 +11,9 @@ class SerialWindow(QtWidgets.QWidget, Ui_SerialWindow):
 		self.event_handler.reconnect_serial.connect(self.reconnect_serial)
 		self.serial.data.checkserial_msg.connect(self.checkserial_msg)
 
-
-		# if parent.fullscreen: self.fullscreen = True
-		# else: self.fullscreen = False
-		# if self.fullscreen: 
-		# 	self.setWindowState(self.windowState() | Qt.WindowFullScreen)
-
 		#Make the selection Behavior as selecting the entire row
 		self.COMlist.setSelectionBehavior(QtWidgets.QTableView.SelectRows)
+		self.COMlist.setSelectionMode(QtWidgets.QTableView.SingleSelection)
 		#Hide the vertical header which contains the Index of the row.
 		self.COMlist.verticalHeader().hide()
 		#Stretch out the horizontal header to take up the entire view
@@ -26,9 +21,10 @@ class SerialWindow(QtWidgets.QWidget, Ui_SerialWindow):
 		header.setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
 		header.setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
 
+
 		self.scan_serial()
 		self.connect_serial()
-		#print(type(self.serial))
+
 		self.Back.clicked.connect(self.close)
 		self.ScanSerial.clicked.connect(self.scan_serial)
 		self.ConnectSerial.clicked.connect(self.connect_serial)

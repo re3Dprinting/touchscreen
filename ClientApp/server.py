@@ -7,14 +7,15 @@ hostname = "192.168.1.49"
 
 class serverping(QtCore.QThread):
 	checkreturnmsg = QtCore.pyqtSignal([str],[unicode])
-	def __init__(self):
+	def __init__(self, hostname):
 		super(serverping, self).__init__()
 		self.response = None
 		self._stop = False
+		self.hostname = hostname
 		self.count = 0
 	def run(self):
 		while(not self._stop):
-			self.response = os.system("ping -c 1 "+ hostname)
+			self.response = os.system("ping -c 1 "+ self.hostname)
 			self.checkreturnmsg.emit("checkreturnmsg")
 			time.sleep(0.1)
 	def stop(self):
@@ -28,7 +29,7 @@ class ServerWindow(QtWidgets.QWidget, Ui_ServerWindow):
 		self.client = client
 		self.setupUi(self)
 
-		self.pingthread = serverping()
+		self.pingthread = serverping(self.client.host)
 		self.pingthread.checkreturnmsg.connect(self.checkping)
 
 		self.IPText.setText(self.client.host)
@@ -46,7 +47,7 @@ class ServerWindow(QtWidgets.QWidget, Ui_ServerWindow):
 	def stopping(self):
 		self.pingthread.stop()
 		self.pingthread.count = 0
-		self.pingthread = serverping()
+		self.pingthread = serverping(self.client.host)
 		self.pingthread.checkreturnmsg.connect(self.checkping)
 		self.outputserver("Pinging stopped!\n")
 
