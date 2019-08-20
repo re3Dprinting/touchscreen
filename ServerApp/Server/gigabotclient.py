@@ -30,11 +30,19 @@ class gigabotclient():
 	 	elif(self.status == "OF"): return "Off\n"
 	 	elif(self.status == "AC"): return "Active\n"
 	def gettemp1(self): 
-		return str(self.temp1[0])+ " / "+ str(self.temp1[1])
+		return str(self.temp1[0])
 	def gettemp2(self): 
-		return str(self.temp2[0])+ " / "+ str(self.temp2[1])
+		return str(self.temp2[0])
 	def getbtemp(self): 
-		return str(self.btemp[0])+ " / "+ str(self.btemp[1])
+		return str(self.btemp[0])
+	def getsettemp1(self):
+		return str(self.temp1[1])
+	def getsettemp2(self):
+		return str(self.temp2[1])
+	def getsetbtemp(self):
+		return str(self.btemp[1])
+
+
 	def getstats(self):
 		allstats = ""
 		allstats += self.getdata()
