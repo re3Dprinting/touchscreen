@@ -1,6 +1,8 @@
+from builtins import str
+from builtins import object
 import PyQt5
 
-class Axis():
+class Axis(object):
 	def __init__(self, ax, feedrate, parent = None, holdmove = None):
 		self.feedrate = feedrate
 		self.ax = ax

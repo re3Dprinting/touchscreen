@@ -1,3 +1,5 @@
+from builtins import str
+from builtins import range
 from socket import *
 import time
 import threading
@@ -7,13 +9,13 @@ from PyQt5 import QtCore
 #	g_data class also handles parsing data and a buffer that is periodically sent to the server
 #	Main data class that handles data extracted from the 3D printer
 class g_data(QtCore.QThread):
-	checkserial_msg = QtCore.pyqtSignal([str],[unicode])
-	checkserver_msg = QtCore.pyqtSignal([str],[unicode])
-	updatefiles = QtCore.pyqtSignal([str],[unicode])
-	notprinting = QtCore.pyqtSignal([str],[unicode])
-	updateprogress = QtCore.pyqtSignal([str],[unicode])
-	updateposition = QtCore.pyqtSignal([str],[unicode])
-	printfinished = QtCore.pyqtSignal([str],[unicode])
+	checkserial_msg = QtCore.pyqtSignal([str],[str])
+	checkserver_msg = QtCore.pyqtSignal([str],[str])
+	updatefiles = QtCore.pyqtSignal([str],[str])
+	notprinting = QtCore.pyqtSignal([str],[str])
+	updateprogress = QtCore.pyqtSignal([str],[str])
+	updateposition = QtCore.pyqtSignal([str],[str])
+	printfinished = QtCore.pyqtSignal([str],[str])
 
 	def __init__(self):
 		super(g_data,self).__init__()
@@ -123,13 +125,13 @@ class g_data(QtCore.QThread):
 			ip = s.getsockname()[0]
 			s.close()
 			return ip
-		except error, exc:
+		except error as exc:
 			return ""
 
 #	Parsedata is a helper function to catch exceptions
 	def parsedata(self, msg, data):
 		try: self.parse_d(msg, data)
-		except Exception, e: 
+		except Exception as e: 
 			err = "Exception occured in g_data: "+ str(e)+ " " + str(data)
 			self.serial_msg = err
 			self.checkserial_msg.emit("checkserial")

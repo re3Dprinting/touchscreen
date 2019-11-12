@@ -1,5 +1,8 @@
+from __future__ import print_function
+from __future__ import absolute_import
+from builtins import str
 from socket import *
-from g_data import *
+from .g_data import *
 import time
 from serial import Serial
 import serial.tools.list_ports
@@ -21,18 +24,18 @@ class g_serial(Serial):
 		try:
 			function()
 			return
-		except IOError, e:
+		except IOError as e:
 			self.is_open = False
 			self.data.changestatus("OF")
-			print e.args[0]
+			print(e.args[0])
 			return(self.com+ " Disconnected: "+ str(e))
-		except ValueError,e:
+		except ValueError as e:
 			#print "COM port is unavalible/ or run program with root permission."
 			#print "Retrying in 5 seconds"
 			self.is_open = False
 			self.data.changestatus("OF")
 			return("ValueError :"+ str(e))
-		except Exception, e:
+		except Exception as e:
 			return("Exception Error :"+ str(e))
 
 #	COM list consists of attributes, device and description
@@ -64,7 +67,7 @@ class g_serial(Serial):
 		self.setDTR(True)
 		self.data.changestatus("ON")
 		self.data.notprinting.emit("notprinting")
-		print "RESET: ", self.just_open, " status: ", self.data.status
+		print("RESET: ", self.just_open, " status: ", self.data.status)
 		# print "Reset?: ", self.just_open
 		# print self.data.status
 
@@ -96,10 +99,10 @@ class g_serial(Serial):
 
 	def send_serial(self, gcode):
 		if self.is_open:
-			print "SEND: " + gcode
+			print("SEND: " + gcode)
 			self.write((gcode+'\r').encode('utf-8'))
 		else:
-			print "Serial port is not open"
+			print("Serial port is not open")
 
 #	Read serial data function
 #	If the insize is detected, wait half a second for the full transmission to come through
@@ -111,7 +114,7 @@ class g_serial(Serial):
 		if insize: 
 			time.sleep(0.5)
 			insize = self.inWaiting()
-			print "Bytes from Serial: ",insize
+			print("Bytes from Serial: ",insize)
 			serial_recv= self.read(insize)
 			print(serial_recv)
 			msg = self.data.parsedata(insize,serial_recv)

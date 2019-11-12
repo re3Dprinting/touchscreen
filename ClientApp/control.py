@@ -1,3 +1,4 @@
+from builtins import str
 from qt.controlwindow import *
 from PyQt5.QtCore import Qt
 from axis import *
@@ -105,4 +106,6 @@ class ControlWindow(QtWidgets.QWidget, Ui_ControlWindow):
 		label.setText(tmp)
 	def inittextformat(self,label):
 		label.format = label.text()
-		label.format = label.format.encode("utf-8").split("-----")
+# This line was, prior to converting for python 3:
+#		label.format = label.format.encode("utf-8").split("-----")
+		label.format = label.format.split("-----")

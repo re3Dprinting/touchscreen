@@ -1,3 +1,4 @@
+from builtins import str
 from qt.serialwindow import *
 from PyQt5.QtCore import Qt
 

@@ -1,3 +1,5 @@
+from __future__ import print_function
+from builtins import str
 from socket import *
 import json
 import errno
@@ -81,6 +83,6 @@ class g_client(socket):
 		data = self.recv(1024)
 		if data:
 			m_data = json.loads(data.decode("base64"))
-			if(m_data == "OK"): print "Server ACK"
+			if(m_data == "OK"): print("Server ACK")
 			else: return m_data
 

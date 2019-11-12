@@ -1,3 +1,4 @@
+from builtins import str
 import time
 import threading
 from PyQt5 import QtCore
@@ -7,7 +8,7 @@ from PyQt5 import QtCore
 # 
 
 class event_handler(QtCore.QThread):
-	reconnect_serial = QtCore.pyqtSignal([str],[unicode])
+	reconnect_serial = QtCore.pyqtSignal([str],[str])
 	def __init__(self, serial, tempwindow = None, serialwindow = None):
 		super(event_handler,self).__init__()
 		self.tempwindow = tempwindow

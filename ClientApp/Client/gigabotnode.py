@@ -1,9 +1,12 @@
+from __future__ import print_function
+from __future__ import absolute_import
+from builtins import object
 import time
 import serial
 import serial.tools.list_ports
-from g_serial import * 
-from g_client import *
-from g_data import * 
+from .g_serial import * 
+from .g_client import *
+from .g_data import * 
 import sys
 import threading
 import os
@@ -11,7 +14,7 @@ import os
 
 baudrate = 250000
 
-class mainhandler():
+class mainhandler(object):
 	def __init__(self, clientconn, serialconn, data_o):
 		self.clientconn = clientconn
 		self.serialconn = serialconn
@@ -66,7 +69,7 @@ if __name__ == "__main__":
 		time.sleep(1)
 		mainhand.loop()
 
-	print "program ended"
+	print("program ended")
 
 	# conn.close()
 

@@ -1,3 +1,4 @@
+from builtins import str
 from qt.serverwindow import *
 from PyQt5.QtCore import Qt
 import os
@@ -6,7 +7,7 @@ import time
 hostname = "192.168.1.49"
 
 class serverping(QtCore.QThread):
-	checkreturnmsg = QtCore.pyqtSignal([str],[unicode])
+	checkreturnmsg = QtCore.pyqtSignal([str],[str])
 	def __init__(self, hostname):
 		super(serverping, self).__init__()
 		self.response = None

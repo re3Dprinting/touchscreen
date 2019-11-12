@@ -1,6 +1,8 @@
+from builtins import str
+from builtins import object
 import PyQt5
 
-class Periph():
+class Periph(object):
 	def __init__(self, periph, command, maxtemp, parent):
 		self.periph = periph
 		self.command = command

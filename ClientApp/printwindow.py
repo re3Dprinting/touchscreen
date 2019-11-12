@@ -1,3 +1,6 @@
+from __future__ import division
+from builtins import str
+from past.utils import old_div
 from qt.printwindow import *
 from PyQt5.QtCore import Qt
 
@@ -37,7 +40,7 @@ class PrintWindow(QtWidgets.QWidget, Ui_PrintWindow):
 		self.FileList.verticalScrollBar().setStyleSheet("QScrollBar::vertical{ width: 40px; }")
 
 
-		tabWidth = (self.tabWidget.width()/2)-24
+		tabWidth = (old_div(self.tabWidget.width(),2))-24
 		self.tabWidget.setStyleSheet(self.tabWidget.styleSheet() +"QTabBar::tab { width: " + str(tabWidth) + "px; height: 35px; font-size: 12pt;}")
 
 	def scansd(self):

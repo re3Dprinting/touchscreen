@@ -1,5 +1,6 @@
 
-class Material():
+from builtins import object
+class Material(object):
 	def __init__(self, e1, e2, bed, parent = None):
 		self.parent = parent
 		self.e1 = e1

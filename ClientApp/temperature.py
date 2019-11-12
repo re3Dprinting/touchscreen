@@ -1,3 +1,4 @@
+from builtins import str
 from qt.temperaturewindow import *
 from notactiveprint_wid import *
 from activeprint_wid import *
@@ -249,7 +250,9 @@ class TemperatureWindow(QtWidgets.QWidget, Ui_TemperatureWindow):
 		label.setText(tmp)
 	def inittextformat(self,label):
 		label.format = label.text()
-		label.format = label.format.encode("utf-8").split("-----")
+# This line was, prior to converting for python 3:
+#		label.format = label.format.encode("utf-8").split("-----")
+		label.format = label.format.split("-----")
 	def setbuttonstyle(self,obj):
 		obj.setStyleSheet("QPushButton{background: rgba(255,255,255,0); outline: none; border: none;}")
 
