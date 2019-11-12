@@ -3,7 +3,7 @@ from PyQt5.QtCore import Qt
 from control import *
 from temperature import *
 from settings import *
-from printfile import *
+from printwindow import *
 import sys
 
 class TouchDisplay(QtWidgets.QWidget, Ui_TouchDisplay):
