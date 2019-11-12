@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'qt/printwindow.ui'
+# Form implementation generated from reading ui file 'printwindow.ui'
 #
-# Created by: PyQt5 UI code generator 5.5.1
+# Created by: PyQt5 UI code generator 5.12.3
 #
 # WARNING! All changes made in this file will be lost!
 
+
 from PyQt5 import QtCore, QtGui, QtWidgets
+
 
 class Ui_PrintWindow(object):
     def setupUi(self, PrintWindow):
@@ -55,11 +57,36 @@ class Ui_PrintWindow(object):
         self.tabWidget.addTab(self.SD, "")
         self.USB = QtWidgets.QWidget()
         self.USB.setObjectName("USB")
+        self.horizontalLayout1 = QtWidgets.QHBoxLayout(self.USB)
+        self.horizontalLayout1.setObjectName("horizontalLayout1")
+        self.FileList1 = QtWidgets.QTableWidget(self.USB)
+        self.FileList1.setObjectName("FileList1")
+        self.FileList1.setColumnCount(2)
+        self.FileList1.setRowCount(0)
+        item = QtWidgets.QTableWidgetItem()
+        self.FileList1.setHorizontalHeaderItem(0, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.FileList1.setHorizontalHeaderItem(1, item)
+        self.horizontalLayout1.addWidget(self.FileList1)
+        self.verticalLayout1 = QtWidgets.QVBoxLayout()
+        self.verticalLayout1.setObjectName("verticalLayout1")
+        self.StartPrint1 = QtWidgets.QPushButton(self.USB)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.StartPrint1.sizePolicy().hasHeightForWidth())
+        self.StartPrint1.setSizePolicy(sizePolicy)
+        self.StartPrint1.setMinimumSize(QtCore.QSize(100, 0))
+        self.StartPrint1.setMaximumSize(QtCore.QSize(100, 100))
+        self.StartPrint1.setObjectName("StartPrint1")
+        self.verticalLayout1.addWidget(self.StartPrint1)
+        self.horizontalLayout1.addLayout(self.verticalLayout1)
         self.tabWidget.addTab(self.USB, "")
         self.widget = QtWidgets.QWidget(PrintWindow)
         self.widget.setGeometry(QtCore.QRect(10, 350, 781, 121))
         self.widget.setObjectName("widget")
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout(self.widget)
+        self.horizontalLayout_2.setContentsMargins(0, 0, 0, 0)
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
         self.Back = QtWidgets.QPushButton(self.widget)
         self.Back.setMaximumSize(QtCore.QSize(100, 100))
@@ -97,7 +124,11 @@ class Ui_PrintWindow(object):
         self.ScanSD.setText(_translate("PrintWindow", "Scan SD"))
         self.StartPrint.setText(_translate("PrintWindow", "Start Print"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.SD), _translate("PrintWindow", "SD"))
+        item = self.FileList1.horizontalHeaderItem(0)
+        item.setText(_translate("PrintWindow", "Name"))
+        item = self.FileList1.horizontalHeaderItem(1)
+        item.setText(_translate("PrintWindow", "Size"))
+        self.StartPrint1.setText(_translate("PrintWindow", "Start Print"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.USB), _translate("PrintWindow", "USB"))
         self.StopPrint.setText(_translate("PrintWindow", "Stop Print"))
         self.ActivePrint.setText(_translate("PrintWindow", "Active Print"))
-
