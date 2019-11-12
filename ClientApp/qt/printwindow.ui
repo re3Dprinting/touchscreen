@@ -112,7 +112,7 @@
     </attribute>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <widget class="QTableWidget" name="FileList">
+      <widget class="QTableWidget" name="USBFileList">
        <column>
         <property name="text">
          <string>Name</string>

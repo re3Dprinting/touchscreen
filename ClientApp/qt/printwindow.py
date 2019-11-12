@@ -2,12 +2,11 @@
 
 # Form implementation generated from reading ui file 'printwindow.ui'
 #
-# Created by: PyQt5 UI code generator 5.12.3
+# Created by: PyQt5 UI code generator 5.13.1
 #
 # WARNING! All changes made in this file will be lost!
 
 
-from builtins import object
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
@@ -60,15 +59,15 @@ class Ui_PrintWindow(object):
         self.USB.setObjectName("USB")
         self.horizontalLayout1 = QtWidgets.QHBoxLayout(self.USB)
         self.horizontalLayout1.setObjectName("horizontalLayout1")
-        self.FileList1 = QtWidgets.QTableWidget(self.USB)
-        self.FileList1.setObjectName("FileList1")
-        self.FileList1.setColumnCount(2)
-        self.FileList1.setRowCount(0)
+        self.USBFileList = QtWidgets.QTableWidget(self.USB)
+        self.USBFileList.setObjectName("USBFileList")
+        self.USBFileList.setColumnCount(2)
+        self.USBFileList.setRowCount(0)
         item = QtWidgets.QTableWidgetItem()
-        self.FileList1.setHorizontalHeaderItem(0, item)
+        self.USBFileList.setHorizontalHeaderItem(0, item)
         item = QtWidgets.QTableWidgetItem()
-        self.FileList1.setHorizontalHeaderItem(1, item)
-        self.horizontalLayout1.addWidget(self.FileList1)
+        self.USBFileList.setHorizontalHeaderItem(1, item)
+        self.horizontalLayout1.addWidget(self.USBFileList)
         self.verticalLayout1 = QtWidgets.QVBoxLayout()
         self.verticalLayout1.setObjectName("verticalLayout1")
         self.StartPrint1 = QtWidgets.QPushButton(self.USB)
@@ -125,9 +124,9 @@ class Ui_PrintWindow(object):
         self.ScanSD.setText(_translate("PrintWindow", "Scan SD"))
         self.StartPrint.setText(_translate("PrintWindow", "Start Print"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.SD), _translate("PrintWindow", "SD"))
-        item = self.FileList1.horizontalHeaderItem(0)
+        item = self.USBFileList.horizontalHeaderItem(0)
         item.setText(_translate("PrintWindow", "Name"))
-        item = self.FileList1.horizontalHeaderItem(1)
+        item = self.USBFileList.horizontalHeaderItem(1)
         item.setText(_translate("PrintWindow", "Size"))
         self.StartPrint1.setText(_translate("PrintWindow", "Start Print"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.USB), _translate("PrintWindow", "USB"))
