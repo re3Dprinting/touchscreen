@@ -35,49 +35,57 @@ class SubFileSystem(object):
     def list(self):
         self.files = []
 
-        # Get the list of files in the current working directory
-        it = os.scandir(self.cwd)
+        try:
+            # Get the list of files in the current working directory
+            it = os.scandir(self.cwd)
 
-        # Loop through the files, collecting some information in each
-        for entry in it:
+            # Loop through the files, collecting some information in each
+            for entry in it:
 
-            # Start with the name
-            name = entry.name
-            displayname = name
+                # Start with the name
+                name = entry.name
+                displayname = name
 
-            # Do some filtering. (To-do: create a filter class do do this)
-            if name.startswith("."):
-                continue
+                # Do some filtering. (To-do: create a filter class do do this)
+                if name.startswith("."):
+                    continue
 
-            if entry.is_dir():
-                type = 'd'
-            elif entry.is_file():
-                type = 'f'
-            elif entry.is_symlink():
-                type = 'l'
-            else:
-                type = 'u'
+                if entry.is_dir():
+                    type = 'd'
+                elif entry.is_file():
+                    type = 'f'
+                elif entry.is_symlink():
+                    type = 'l'
+                else:
+                    type = 'u'
 
-            # Do some more filtering. (To-do: filter class)
-            if type == 'l':
-                continue
+                # Do some more filtering. (To-do: filter class)
+                if type == 'l':
+                    continue
 
-            # If the file is a directory, append a slash to the
-            # display name this is how we visually distinguish
-            # directories and folders from regular files.
+                # If the file is a directory, append a slash to the
+                # display name this is how we visually distinguish
+                # directories and folders from regular files.
 
-            if type == 'd':
-                displayname += "/"
+                if type == 'd':
+                    displayname += "/"
 
-            # Call stat to get information that includes the file size
-            statinfo = entry.stat()
-            size = statinfo.st_size
+                # Call stat to get information that includes the file size
+                statinfo = entry.stat()
+                size = statinfo.st_size
 
-            # Create a tuple and append it to the list of files
-#            file_tuple = (name, size)
-            the_file = fsutils.file.File(name, displayname, size, type)
-            self.files.append(the_file)
+                # Create a tuple and append it to the list of files
+                the_file = fsutils.file.File(name, displayname, size, type)
+                self.files.append(the_file)
 
-        # Lastly, return the list of file tuples
-        self.files = sorted(self.files)
-        return self.files
+            # Lastly, return the list of file tuples
+            self.files = sorted(self.files)
+            return self.files
+
+        # There's a number of exceptions that can occur in os.scandir,
+        # mostly related to directories to which we do not have read
+        # or execute permission. For all of these, simply act as if no
+        # files have been found.
+        except:
+            self.files = []
+            return self.files

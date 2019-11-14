@@ -56,6 +56,7 @@ class PrintWindow(QtWidgets.QWidget, Ui_PrintWindow):
         header.setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
 
         self.USBFileList.itemClicked.connect(self.itemClicked)
+        self.USBFileList.itemDoubleClicked.connect(self.itemDoubleClicked)
         self.pushbutton_open.clicked.connect(self.open_subdir)
         self.pushbutton_up.clicked.connect(self.up_dir)
 
@@ -182,8 +183,6 @@ class PrintWindow(QtWidgets.QWidget, Ui_PrintWindow):
         else:
             self.pushbutton_up.setEnabled(False)
 
-        print("****", selected_row)
-
         if selected_row == -1:
             self.pushbutton_open.setEnabled(False)
             self.pushbutton_print.setEnabled(False)
@@ -210,7 +209,7 @@ class PrintWindow(QtWidgets.QWidget, Ui_PrintWindow):
 
         self.subdir.cd(selected_file.name)
         self.updateusbfiles()
-        self.showFile(0)
+        self.showFileAndDeselect(0)
         self.update_button_states()
 
     def up_dir(self):
@@ -227,7 +226,18 @@ class PrintWindow(QtWidgets.QWidget, Ui_PrintWindow):
         selected_item = self.USBFileList.currentItem()
         self.USBFileList.scrollToItem(selected_item)
 
+    def showFileAndDeselect(self, selected_row):
+        self.USBFileList.setCurrentCell(selected_row, 0)
+        selected_item = self.USBFileList.currentItem()
+        self.USBFileList.scrollToItem(selected_item)
+        self.USBFileList.setCurrentItem(None)
+
     def itemClicked(self):
         row = self.USBFileList.currentRow()
-        print("itemClicked", row)
         self.update_button_states()
+
+    def itemDoubleClicked(self):
+        self.open_subdir()
+        # row = self.USBFileList.currentRow()
+        # print("itemDoubleClicked", row)
+        
