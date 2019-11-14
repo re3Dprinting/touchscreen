@@ -6,12 +6,33 @@ class SubFileSystem(object):
     def __init__(self, rootdir):
         self.rootdir = rootdir
         self.cwd = rootdir
+        self.level = 0
+        self.dir_stack = []
+        self.dir_stack.append(rootdir)
+
+    def depth(self):
+        return self.level
 
     def cd(self, dir):
-        pass
+        if dir == "..":
+            self.cdup()
+            return
+        
+        self.dir_stack.append(self.cwd)
+        self.level += 1
+        self.cwd += "/" + dir
+        print("pushed:", self.cwd)
+
+    def up(self):
+        if self.level == 0:
+            return;
+
+        self.level -= 1
+        self.cwd = self.dir_stack.pop()
+        print("popped:", self.cwd)
 
     def list(self):
-        files = []
+        self.files = []
 
         # Get the list of files in the current working directory
         it = os.scandir(self.cwd)
@@ -54,7 +75,8 @@ class SubFileSystem(object):
             # Create a tuple and append it to the list of files
 #            file_tuple = (name, size)
             the_file = fsutils.file.File(name, displayname, size, type)
-            files.append(the_file)
+            self.files.append(the_file)
 
         # Lastly, return the list of file tuples
-        return sorted(files)
+        self.files = sorted(self.files)
+        return self.files

@@ -4,6 +4,7 @@ from past.utils import old_div
 from PyQt5.QtCore import Qt
 from qt.printwindow import *
 from fsutils.subfilesystem import *
+from fsutils.file import *
 
 class PrintWindow(QtWidgets.QWidget, Ui_PrintWindow):
         def __init__(self, serial, temp_pop, parent = None):
@@ -13,6 +14,8 @@ class PrintWindow(QtWidgets.QWidget, Ui_PrintWindow):
                 self.serial.data.updatefiles.connect(self.updatefiles)
                 self.temp_pop = temp_pop
                 self.parent = parent
+
+                self.item_stack = []
 
                 if parent.fullscreen: self.fullscreen = True
                 else: self.fullscreen = False
@@ -39,7 +42,6 @@ class PrintWindow(QtWidgets.QWidget, Ui_PrintWindow):
                 self.FileList.verticalHeader().setDefaultSectionSize(50)
                 self.FileList.verticalScrollBar().setStyleSheet("QScrollBar::vertical{ width: 40px; }")
 
-
                 # Set up the list of USB files
 
                 self.USBFileList.setSelectionBehavior(QtWidgets.QTableView.SelectRows)
@@ -49,27 +51,17 @@ class PrintWindow(QtWidgets.QWidget, Ui_PrintWindow):
                 header = self.USBFileList.horizontalHeader()
                 header.setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
 
-                # self.USBFileList.cellActivated.connect(self.cellActivated)
-                # self.USBFileList.cellChanged.connect(self.cellChanged)
-                # self.USBFileList.cellClicked.connect(self.cellClicked)
-                # self.USBFileList.cellDoubleClicked.connect(self.cellDoubleClicked)
-                # self.USBFileList.cellEntered.connect(self.cellEntered)
-                # self.USBFileList.cellPressed.connect(self.cellPressed)
-                # self.USBFileList.currentCellChanged.connect(self.currentCellChanged)
                 self.USBFileList.currentItemChanged.connect(self.currentItemChanged)
-                # self.USBFileList.itemActivated.connect(self.itemActivated)
-                # self.USBFileList.itemChanged.connect(self.itemChanged)
-                self.USBFileList.itemClicked.connect(self.itemClicked)
-                # self.USBFileList.itemDoubleClicked.connect(self.itemDoubleClicked)
-                # self.USBFileList.itemEntered.connect(self.itemEntered)
-                # self.USBFileList.itemPressed.connect(self.itemPressed)
-                # self.USBFileList.itemSelectionChanged.connect(self.itemSelectionChanged)
-
+                self.pushbutton_open.clicked.connect(self.open_subdir)
+                self.pushbutton_up.clicked.connect(self.up_dir)
+                
                 tabWidth = (old_div(self.tabWidget.width(),2))-24
                 self.tabWidget.setStyleSheet(self.tabWidget.styleSheet() +"QTabBar::tab { width: " + str(tabWidth) + "px; height: 35px; font-size: 12pt;}")
 
                 self.subdir = SubFileSystem("/Users/jct")
                 self.updateusbfiles()
+                self.showFile(0)
+                self.update_button_states()
 
         def scansd(self):
                 self.serial.send_serial("M22 \r")
@@ -94,6 +86,8 @@ class PrintWindow(QtWidgets.QWidget, Ui_PrintWindow):
 
         def updateusbfiles(self):
                 print("Updating USB files")
+                self.USBFileList.clearContents()
+                self.USBFileList.setRowCount(0)
                 files = self.subdir.list()
 
                 for usbfile in files:
@@ -156,60 +150,76 @@ class PrintWindow(QtWidgets.QWidget, Ui_PrintWindow):
                         self.temp_pop.ActivePrintWid.FileProgress.setValue(0)
                         self.parent.Control.setEnabled(False)
 
+        def get_selected_file(self):
+                selected_row = self.USBFileList.currentRow()
+                if selected_row == -1:
+                        return (-1, None, None)
+
+                selected_file = self.subdir.files[selected_row]
+                selected_item = self.USBFileList.currentItem()
+
+                return (selected_row, selected_file, selected_item)
 
         def activeprintpop(self):
                 if self.fullscreen: self.temp_pop.showFullScreen()
                 else: self.temp_pop.show()              
 
+        def update_button_states_none(self):
+                self.pushbutton_up.setEnabled(False)
+                self.pushbutton_open.setEnabled(False)
+                self.pushbutton_print.setEnabled(False)
 
-                # else:
-                #       self.output_serial("Please select a file")
+        def update_button_states(self):
+                selected_row, selected_file, selected_item = self.get_selected_file()
 
+                if self.subdir.depth() > 0:
+                        self.pushbutton_up.setEnabled(True)
+                else:
+                        self.pushbutton_up.setEnabled(False)
 
-        # def cellActivated(self):
-        #         print("cellActivated")
+                print("****", selected_row)
 
-        # def cellChanged(self):
-        #         print("cellChanged")
+                if selected_row == -1:
+                        self.pushbutton_open.setEnabled(False)
+                        self.pushbutton_print.setEnabled(False)
+                        return
 
-        # def cellClicked(self):
-        #         print("cellClicked")
+                if selected_file.type == 'd':
+                        self.pushbutton_open.setEnabled(True)
+                        self.pushbutton_print.setEnabled(False)
 
-        # def cellDoubleClicked(self):
-        #         print("cellDoubleClicked")
+                elif selected_file.type == 'f':
+                        self.pushbutton_open.setEnabled(False)
+                        self.pushbutton_print.setEnabled(True)
 
-        # def cellEntered(self):
-        #         print("cellEntered")
+        def open_subdir(self):
+                selected_row, selected_file, selected_item = self.get_selected_file()
 
-        # def cellPressed(self):
-        #         print("cellPressed")
+                if selected_row is None:
+                        return
 
-        # def currentCellChanged(self):
-        #         print("currentCellChanged")
+                if selected_file.type != 'd':
+                        return
+
+                self.item_stack.append(selected_row)
+
+                self.subdir.cd(selected_file.name)
+                self.updateusbfiles()
+                self.update_button_states()
+
+        def up_dir(self):
+                self.subdir.up()
+                self.updateusbfiles()
+                self.update_button_states()
+
+                selected_row = self.item_stack.pop()
+
+        def showFile(self, selected_row):
+                self.USBFileList.setCurrentCell(selected_row, 0)
+                selected_item = self.USBFileList.currentItem()
+                self.USBFileList.scrollToItem(selected_item)
 
         def currentItemChanged(self):
                 row = self.USBFileList.currentRow()
                 print("currentItemChanged", row)
-
-        # def itemActivated(self):
-        #         print("itemActivated")
-
-        # def itemChanged(self):
-        #         print("itemChanged")
-
-        def itemClicked(self, table):
-                row = self.USBFileList.currentRow()
-                print("itemClicked ", row)
-
-        # def itemDoubleClicked(self):
-        #         print("itemDoubleClicked")
-
-        # def itemEntered(self):
-        #         print("itemEntered")
-
-        # def itemPressed(self):
-        #         print("itemPressed")
-
-        # def itemSelectionChanged(self):
-        #         print("itemSelectionChanged")
-
+                self.update_button_states()
