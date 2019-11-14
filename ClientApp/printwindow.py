@@ -51,7 +51,7 @@ class PrintWindow(QtWidgets.QWidget, Ui_PrintWindow):
                 header = self.USBFileList.horizontalHeader()
                 header.setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
 
-                self.USBFileList.currentItemChanged.connect(self.currentItemChanged)
+                self.USBFileList.itemClicked.connect(self.itemClicked)
                 self.pushbutton_open.clicked.connect(self.open_subdir)
                 self.pushbutton_up.clicked.connect(self.up_dir)
                 
@@ -205,21 +205,25 @@ class PrintWindow(QtWidgets.QWidget, Ui_PrintWindow):
 
                 self.subdir.cd(selected_file.name)
                 self.updateusbfiles()
+                self.showFile(0)
                 self.update_button_states()
 
         def up_dir(self):
                 self.subdir.up()
                 self.updateusbfiles()
-                self.update_button_states()
 
                 selected_row = self.item_stack.pop()
+                self.showFile(selected_row)
+
+                self.update_button_states()
+
 
         def showFile(self, selected_row):
                 self.USBFileList.setCurrentCell(selected_row, 0)
                 selected_item = self.USBFileList.currentItem()
                 self.USBFileList.scrollToItem(selected_item)
 
-        def currentItemChanged(self):
+        def itemClicked(self):
                 row = self.USBFileList.currentRow()
-                print("currentItemChanged", row)
+                print("itemClicked", row)
                 self.update_button_states()
