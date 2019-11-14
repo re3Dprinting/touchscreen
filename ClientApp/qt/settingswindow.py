@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'qt/settingswindow.ui'
+# Form implementation generated from reading ui file 'settingswindow.ui'
 #
-# Created by: PyQt5 UI code generator 5.5.1
+# Created by: PyQt5 UI code generator 5.13.1
 #
 # WARNING! All changes made in this file will be lost!
 
-from builtins import object
+
 from PyQt5 import QtCore, QtGui, QtWidgets
+
 
 class Ui_SettingsWindow(object):
     def setupUi(self, SettingsWindow):
@@ -88,4 +89,3 @@ class Ui_SettingsWindow(object):
         _translate = QtCore.QCoreApplication.translate
         SettingsWindow.setWindowTitle(_translate("SettingsWindow", "TouchDisplay"))
         self.label.setText(_translate("SettingsWindow", "V.1.0.0 re3Display"))
-

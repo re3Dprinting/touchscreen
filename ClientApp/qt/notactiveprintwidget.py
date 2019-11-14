@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'qt/notactiveprintwidget.ui'
+# Form implementation generated from reading ui file 'notactiveprintwidget.ui'
 #
-# Created by: PyQt5 UI code generator 5.5.1
+# Created by: PyQt5 UI code generator 5.13.1
 #
 # WARNING! All changes made in this file will be lost!
 
-from builtins import object
+
 from PyQt5 import QtCore, QtGui, QtWidgets
+
 
 class Ui_NotActivePrintWidget(object):
     def setupUi(self, NotActivePrintWidget):
@@ -244,4 +245,3 @@ class Ui_NotActivePrintWidget(object):
         self.m3bed.setText(_translate("NotActivePrintWidget", "Bed"))
         self.m3all.setToolTip(_translate("NotActivePrintWidget", "<html><head/><body><p><span style=\" font-size:24pt;\">0.1</span></p></body></html>"))
         self.m3all.setText(_translate("NotActivePrintWidget", "All"))
-

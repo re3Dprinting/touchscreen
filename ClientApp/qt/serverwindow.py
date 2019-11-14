@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'qt/serverwindow.ui'
+# Form implementation generated from reading ui file 'serverwindow.ui'
 #
-# Created by: PyQt5 UI code generator 5.5.1
+# Created by: PyQt5 UI code generator 5.13.1
 #
 # WARNING! All changes made in this file will be lost!
 
-from builtins import object
+
 from PyQt5 import QtCore, QtGui, QtWidgets
+
 
 class Ui_ServerWindow(object):
     def setupUi(self, ServerWindow):
@@ -27,6 +28,7 @@ class Ui_ServerWindow(object):
         self.layoutWidget.setGeometry(QtCore.QRect(90, 90, 131, 271))
         self.layoutWidget.setObjectName("layoutWidget")
         self.verticalLayout = QtWidgets.QVBoxLayout(self.layoutWidget)
+        self.verticalLayout.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout.setObjectName("verticalLayout")
         self.Ping = QtWidgets.QPushButton(self.layoutWidget)
         self.Ping.setMaximumSize(QtCore.QSize(100, 100))
@@ -57,6 +59,7 @@ class Ui_ServerWindow(object):
         self.layoutWidget1.setGeometry(QtCore.QRect(260, 20, 391, 51))
         self.layoutWidget1.setObjectName("layoutWidget1")
         self.horizontalLayout = QtWidgets.QHBoxLayout(self.layoutWidget1)
+        self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
         self.horizontalLayout.setObjectName("horizontalLayout")
         self.IPLabel = QtWidgets.QLabel(self.layoutWidget1)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
@@ -89,4 +92,3 @@ class Ui_ServerWindow(object):
         self.ConnectServer.setText(_translate("ServerWindow", "Connect"))
         self.DisconnectServer.setText(_translate("ServerWindow", "Disconnect"))
         self.IPLabel.setText(_translate("ServerWindow", "Server IP Address: "))
-

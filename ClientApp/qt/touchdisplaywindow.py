@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'qt/touchdisplaywindow.ui'
+# Form implementation generated from reading ui file 'touchdisplaywindow.ui'
 #
-# Created by: PyQt5 UI code generator 5.5.1
+# Created by: PyQt5 UI code generator 5.13.1
 #
 # WARNING! All changes made in this file will be lost!
 
-from builtins import object
+
 from PyQt5 import QtCore, QtGui, QtWidgets
+
 
 class Ui_TouchDisplay(object):
     def setupUi(self, TouchDisplay):
@@ -124,7 +125,6 @@ class Ui_TouchDisplay(object):
 
     def retranslateUi(self, TouchDisplay):
         _translate = QtCore.QCoreApplication.translate
-        TouchDisplay.setWindowTitle(_translate("TouchDisplay", "Form"))
+        TouchDisplay.setWindowTitle(_translate("TouchDisplay", "TouchDisplay"))
         self.Title.setText(_translate("TouchDisplay", "<html><head/><body><p><span style=\" font-size:36pt;\">re:3Display</span></p></body></html>"))
         self.label.setText(_translate("TouchDisplay", "V.1.0.0 re3Display"))
-

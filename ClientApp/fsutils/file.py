@@ -1,9 +1,10 @@
 from builtins import object
 from functools import total_ordering
 
+
 @total_ordering
 class File:
-    def __init__(self, name = "", displayname = "", size = 0, type = 'u'):
+    def __init__(self, name="", displayname="", size=0, type='u'):
         self.name = name
         self.displayname = displayname
         self.size = size

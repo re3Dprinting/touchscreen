@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'qt/temperaturewindow.ui'
+# Form implementation generated from reading ui file 'temperaturewindow.ui'
 #
-# Created by: PyQt5 UI code generator 5.5.1
+# Created by: PyQt5 UI code generator 5.13.1
 #
 # WARNING! All changes made in this file will be lost!
 
-from builtins import object
+
 from PyQt5 import QtCore, QtGui, QtWidgets
+
 
 class Ui_TemperatureWindow(object):
     def setupUi(self, TemperatureWindow):
@@ -151,4 +152,3 @@ class Ui_TemperatureWindow(object):
         self.e1set.setText(_translate("TemperatureWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:22pt;\">-----</span></p></body></html>"))
         self.e2set.setText(_translate("TemperatureWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:22pt;\">-----</span></p></body></html>"))
         self.bedset.setText(_translate("TemperatureWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:22pt;\">-----</span></p></body></html>"))
-

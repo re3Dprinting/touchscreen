@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'qt/printwindow.ui'
+# Form implementation generated from reading ui file 'printwindow.ui'
 #
 # Created by: PyQt5 UI code generator 5.13.1
 #
@@ -81,7 +81,7 @@ class Ui_PrintWindow(object):
         spacerItem = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         self.verticalLayout1.addItem(spacerItem)
         self.pushbutton_print = QtWidgets.QPushButton(self.USB)
-        self.pushbutton_print.setMinimumSize(QtCore.QSize(0, 50))
+        self.pushbutton_print.setMinimumSize(QtCore.QSize(0, 100))
         self.pushbutton_print.setObjectName("pushbutton_print")
         self.verticalLayout1.addWidget(self.pushbutton_print)
         self.horizontalLayout1.addLayout(self.verticalLayout1)

@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'qt/controlwindow.ui'
+# Form implementation generated from reading ui file 'controlwindow.ui'
 #
-# Created by: PyQt5 UI code generator 5.5.1
+# Created by: PyQt5 UI code generator 5.13.1
 #
 # WARNING! All changes made in this file will be lost!
 
-from builtins import object
+
 from PyQt5 import QtCore, QtGui, QtWidgets
+
 
 class Ui_ControlWindow(object):
     def setupUi(self, ControlWindow):
@@ -118,6 +119,7 @@ class Ui_ControlWindow(object):
         self.layoutWidget.setGeometry(QtCore.QRect(430, 300, 361, 171))
         self.layoutWidget.setObjectName("layoutWidget")
         self.verticalLayout = QtWidgets.QVBoxLayout(self.layoutWidget)
+        self.verticalLayout.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout.setObjectName("verticalLayout")
         self.horizontalLayout = QtWidgets.QHBoxLayout()
         self.horizontalLayout.setObjectName("horizontalLayout")
@@ -303,6 +305,7 @@ class Ui_ControlWindow(object):
         self.layoutWidget1.setGeometry(QtCore.QRect(730, 80, 41, 161))
         self.layoutWidget1.setObjectName("layoutWidget1")
         self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.layoutWidget1)
+        self.verticalLayout_2.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout_2.setObjectName("verticalLayout_2")
         self.E1 = QtWidgets.QPushButton(self.layoutWidget1)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.MinimumExpanding)
@@ -426,4 +429,3 @@ class Ui_ControlWindow(object):
         self.label_10.setText(_translate("ControlWindow", "Home XY"))
         self.label_11.setText(_translate("ControlWindow", "Home Z"))
         self.PositionLabel.setText(_translate("ControlWindow", "<html><head/><body><p align=\"right\"><span style=\" font-size:16pt;\">-----</span></p></body></html>"))
-

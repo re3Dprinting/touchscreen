@@ -2,6 +2,7 @@ from builtins import object
 import os
 import fsutils.file
 
+
 class SubFileSystem(object):
     def __init__(self, rootdir):
         self.rootdir = rootdir
@@ -17,7 +18,7 @@ class SubFileSystem(object):
         if dir == "..":
             self.cdup()
             return
-        
+
         self.dir_stack.append(self.cwd)
         self.level += 1
         self.cwd += "/" + dir
@@ -25,7 +26,7 @@ class SubFileSystem(object):
 
     def up(self):
         if self.level == 0:
-            return;
+            return
 
         self.level -= 1
         self.cwd = self.dir_stack.pop()

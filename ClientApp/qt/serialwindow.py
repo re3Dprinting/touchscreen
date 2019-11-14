@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'qt/serialwindow.ui'
+# Form implementation generated from reading ui file 'serialwindow.ui'
 #
-# Created by: PyQt5 UI code generator 5.5.1
+# Created by: PyQt5 UI code generator 5.13.1
 #
 # WARNING! All changes made in this file will be lost!
 
-from builtins import object
+
 from PyQt5 import QtCore, QtGui, QtWidgets
+
 
 class Ui_SerialWindow(object):
     def setupUi(self, SerialWindow):
@@ -27,6 +28,7 @@ class Ui_SerialWindow(object):
         self.widget.setGeometry(QtCore.QRect(50, 70, 711, 261))
         self.widget.setObjectName("widget")
         self.horizontalLayout = QtWidgets.QHBoxLayout(self.widget)
+        self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
         self.horizontalLayout.setObjectName("horizontalLayout")
         self.horizontalLayout_4 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_4.setObjectName("horizontalLayout_4")
@@ -72,4 +74,3 @@ class Ui_SerialWindow(object):
         item.setText(_translate("SerialWindow", "Device"))
         item = self.COMlist.horizontalHeaderItem(1)
         item.setText(_translate("SerialWindow", "Description"))
-
