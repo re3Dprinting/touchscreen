@@ -65,8 +65,9 @@ class PrintWindow(QtWidgets.QWidget, Ui_PrintWindow):
         ) + "QTabBar::tab { width: " + str(tabWidth) + "px; height: 35px; font-size: 12pt;}")
 
         self.subdir = SubFileSystem("/Users/jct")
+        self.pathlabel.setText(self.subdir.abspath)
+
         self.updateusbfiles()
-        self.showFile(0)
         self.update_button_states()
 
     def scansd(self):
@@ -91,7 +92,6 @@ class PrintWindow(QtWidgets.QWidget, Ui_PrintWindow):
         self.StartPrint.setEnabled(True)
 
     def updateusbfiles(self):
-        print("Updating USB files")
         self.USBFileList.clearContents()
         self.USBFileList.setRowCount(0)
         files = self.subdir.list()
@@ -211,6 +211,7 @@ class PrintWindow(QtWidgets.QWidget, Ui_PrintWindow):
         self.updateusbfiles()
         self.showFileAndDeselect(0)
         self.update_button_states()
+        self.pathlabel.setText(self.subdir.abspath)
 
     def up_dir(self):
         self.subdir.up()
@@ -220,6 +221,7 @@ class PrintWindow(QtWidgets.QWidget, Ui_PrintWindow):
         self.showFile(selected_row)
 
         self.update_button_states()
+        self.pathlabel.setText(self.subdir.abspath)
 
     def showFile(self, selected_row):
         self.USBFileList.setCurrentCell(selected_row, 0)
@@ -238,6 +240,3 @@ class PrintWindow(QtWidgets.QWidget, Ui_PrintWindow):
 
     def itemDoubleClicked(self):
         self.open_subdir()
-        # row = self.USBFileList.currentRow()
-        # print("itemDoubleClicked", row)
-        

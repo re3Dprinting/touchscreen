@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'printwindow.ui'
+# Form implementation generated from reading ui file 'qt/printwindow.ui'
 #
 # Created by: PyQt5 UI code generator 5.13.1
 #
@@ -57,7 +57,12 @@ class Ui_PrintWindow(object):
         self.tabWidget.addTab(self.SD, "")
         self.USB = QtWidgets.QWidget()
         self.USB.setObjectName("USB")
-        self.horizontalLayout1 = QtWidgets.QHBoxLayout(self.USB)
+        self.uppervertLayout = QtWidgets.QVBoxLayout(self.USB)
+        self.uppervertLayout.setObjectName("uppervertLayout")
+        self.pathlabel = QtWidgets.QLabel(self.USB)
+        self.pathlabel.setObjectName("pathlabel")
+        self.uppervertLayout.addWidget(self.pathlabel)
+        self.horizontalLayout1 = QtWidgets.QHBoxLayout()
         self.horizontalLayout1.setObjectName("horizontalLayout1")
         self.USBFileList = QtWidgets.QTableWidget(self.USB)
         self.USBFileList.setObjectName("USBFileList")
@@ -85,6 +90,7 @@ class Ui_PrintWindow(object):
         self.pushbutton_print.setObjectName("pushbutton_print")
         self.verticalLayout1.addWidget(self.pushbutton_print)
         self.horizontalLayout1.addLayout(self.verticalLayout1)
+        self.uppervertLayout.addLayout(self.horizontalLayout1)
         self.tabWidget.addTab(self.USB, "")
         self.layoutWidget = QtWidgets.QWidget(PrintWindow)
         self.layoutWidget.setGeometry(QtCore.QRect(10, 350, 781, 121))
@@ -128,6 +134,7 @@ class Ui_PrintWindow(object):
         self.ScanSD.setText(_translate("PrintWindow", "Scan SD"))
         self.StartPrint.setText(_translate("PrintWindow", "Start Print"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.SD), _translate("PrintWindow", "SD"))
+        self.pathlabel.setText(_translate("PrintWindow", "TextLabel"))
         item = self.USBFileList.horizontalHeaderItem(0)
         item.setText(_translate("PrintWindow", "Name"))
         item = self.USBFileList.horizontalHeaderItem(1)

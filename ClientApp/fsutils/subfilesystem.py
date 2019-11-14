@@ -1,15 +1,20 @@
 from builtins import object
 import os
+import os.path
 import fsutils.file
 
 
 class SubFileSystem(object):
     def __init__(self, rootdir):
         self.rootdir = rootdir
-        self.cwd = rootdir
+        self.setCwd(rootdir)
         self.level = 0
         self.dir_stack = []
         self.dir_stack.append(rootdir)
+
+    def setCwd(self, path):
+        self.cwd = path
+        self.abspath = os.path.abspath(self.cwd)
 
     def depth(self):
         return self.level
@@ -21,16 +26,14 @@ class SubFileSystem(object):
 
         self.dir_stack.append(self.cwd)
         self.level += 1
-        self.cwd += "/" + dir
-        print("pushed:", self.cwd)
+        self.setCwd(self.cwd + "/" + dir)
 
     def up(self):
         if self.level == 0:
             return
 
         self.level -= 1
-        self.cwd = self.dir_stack.pop()
-        print("popped:", self.cwd)
+        self.setCwd(self.dir_stack.pop())
 
     def list(self):
         self.files = []
