@@ -6,6 +6,7 @@ from Client.g_client import *
 from Client.g_data import *
 
 from touchdisplay import *
+from watchdogthread import *
 
 import sys
 import threading
@@ -18,7 +19,10 @@ if __name__ == "__main__":
     serial_conn = g_serial(data_thread)
     data_thread.start()
 
+
     app = QtWidgets.QApplication(sys.argv)
     display = TouchDisplay(client_conn, serial_conn, False)
     display.show()
+    jt_thread = WatchdogThread(display.print_pop)
+    jt_thread.start()
     app.exec_()

@@ -67,8 +67,23 @@ class PrintWindow(QtWidgets.QWidget, Ui_PrintWindow):
         self.subdir = SubFileSystem("/Users/jct")
         self.pathlabel.setText(self.subdir.abspath)
 
+        # self.updateusbfiles()
+        self.clearusbfiles()
+        self.pathlabel.setText("")
+        self.update_button_states()
+
+    def update_create(self, path):
+        print("Create:", path)
+        self.pathlabel.setText(path)
+        self.subdir = SubFileSystem(path)
         self.updateusbfiles()
         self.update_button_states()
+
+    def update_delete(self, path):
+        print("Delete:", path)
+#        self.pathlabel.setText(self.subdir.abspath)
+        self.clearusbfiles()
+        self.pathlabel.setText("")
 
     def scansd(self):
         self.serial.send_serial("M22 \r")
@@ -114,6 +129,11 @@ class PrintWindow(QtWidgets.QWidget, Ui_PrintWindow):
 
             self.USBFileList.setItem(rowpos, 0, file)
             self.USBFileList.setItem(rowpos, 1, size)
+
+    def clearusbfiles(self):
+        self.USBFileList.clearContents()
+        self.USBFileList.setRowCount(0)
+        
 
     def finished(self):
         self.notprinting()
