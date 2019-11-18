@@ -8,12 +8,13 @@ from fsutils.file import *
 
 
 class PrintWindow(QtWidgets.QWidget, Ui_PrintWindow):
-    def __init__(self, serial, temp_pop, parent=None):
+    def __init__(self, serial, temp_pop, personality, parent=None):
         super(PrintWindow, self).__init__()
         self.setupUi(self)
         self.serial = serial
         self.serial.data.updatefiles.connect(self.updatefiles)
         self.temp_pop = temp_pop
+        self.personality = personality
         self.parent = parent
 
         self.item_stack = []
@@ -64,7 +65,7 @@ class PrintWindow(QtWidgets.QWidget, Ui_PrintWindow):
         self.tabWidget.setStyleSheet(self.tabWidget.styleSheet(
         ) + "QTabBar::tab { width: " + str(tabWidth) + "px; height: 35px; font-size: 12pt;}")
 
-        self.subdir = SubFileSystem("/Users/jct")
+        self.subdir = SubFileSystem(self.personality.watchpoint)
         self.pathlabel.setText(self.subdir.abspath)
 
         # self.updateusbfiles()
