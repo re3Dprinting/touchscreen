@@ -42,7 +42,6 @@ class PrintWindow(QtWidgets.QWidget, Ui_PrintWindow):
         header = self.FileList.horizontalHeader()
         header.setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
         header.setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
-        header.setSectionResizeMode(2, QtWidgets.QHeaderView.Stretch)
         self.FileList.verticalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Fixed)
         self.FileList.verticalHeader().setDefaultSectionSize(50)
         self.FileList.verticalScrollBar().setStyleSheet(
