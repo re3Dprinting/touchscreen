@@ -39,11 +39,11 @@ class PrintWindow(QtWidgets.QWidget, Ui_PrintWindow):
         self.FileList.setSelectionMode(QtWidgets.QTableView.SingleSelection)
         self.FileList.verticalHeader().hide()
         # Stretch out the horizontal header to take up the entire view
-        # header = self.FileList.horizontalHeader()
-        # header.setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
-        # header.setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
-        # header.setSectionResizeMode(2, QtWidgets.QHeaderView.Stretch)
-        # self.FileList.verticalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Fixed)
+        header = self.FileList.horizontalHeader()
+        header.setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
+        header.setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
+        header.setSectionResizeMode(2, QtWidgets.QHeaderView.Stretch)
+        self.FileList.verticalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Fixed)
         self.FileList.verticalHeader().setDefaultSectionSize(50)
         self.FileList.verticalScrollBar().setStyleSheet(
             "QScrollBar::vertical{ width: 40px; }")
@@ -68,6 +68,7 @@ class PrintWindow(QtWidgets.QWidget, Ui_PrintWindow):
 
         self.subdir = SubFileSystem(self.personality.watchpoint)
         self.pathlabel.setText(self.subdir.abspath)
+        self.pathlabel1.setText("foobar")
 
         # self.updateusbfiles()
         self.clearusbfiles()
