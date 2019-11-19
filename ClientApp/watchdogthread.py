@@ -7,6 +7,9 @@ from watchdog.observers import Observer
 #from watchdog.events import LoggingEventHandler
 from watchdog.events import FileSystemEventHandler
 
+import time
+from PyQt5.QtCore import QThread
+
 class my_handler(FileSystemEventHandler):
 
     def __init__(self, ui):
@@ -17,9 +20,6 @@ class my_handler(FileSystemEventHandler):
         
     def on_deleted(self, event):
         self.ui.update_delete(event.src_path)
-
-import time
-from PyQt5.QtCore import QThread
 
 
 class WatchdogThread(QThread):

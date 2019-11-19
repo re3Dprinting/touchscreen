@@ -20,7 +20,7 @@ if __name__ == "__main__":
     serial_conn = g_serial(data_thread)
     data_thread.start()
 
-    personality = Personality(False, "/Volumes")
+    personality = Personality(False, "/Volumes", "/Users/jct/localgcode")
 
     app = QtWidgets.QApplication(sys.argv)
     display = TouchDisplay(client_conn, serial_conn, personality)

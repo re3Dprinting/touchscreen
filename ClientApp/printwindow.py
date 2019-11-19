@@ -67,7 +67,6 @@ class PrintWindow(QtWidgets.QWidget, Ui_PrintWindow):
 
         self.subdir = SubFileSystem(self.personality.watchpoint)
         self.pathlabel.setText(self.subdir.abspath)
-        self.pathlabel1.setText("foobar")
 
         # self.updateusbfiles()
         self.clearusbfiles()
