@@ -28,11 +28,20 @@
      <height>341</height>
     </rect>
    </property>
-   <property name="currentIndex">
-    <number>1</number>
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
    </property>
-   <property name="tabsClosable">
-    <bool>true</bool>
+   <property name="tabPosition">
+    <enum>QTabWidget::North</enum>
+   </property>
+   <property name="tabShape">
+    <enum>QTabWidget::Rounded</enum>
+   </property>
+   <property name="currentIndex">
+    <number>0</number>
+   </property>
+   <property name="elideMode">
+    <enum>Qt::ElideNone</enum>
    </property>
    <widget class="QWidget" name="SD">
     <attribute name="title">
