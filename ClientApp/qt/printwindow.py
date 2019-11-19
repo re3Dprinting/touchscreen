@@ -17,6 +17,7 @@ class Ui_PrintWindow(object):
         PrintWindow.setMaximumSize(QtCore.QSize(800, 480))
         self.tabWidget = QtWidgets.QTabWidget(PrintWindow)
         self.tabWidget.setGeometry(QtCore.QRect(9, 9, 781, 341))
+        self.tabWidget.setTabsClosable(True)
         self.tabWidget.setObjectName("tabWidget")
         self.SD = QtWidgets.QWidget()
         self.SD.setObjectName("SD")

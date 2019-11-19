@@ -31,6 +31,9 @@
    <property name="currentIndex">
     <number>1</number>
    </property>
+   <property name="tabsClosable">
+    <bool>true</bool>
+   </property>
    <widget class="QWidget" name="SD">
     <attribute name="title">
      <string>SD</string>
