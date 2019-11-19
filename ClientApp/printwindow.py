@@ -61,9 +61,9 @@ class PrintWindow(QtWidgets.QWidget, Ui_PrintWindow):
         self.pushbutton_open.clicked.connect(self.open_subdir)
         self.pushbutton_up.clicked.connect(self.up_dir)
 
-        tabWidth = (old_div(self.tabWidget.width(), 2))-24
-        self.tabWidget.setStyleSheet(self.tabWidget.styleSheet(
-        ) + "QTabBar::tab { width: " + str(tabWidth) + "px; height: 35px; font-size: 12pt;}")
+        # tabWidth = (old_div(self.tabWidget.width(), 2))-24
+        # self.tabWidget.setStyleSheet(self.tabWidget.styleSheet(
+        # ) + "QTabBar::tab { width: " + str(tabWidth) + "px; height: 35px; font-size: 12pt;}")
 
         self.subdir = SubFileSystem(self.personality.watchpoint)
         self.pathlabel.setText(self.subdir.abspath)
