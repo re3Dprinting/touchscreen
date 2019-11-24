@@ -110,8 +110,8 @@ class ModuleGigabot(QtWidgets.QWidget , Ui_GigabotModule):
                 self.StatusImg.changepix("img/off.png")
                 # self.Nozzle1Img.changepix("img/nozzle2.png")
                 # self.Nozzle2Img.changepix("img/nozzle2.png")
-                self.changeicon(self.Nozzle1Img, "img/nozzle1.png")
-                self.changeicon(self.Nozzle2Img, "img/nozzle1.png")
+                self.changeicon(self.Nozzle1Img, "img/nozzle2.png")
+                self.changeicon(self.Nozzle2Img, "img/nozzle2.png")
             if self.bedflash == 2:
                 # self.BedImg.changepix("img/bed_unheated.png")
                 self.changeicon(self.BedImg, "img/bed_unheated.png")
