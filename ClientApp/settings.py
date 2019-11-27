@@ -13,6 +13,8 @@ class SettingsWindow(QtWidgets.QWidget, Ui_SettingsWindow):
         self.parent = parent
         self.parent.setbuttonstyle(self.Serial)
         self.parent.setbuttonstyle(self.Server)
+        self.parent.setbuttonstyle(self.UserUpdate)
+        self.parent.setbuttonstyle(self.Wifi)
 
         if parent.fullscreen:
             self.fullscreen = True
@@ -21,6 +23,8 @@ class SettingsWindow(QtWidgets.QWidget, Ui_SettingsWindow):
 
         self.Serial.clicked.connect(self.serialpop)
         self.Server.clicked.connect(self.serverpop)
+        self.UserUpdate.clicked.connect(self.userupdatepop)
+        # self.Wifi.clicked.connect(self.wifipop)
         self.Back.clicked.connect(self.close)
 
     def serialpop(self):
@@ -34,3 +38,9 @@ class SettingsWindow(QtWidgets.QWidget, Ui_SettingsWindow):
             self.server_pop.showFullScreen()
         else:
             self.server_pop.show()
+
+    def userupdatepop(self):
+        if self.fullscreen:
+            self.userupdate_pop.showFullScreen()
+        else:
+            self.userupdate_pop.show()

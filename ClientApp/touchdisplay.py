@@ -4,6 +4,7 @@ from control import *
 from temperature import *
 from settings import *
 from printwindow import *
+from userupdate import *
 import sys
 
 
@@ -32,10 +33,12 @@ class TouchDisplay(QtWidgets.QWidget, Ui_TouchDisplay):
 
         self.set_pop = SettingsWindow(self.client, self.serial, self)
         self.server_pop = ServerWindow(self.client, self.set_pop)
+        self.userupdate_pop = UserUpdateWindow(self)
         self.serial_pop = SerialWindow(
             self.serial, self.event_handler, self.set_pop)
         self.set_pop.serial_pop = self.serial_pop
         self.set_pop.server_pop = self.server_pop
+        self.set_pop.userupdate_pop = self.userupdate_pop
 
         self.temp_pop = TemperatureWindow(
             self.serial, self.event_handler, self)
