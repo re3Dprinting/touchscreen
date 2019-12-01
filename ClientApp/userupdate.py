@@ -10,6 +10,7 @@ class UserUpdateWindow(QtWidgets.QWidget, Ui_UserUpdate):
         super(UserUpdateWindow, self).__init__()
         self.setupUi(self)
 
+        self.app = QtWidgets.QApplication.instance()
 
         # Make the selection Behavior as selecting the entire row
         self.SoftwareList.setSelectionBehavior(QtWidgets.QTableView.SelectRows)
@@ -21,12 +22,12 @@ class UserUpdateWindow(QtWidgets.QWidget, Ui_UserUpdate):
         header.setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
         header.setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
 
-
-
+        temp = self.CurrentVersion.text()+ " " + self.app.applicationVersion()
+        self.CurrentVersion.setText(temp)
 
         self.Back.clicked.connect(self.close)
         self.CheckUpdate.clicked.connect(self.checkupdate)
-        # self.Update.clicked.connect(self.update)
+        self.Update.clicked.connect(self.update)
         # self.Rollback.clicked.connect(self.rollback)
 
     def checkupdate(self):
@@ -34,6 +35,7 @@ class UserUpdateWindow(QtWidgets.QWidget, Ui_UserUpdate):
         github = Github(token)
         repo = github.get_repo("plloppii/DashboardApp")
         tags = repo.get_tags()
+        self.SoftwareList.setRowCount(0)
         for t in tags:
             print(t.name, " date:", t.commit.last_modified)
             rowpos = self.SoftwareList.rowCount()
@@ -45,4 +47,17 @@ class UserUpdateWindow(QtWidgets.QWidget, Ui_UserUpdate):
             date.setFlags(Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
             self.SoftwareList.setItem(rowpos,0,version)
             self.SoftwareList.setItem(rowpos,1,date)
+            
+    def update(self):
+        software = self.SoftwareList.currentRow()
+        selected_version = self.SoftwareList.item(software, 0)
+        if selected_version != None:
+            self.print_debug("Updating....")
+        else:
+            self.print_debug("Select a Version on list")
+
+    def print_debug(self, text):
+        self.DebugOutput.moveCursor(QtGui.QTextCursor.End)
+        self.DebugOutput.ensureCursorVisible()
+        self.DebugOutput.append(text)
 

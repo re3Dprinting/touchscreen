@@ -23,6 +23,14 @@ if __name__ == "__main__":
     personality = Personality(False, "/Volumes", "/Users/jct/localgcode")
 
     app = QtWidgets.QApplication(sys.argv)
+
+    properties = {}
+    for line in open("config.properties"):
+        properties[line.split("=")[0]] = line.split("=")[1].strip()
+
+    app.setApplicationName(properties["name"])
+    app.setApplicationVersion(properties["version"])
+
     display = TouchDisplay(client_conn, serial_conn, personality)
     display.show()
     jt_thread = WatchdogThread(display.print_pop, personality.watchpoint)
