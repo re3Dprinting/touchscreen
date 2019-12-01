@@ -27,6 +27,8 @@ class TouchDisplay(QtWidgets.QWidget, Ui_TouchDisplay):
         self.setbuttonstyle(self.Settings)
         self.setbuttonstyle(self.Control)
         self.setbuttonstyle(self.Temperature)
+        self.setbuttonstyle(self.WifiStatus)
+        self.setbuttonstyle(self.DeviceStatus)
 
 #       Event handler object that handles temperature materials, flowrate, etc.
         self.event_handler = event_handler(self.serial)

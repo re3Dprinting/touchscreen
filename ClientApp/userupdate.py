@@ -1,6 +1,7 @@
 from builtins import str
 from qt.userupdatewindow import *
 from PyQt5.QtCore import Qt
+from github import Github
 
 
 class UserUpdateWindow(QtWidgets.QWidget, Ui_UserUpdate):
@@ -9,7 +10,7 @@ class UserUpdateWindow(QtWidgets.QWidget, Ui_UserUpdate):
         self.setupUi(self)
 
 
-
+        
         # Make the selection Behavior as selecting the entire row
         self.SoftwareList.setSelectionBehavior(QtWidgets.QTableView.SelectRows)
         self.SoftwareList.setSelectionMode(QtWidgets.QTableView.SingleSelection)
