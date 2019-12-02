@@ -45,10 +45,9 @@ class UserUpdateWindow(QtWidgets.QWidget, Ui_UserUpdate):
         self.CheckUpdate.clicked.connect(self.checkupdate)
         self.Update.clicked.connect(self.update)
         # self.Rollback.clicked.connect(self.rollback)
-        self.editbashscript()
 
     def checkupdate(self):
-        token = "3a2f5c456fdda069efe987b19c3f6ed58c69aa37"
+        token = "2e585268d5edf652adb8763d252fa514566370a7"
         github = Github(token)
         repo = github.get_repo("plloppii/DashboardApp")
         tags = repo.get_tags()
