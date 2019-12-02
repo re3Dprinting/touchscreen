@@ -47,6 +47,7 @@ class UserUpdateWindow(QtWidgets.QWidget, Ui_UserUpdate):
         # self.Rollback.clicked.connect(self.rollback)
 
     def checkupdate(self):
+        print(Path(__file__).parents[1].__str__()+ "/git.token")
         if(os.path.isfile(Path(__file__).parents[1].__str__()+ "/git.token")):
             token = open(Path(__file__).parents[1].__str__()+ "/git.token").read()
         else: 
