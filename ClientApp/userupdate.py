@@ -49,7 +49,7 @@ class UserUpdateWindow(QtWidgets.QWidget, Ui_UserUpdate):
     def checkupdate(self):
         print(Path(__file__).parents[1].__str__()+ "/git.token")
         if(os.path.isfile(Path(__file__).parents[1].__str__()+ "/git.token")):
-            token = open(Path(__file__).parents[1].__str__()+ "/git.token").read()
+            token = open(Path(__file__).parents[1].__str__()+ "/git.token").read().strip()
             print(token)
         else: 
             self.print_debug("Token not found! Cannot fetch software versions")
