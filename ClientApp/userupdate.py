@@ -47,7 +47,11 @@ class UserUpdateWindow(QtWidgets.QWidget, Ui_UserUpdate):
         # self.Rollback.clicked.connect(self.rollback)
 
     def checkupdate(self):
-        token = "2e585268d5edf652adb8763d252fa514566370a7"
+        if(os.path.isfile(Path(__file__).parents[1].__str__()+ "/git.token")):
+            token = open(Path(__file__).parents[1].__str__()+ "/git.token").read()
+        else: 
+            self.print_debug("Token not found! Cannot fetch software versions")
+            return
         github = Github(token)
         repo = github.get_repo("plloppii/DashboardApp")
         tags = repo.get_tags()
