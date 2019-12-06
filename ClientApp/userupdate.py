@@ -34,8 +34,8 @@ class UserUpdateWindow(QtWidgets.QWidget, Ui_UserUpdate):
             else: self.remote_repo = r
         #If re3d repo does not exist, add it as a remote.
         if self.remote_repo == None:
-            self.remote_repo = self.repo.create_remote("re3d", "https://github.com/plloppii/DashboardApp.git")
-            # self.remote_repo = self.repo.create_remote("re3d", "https://github.com/re3Dprinting/touchscreen")
+            # self.remote_repo = self.repo.create_remote("re3d", "https://github.com/plloppii/DashboardApp.git")
+            self.remote_repo = self.repo.create_remote("re3d", "https://github.com/re3Dprinting/touchscreen")
 
 
         # Make the selection Behavior as selecting the entire row
@@ -64,7 +64,7 @@ class UserUpdateWindow(QtWidgets.QWidget, Ui_UserUpdate):
         self.SoftwareList.setRowCount(0)
 
         for t in tags:
-            if("release" in t.name):
+            if("release" in t.name and not self.app.applicationVersion() in t.name):
                 tag_date = time.asctime(time.gmtime(t.commit.committed_date))
                 print(t.name, " date:", tag_date)
                 rowpos = self.SoftwareList.rowCount()
