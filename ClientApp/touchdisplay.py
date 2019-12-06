@@ -20,6 +20,9 @@ class TouchDisplay(QtWidgets.QWidget, Ui_TouchDisplay):
         if self.fullscreen:
             self.setWindowState(self.windowState() | Qt.WindowFullScreen)
 
+        versiontext = "v"+QtWidgets.QApplication.instance().applicationVersion()
+        self.SoftwareVersion.setText(versiontext)
+
         self.client = client
         self.serial = serial
 
@@ -35,9 +38,8 @@ class TouchDisplay(QtWidgets.QWidget, Ui_TouchDisplay):
 
         self.set_pop = SettingsWindow(self.client, self.serial, self)
         self.server_pop = ServerWindow(self.client, self.set_pop)
-        self.userupdate_pop = UserUpdateWindow(self)
-        self.serial_pop = SerialWindow(
-            self.serial, self.event_handler, self.set_pop)
+        self.userupdate_pop = UserUpdateWindow(self.personality, self.set_pop)
+        self.serial_pop = SerialWindow(self.serial, self.event_handler, self.set_pop)
         self.set_pop.serial_pop = self.serial_pop
         self.set_pop.server_pop = self.server_pop
         self.set_pop.userupdate_pop = self.userupdate_pop

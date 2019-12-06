@@ -7,38 +7,21 @@ from PyQt5.QtCore import Qt
 from git import Repo
 from git import Git
 import os
-import shutil
+import psutil
 from pathlib import Path
 import time
 import sys
 
 
 class UserUpdateWindow(QtWidgets.QWidget, Ui_UserUpdate):
-    def __init__(self, parent=None):
+    def __init__(self, personality, parent=None):
         super(UserUpdateWindow, self).__init__()
         self.setupUi(self)
 
+        self.personality = personality
         self.app = QtWidgets.QApplication.instance()
 
         self.current_path = Path(__file__).parents
-        print(self.current_path[1].__str__())
-        print(self.current_path[0].__str__())
-        # #If the Application folder name does not have the version in it, append the version number.
-        # old_path_tmp = Path(__file__).parents[1].__str__()
-        # self.old_path = old_path_tmp
-
-        # file_names = old_path_tmp.split("/")
-        # if("DashboardApp" in file_names): 
-        #     i = file_names.index("DashboardApp")
-        #     file_names[i] += "_"+self.app.applicationVersion()
-
-        #     #Only rename the file if the bashscript can be found.
-        #     if(self.editbashscript(self.app.applicationVersion())):
-        #         self.old_path = "/".join(file_names)
-        #         os.rename(old_path_tmp, self.old_path) 
-
-        # #This will be the directory path to the new software version (Leaving the version blank initially)
-        # self.update_path = Path(__file__).parents[2].__str__()+ "/DashboardApp_"
 
         #Get the current path (local repository) and make sure that the github link is the current repository.
         self.git = Git(self.current_path[1].__str__())
@@ -74,16 +57,6 @@ class UserUpdateWindow(QtWidgets.QWidget, Ui_UserUpdate):
         # self.Rollback.clicked.connect(self.rollback)
 
     def checkupdate(self):
-        # if(os.path.isfile(Path(__file__).parents[1].__str__()+ "/git.token")):
-        #     token = open(Path(__file__).parents[1].__str__()+ "/git.token").read().strip()
-        #     print(token)
-        # else: 
-        #     self.print_debug("Token not found! Cannot fetch software versions")
-        #     return
-        # github = Github(token)
-        # repo = github.get_repo("plloppii/DashboardApp")
-        # tags = repo.get_tags()
-        
         #Fetch all of the tags from the remote repository.
         self.remote_repo.fetch("--tags")
         tags = self.repo.tags
@@ -114,7 +87,8 @@ class UserUpdateWindow(QtWidgets.QWidget, Ui_UserUpdate):
             #script will reboot device and properly shut down Raspberry pi.
             
             self.git.checkout(selected_version.text())
-            os.execl(sys.executable,sys.executable,"jtmain.py")
+            if(self.personality.fullscreen = False): self.restart_program("jtmain.py")
+            else: self.restart_program("qtmain.py")
         elif selected_version == self.app.applicationVersion():
             self.print_debug("Currently on that software version")
         else:
@@ -125,38 +99,36 @@ class UserUpdateWindow(QtWidgets.QWidget, Ui_UserUpdate):
         self.DebugOutput.ensureCursorVisible()
         self.DebugOutput.append(text)
 
-    # def copy_and_rename(self):
-    #     try:
-    #         shutil.copytree(self.old_path,self.update_path)
-    #     # Directories are the same
-    #     except shutil.Error as e:
-    #         print('Directory not copied. Error: %s' % e)
-    #     # Any error saying that the directory doesn't exist
-    #     except OSError as e:
-    #         print('Directory not copied. Error: %s' % e)
+    def restart_program(argument):
+        # Restarts the current program, with file objects and descriptors cleanup
+        try:
+            p = psutil.Process(os.getpid())
+            for handler in p.open_files() + p.connections():
+                os.close(handler.fd)
+        except Exception as e:
+            logging.error(e)
 
+        python = sys.executable
+        os.execl(python, python, argument)
 
-
-
-
-
-    def editbashscript(self, new_version):
-        script_path = Path(__file__).parents[2].__str__()
-        script_file = "/StartClientApp.sh"
-        # print(script_path+script_file+ os.path.isfile(script_path+ script_file))
-        if not os.path.isfile(script_path+ script_file):
-            self.print_debug("Cannot locate script path: "+ script_path+ script_file)
-            return False
-        else:
-            for line in open(script_path+script_file):
-                tmp = line.split(" ")
-                if("cd" in tmp): 
-                    tmp1 = tmp[1].split("/")
-                    i = tmp1.index("DashboardApp_"+ self.app.applicationVersion)
-                    tmp1[i] = "DashboardApp_"+ new_version
-                    tmp[1] = tmp1
-                    line = " ".join(tmp)
-                if("python" in tmp):
-                    tmp[0] = "python3"
-                    line = " ".join(tmp)
-            return True
+    #  #Script to edit the bashscript on the raspberry pi if necessary.    
+    # def editbashscript(self, new_version):
+    #     script_path = Path(__file__).parents[2].__str__()
+    #     script_file = "/StartClientApp.sh"
+    #     # print(script_path+script_file+ os.path.isfile(script_path+ script_file))
+    #     if not os.path.isfile(script_path+ script_file):
+    #         self.print_debug("Cannot locate script path: "+ script_path+ script_file)
+    #         return False
+    #     else:
+    #         for line in open(script_path+script_file):
+    #             tmp = line.split(" ")
+    #             if("cd" in tmp): 
+    #                 tmp1 = tmp[1].split("/")
+    #                 i = tmp1.index("DashboardApp_"+ self.app.applicationVersion)
+    #                 tmp1[i] = "DashboardApp_"+ new_version
+    #                 tmp[1] = tmp1
+    #                 line = " ".join(tmp)
+    #             if("python" in tmp):
+    #                 tmp[0] = "python3"
+    #                 line = " ".join(tmp)
+    #         return True
