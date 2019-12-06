@@ -63,20 +63,21 @@ class UserUpdateWindow(QtWidgets.QWidget, Ui_UserUpdate):
 
         self.SoftwareList.setRowCount(0)
 
-        if(len(tags) == 0): 
-            self.print_debug("No software versions found. The server might be down, please try again later.")
         for t in tags:
-            tag_date = time.asctime(time.gmtime(t.commit.committed_date))
-            print(t.name, " date:", tag_date)
-            rowpos = self.SoftwareList.rowCount()
-            self.SoftwareList.insertRow(rowpos)
-            version = QtWidgets.QTableWidgetItem(t.name)
-            version.setFlags(Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
+            if("release" in t.name):
+                tag_date = time.asctime(time.gmtime(t.commit.committed_date))
+                print(t.name, " date:", tag_date)
+                rowpos = self.SoftwareList.rowCount()
+                self.SoftwareList.insertRow(rowpos)
+                version = QtWidgets.QTableWidgetItem(t.name.strip("release/"))
+                version.setFlags(Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
 
-            date = QtWidgets.QTableWidgetItem(tag_date)
-            date.setFlags(Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
-            self.SoftwareList.setItem(rowpos,0,version)
-            self.SoftwareList.setItem(rowpos,1,date)
+                date = QtWidgets.QTableWidgetItem(tag_date)
+                date.setFlags(Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
+                self.SoftwareList.setItem(rowpos,0,version)
+                self.SoftwareList.setItem(rowpos,1,date)
+        if(self.SoftwareList.rowCount() == 0): 
+            self.print_debug("No software versions found. The server might be down, please try again later.")
 
     def update(self):
         software = self.SoftwareList.currentRow()
@@ -86,8 +87,8 @@ class UserUpdateWindow(QtWidgets.QWidget, Ui_UserUpdate):
             #checkout into new tag and run a script.
             #script will reboot device and properly shut down Raspberry pi.
             
-            self.git.checkout(selected_version.text())
-            if(self.personality.fullscreen = False): self.restart_program("jtmain.py")
+            self.git.checkout("release/" + selected_version.text())
+            if(self.personality.fullscreen == False): self.restart_program("jtmain.py")
             else: self.restart_program("qtmain.py")
         elif selected_version == self.app.applicationVersion():
             self.print_debug("Currently on that software version")
@@ -99,7 +100,7 @@ class UserUpdateWindow(QtWidgets.QWidget, Ui_UserUpdate):
         self.DebugOutput.ensureCursorVisible()
         self.DebugOutput.append(text)
 
-    def restart_program(argument):
+    def restart_program(self, argument):
         # Restarts the current program, with file objects and descriptors cleanup
         try:
             p = psutil.Process(os.getpid())
