@@ -98,16 +98,16 @@ class Ui_SettingsWindow(object):
         self.horizontalLayout.addWidget(self.Back)
         spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout.addItem(spacerItem)
-        self.versionnum = QtWidgets.QLabel(SettingsWindow)
+        self.SoftwareVersion = QtWidgets.QLabel(SettingsWindow)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.versionnum.sizePolicy().hasHeightForWidth())
-        self.versionnum.setSizePolicy(sizePolicy)
-        self.versionnum.setMinimumSize(QtCore.QSize(0, 65))
-        self.versionnum.setMaximumSize(QtCore.QSize(250, 70))
-        self.versionnum.setObjectName("versionnum")
-        self.horizontalLayout.addWidget(self.versionnum)
+        sizePolicy.setHeightForWidth(self.SoftwareVersion.sizePolicy().hasHeightForWidth())
+        self.SoftwareVersion.setSizePolicy(sizePolicy)
+        self.SoftwareVersion.setMinimumSize(QtCore.QSize(0, 65))
+        self.SoftwareVersion.setMaximumSize(QtCore.QSize(250, 70))
+        self.SoftwareVersion.setObjectName("SoftwareVersion")
+        self.horizontalLayout.addWidget(self.SoftwareVersion)
         self.verticalLayout.addLayout(self.horizontalLayout)
 
         self.retranslateUi(SettingsWindow)
@@ -116,5 +116,5 @@ class Ui_SettingsWindow(object):
     def retranslateUi(self, SettingsWindow):
         _translate = QtCore.QCoreApplication.translate
         SettingsWindow.setWindowTitle(_translate("SettingsWindow", "TouchDisplay"))
-        self.versionnum.setText(_translate("SettingsWindow", "V.1.0.0 re3Display"))
+        self.SoftwareVersion.setText(_translate("SettingsWindow", "V.1.0.0 re3Display"))
 

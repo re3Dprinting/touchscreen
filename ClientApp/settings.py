@@ -16,6 +16,9 @@ class SettingsWindow(QtWidgets.QWidget, Ui_SettingsWindow):
         self.parent.setbuttonstyle(self.UserUpdate)
         self.parent.setbuttonstyle(self.Wifi)
 
+        versiontext = "v"+QtWidgets.QApplication.instance().applicationVersion()
+        self.SoftwareVersion.setText(versiontext)
+
         if parent.fullscreen:
             self.fullscreen = True
         else:

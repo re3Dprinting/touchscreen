@@ -91,7 +91,20 @@
       </layout>
      </item>
      <item>
-      <widget class="QTextBrowser" name="DebugOutput"/>
+      <widget class="QTextBrowser" name="DebugOutput">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>400</width>
+         <height>16777215</height>
+        </size>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>

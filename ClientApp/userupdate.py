@@ -36,8 +36,8 @@ class UserUpdateWindow(QtWidgets.QWidget, Ui_UserUpdate):
             else: self.repo.delete_remote(r) 
         #If re3d repo does not exist, add it as a remote.
         if not found_remote:
-            # self.remote_repo = self.repo.create_remote("re3d", "https://github.com/re3Dprinting/touchscreen")
-            self.remote_repo = self.repo.create_remote("re3d", "https://github.com/plloppii/DashboardApp.git")
+            self.remote_repo = self.repo.create_remote("re3d", "https://github.com/re3Dprinting/touchscreen")
+            # self.remote_repo = self.repo.create_remote("re3d", "https://github.com/plloppii/DashboardApp.git")
 
         # Make the selection Behavior as selecting the entire row
         self.SoftwareList.setSelectionBehavior(QtWidgets.QTableView.SelectRows)
@@ -55,7 +55,6 @@ class UserUpdateWindow(QtWidgets.QWidget, Ui_UserUpdate):
         self.Back.clicked.connect(self.close)
         self.CheckUpdate.clicked.connect(self.checkupdate)
         self.Update.clicked.connect(self.update)
-        # self.Rollback.clicked.connect(self.rollback)
 
     def checkupdate(self):
         #Fetch all of the tags from the remote repository.
