@@ -58,6 +58,9 @@ class UserUpdateWindow(QtWidgets.QWidget, Ui_UserUpdate):
 
     def checkupdate(self):
         #Fetch all of the tags from the remote repository.
+        for tag in self.repo.tags:
+            self.repo.delete_tag(tag)
+
         self.remote_repo.fetch("--tags")
         tags = self.repo.tags
 
