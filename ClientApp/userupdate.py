@@ -26,18 +26,18 @@ class UserUpdateWindow(QtWidgets.QWidget, Ui_UserUpdate):
         #Get the current path (local repository) and make sure that the github link is the current repository.
         self.git = Git(self.current_path[1].__str__())
         self.repo = Repo(self.current_path[1].__str__())
-        self.remote_repo = self.repo.create_remote("None", "None")
+
+        found_remote = False
         #Check if re3d remote repository is in current remote tree
         for r in self.repo.remotes:
-            if r.name != "re3d":
-                self.repo.delete_remote(r)
-            else: self.remote_repo = r
+            if r.name == "re3d":
+                self.remote_repo = r
+                found_remote = True
+            else: self.repo.delete_remote(r) 
         #If re3d repo does not exist, add it as a remote.
-        if self.remote_repo.name == "None":
-            # self.remote_repo = self.repo.create_remote("re3d", "https://github.com/plloppii/DashboardApp.git")
-            self.repo.delete_remote(self.remote_repo)
-            self.remote_repo = self.repo.create_remote("re3d", "https://github.com/re3Dprinting/touchscreen")
-
+        if not found_remote:
+            # self.remote_repo = self.repo.create_remote("re3d", "https://github.com/re3Dprinting/touchscreen")
+            self.remote_repo = self.repo.create_remote("re3d", "https://github.com/plloppii/DashboardApp.git")
 
         # Make the selection Behavior as selecting the entire row
         self.SoftwareList.setSelectionBehavior(QtWidgets.QTableView.SelectRows)
