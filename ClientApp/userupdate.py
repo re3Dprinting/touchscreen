@@ -26,6 +26,7 @@ class UserUpdateWindow(QtWidgets.QWidget, Ui_UserUpdate):
         #Get the current path (local repository) and make sure that the github link is the current repository.
         self.git = Git(self.current_path[1].__str__())
         self.repo = Repo(self.current_path[1].__str__())
+        self.current_tags = None
 
         found_remote = False
         #Check if re3d remote repository is in current remote tree
@@ -42,6 +43,7 @@ class UserUpdateWindow(QtWidgets.QWidget, Ui_UserUpdate):
         # Make the selection Behavior as selecting the entire row
         self.SoftwareList.setSelectionBehavior(QtWidgets.QTableView.SelectRows)
         self.SoftwareList.setSelectionMode(QtWidgets.QTableView.SingleSelection)
+        self.SoftwareList.itemSelectionChanged.connect(self.show_tag_message)
         # Hide the vertical header which contains the Index of the row.
         self.SoftwareList.verticalHeader().hide()
         # Stretch out the horizontal header to take up the entire view
@@ -63,11 +65,15 @@ class UserUpdateWindow(QtWidgets.QWidget, Ui_UserUpdate):
 
         self.remote_repo.fetch("--tags")
         tags = self.repo.tags
+        tags.reverse()
 
         self.SoftwareList.setRowCount(0)
 
+        self.current_tags = []
         for t in tags:
-            if("release" in t.name and not self.app.applicationVersion() in t.name):
+            
+            if("release" in t.name): #and not self.app.applicationVersion() in t.name #<--- Dont show current version
+                self.current_tags.append(t)
                 tag_date = time.asctime(time.gmtime(t.commit.committed_date))
                 print(t.name, " date:", tag_date)
                 rowpos = self.SoftwareList.rowCount()
@@ -82,19 +88,26 @@ class UserUpdateWindow(QtWidgets.QWidget, Ui_UserUpdate):
         if(self.SoftwareList.rowCount() == 0): 
             self.print_debug("No software versions found. The server might be down, please try again later.")
 
+    def show_tag_message(self):
+        item = self.SoftwareList.currentRow()
+        selected = self.SoftwareList.item(item, 0)
+        if(selected != None):
+            self.DebugOutput.clear()
+            self.print_debug("re:3Display "+ selected.text() + " changelog:\n")
+            version = "release/"+ selected.text()
+            for tag in self.current_tags:
+                if(version == tag.name):
+                    self.print_debug(tag.tag.message)
+
     def update(self):
         software = self.SoftwareList.currentRow()
         selected_version = self.SoftwareList.item(software, 0)
-        if selected_version != None and selected_version.text() != self.app.applicationVersion():
+        if selected_version != None: #and selected_version.text() != self.app.applicationVersion(): #<--- Dont allow update to current version
             self.print_debug("Updating....")
-            #checkout into new tag and run a script.
-            #script will reboot device and properly shut down Raspberry pi.
-            
+
             self.git.checkout("release/" + selected_version.text())
             if(self.personality.fullscreen == False): self.restart_program("jtmain.py")
             else: self.restart_program("qtmain.py")
-        elif selected_version == self.app.applicationVersion():
-            self.print_debug("Currently on that software version")
         else:
             self.print_debug("Select a Version on list")
 
