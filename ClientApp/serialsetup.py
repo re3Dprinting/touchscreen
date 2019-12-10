@@ -7,10 +7,10 @@ class SerialWindow(QtWidgets.QWidget, Ui_SerialWindow):
     def __init__(self, serial, event_handler, parent=None):
         super(SerialWindow, self).__init__()
         self.setupUi(self)
-        self.serial = serial
+        # self.serial = serial
         self.event_handler = event_handler
         self.event_handler.reconnect_serial.connect(self.reconnect_serial)
-        self.serial.data.checkserial_msg.connect(self.checkserial_msg)
+        # self.serial.data.checkserial_msg.connect(self.checkserial_msg)
 
         # Make the selection Behavior as selecting the entire row
         self.COMlist.setSelectionBehavior(QtWidgets.QTableView.SelectRows)
@@ -35,7 +35,7 @@ class SerialWindow(QtWidgets.QWidget, Ui_SerialWindow):
             self.connect_serial()
 
     def checkserial_msg(self):
-        self.output_serial(self.serial.data.serial_msg)
+        # self.output_serial(self.serial.data.serial_msg)
         self.scan_serial()
 
     def output_serial(self, text):
@@ -47,17 +47,19 @@ class SerialWindow(QtWidgets.QWidget, Ui_SerialWindow):
         selected = self.COMlist.currentRow()
         selected_device = self.COMlist.item(selected, 0)
         if selected_device != None:
-            self.serial.com = selected_device.text()
-            response = str(self.serial.attemptconnect())
+            # self.serial.com = selected_device.text()
+            # response = str(self.serial.attemptconnect())
             self.output_serial(response)
         else:
             self.output_serial("Please select a device")
 
     def disconnect_serial(self):
-        self.output_serial(self.serial.disconnect())
+        # self.output_serial(self.serial.disconnect())
+        pass
 
     def scan_serial(self):
-        comlist = self.serial.scan()
+        # comlist = self.serial.scan()
+        comlist = []
         self.COMlist.setRowCount(0)
         for p in comlist:
             rowpos = self.COMlist.rowCount()

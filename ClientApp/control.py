@@ -18,7 +18,7 @@ class ControlWindow(QtWidgets.QWidget, Ui_ControlWindow):
         # 	self.setWindowState(self.windowState() | Qt.WindowFullScreen)
 
         self.parent = parent
-        self.serial = serial
+#        self.serial = serial
 
         # self.timer.timeout.connect(lambda: self.button_event_check())
         self.xinc = None
@@ -54,7 +54,7 @@ class ControlWindow(QtWidgets.QWidget, Ui_ControlWindow):
         self.eaxis = Axis("e", "60", self)
 
         self.inittextformat(self.PositionLabel)
-        self.serial.data.updateposition.connect(self.updateposition)
+        # self.serial.data.updateposition.connect(self.updateposition)
 
         self.HomeXY.clicked.connect(self.homexy)
         self.HomeZ.clicked.connect(self.homez)
@@ -63,28 +63,33 @@ class ControlWindow(QtWidgets.QWidget, Ui_ControlWindow):
         self.DisableMotors.clicked.connect(self.disablemotors)
 
     def updateposition(self):
-        pos = self.serial.data.position
+        # pos = self.serial.data.position
+        pos = 0
         tmp = "X: "+str(pos["X"]) + " Y: "+str(pos["Y"]) + " Z: "+str(pos["Z"])
         self.changeText(self.PositionLabel, tmp)
 
     def disablemotors(self):
-        self.serial.send_serial('M18')
-
+        # self.serial.send_serial('M18')
+        pass
+    
     def homexy(self):
-        self.serial.send_serial('G28 XY')
-
+        # self.serial.send_serial('G28 XY')
+        pass
+    
     def homez(self):
-        self.serial.send_serial('G28 Z')
-
+        # self.serial.send_serial('G28 Z')
+        pass
+    
     def homeall(self):
-        self.serial.send_serial('G28')
-
+        # self.serial.send_serial('G28')
+        pass
+    
     def updatecurrentextruder(self):
         self.currentextruder = self.extruder.checkedButton().text()
-        if self.currentextruder == "E1":
-            self.serial.send_serial("T0")
-        elif self.currentextruder == "E2":
-            self.serial.send_serial("T1")
+        # if self.currentextruder == "E1":
+        #     self.serial.send_serial("T0")
+        # elif self.currentextruder == "E2":
+        #     self.serial.send_serial("T1")
 
     def AddButtontoGroup(self, axis):
         group = QtWidgets.QButtonGroup(self)

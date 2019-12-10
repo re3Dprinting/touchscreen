@@ -81,13 +81,13 @@ class Axis(object):
     def movepos(self, inc=None):
         if inc == None:
             inc = self.inc
-        self.parent.serial.send_serial('G91')
-        self.parent.serial.send_serial(
-            'G1 ' + self.Ax + str(inc) + ' F' + self.feedrate)
+        # self.parent.serial.send_serial('G91')
+        # self.parent.serial.send_serial(
+        #     'G1 ' + self.Ax + str(inc) + ' F' + self.feedrate)
 
     def moveneg(self, inc=None):
         if inc == None:
             inc = self.inc
-        self.parent.serial.send_serial('G91')
-        self.parent.serial.send_serial(
-            'G1 ' + self.Ax + '-' + str(inc) + ' F' + self.feedrate)
+        # self.parent.serial.send_serial('G91')
+        # self.parent.serial.send_serial(
+        #     'G1 ' + self.Ax + '-' + str(inc) + ' F' + self.feedrate)

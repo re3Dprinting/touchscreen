@@ -14,7 +14,7 @@ class event_handler(QtCore.QThread):
         super(event_handler, self).__init__()
         self.tempwindow = tempwindow
         self.serialwindow = serialwindow
-        self.serial = serial
+        # self.serial = serial
 
         self.feedrate = 100
         self.fr_index = 0
@@ -41,8 +41,8 @@ class event_handler(QtCore.QThread):
             self.flashbedicon()
 
             if self.rescanserial_count >= 20:
-                if(not self.serial.is_open):
-                    self.reconnect_serial.emit("reconnectserial")
+                # if(not self.serial.is_open):
+                #     self.reconnect_serial.emit("reconnectserial")
                 self.rescanserial_count = 0
 
     def resetparameters(self):

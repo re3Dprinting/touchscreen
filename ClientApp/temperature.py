@@ -22,7 +22,7 @@ class TemperatureWindow(QtWidgets.QWidget, Ui_TemperatureWindow):
         # if self.fullscreen:
         # 	self.setWindowState(self.windowState() | Qt.WindowFullScreen)
 
-        self.serial = serial
+        # self.serial = serial
         self.parent = parent
         self.event_handler = event_handler
 
@@ -31,8 +31,8 @@ class TemperatureWindow(QtWidgets.QWidget, Ui_TemperatureWindow):
         self.gridLayout.addWidget(self.NotActivePrintWid, 2, 0, 1, 1)
         self.gridLayout.addWidget(self.ActivePrintWid, 2, 0, 1, 1)
         self.notactiveprint()
-        self.serial.data.updateprogress.connect(self.updateprogress)
-        self.serial.data.updateposition.connect(self.updateposition)
+        # self.serial.data.updateprogress.connect(self.updateprogress)
+        # self.serial.data.updateposition.connect(self.updateposition)
 
         # self.event_handler.updatetemperatures.connect(self.updatetemperatures)
         self.inittextformat(self.e1temp)
@@ -114,18 +114,19 @@ class TemperatureWindow(QtWidgets.QWidget, Ui_TemperatureWindow):
 
     def update_parameters(self):
         self.event_handler.resetparameters()
-        self.changeText(self.ActivePrintWid.FileName,
-                        str(self.serial.data.currentfile))
-        self.changeText(self.ActivePrintWid.FeedrateVal,
-                        str(self.event_handler.feedrate))
-        self.changeText(self.ActivePrintWid.BabysteppingVal,
-                        str(self.event_handler.babystep))
+        # self.changeText(self.ActivePrintWid.FileName,
+        #                 str(self.serial.data.currentfile))
+        # self.changeText(self.ActivePrintWid.FeedrateVal,
+        #                 str(self.event_handler.feedrate))
+        # self.changeText(self.ActivePrintWid.BabysteppingVal,
+        #                 str(self.event_handler.babystep))
         self.changeText(self.ActivePrintWid.FlowrateVal, str(
             self.event_handler.flowrate[self.event_handler.fr_index]))
 
     def sendfeedrate(self):
-        self.serial.send_serial(
-            "M220 S" + str(self.ActivePrintWid.FeedrateSlider.value()))
+        # self.serial.send_serial(
+        #     "M220 S" + str(self.ActivePrintWid.FeedrateSlider.value()))
+        pass
 
     def feedrateslider(self):
         val = self.ActivePrintWid.FeedrateSlider.value()
@@ -148,13 +149,15 @@ class TemperatureWindow(QtWidgets.QWidget, Ui_TemperatureWindow):
         self.event_handler.sendbabystep()
 
     def updateposition(self):
-        pos = self.serial.data.position
+        # pos = self.serial.data.position
+        pos = 0
         tmp = "X: "+str(pos["X"]) + " Y: "+str(pos["Y"]) + " Z: "+str(pos["Z"])
         self.changeText(self.ActivePrintWid.PositionLabel, tmp)
 
     def updateprogress(self):
-        prog = (
-            float(self.serial.data.progress[0])/float(self.serial.data.progress[1])) * 100
+        # prog = (
+        #     float(self.serial.data.progress[0])/float(self.serial.data.progress[1])) * 100
+        prog = 0
         self.ActivePrintWid.FileProgress.setValue(prog)
 
     def updateflowlabel(self):
@@ -186,13 +189,13 @@ class TemperatureWindow(QtWidgets.QWidget, Ui_TemperatureWindow):
         self.ActivePrintWid.show()
 
     def pauseprint(self):
-        self.serial.send_serial("M25")
+        # self.serial.send_serial("M25")
         self.ActivePrintWid.ResumePrint.setEnabled(True)
         self.ActivePrintWid.PausePrint.setEnabled(False)
         self.parent.Control.setEnabled(True)
 
     def resumeprint(self):
-        self.serial.send_serial("M24")
+        # self.serial.send_serial("M24")
         self.ActivePrintWid.ResumePrint.setEnabled(False)
         self.ActivePrintWid.PausePrint.setEnabled(True)
         self.parent.Control.setEnabled(False)
@@ -220,21 +223,22 @@ class TemperatureWindow(QtWidgets.QWidget, Ui_TemperatureWindow):
                         p).clicked.connect(getattr(getattr(self, m), p + 'set'))
 
     def fan(self):
-        if self.serial.is_open:
-            if self.fanon:
-                self.serial.send_serial('M106 S0')
-                self.ActivePrintWid.Fan.setIcon(self.fanofficon)
-                self.ActivePrintWid.Fan.setIconSize(QtCore.QSize(55, 55))
-                self.NotActivePrintWid.Fan.setIcon(self.fanofficon)
-                self.NotActivePrintWid.Fan.setIconSize(QtCore.QSize(55, 55))
-                self.fanon = False
-            elif not self.fanon:
-                self.serial.send_serial('M106 S255')
-                self.ActivePrintWid.Fan.setIcon(self.fanonicon)
-                self.ActivePrintWid.Fan.setIconSize(QtCore.QSize(55, 55))
-                self.NotActivePrintWid.Fan.setIcon(self.fanonicon)
-                self.NotActivePrintWid.Fan.setIconSize(QtCore.QSize(55, 55))
-                self.fanon = True
+        # if self.serial.is_open:
+        #     if self.fanon:
+        #         self.serial.send_serial('M106 S0')
+        #         self.ActivePrintWid.Fan.setIcon(self.fanofficon)
+        #         self.ActivePrintWid.Fan.setIconSize(QtCore.QSize(55, 55))
+        #         self.NotActivePrintWid.Fan.setIcon(self.fanofficon)
+        #         self.NotActivePrintWid.Fan.setIconSize(QtCore.QSize(55, 55))
+        #         self.fanon = False
+        #     elif not self.fanon:
+        #         self.serial.send_serial('M106 S255')
+        #         self.ActivePrintWid.Fan.setIcon(self.fanonicon)
+        #         self.ActivePrintWid.Fan.setIconSize(QtCore.QSize(55, 55))
+        #         self.NotActivePrintWid.Fan.setIcon(self.fanonicon)
+        #         self.NotActivePrintWid.Fan.setIconSize(QtCore.QSize(55, 55))
+        #         self.fanon = True
+        pass
 
     def cool(self):
         self.extruder1.setandsend(0)
@@ -242,13 +246,15 @@ class TemperatureWindow(QtWidgets.QWidget, Ui_TemperatureWindow):
         self.heatedbed.setandsend(0)
 
     def updatetemperatures(self):
-        if self.serial.is_open:
-            self.changeText(self.e1temp, str(
-                int(self.serial.data.temp["T0"][0])))
-            self.changeText(self.e2temp, str(
-                int(self.serial.data.temp["T1"][0])))
-            self.changeText(self.bedtemp, str(
-                int(self.serial.data.temp["B"][0])))
+        # if self.serial.is_open:
+            # self.changeText(self.e1temp, str(
+            #     int(self.serial.data.temp["T0"][0])))
+            # self.changeText(self.e2temp, str(
+            #     int(self.serial.data.temp["T1"][0])))
+            # self.changeText(self.bedtemp, str(
+            #     int(self.serial.data.temp["B"][0])))
+        if False:
+            pass
         else:
             self.changeText(self.e1temp, "-----")
             self.changeText(self.e2temp, "-----")
@@ -259,19 +265,20 @@ class TemperatureWindow(QtWidgets.QWidget, Ui_TemperatureWindow):
             self.extruder1.settemp = 0
             self.extruder2.settemp = 0
             self.heatedbed.settemp = 0
-            self.serial.data.resettemps()
+            # self.serial.data.resettemps()
 
     def updatesettemperatures(self):
-        if self.serial.is_open:
-            self.changeText(self.e1set, str(
-                int(self.serial.data.temp["T0"][1])))
-            self.changeText(self.e2set, str(
-                int(self.serial.data.temp["T1"][1])))
-            self.changeText(self.bedset, str(
-                int(self.serial.data.temp["B"][1])))
-            self.extruder1.settemp = int(self.serial.data.temp["T0"][1])
-            self.extruder2.settemp = int(self.serial.data.temp["T1"][1])
-            self.heatedbed.settemp = int(self.serial.data.temp["B"][1])
+        # if self.serial.is_open:
+        #     self.changeText(self.e1set, str(
+        #         int(self.serial.data.temp["T0"][1])))
+        #     self.changeText(self.e2set, str(
+        #         int(self.serial.data.temp["T1"][1])))
+        #     self.changeText(self.bedset, str(
+        #         int(self.serial.data.temp["B"][1])))
+        #     self.extruder1.settemp = int(self.serial.data.temp["T0"][1])
+        #     self.extruder2.settemp = int(self.serial.data.temp["T1"][1])
+        #     self.heatedbed.settemp = int(self.serial.data.temp["B"][1])
+        pass
 
     def changeText(self, label, text):
         tmp = QtWidgets.QApplication.translate(

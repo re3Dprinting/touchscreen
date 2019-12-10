@@ -83,6 +83,6 @@ class Periph(object):
             getattr(self.parent, self.periph + "set"), str(self.settemp))
 
     def sendtemp(self):
-        self.parent.serial.send_serial(self.command + str(self.settemp))
-        self.parent.serial.send_serial("M105")
+        # self.parent.serial.send_serial(self.command + str(self.settemp))
+        # self.parent.serial.send_serial("M105")
         self.parent.event_handler.sendtempcount = 0
