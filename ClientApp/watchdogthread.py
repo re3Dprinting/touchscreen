@@ -16,10 +16,10 @@ class my_handler(FileSystemEventHandler):
         self.ui = ui
 
     def on_created(self, event):
-        self.ui.update_create(event.src_path)
+        self.ui.update_usb_create(event.src_path)
         
     def on_deleted(self, event):
-        self.ui.update_delete(event.src_path)
+        self.ui.update_usb_delete(event.src_path)
 
 
 class WatchdogThread(QThread):

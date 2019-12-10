@@ -6,7 +6,6 @@ from qt.printwindow import *
 from fsutils.subfilesystem import *
 from fsutils.file import *
 
-
 class PrintWindow(QtWidgets.QWidget, Ui_PrintWindow):
     def __init__(self, serial, temp_pop, personality, parent=None):
         super(PrintWindow, self).__init__()
@@ -47,6 +46,10 @@ class PrintWindow(QtWidgets.QWidget, Ui_PrintWindow):
         self.FileList.verticalScrollBar().setStyleSheet(
             "QScrollBar::vertical{ width: 40px; }")
 
+        tabWidth = (old_div(self.tabWidget.width(), 3))-24
+        self.tabWidget.setStyleSheet(self.tabWidget.styleSheet(
+        ) + "QTabBar::tab { width: " + str(tabWidth) + "px; height: 35px; font-size: 12pt;}")
+
         # Set up the list of USB files
 
         self.USBFileList.setSelectionBehavior(QtWidgets.QTableView.SelectRows)
@@ -58,33 +61,51 @@ class PrintWindow(QtWidgets.QWidget, Ui_PrintWindow):
 
         self.USBFileList.itemClicked.connect(self.itemClicked)
         self.USBFileList.itemDoubleClicked.connect(self.itemDoubleClicked)
-        self.pushbutton_open.clicked.connect(self.open_subdir)
-        self.pushbutton_up.clicked.connect(self.up_dir)
+        self.usb_pushbutton_open.clicked.connect(self.open_usb_subdir)
+        self.usb_pushbutton_up.clicked.connect(self.up_usb_dir)
 
-        tabWidth = (old_div(self.tabWidget.width(), 3))-24
-        self.tabWidget.setStyleSheet(self.tabWidget.styleSheet(
-        ) + "QTabBar::tab { width: " + str(tabWidth) + "px; height: 35px; font-size: 12pt;}")
-
-        self.subdir = SubFileSystem(self.personality.watchpoint)
-        self.pathlabel.setText(self.subdir.abspath)
+        self.usb_subdir = SubFileSystem(self.personality.watchpoint)
+        self.usb_pathlabel.setText(self.usb_subdir.abspath)
 
         # self.updateusbfiles()
         self.clearusbfiles()
-        self.pathlabel.setText("")
-        self.update_button_states()
+        # self.sd_pathlabel.setText("Files on ")
+        self.update_usb_button_states()
 
-    def update_create(self, path):
-        print("Create:", path)
-        self.pathlabel.setText(path)
-        self.subdir = SubFileSystem(path)
-        self.updateusbfiles()
-        self.update_button_states()
+        # Set up the list of local files
 
-    def update_delete(self, path):
-        print("Delete:", path)
-#        self.pathlabel.setText(self.subdir.abspath)
+        self.LocalFileList.setSelectionBehavior(QtWidgets.QTableView.SelectRows)
+        self.LocalFileList.setSelectionMode(QtWidgets.QTableView.SingleSelection)
+        self.LocalFileList.verticalHeader().hide()
+
+        header = self.LocalFileList.horizontalHeader()
+        header.setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
+
+        self.LocalFileList.itemClicked.connect(self.itemClicked)
+        self.LocalFileList.itemDoubleClicked.connect(self.itemDoubleClicked)
+        self.loc_pushbutton_open.clicked.connect(self.open_loc_subdir)
+        self.loc_pushbutton_up.clicked.connect(self.up_loc_dir)
+
+        self.loc_subdir = SubFileSystem(self.personality.watchpoint)
+        self.loc_pathlabel.setText(self.loc_subdir.abspath)
+
+        # self.updateusbfiles()
         self.clearusbfiles()
-        self.pathlabel.setText("")
+        # self.sd_pathlabel.setText("Files on ")
+        self.update_loc_button_states()
+
+    def update_usb_create(self, path):
+        print("Create:", path)
+        self.usb_pathlabel.setText(path)
+        self.usb_subdir = SubFileSystem(path)
+        self.updateusbfiles()
+        self.update_usb_button_states()
+
+    def update_usb_delete(self, path):
+        print("Delete:", path)
+#        self.usb_pathlabel.setText(self.usb_subdir.abspath)
+        self.clearusbfiles()
+        self.usb_pathlabel.setText("")
 
     def scansd(self):
         self.serial.send_serial("M22 \r")
@@ -110,7 +131,7 @@ class PrintWindow(QtWidgets.QWidget, Ui_PrintWindow):
     def updateusbfiles(self):
         self.USBFileList.clearContents()
         self.USBFileList.setRowCount(0)
-        files = self.subdir.list()
+        files = self.usb_subdir.list()
 
         for usbfile in files:
             rowpos = self.USBFileList.rowCount()
@@ -180,7 +201,7 @@ class PrintWindow(QtWidgets.QWidget, Ui_PrintWindow):
         if selected_row == -1:
             return (-1, None, None)
 
-        selected_file = self.subdir.files[selected_row]
+        selected_file = self.usb_subdir.files[selected_row]
         selected_item = self.USBFileList.currentItem()
 
         return (selected_row, selected_file, selected_item)
@@ -191,33 +212,33 @@ class PrintWindow(QtWidgets.QWidget, Ui_PrintWindow):
         else:
             self.temp_pop.show()
 
-    def update_button_states_none(self):
-        self.pushbutton_up.setEnabled(False)
-        self.pushbutton_open.setEnabled(False)
-        self.pushbutton_print.setEnabled(False)
+    def update_usb_button_states_none(self):
+        self.usb_pushbutton_up.setEnabled(False)
+        self.usb_pushbutton_open.setEnabled(False)
+        self.usb_pushbutton_print.setEnabled(False)
 
-    def update_button_states(self):
+    def update_usb_button_states(self):
         selected_row, selected_file, selected_item = self.get_selected_file()
 
-        if self.subdir.depth() > 0:
-            self.pushbutton_up.setEnabled(True)
+        if self.usb_subdir.depth() > 0:
+            self.usb_pushbutton_up.setEnabled(True)
         else:
-            self.pushbutton_up.setEnabled(False)
+            self.usb_pushbutton_up.setEnabled(False)
 
         if selected_row == -1:
-            self.pushbutton_open.setEnabled(False)
-            self.pushbutton_print.setEnabled(False)
+            self.usb_pushbutton_open.setEnabled(False)
+            self.usb_pushbutton_print.setEnabled(False)
             return
 
         if selected_file.type == 'd':
-            self.pushbutton_open.setEnabled(True)
-            self.pushbutton_print.setEnabled(False)
+            self.usb_pushbutton_open.setEnabled(True)
+            self.usb_pushbutton_print.setEnabled(False)
 
         elif selected_file.type == 'f':
-            self.pushbutton_open.setEnabled(False)
-            self.pushbutton_print.setEnabled(True)
+            self.usb_pushbutton_open.setEnabled(False)
+            self.usb_pushbutton_print.setEnabled(True)
 
-    def open_subdir(self):
+    def open_usb_subdir(self):
         selected_row, selected_file, selected_item = self.get_selected_file()
 
         if selected_row is None:
@@ -228,21 +249,74 @@ class PrintWindow(QtWidgets.QWidget, Ui_PrintWindow):
 
         self.item_stack.append(selected_row)
 
-        self.subdir.cd(selected_file.name)
+        self.usb_subdir.cd(selected_file.name)
         self.updateusbfiles()
         self.showFileAndDeselect(0)
-        self.update_button_states()
-        self.pathlabel.setText(self.subdir.abspath)
+        self.update_usb_button_states()
+        self.usb_pathlabel.setText(self.usb_subdir.abspath)
 
-    def up_dir(self):
-        self.subdir.up()
+    def up_usb_dir(self):
+        self.usb_subdir.up()
         self.updateusbfiles()
 
         selected_row = self.item_stack.pop()
         self.showFile(selected_row)
 
-        self.update_button_states()
-        self.pathlabel.setText(self.subdir.abspath)
+        self.update_usb_button_states()
+        self.usb_pathlabel.setText(self.usb_subdir.abspath)
+
+    def update_loc_button_states_none(self):
+        self.loc_pushbutton_up.setEnabled(False)
+        self.loc_pushbutton_open.setEnabled(False)
+        self.loc_pushbutton_print.setEnabled(False)
+
+    def update_loc_button_states(self):
+        selected_row, selected_file, selected_item = self.get_selected_file()
+
+        if self.loc_subdir.depth() > 0:
+            self.loc_pushbutton_up.setEnabled(True)
+        else:
+            self.loc_pushbutton_up.setEnabled(False)
+
+        if selected_row == -1:
+            self.loc_pushbutton_open.setEnabled(False)
+            self.loc_pushbutton_print.setEnabled(False)
+            return
+
+        if selected_file.type == 'd':
+            self.loc_pushbutton_open.setEnabled(True)
+            self.loc_pushbutton_print.setEnabled(False)
+
+        elif selected_file.type == 'f':
+            self.loc_pushbutton_open.setEnabled(False)
+            self.loc_pushbutton_print.setEnabled(True)
+
+    def open_loc_subdir(self):
+        selected_row, selected_file, selected_item = self.get_selected_file()
+
+        if selected_row is None:
+            return
+
+        if selected_file.type != 'd':
+            return
+
+        self.item_stack.append(selected_row)
+
+        self.loc_subdir.cd(selected_file.name)
+        self.updateusbfiles()
+        self.showFileAndDeselect(0)
+        self.update_loc_button_states()
+        self.loc_pathlabel.setText(self.loc_subdir.abspath)
+
+    def up_loc_dir(self):
+        self.loc_subdir.up()
+        self.updateusbfiles()
+
+        selected_row = self.item_stack.pop()
+        self.showFile(selected_row)
+
+        self.update_loc_button_states()
+        self.loc_pathlabel.setText(self.loc_subdir.abspath)
 
     def showFile(self, selected_row):
         self.USBFileList.setCurrentCell(selected_row, 0)
@@ -257,7 +331,7 @@ class PrintWindow(QtWidgets.QWidget, Ui_PrintWindow):
 
     def itemClicked(self):
         row = self.USBFileList.currentRow()
-        self.update_button_states()
+        self.update_usb_button_states()
 
     def itemDoubleClicked(self):
-        self.open_subdir()
+        self.open_usb_subdir()
