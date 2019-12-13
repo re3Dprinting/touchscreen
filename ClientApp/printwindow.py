@@ -2,9 +2,9 @@ from __future__ import division
 from builtins import str
 from past.utils import old_div
 from PyQt5.QtCore import Qt
-from qt.printwindow import *
-from fsutils.subfilesystem import *
-from fsutils.file import *
+from .qt.printwindow import *
+from .fsutils.subfilesystem import *
+from .fsutils.file import *
 
 class PrintWindow(QtWidgets.QWidget, Ui_PrintWindow):
     def __init__(self, serial, temp_pop, personality, parent=None):

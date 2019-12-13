@@ -1,8 +1,8 @@
 from builtins import str
-from qt.serverwindow import *
-from PyQt5.QtCore import Qt
 import os
 import time
+from PyQt5.QtCore import Qt
+from .qt.serverwindow import *
 
 hostname = "192.168.1.49"
 

@@ -1,7 +1,7 @@
 from builtins import str
-from qt.controlwindow import *
 from PyQt5.QtCore import Qt
-from axis import *
+from .qt.controlwindow import *
+from .axis import *
 
 increments_str = ["01", "1", "10", "100"]
 increments_int = ['0.1', '1', '10', '100']

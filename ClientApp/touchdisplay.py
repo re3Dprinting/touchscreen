@@ -1,11 +1,23 @@
-from qt.touchdisplaywindow import *
-from PyQt5.QtCore import Qt
-from control import *
-from temperature import *
-from settings import *
-from printwindow import *
 import sys
 
+#from PyQt5.QtCore import Qt
+from PyQt5 import QtCore, QtGui, QtWidgets
+#import PyQt5
+
+#from . import control
+#from . import temperature
+from .control import ControlWindow
+#from . import printwindow
+from .printwindow import PrintWindow
+from . import settings
+from .event_hand import event_handler
+from .settings import SettingsWindow
+from .server import ServerWindow
+from .serialsetup import SerialWindow
+from .temperature import TemperatureWindow
+#from . import event_hand
+
+from .qt.touchdisplaywindow import Ui_TouchDisplay
 
 class TouchDisplay(QtWidgets.QWidget, Ui_TouchDisplay):
     def __init__(self, client, serial, personality, parent=None):

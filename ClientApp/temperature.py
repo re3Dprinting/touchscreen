@@ -1,12 +1,12 @@
 from builtins import str
-from qt.temperaturewindow import *
-from notactiveprint_wid import *
-from activeprint_wid import *
+from .qt.temperaturewindow import *
+from .notactiveprint_wid import *
+from .activeprint_wid import *
 from PyQt5.QtCore import Qt
 import PyQt5.QtCore
-from event_hand import *
-from preheatmaterial import *
-from periph import *
+from .event_hand import *
+from .preheatmaterial import *
+from .periph import *
 
 mats = ['m1', 'm2', 'm3']
 periphs = ['e1', 'e2', 'bed', 'all']
@@ -223,22 +223,22 @@ class TemperatureWindow(QtWidgets.QWidget, Ui_TemperatureWindow):
                         p).clicked.connect(getattr(getattr(self, m), p + 'set'))
 
     def fan(self):
-        # if self.serial.is_open:
-        #     if self.fanon:
-        #         self.serial.send_serial('M106 S0')
-        #         self.ActivePrintWid.Fan.setIcon(self.fanofficon)
-        #         self.ActivePrintWid.Fan.setIconSize(QtCore.QSize(55, 55))
-        #         self.NotActivePrintWid.Fan.setIcon(self.fanofficon)
-        #         self.NotActivePrintWid.Fan.setIconSize(QtCore.QSize(55, 55))
-        #         self.fanon = False
-        #     elif not self.fanon:
-        #         self.serial.send_serial('M106 S255')
-        #         self.ActivePrintWid.Fan.setIcon(self.fanonicon)
-        #         self.ActivePrintWid.Fan.setIconSize(QtCore.QSize(55, 55))
-        #         self.NotActivePrintWid.Fan.setIcon(self.fanonicon)
-        #         self.NotActivePrintWid.Fan.setIconSize(QtCore.QSize(55, 55))
-        #         self.fanon = True
-        pass
+# if self.serial.is_open:
+            if self.fanon:
+                # self.serial.send_serial('M106 S0')
+                self.ActivePrintWid.Fan.setIcon(self.fanofficon)
+                self.ActivePrintWid.Fan.setIconSize(QtCore.QSize(55, 55))
+                self.NotActivePrintWid.Fan.setIcon(self.fanofficon)
+                self.NotActivePrintWid.Fan.setIconSize(QtCore.QSize(55, 55))
+                self.fanon = False
+            elif not self.fanon:
+                # self.serial.send_serial('M106 S255')
+                self.ActivePrintWid.Fan.setIcon(self.fanonicon)
+                self.ActivePrintWid.Fan.setIconSize(QtCore.QSize(55, 55))
+                self.NotActivePrintWid.Fan.setIcon(self.fanonicon)
+                self.NotActivePrintWid.Fan.setIconSize(QtCore.QSize(55, 55))
+                self.fanon = True
+#        pass
 
     def cool(self):
         self.extruder1.setandsend(0)

@@ -1,7 +1,7 @@
 from builtins import object
 import os
 import os.path
-import fsutils.file
+from . import file
 
 
 class SubFileSystem(object):

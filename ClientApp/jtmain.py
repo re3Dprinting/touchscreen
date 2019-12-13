@@ -5,8 +5,10 @@ from Client.g_serial import *
 from Client.g_client import *
 from Client.g_data import *
 
-from touchdisplay import *
-from watchdogthread import *
+from . import touchdisplay
+#import touchdisplay
+#from watchdogthread import *
+import watchdogthread
 from personality import Personality
 
 import sys

@@ -1,8 +1,7 @@
-from qt.settingswindow import *
 from PyQt5.QtCore import Qt
-from serialsetup import *
-from server import *
-
+from .qt.settingswindow import *
+from . import serialsetup
+from . import server
 
 class SettingsWindow(QtWidgets.QWidget, Ui_SettingsWindow):
     def __init__(self, client_obj, serial_obj, parent=None):
