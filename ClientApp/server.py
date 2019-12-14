@@ -40,7 +40,7 @@ class ServerWindow(QtWidgets.QWidget, Ui_ServerWindow):
 
         self.IPText.setText(self.client.host)
         self.client.data.checkserver_msg.connect(self.checkserver_msg)
-        self.Back.clicked.connect(self.close)
+        self.Back.clicked.connect(self.back)
         self.ConnectServer.clicked.connect(self.connect_server)
         self.DisconnectServer.clicked.connect(self.disconnect_server)
         self.Ping.clicked.connect(self.ping)
@@ -84,3 +84,10 @@ class ServerWindow(QtWidgets.QWidget, Ui_ServerWindow):
         self.ServerOutput.moveCursor(QtGui.QTextCursor.End)
         self.ServerOutput.ensureCursorVisible()
         self.ServerOutput.append(text)
+        
+    def back(self):
+        if self.parent.fullscreen:
+            self.parent.showFullScreen()
+        else:
+            self.parent.show()
+        self.close()

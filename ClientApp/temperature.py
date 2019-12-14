@@ -79,14 +79,14 @@ class TemperatureWindow(QtWidgets.QWidget, Ui_TemperatureWindow):
 #		Initilization for Not-Printing Widget.
 
         self.initpreheatbuttons()
-        self.NotActivePrintWid.Back.clicked.connect(self.close)
+        self.NotActivePrintWid.Back.clicked.connect(self.back)
         self.NotActivePrintWid.CoolDown.clicked.connect(self.cool)
         self.NotActivePrintWid.Fan.clicked.connect(self.fan)
 
 
 #		Initilization for Printing Widget.
 
-        self.ActivePrintWid.Back.clicked.connect(self.close)
+        self.ActivePrintWid.Back.clicked.connect(self.back)
         self.ActivePrintWid.Fan.clicked.connect(self.fan)
         self.ActivePrintWid.ResumePrint.setEnabled(False)
         # self.ActivePrintWid.StopPrint.clicked.connect(self.stopprint)
@@ -287,3 +287,7 @@ class TemperatureWindow(QtWidgets.QWidget, Ui_TemperatureWindow):
     def setbuttonstyle(self, obj):
         obj.setStyleSheet(
             "QPushButton{background: rgba(255,255,255,0); outline: none; border: none;}")
+    
+    def back(self):
+        self.parent.show()
+        self.close()

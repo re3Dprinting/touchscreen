@@ -39,6 +39,7 @@ class TouchDisplay(QtWidgets.QWidget, Ui_TouchDisplay):
         self.set_pop = SettingsWindow(self.client, self.serial, self)
         self.server_pop = ServerWindow(self.client, self.set_pop)
         self.userupdate_pop = UserUpdateWindow(self.personality, self.set_pop)
+        self.userupdate_pop.checkupdate()
         self.serial_pop = SerialWindow(self.serial, self.event_handler, self.set_pop)
         self.set_pop.serial_pop = self.serial_pop
         self.set_pop.server_pop = self.server_pop
@@ -63,24 +64,28 @@ class TouchDisplay(QtWidgets.QWidget, Ui_TouchDisplay):
             self.con_pop.showFullScreen()
         else:
             self.con_pop.show()
+        self.close()
 
     def temperaturepop(self):
         if self.fullscreen:
             self.temp_pop.showFullScreen()
         else:
             self.temp_pop.show()
+        self.close()
 
     def settingspop(self):
         if self.fullscreen:
             self.set_pop.showFullScreen()
         else:
             self.set_pop.show()
+        self.close()
 
     def printpop(self):
         if self.fullscreen:
             self.print_pop.showFullScreen()
         else:
             self.print_pop.show()
+        self.close()
 
     def setbuttonstyle(self, obj):
         obj.setStyleSheet(
