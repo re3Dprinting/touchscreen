@@ -97,6 +97,8 @@ class UserUpdateWindow(QtWidgets.QWidget, Ui_UserUpdate):
             for tag in self.current_tags:
                 if(version == tag.name):
                     self.print_debug(tag.tag.message)
+            self.DebugOutput.moveCursor(QtGui.QTextCursor.Start)
+            self.DebugOutput.ensureCursorVisible()
 
     def update(self):
         software = self.SoftwareList.currentRow()
@@ -111,9 +113,8 @@ class UserUpdateWindow(QtWidgets.QWidget, Ui_UserUpdate):
             self.print_debug("Select a Version on list")
 
     def print_debug(self, text):
-        self.DebugOutput.moveCursor(QtGui.QTextCursor.End)
-        self.DebugOutput.ensureCursorVisible()
         self.DebugOutput.append(text)
+    
 
     def restart_program(self, argument):
         # Restarts the current program, with file objects and descriptors cleanup

@@ -23,6 +23,7 @@ if __name__ == "__main__":
     serial_conn = g_serial(data_thread)
     data_thread.start()
 
+#   Remove the broken refs/tags
     if(os.path.isdir(Path(__file__).resolve().parents[1].__str__()+"/.git/refs/tags")):
         shutil.rmtree(Path(__file__).resolve().parents[1].__str__()+"/.git/refs/tags")
 
