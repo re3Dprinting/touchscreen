@@ -111,7 +111,7 @@ class UserUpdateWindow(QtWidgets.QWidget, Ui_UserUpdate):
             self.print_debug("Select a Version on list")
 
     def print_debug(self, text):
-        self.DebugOutput.moveCursor(QtGui.QTextCursor.End)
+        self.DebugOutput.moveCursor(QtGui.QTextCursor.Start)
         self.DebugOutput.ensureCursorVisible()
         self.DebugOutput.append(text)
 
