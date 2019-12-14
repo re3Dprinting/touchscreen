@@ -70,7 +70,7 @@
          </column>
          <column>
           <property name="text">
-           <string>Date</string>
+           <string>Release Time</string>
           </property>
          </column>
         </widget>

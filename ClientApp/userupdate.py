@@ -74,8 +74,7 @@ class UserUpdateWindow(QtWidgets.QWidget, Ui_UserUpdate):
             
             if("release" in t.name): #and not self.app.applicationVersion() in t.name #<--- Dont show current version
                 self.current_tags.append(t)
-                tag_date = time.asctime(time.gmtime(t.commit.committed_date))
-                print(t.name, " date:", tag_date)
+                tag_date = time.strftime('%I:%M%p %m/%d/%y', time.localtime(t.commit.committed_date))
                 rowpos = self.SoftwareList.rowCount()
                 self.SoftwareList.insertRow(rowpos)
                 version = QtWidgets.QTableWidgetItem(t.name.strip("release/"))

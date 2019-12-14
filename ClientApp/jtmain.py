@@ -9,8 +9,11 @@ from touchdisplay import *
 from watchdogthread import *
 from personality import Personality
 
+from pathlib import Path
+
 import sys
 import threading
+import shutil
 import os
 
 if __name__ == "__main__":
@@ -19,6 +22,10 @@ if __name__ == "__main__":
     client_conn = g_client(data_thread)
     serial_conn = g_serial(data_thread)
     data_thread.start()
+
+
+    if(os.path.isdir(Path(__file__).resolve().parents[1].__str__()+"/.git/refs/tags")):
+        shutil.rmtree(Path(__file__).resolve().parents[1].__str__()+"/.git/refs/tags")
 
     personality = Personality(False, "/Volumes", "/Users/jct/localgcode")
 

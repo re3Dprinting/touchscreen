@@ -80,5 +80,5 @@ class Ui_UserUpdate(object):
         item = self.SoftwareList.horizontalHeaderItem(0)
         item.setText(_translate("UserUpdate", "Version"))
         item = self.SoftwareList.horizontalHeaderItem(1)
-        item.setText(_translate("UserUpdate", "Date"))
+        item.setText(_translate("UserUpdate", "Release Time"))
 
