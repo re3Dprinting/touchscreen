@@ -18,6 +18,7 @@ class UserUpdateWindow(QtWidgets.QWidget, Ui_UserUpdate):
     def __init__(self, personality, parent=None):
         super(UserUpdateWindow, self).__init__()
         self.setupUi(self)
+        self.parent = parent
 
         self.personality = personality
         self.app = QtWidgets.QApplication.instance()
@@ -56,7 +57,7 @@ class UserUpdateWindow(QtWidgets.QWidget, Ui_UserUpdate):
         temp = self.CurrentVersion.text()+ " " + self.app.applicationVersion()
         self.CurrentVersion.setText(temp)
 
-        self.Back.clicked.connect(self.close)
+        self.Back.clicked.connect(self.back)
         self.CheckUpdate.clicked.connect(self.checkupdate)
         self.Update.clicked.connect(self.update)
 
@@ -137,6 +138,13 @@ class UserUpdateWindow(QtWidgets.QWidget, Ui_UserUpdate):
 
         python = sys.executable
         os.execl(python, python, argument)
+
+    def back(self):
+        if self.parent.fullscreen:
+            self.parent.showFullScreen()
+        else:
+            self.parent.show()
+        self.close()
 
     #  #Script to edit the bashscript on the raspberry pi if necessary.    
     # def editbashscript(self, new_version):

@@ -28,22 +28,32 @@ class SettingsWindow(QtWidgets.QWidget, Ui_SettingsWindow):
         self.Server.clicked.connect(self.serverpop)
         self.UserUpdate.clicked.connect(self.userupdatepop)
         # self.Wifi.clicked.connect(self.wifipop)
-        self.Back.clicked.connect(self.close)
+        self.Back.clicked.connect(self.back)
 
     def serialpop(self):
         if self.fullscreen:
             self.serial_pop.showFullScreen()
         else:
             self.serial_pop.show()
+        self.close()
 
     def serverpop(self):
         if self.fullscreen:
             self.server_pop.showFullScreen()
         else:
             self.server_pop.show()
+        self.close()
 
     def userupdatepop(self):
         if self.fullscreen:
             self.userupdate_pop.showFullScreen()
         else:
             self.userupdate_pop.show()
+        self.close()
+
+    def back(self):
+        if self.fullscreen:
+            self.parent.showFullScreen()
+        else:
+            self.parent.show()
+        self.close()

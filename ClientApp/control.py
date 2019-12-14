@@ -59,7 +59,7 @@ class ControlWindow(QtWidgets.QWidget, Ui_ControlWindow):
         self.HomeXY.clicked.connect(self.homexy)
         self.HomeZ.clicked.connect(self.homez)
         self.HomeAll.clicked.connect(self.homeall)
-        self.Back.clicked.connect(self.close)
+        self.Back.clicked.connect(self.back)
         self.DisableMotors.clicked.connect(self.disablemotors)
 
     def updateposition(self):
@@ -112,3 +112,10 @@ class ControlWindow(QtWidgets.QWidget, Ui_ControlWindow):
 # This line was, prior to converting for python 3:
 #		label.format = label.format.encode("utf-8").split("-----")
         label.format = label.format.split("-----")
+
+    def back(self):
+        if self.parent.fullscreen:
+            self.parent.showFullScreen()
+        else:
+            self.parent.show()
+        self.close()

@@ -24,7 +24,7 @@ class PrintWindow(QtWidgets.QWidget, Ui_PrintWindow):
         else:
             self.fullscreen = False
 
-        self.Back.clicked.connect(self.close)
+        self.Back.clicked.connect(self.back)
         self.ScanSD.clicked.connect(self.scansd)
         self.StartPrint.clicked.connect(self.startprint)
         self.ActivePrint.clicked.connect(self.activeprintpop)
@@ -261,3 +261,10 @@ class PrintWindow(QtWidgets.QWidget, Ui_PrintWindow):
 
     def itemDoubleClicked(self):
         self.open_subdir()
+
+    def back(self):
+        if self.fullscreen:
+            self.parent.showFullScreen()
+        else:
+            self.parent.show()
+        self.close()
