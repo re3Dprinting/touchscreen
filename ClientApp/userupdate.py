@@ -1,8 +1,9 @@
 #!/usr/bin/python3.4
 
 from builtins import str
-from qt.userupdatewindow import *
+from qt.userupdatewindow import Ui_UserUpdate
 from PyQt5.QtCore import Qt
+from PyQt5 import QtCore, QtGui, QtWidgets
 # from github import Github
 from git import Repo
 from git import Git
@@ -20,6 +21,7 @@ class UserUpdateWindow(QtWidgets.QWidget, Ui_UserUpdate):
 
         self.personality = personality
         self.app = QtWidgets.QApplication.instance()
+        self.new_version_avalible = False
 
         self.current_path = Path(__file__).parents
 
@@ -71,22 +73,22 @@ class UserUpdateWindow(QtWidgets.QWidget, Ui_UserUpdate):
 
         self.current_tags = []
         for t in tags:
-            
-            if("release" in t.name): #and not self.app.applicationVersion() in t.name #<--- Dont show current version
+            if("release" == t.name.split("/")[0]): #and not self.app.applicationVersion() in t.name #<--- Dont show current version
                 self.current_tags.append(t)
                 tag_date = time.strftime('%I:%M%p %m/%d/%y', time.localtime(t.commit.committed_date))
                 rowpos = self.SoftwareList.rowCount()
                 self.SoftwareList.insertRow(rowpos)
                 version = QtWidgets.QTableWidgetItem(t.name.strip("release/"))
+                self.checkagainstcurrent(t.name.strip("release/"))
                 version.setFlags(Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
 
                 date = QtWidgets.QTableWidgetItem(tag_date)
                 date.setFlags(Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
                 self.SoftwareList.setItem(rowpos,0,version)
                 self.SoftwareList.setItem(rowpos,1,date)
-        if(self.SoftwareList.rowCount() == 0): 
-            self.print_debug("No software versions found. The server might be down, please try again later.")
-
+        if(self.SoftwareList.rowCount() == 0): self.print_debug("No software versions found. The server might be down, please try again later.")
+        elif(self.new_version_avalible):
+            print("new software version avalible!")
     def show_tag_message(self):
         item = self.SoftwareList.currentRow()
         selected = self.SoftwareList.item(item, 0)
@@ -112,10 +114,18 @@ class UserUpdateWindow(QtWidgets.QWidget, Ui_UserUpdate):
         else:
             self.print_debug("Select a Version on list")
 
+    def checkagainstcurrent(self, version):
+        current_v = self.app.applicationVersion().split(".")
+        given_v = version.split(".")
+        for i in range(len(current_v)):
+            if(int(current_v[i]) < int(given_v[i])):
+                self.new_version_avalible = True
+                return
+
+
     def print_debug(self, text):
         self.DebugOutput.append(text)
     
-
     def restart_program(self, argument):
         # Restarts the current program, with file objects and descriptors cleanup
         try:
