@@ -5,7 +5,7 @@ from qt.userupdatewindow import Ui_UserUpdate
 from PyQt5.QtCore import Qt
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-from notificationwindow import Notification
+from notification import Notification
 from git import Repo
 from git import Git
 import os
@@ -91,8 +91,6 @@ class UserUpdateWindow(QtWidgets.QWidget, Ui_UserUpdate):
         if(self.SoftwareList.rowCount() == 0): self.print_debug("No software versions found. The server might be down, please try again later.")
         elif(self.new_version_avalible):
             print("new software version avalible!")
-            self.notification = Notification(self)
-            self.notification.show()
 
     def show_tag_message(self):
         item = self.SoftwareList.currentRow()
