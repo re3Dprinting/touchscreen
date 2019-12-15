@@ -7,26 +7,21 @@ class Notification(QtWidgets.QWidget, Ui_NotificationWindow):
 		super(Notification, self).__init__()
 		self.setupUi(self)
 		self.setWindowFlags(QtCore.Qt.Tool | QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.FramelessWindowHint)
-		parent_rect = parent.rect()
-		# print(parent.geometry().width())
-		notification_width = parent.geometry().width() *3/5
-		notification_height = notification_width/6
-		self.resize(notification_width, notification_height)
+		self.parent = parent
+		self.Close.clicked.connect(self.close)
 
-		# self.NotificationWindow.resize()
+	def show(self):
+		if(self.parent != None): 
+			parent_rect = self.parent.rect()
+			notification_width = self.parent.geometry().width() *3/5
+			notification_height = notification_width/6
+			self.resize(notification_width, notification_height)
 
-		print(parent_rect.left(), parent_rect.top())
-		print(self.mapToGlobal(parent.pos()) )
+			tmp = self.parent.geometry().width()/5
 
-
-		tmp = parent.geometry().width()/5
-		notification_pos = QtCore.QPoint(parent_rect.left() + tmp, parent_rect.top()-self.geometry().height()+5)
-		notification_pos = parent.mapToGlobal(notification_pos)
-		# print(parent_rect.left() + tmp, parent_rect.top()-self.geometry().height()+5)
-		# print(notification_pos)
-		self.move(notification_pos)
-		print(self.mapToGlobal(self.pos()) )
-		# parent_width = parent.width()
-		# parent_length = parent.length()
+			notification_pos = QtCore.QPoint(parent_rect.left() + tmp, parent_rect.bottom() - self.geometry().height())
+			notification_pos = self.parent.mapToGlobal(notification_pos)
+			self.move(notification_pos)
+		super(Notification,self).show()
 
         

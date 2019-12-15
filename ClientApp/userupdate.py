@@ -93,10 +93,8 @@ class UserUpdateWindow(BaseWindow, Ui_UserUpdate):
         if(self.SoftwareList.rowCount() == 0): self.print_debug("No software versions found. The server might be down, please try again later.")
         elif(self.new_version_avalible):
             print("new software version avalible!")
-<<<<<<< HEAD
+            return Notification()
 
-=======
->>>>>>> bugfix/single-screen
     def show_tag_message(self):
         item = self.SoftwareList.currentRow()
         selected = self.SoftwareList.item(item, 0)
@@ -131,11 +129,6 @@ class UserUpdateWindow(BaseWindow, Ui_UserUpdate):
                 return
                 
     def print_debug(self, text):
-<<<<<<< HEAD
-        self.DebugOutput.moveCursor(QtGui.QTextCursor.Start)
-        self.DebugOutput.ensureCursorVisible()
-=======
->>>>>>> bugfix/single-screen
         self.DebugOutput.append(text)
     
 

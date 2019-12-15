@@ -23,6 +23,7 @@ class Ui_NotificationWindow(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Text.sizePolicy().hasHeightForWidth())
         self.Text.setSizePolicy(sizePolicy)
+        self.Text.setAlignment(QtCore.Qt.AlignCenter)
         self.Text.setObjectName("Text")
         self.horizontalLayout.addWidget(self.Text)
         self.Close = QtWidgets.QPushButton(NotificationWindow)
