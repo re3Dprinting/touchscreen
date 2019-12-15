@@ -1,23 +1,17 @@
 from builtins import str
+from basewindow import BaseWindow
 from qt.controlwindow import *
-from PyQt5.QtCore import Qt
 from axis import *
 
 increments_str = ["01", "1", "10", "100"]
 increments_int = ['0.1', '1', '10', '100']
 
 
-class ControlWindow(QtWidgets.QWidget, Ui_ControlWindow):
+class ControlWindow(BaseWindow, Ui_ControlWindow):
     def __init__(self, serial, parent=None):
-        super(ControlWindow, self).__init__()
+        super(ControlWindow, self).__init__(parent)
         self.setupUi(self)
 
-        # if parent.fullscreen: self.fullscreen = True
-        # else: self.fullscreen = False
-        # if self.fullscreen:
-        # 	self.setWindowState(self.windowState() | Qt.WindowFullScreen)
-
-        self.parent = parent
         self.serial = serial
 
         # self.timer.timeout.connect(lambda: self.button_event_check())
@@ -112,10 +106,3 @@ class ControlWindow(QtWidgets.QWidget, Ui_ControlWindow):
 # This line was, prior to converting for python 3:
 #		label.format = label.format.encode("utf-8").split("-----")
         label.format = label.format.split("-----")
-
-    def back(self):
-        if self.parent.fullscreen:
-            self.parent.showFullScreen()
-        else:
-            self.parent.show()
-        self.close()

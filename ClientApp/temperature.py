@@ -1,20 +1,21 @@
 from builtins import str
+from basewindow import BaseWindow
 from qt.temperaturewindow import *
 from notactiveprint_wid import *
 from activeprint_wid import *
-from PyQt5.QtCore import Qt
-import PyQt5.QtCore
 from event_hand import *
 from preheatmaterial import *
 from periph import *
+
+from PyQt5 import QtCore, QtGui, QtWidgets
 
 mats = ['m1', 'm2', 'm3']
 periphs = ['e1', 'e2', 'bed', 'all']
 
 
-class TemperatureWindow(QtWidgets.QWidget, Ui_TemperatureWindow):
+class TemperatureWindow(BaseWindow, Ui_TemperatureWindow):
     def __init__(self, serial, event_handler, parent=None):
-        super(TemperatureWindow, self).__init__()
+        super(TemperatureWindow, self).__init__(parent)
         self.setupUi(self)
 
         # if parent.fullscreen: self.fullscreen = True
@@ -23,7 +24,6 @@ class TemperatureWindow(QtWidgets.QWidget, Ui_TemperatureWindow):
         # 	self.setWindowState(self.windowState() | Qt.WindowFullScreen)
 
         self.serial = serial
-        self.parent = parent
         self.event_handler = event_handler
 
         self.ActivePrintWid = ActivePrintWidget(self)
@@ -287,7 +287,3 @@ class TemperatureWindow(QtWidgets.QWidget, Ui_TemperatureWindow):
     def setbuttonstyle(self, obj):
         obj.setStyleSheet(
             "QPushButton{background: rgba(255,255,255,0); outline: none; border: none;}")
-    
-    def back(self):
-        self.parent.show()
-        self.close()

@@ -1,11 +1,12 @@
 from builtins import str
 from qt.serialwindow import *
+from basewindow import BaseWindow
 from PyQt5.QtCore import Qt
 
 
-class SerialWindow(QtWidgets.QWidget, Ui_SerialWindow):
+class SerialWindow(BaseWindow, Ui_SerialWindow):
     def __init__(self, serial, event_handler, parent=None):
-        super(SerialWindow, self).__init__()
+        super(SerialWindow, self).__init__(parent)
         self.setupUi(self)
         self.serial = serial
         self.parent = parent
@@ -76,9 +77,3 @@ class SerialWindow(QtWidgets.QWidget, Ui_SerialWindow):
             if '/dev/ttyUSB' in p.device:
                 self.COMlist.selectRow(rowpos)
                 return True
-    def back(self):
-        if self.parent.fullscreen:
-            self.parent.showFullScreen()
-        else:
-            self.parent.show()
-        self.close()

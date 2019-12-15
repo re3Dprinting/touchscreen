@@ -1,4 +1,5 @@
 from __future__ import division
+from basewindow import BaseWindow
 from builtins import str
 from past.utils import old_div
 from PyQt5.QtCore import Qt
@@ -7,22 +8,16 @@ from fsutils.subfilesystem import *
 from fsutils.file import *
 
 
-class PrintWindow(QtWidgets.QWidget, Ui_PrintWindow):
+class PrintWindow(BaseWindow, Ui_PrintWindow):
     def __init__(self, serial, temp_pop, personality, parent=None):
-        super(PrintWindow, self).__init__()
+        super(PrintWindow, self).__init__(parent)
         self.setupUi(self)
         self.serial = serial
         self.serial.data.updatefiles.connect(self.updatefiles)
         self.temp_pop = temp_pop
         self.personality = personality
-        self.parent = parent
 
         self.item_stack = []
-
-        if parent.fullscreen:
-            self.fullscreen = True
-        else:
-            self.fullscreen = False
 
         self.Back.clicked.connect(self.back)
         self.ScanSD.clicked.connect(self.scansd)
@@ -262,9 +257,3 @@ class PrintWindow(QtWidgets.QWidget, Ui_PrintWindow):
     def itemDoubleClicked(self):
         self.open_subdir()
 
-    def back(self):
-        if self.fullscreen:
-            self.parent.showFullScreen()
-        else:
-            self.parent.show()
-        self.close()

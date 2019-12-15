@@ -1,6 +1,7 @@
 from builtins import str
 from qt.serverwindow import *
-from PyQt5.QtCore import Qt
+from basewindow import BaseWindow
+from PyQt5 import QtCore, QtGui, QtWidgets
 import os
 import time
 
@@ -29,9 +30,9 @@ class serverping(QtCore.QThread):
         self.wait()
 
 
-class ServerWindow(QtWidgets.QWidget, Ui_ServerWindow):
+class ServerWindow(BaseWindow, Ui_ServerWindow):
     def __init__(self, client, parent=None):
-        super(ServerWindow, self).__init__()
+        super(ServerWindow, self).__init__(parent)
         self.client = client
         self.setupUi(self)
 
@@ -85,9 +86,3 @@ class ServerWindow(QtWidgets.QWidget, Ui_ServerWindow):
         self.ServerOutput.ensureCursorVisible()
         self.ServerOutput.append(text)
         
-    def back(self):
-        if self.parent.fullscreen:
-            self.parent.showFullScreen()
-        else:
-            self.parent.show()
-        self.close()

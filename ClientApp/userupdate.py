@@ -2,6 +2,7 @@
 
 from builtins import str
 from qt.userupdatewindow import Ui_UserUpdate
+from basewindow import BaseWindow
 from PyQt5.QtCore import Qt
 from PyQt5 import QtCore, QtGui, QtWidgets
 # from github import Github
@@ -14,9 +15,9 @@ import time
 import sys
 
 
-class UserUpdateWindow(QtWidgets.QWidget, Ui_UserUpdate):
+class UserUpdateWindow(BaseWindow, Ui_UserUpdate):
     def __init__(self, personality, parent=None):
-        super(UserUpdateWindow, self).__init__()
+        super(UserUpdateWindow, self).__init__(parent)
         self.setupUi(self)
         self.parent = parent
 
@@ -139,12 +140,6 @@ class UserUpdateWindow(QtWidgets.QWidget, Ui_UserUpdate):
         python = sys.executable
         os.execl(python, python, argument)
 
-    def back(self):
-        if self.parent.fullscreen:
-            self.parent.showFullScreen()
-        else:
-            self.parent.show()
-        self.close()
 
     #  #Script to edit the bashscript on the raspberry pi if necessary.    
     # def editbashscript(self, new_version):

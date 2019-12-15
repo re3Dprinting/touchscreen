@@ -1,16 +1,14 @@
 from qt.touchdisplaywindow import *
-from PyQt5.QtCore import Qt
 from control import *
 from temperature import *
 from settings import *
 from printwindow import *
 from userupdate import *
-import sys
 
 
-class TouchDisplay(QtWidgets.QWidget, Ui_TouchDisplay):
+class TouchDisplay(BaseWindow, Ui_TouchDisplay):
     def __init__(self, client, serial, personality, parent=None):
-        super(TouchDisplay, self).__init__()
+        super(TouchDisplay, self).__init__(parent)
         self.personality = personality
         
         self.setupUi(self)
