@@ -1,23 +1,17 @@
 from builtins import str
+from basewindow import BaseWindow
 from qt.controlwindow import *
-from PyQt5.QtCore import Qt
 from axis import *
 
 increments_str = ["01", "1", "10", "100"]
 increments_int = ['0.1', '1', '10', '100']
 
 
-class ControlWindow(QtWidgets.QWidget, Ui_ControlWindow):
+class ControlWindow(BaseWindow, Ui_ControlWindow):
     def __init__(self, serial, parent=None):
-        super(ControlWindow, self).__init__()
+        super(ControlWindow, self).__init__(parent)
         self.setupUi(self)
 
-        # if parent.fullscreen: self.fullscreen = True
-        # else: self.fullscreen = False
-        # if self.fullscreen:
-        # 	self.setWindowState(self.windowState() | Qt.WindowFullScreen)
-
-        self.parent = parent
         self.serial = serial
 
         # self.timer.timeout.connect(lambda: self.button_event_check())
@@ -59,7 +53,7 @@ class ControlWindow(QtWidgets.QWidget, Ui_ControlWindow):
         self.HomeXY.clicked.connect(self.homexy)
         self.HomeZ.clicked.connect(self.homez)
         self.HomeAll.clicked.connect(self.homeall)
-        self.Back.clicked.connect(self.close)
+        self.Back.clicked.connect(self.back)
         self.DisableMotors.clicked.connect(self.disablemotors)
 
     def updateposition(self):

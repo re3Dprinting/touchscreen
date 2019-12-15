@@ -1,17 +1,18 @@
 from qt.touchdisplaywindow import *
-from PyQt5.QtCore import Qt
 from control import *
 from temperature import *
 from settings import *
 from printwindow import *
 from userupdate import *
+
 from notification import Notification
 import sys
 
 
-class TouchDisplay(QtWidgets.QWidget, Ui_TouchDisplay):
+
+class TouchDisplay(BaseWindow, Ui_TouchDisplay):
     def __init__(self, client, serial, personality, parent=None):
-        super(TouchDisplay, self).__init__()
+        super(TouchDisplay, self).__init__(parent)
         self.personality = personality
         
         self.setupUi(self)
@@ -66,24 +67,28 @@ class TouchDisplay(QtWidgets.QWidget, Ui_TouchDisplay):
             self.con_pop.showFullScreen()
         else:
             self.con_pop.show()
+        self.close()
 
     def temperaturepop(self):
         if self.fullscreen:
             self.temp_pop.showFullScreen()
         else:
             self.temp_pop.show()
+        self.close()
 
     def settingspop(self):
         if self.fullscreen:
             self.set_pop.showFullScreen()
         else:
             self.set_pop.show()
+        self.close()
 
     def printpop(self):
         if self.fullscreen:
             self.print_pop.showFullScreen()
         else:
             self.print_pop.show()
+        self.close()
 
     def setbuttonstyle(self, obj):
         obj.setStyleSheet(

@@ -1,13 +1,15 @@
 from builtins import str
 from qt.serialwindow import *
+from basewindow import BaseWindow
 from PyQt5.QtCore import Qt
 
 
-class SerialWindow(QtWidgets.QWidget, Ui_SerialWindow):
+class SerialWindow(BaseWindow, Ui_SerialWindow):
     def __init__(self, serial, event_handler, parent=None):
-        super(SerialWindow, self).__init__()
+        super(SerialWindow, self).__init__(parent)
         self.setupUi(self)
         self.serial = serial
+        self.parent = parent
         self.event_handler = event_handler
         self.event_handler.reconnect_serial.connect(self.reconnect_serial)
         self.serial.data.checkserial_msg.connect(self.checkserial_msg)
@@ -25,7 +27,7 @@ class SerialWindow(QtWidgets.QWidget, Ui_SerialWindow):
         self.scan_serial()
         self.connect_serial()
 
-        self.Back.clicked.connect(self.close)
+        self.Back.clicked.connect(self.back)
         self.ScanSerial.clicked.connect(self.scan_serial)
         self.ConnectSerial.clicked.connect(self.connect_serial)
         self.DisconnectSerial.clicked.connect(self.disconnect_serial)

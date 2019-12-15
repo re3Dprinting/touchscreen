@@ -2,10 +2,12 @@
 
 from builtins import str
 from qt.userupdatewindow import Ui_UserUpdate
+from notification import Notification
+from basewindow import BaseWindow
+
 from PyQt5.QtCore import Qt
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-from notification import Notification
 from git import Repo
 from git import Git
 import os
@@ -15,9 +17,9 @@ import time
 import sys
 
 
-class UserUpdateWindow(QtWidgets.QWidget, Ui_UserUpdate):
+class UserUpdateWindow(BaseWindow, Ui_UserUpdate):
     def __init__(self, personality, parent=None):
-        super(UserUpdateWindow, self).__init__()
+        super(UserUpdateWindow, self).__init__(parent)
         self.setupUi(self)
         self.parent = parent
 
@@ -58,7 +60,7 @@ class UserUpdateWindow(QtWidgets.QWidget, Ui_UserUpdate):
         temp = self.CurrentVersion.text()+ " " + self.app.applicationVersion()
         self.CurrentVersion.setText(temp)
 
-        self.Back.clicked.connect(self.close)
+        self.Back.clicked.connect(self.back)
         self.CheckUpdate.clicked.connect(self.checkupdate)
         self.Update.clicked.connect(self.update)
 
@@ -91,7 +93,10 @@ class UserUpdateWindow(QtWidgets.QWidget, Ui_UserUpdate):
         if(self.SoftwareList.rowCount() == 0): self.print_debug("No software versions found. The server might be down, please try again later.")
         elif(self.new_version_avalible):
             print("new software version avalible!")
+<<<<<<< HEAD
 
+=======
+>>>>>>> bugfix/single-screen
     def show_tag_message(self):
         item = self.SoftwareList.currentRow()
         selected = self.SoftwareList.item(item, 0)
@@ -102,6 +107,8 @@ class UserUpdateWindow(QtWidgets.QWidget, Ui_UserUpdate):
             for tag in self.current_tags:
                 if(version == tag.name):
                     self.print_debug(tag.tag.message)
+            self.DebugOutput.moveCursor(QtGui.QTextCursor.Start)
+            self.DebugOutput.ensureCursorVisible()
 
     def update(self):
         software = self.SoftwareList.currentRow()
@@ -124,9 +131,13 @@ class UserUpdateWindow(QtWidgets.QWidget, Ui_UserUpdate):
                 return
                 
     def print_debug(self, text):
+<<<<<<< HEAD
         self.DebugOutput.moveCursor(QtGui.QTextCursor.Start)
         self.DebugOutput.ensureCursorVisible()
+=======
+>>>>>>> bugfix/single-screen
         self.DebugOutput.append(text)
+    
 
     def restart_program(self, argument):
         # Restarts the current program, with file objects and descriptors cleanup
