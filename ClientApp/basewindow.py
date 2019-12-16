@@ -7,15 +7,13 @@ class BaseWindow(QtWidgets.QWidget):
 		self.fullscreen = False
 		self.parent = parent
 		self.notification = None
-
-		if(parent != None):
-			if(self.parent.fullscreen):self.fullscreen = True
+		self.setWindowFlags(self.windowFlags() | QtCore.Qt.FramelessWindowHint)
+		if(parent != None and self.parent.fullscreen):
+			self.fullscreen = True
+			self.setWindowState(self.windowState() | QtCore.Qt.WindowFullScreen)
 
 	def back(self):
-		if self.fullscreen:
-			self.parent.showFullScreen()
-		else:
-			self.parent.show()
+		self.parent.show()
 		self.close()
 
 	def show(self):
@@ -23,8 +21,11 @@ class BaseWindow(QtWidgets.QWidget):
 		super(BaseWindow,self).show()
 		
 		if(self.parent != None):
-			if(self.parent.notification!=None):
+			if(self.parent.notification != None):
 				self.notification = self.parent.notification
+
 		if(self.notification != None):
 			self.notification.parent = self
 			self.notification.show()
+			self.notification.activateWindow()
+			# print(self.notification.hasFocus())

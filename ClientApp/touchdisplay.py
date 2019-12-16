@@ -63,31 +63,19 @@ class TouchDisplay(BaseWindow, Ui_TouchDisplay):
         self.Print.clicked.connect(self.printpop)
 
     def controlpop(self):
-        if self.fullscreen:
-            self.con_pop.showFullScreen()
-        else:
-            self.con_pop.show()
+        self.con_pop.show()
         self.close()
 
     def temperaturepop(self):
-        if self.fullscreen:
-            self.temp_pop.showFullScreen()
-        else:
-            self.temp_pop.show()
+        self.temp_pop.show()
         self.close()
 
     def settingspop(self):
-        if self.fullscreen:
-            self.set_pop.showFullScreen()
-        else:
-            self.set_pop.show()
+        self.set_pop.show()
         self.close()
 
     def printpop(self):
-        if self.fullscreen:
-            self.print_pop.showFullScreen()
-        else:
-            self.print_pop.show()
+        self.print_pop.show()
         self.close()
 
     def setbuttonstyle(self, obj):

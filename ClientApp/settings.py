@@ -25,22 +25,13 @@ class SettingsWindow(BaseWindow, Ui_SettingsWindow):
         self.Back.clicked.connect(self.back)
 
     def serialpop(self):
-        if self.fullscreen:
-            self.serial_pop.showFullScreen()
-        else:
-            self.serial_pop.show()
+        self.serial_pop.show()
         self.close()
 
     def serverpop(self):
-        if self.fullscreen:
-            self.server_pop.showFullScreen()
-        else:
-            self.server_pop.show()
+        self.server_pop.show()
         self.close()
 
     def userupdatepop(self):
-        if self.fullscreen:
-            self.userupdate_pop.showFullScreen()
-        else:
-            self.userupdate_pop.show()
+        self.userupdate_pop.show()
         self.close()

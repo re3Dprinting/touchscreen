@@ -6,7 +6,7 @@ class Notification(QtWidgets.QWidget, Ui_NotificationWindow):
 	def __init__(self, parent=None):
 		super(Notification, self).__init__()
 		self.setupUi(self)
-		self.setWindowFlags(QtCore.Qt.Tool | QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.FramelessWindowHint)
+		self.setWindowFlags(self.windowFlags() | QtCore.Qt.Tool | QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.FramelessWindowHint)
 		self.parent = parent
 		self.Close.clicked.connect(self.close)
 
@@ -22,6 +22,7 @@ class Notification(QtWidgets.QWidget, Ui_NotificationWindow):
 			notification_pos = QtCore.QPoint(parent_rect.left() + tmp, parent_rect.bottom() - self.geometry().height())
 			notification_pos = self.parent.mapToGlobal(notification_pos)
 			self.move(notification_pos)
+		# super(Notification,self).activateWindow()
 		super(Notification,self).show()
 
         
