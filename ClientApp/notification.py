@@ -3,12 +3,16 @@ from qt.notificationwindow import Ui_NotificationWindow
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 class Notification(QtWidgets.QWidget, Ui_NotificationWindow):
-	def __init__(self, parent=None):
+	def __init__(self, text, parent=None):
 		super(Notification, self).__init__()
 		self.setupUi(self)
-		self.setWindowFlags(self.windowFlags() | QtCore.Qt.Tool | QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.FramelessWindowHint)
+		self.setWindowFlags(self.windowFlags() |  QtCore.Qt.X11BypassWindowManagerHint | QtCore.Qt.Tool | QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.FramelessWindowHint)
+		
+		self.Text.setText(text)
 		self.parent = parent
 		self.Close.clicked.connect(self.close)
+
+		
 
 	def show(self):
 		if(self.parent != None): 
@@ -25,4 +29,8 @@ class Notification(QtWidgets.QWidget, Ui_NotificationWindow):
 		# super(Notification,self).activateWindow()
 		super(Notification,self).show()
 
-        
+	def close(self):
+		self.parent.notification = None
+		self.parent = None
+		super(Notification,self).close()
+

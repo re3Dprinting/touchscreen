@@ -42,7 +42,7 @@ class Ui_NotificationWindow(object):
 
     def retranslateUi(self, NotificationWindow):
         _translate = QtCore.QCoreApplication.translate
-        NotificationWindow.setWindowTitle(_translate("NotificationWindow", "TemperatureWindow"))
+        NotificationWindow.setWindowTitle(_translate("NotificationWindow", "Notification"))
         self.Text.setText(_translate("NotificationWindow", "A new Software Version is avalible!"))
         self.Close.setText(_translate("NotificationWindow", "X"))
 

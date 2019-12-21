@@ -92,8 +92,7 @@ class UserUpdateWindow(BaseWindow, Ui_UserUpdate):
                 self.SoftwareList.setItem(rowpos,1,date)
         if(self.SoftwareList.rowCount() == 0): self.print_debug("No software versions found. The server might be down, please try again later.")
         elif(self.new_version_avalible):
-            print("new software version avalible!")
-            return Notification()
+            return Notification("A new software version is available!\nTo update, go to Settings > Software Update")
 
     def show_tag_message(self):
         item = self.SoftwareList.currentRow()

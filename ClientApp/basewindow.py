@@ -19,13 +19,13 @@ class BaseWindow(QtWidgets.QWidget):
 	def show(self):
 		self.move(QtWidgets.qApp.desktop().availableGeometry().center() - self.rect().center())
 		super(BaseWindow,self).show()
-		
-		if(self.parent != None):
-			if(self.parent.notification != None):
-				self.notification = self.parent.notification
 
+		#Display notification if there is a notification object present AND
+		#If the window is the main window or if the notificaiton is not visible. 
 		if(self.notification != None):
 			self.notification.parent = self
 			self.notification.show()
 			self.notification.activateWindow()
-			# print(self.notification.hasFocus())
+			# print(self.notification.visibleRegion().isEmpty())
+
+			
