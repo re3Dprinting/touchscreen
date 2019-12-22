@@ -2,6 +2,8 @@
 from qt.notificationwindow import Ui_NotificationWindow
 from PyQt5 import QtCore, QtGui, QtWidgets
 
+
+#Universal Notification class that can be used for any messages that need to be descritely shown to the user.
 class Notification(QtWidgets.QWidget, Ui_NotificationWindow):
 	def __init__(self, text, parent=None):
 		super(Notification, self).__init__()
@@ -26,7 +28,6 @@ class Notification(QtWidgets.QWidget, Ui_NotificationWindow):
 			notification_pos = QtCore.QPoint(parent_rect.left() + tmp, parent_rect.bottom() - self.geometry().height())
 			notification_pos = self.parent.mapToGlobal(notification_pos)
 			self.move(notification_pos)
-		# super(Notification,self).activateWindow()
 		super(Notification,self).show()
 
 	def close(self):

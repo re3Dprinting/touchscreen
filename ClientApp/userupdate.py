@@ -94,6 +94,7 @@ class UserUpdateWindow(BaseWindow, Ui_UserUpdate):
         elif(self.new_version_avalible):
             return Notification("A new software version is available!\nTo update, go to Settings > Software Update")
 
+#   Show tag message called when a new item is selected in the software version table. 
     def show_tag_message(self):
         item = self.SoftwareList.currentRow()
         selected = self.SoftwareList.item(item, 0)
@@ -107,6 +108,8 @@ class UserUpdateWindow(BaseWindow, Ui_UserUpdate):
             self.DebugOutput.moveCursor(QtGui.QTextCursor.Start)
             self.DebugOutput.ensureCursorVisible()
 
+#   Update function called by clicking the Update/Rollback button
+#   Uses psutil to kill the current process, then reexecutes the original python command. 
     def update(self):
         software = self.SoftwareList.currentRow()
         selected_version = self.SoftwareList.item(software, 0)
@@ -143,25 +146,3 @@ class UserUpdateWindow(BaseWindow, Ui_UserUpdate):
         python = sys.executable
         os.execl(python, python, argument)
 
-
-    #  #Script to edit the bashscript on the raspberry pi if necessary.    
-    # def editbashscript(self, new_version):
-    #     script_path = Path(__file__).parents[2].__str__()
-    #     script_file = "/StartClientApp.sh"
-    #     # print(script_path+script_file+ os.path.isfile(script_path+ script_file))
-    #     if not os.path.isfile(script_path+ script_file):
-    #         self.print_debug("Cannot locate script path: "+ script_path+ script_file)
-    #         return False
-    #     else:
-    #         for line in open(script_path+script_file):
-    #             tmp = line.split(" ")
-    #             if("cd" in tmp): 
-    #                 tmp1 = tmp[1].split("/")
-    #                 i = tmp1.index("DashboardApp_"+ self.app.applicationVersion)
-    #                 tmp1[i] = "DashboardApp_"+ new_version
-    #                 tmp[1] = tmp1
-    #                 line = " ".join(tmp)
-    #             if("python" in tmp):
-    #                 tmp[0] = "python3"
-    #                 line = " ".join(tmp)
-    #         return True

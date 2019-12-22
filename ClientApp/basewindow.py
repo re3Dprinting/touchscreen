@@ -1,6 +1,9 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
+#BaseWindow that is inherited from all windows. 
+#Overrides basic functions like close and show
+#Implements Fullscreen flags, cleaning up code in the individual windows
 class BaseWindow(QtWidgets.QWidget):
 	def __init__(self, parent = None):
 		super(BaseWindow,self).__init__()
@@ -25,7 +28,7 @@ class BaseWindow(QtWidgets.QWidget):
 		if(self.notification != None):
 			self.notification.parent = self
 			self.notification.show()
-			self.notification.activateWindow()
+			# self.notification.activateWindow()
 			# print(self.notification.visibleRegion().isEmpty())
 
 			
