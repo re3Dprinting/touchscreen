@@ -20,7 +20,7 @@ from .temperature import TemperatureWindow
 from .qt.touchdisplaywindow import Ui_TouchDisplay
 
 class TouchDisplay(QtWidgets.QWidget, Ui_TouchDisplay):
-    def __init__(self, client, serial, personality, parent=None):
+    def __init__(self, client, printer_if, personality, parent=None):
         super(TouchDisplay, self).__init__()
         self.personality = personality
         
@@ -32,7 +32,7 @@ class TouchDisplay(QtWidgets.QWidget, Ui_TouchDisplay):
             self.setWindowState(self.windowState() | Qt.WindowFullScreen)
 
         self.client = client
-        self.serial = serial
+        self.printer_if = printer_if
 
         self.setbuttonstyle(self.Print)
         self.setbuttonstyle(self.Settings)
@@ -40,19 +40,19 @@ class TouchDisplay(QtWidgets.QWidget, Ui_TouchDisplay):
         self.setbuttonstyle(self.Temperature)
 
 #       Event handler object that handles temperature materials, flowrate, etc.
-        self.event_handler = event_handler(self.serial)
+        self.event_handler = event_handler(self.printer_if)
 
-        self.set_pop = SettingsWindow(self.client, self.serial, self)
+        self.set_pop = SettingsWindow(self.client, self.printer_if, self)
         self.server_pop = ServerWindow(self.client, self.set_pop)
         self.serial_pop = SerialWindow(
-            self.serial, self.event_handler, self.set_pop)
+            self.printer_if, self.event_handler, self.set_pop)
         self.set_pop.serial_pop = self.serial_pop
         self.set_pop.server_pop = self.server_pop
 
         self.temp_pop = TemperatureWindow(
-            self.serial, self.event_handler, self)
-        self.con_pop = ControlWindow(self.serial, self)
-        self.print_pop = PrintWindow(self.serial, self.temp_pop, self.personality, self)
+            self.printer_if, self.event_handler, self)
+        self.con_pop = ControlWindow(self.printer_if, self)
+        self.print_pop = PrintWindow(self.printer_if, self.temp_pop, self.personality, self)
 
         self.event_handler.tempwindow = self.temp_pop
         self.event_handler.serialwindow = self.serial_pop

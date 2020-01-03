@@ -35,9 +35,9 @@ class event_handler(QtCore.QThread):
             self.sendtempcount += 1
             self.rescanserial_count += 1
             if self.sendtempcount >= 40:
-                self.tempwindow.updatesettemperatures()
+                # self.tempwindow.updatesettemperatures()
                 self.sendtempcount = 0
-            self.tempwindow.updatetemperatures()
+            # self.tempwindow.updatetemperatures()
             self.flashbedicon()
 
             if self.rescanserial_count >= 20:

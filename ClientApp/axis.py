@@ -82,12 +82,22 @@ class Axis(object):
         if inc == None:
             inc = self.inc
         # self.parent.serial.send_serial('G91')
+        self.parent.printer_if.relative_positioning();
+        movement_command = 'G1 ' + self.Ax + str(inc) + ' F' + self.feedrate
+        print("Sending <%s>" % (movement_command))
+        self.parent.printer_if.commands(movement_command)
+
         # self.parent.serial.send_serial(
         #     'G1 ' + self.Ax + str(inc) + ' F' + self.feedrate)
 
     def moveneg(self, inc=None):
         if inc == None:
             inc = self.inc
+        self.parent.printer_if.relative_positioning();
+        movement_command = 'G1 ' + self.Ax + "-" + str(inc) + ' F' + self.feedrate
+        print("Sending <%s>" % (movement_command))
+        self.parent.printer_if.commands(movement_command)
+
         # self.parent.serial.send_serial('G91')
         # self.parent.serial.send_serial(
         #     'G1 ' + self.Ax + '-' + str(inc) + ' F' + self.feedrate)

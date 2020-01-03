@@ -7,9 +7,15 @@ from .fsutils.subfilesystem import *
 from .fsutils.file import *
 
 class PrintWindow(QtWidgets.QWidget, Ui_PrintWindow):
-    def __init__(self, serial, temp_pop, personality, parent=None):
+    def __init__(self, printer_if, temp_pop, personality, parent=None):
         super(PrintWindow, self).__init__()
         self.setupUi(self)
+        self.printer_if = printer_if
+
+        self.printer_if.set_file_list_update_callback(self.sd_file_list_update_callback)
+        # print("Setting print finished callback")
+        self.printer_if.set_print_finished_callback(self.print_finished_callback)
+        
         # self.serial = serial
         # self.serial.data.updatefiles.connect(self.updatefiles)
         self.temp_pop = temp_pop
@@ -95,7 +101,7 @@ class PrintWindow(QtWidgets.QWidget, Ui_PrintWindow):
         self.update_loc_button_states()
 
     def update_usb_create(self, path):
-        print("Create:", path)
+        # print("Create:", path)
         self.usb_pathlabel.setText(path)
         self.usb_subdir = SubFileSystem(path)
         self.updateusbfiles()
@@ -108,26 +114,31 @@ class PrintWindow(QtWidgets.QWidget, Ui_PrintWindow):
         self.usb_pathlabel.setText("")
 
     def scansd(self):
-        # self.serial.send_serial("M22 \r")
-        # self.serial.send_serial("M21 \r")
-        # self.serial.send_serial("M20 \r")
-        pass
-    
-    def updatefiles(self):
+        self.printer_if.release_sd_card();
+        self.printer_if.init_sd_card();
+        self.printer_if.list_sd_card();
+
+    def sd_file_list_update_callback(self, sd_file_list):
+        self.updatefiles(sd_file_list)
+
+    def updatefiles(self, file_list):
+        self.FileList.clearContents()
         self.FileList.setRowCount(0)
-        # for f in self.serial.data.files:
-        #     rowpos = self.FileList.rowCount()
+        
+        for (filename, filesize) in file_list:
+            rowpos = self.FileList.rowCount()
 
-        #     self.FileList.insertRow(rowpos)
-        #     file = QtWidgets.QTableWidgetItem(f)
-        #     file.setFlags(Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
+            self.FileList.insertRow(rowpos)
+            file_wid = QtWidgets.QTableWidgetItem(filename)
+            file_wid.setFlags(Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
 
-        #     size = QtWidgets.QTableWidgetItem(self.serial.data.files[f])
-        #     size.setFlags(Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
+            size_wid = QtWidgets.QTableWidgetItem(str(filesize))
+            size_wid.setFlags(Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
 
-        #     self.FileList.setItem(rowpos, 0, file)
-        #     self.FileList.setItem(rowpos, 1, size)
-        # self.StartPrint.setEnabled(True)
+            self.FileList.setItem(rowpos, 0, file_wid)
+            self.FileList.setItem(rowpos, 1, size_wid)
+
+        self.StartPrint.setEnabled(True)
 
     def updateusbfiles(self):
         self.USBFileList.clearContents()
@@ -135,6 +146,7 @@ class PrintWindow(QtWidgets.QWidget, Ui_PrintWindow):
         files = self.usb_subdir.list()
 
         for usbfile in files:
+
             rowpos = self.USBFileList.rowCount()
 
             self.USBFileList.insertRow(rowpos)
@@ -156,15 +168,19 @@ class PrintWindow(QtWidgets.QWidget, Ui_PrintWindow):
     def clearusbfiles(self):
         self.USBFileList.clearContents()
         self.USBFileList.setRowCount(0)
-        
+
+    def print_finished_callback(self):
+        self.finished()
 
     def finished(self):
         self.notprinting()
         # self.serial.data.changestatus("ON")
-        self.scansd()
+        # Question for Noah: Why scan the SD here?
+        # self.scansd()
 
     def stopprint(self):
         # self.serial.reset()
+        self.printer_if.cancel_printing()
         self.notprinting()
         # self.serial.data.changestatus("ON")
         # self.serial.data.resetsettemps()
@@ -174,24 +190,26 @@ class PrintWindow(QtWidgets.QWidget, Ui_PrintWindow):
         self.ActivePrint.setEnabled(False)
         self.StopPrint.setEnabled(False)
         self.StartPrint.setEnabled(True)
-        self.FileList.setRowCount(0)
+        self.ScanSD.setEnabled(True)
+        # Why?:
+        # self.FileList.setRowCount(0)
         self.parent.Control.setEnabled(True)
         ## self.serial.data.changestatus("ON")
 
     def startprint(self):
         selected = self.FileList.currentRow()
-        selected_file = self.FileList.item(selected, 0)
+        selected_file_item = self.FileList.item(selected, 0)
+        selected_file = selected_file_item.text()
+        # print("Printing <%s>" %(selected_file))
         if selected_file != None:
-            # self.serial.data.currentfile = selected_file.text()
-            # self.serial.data.addtobuffer("FI", self.serial.data.currentfile)
-            # self.serial.send_serial("M23 " + selected_file.text())
-            # self.serial.send_serial("M24 \r")
+            self.printer_if.select_sd_file(selected_file)
+            self.printer_if.start_print()
+
             self.StartPrint.setEnabled(False)
             self.ActivePrint.setEnabled(True)
             self.StopPrint.setEnabled(True)
-            # self.serial.data.changestatus("AC")
-            # self.serial.send_serial("M155 S1")
-            # self.serial.send_serial("M27 S5")
+            self.ScanSD.setEnabled(False)
+
             self.temp_pop.activeprint()
             self.temp_pop.update_parameters()
             self.temp_pop.ActivePrintWid.FileProgress.setValue(0)

@@ -8,7 +8,7 @@ increments_int = ['0.1', '1', '10', '100']
 
 
 class ControlWindow(QtWidgets.QWidget, Ui_ControlWindow):
-    def __init__(self, serial, parent=None):
+    def __init__(self, printer_if, parent=None):
         super(ControlWindow, self).__init__()
         self.setupUi(self)
 
@@ -18,7 +18,7 @@ class ControlWindow(QtWidgets.QWidget, Ui_ControlWindow):
         # 	self.setWindowState(self.windowState() | Qt.WindowFullScreen)
 
         self.parent = parent
-#        self.serial = serial
+        self.printer_if = printer_if
 
         # self.timer.timeout.connect(lambda: self.button_event_check())
         self.xinc = None
@@ -70,19 +70,20 @@ class ControlWindow(QtWidgets.QWidget, Ui_ControlWindow):
 
     def disablemotors(self):
         # self.serial.send_serial('M18')
+        self.printer_if.commands("M18")
         pass
     
     def homexy(self):
         # self.serial.send_serial('G28 XY')
-        pass
+        self.printer_if.homexy()
     
     def homez(self):
         # self.serial.send_serial('G28 Z')
-        pass
+        self.printer_if.homez()
     
     def homeall(self):
         # self.serial.send_serial('G28')
-        pass
+        self.printer_if.homeall()
     
     def updatecurrentextruder(self):
         self.currentextruder = self.extruder.checkedButton().text()

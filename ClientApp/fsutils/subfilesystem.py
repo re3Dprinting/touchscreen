@@ -1,8 +1,7 @@
 from builtins import object
 import os
 import os.path
-from . import file
-
+from .file import File
 
 class SubFileSystem(object):
     def __init__(self, rootdir):
@@ -60,6 +59,12 @@ class SubFileSystem(object):
             name = entry.name
             displayname = name
 
+            # Do not display files that don't appear to be gcode files
+            if not (name.endswith(".gcode") or
+                    name.endswith(".gco") or
+                    name.endswith(".g")):
+                continue
+
             # Do some filtering. (To-do: create a filter class do do this)
             if name.startswith("."):
                 continue
@@ -89,7 +94,7 @@ class SubFileSystem(object):
             size = statinfo.st_size
 
             # Create a tuple and append it to the list of files
-            the_file = fsutils.file.File(name, displayname, size, type)
+            the_file = File(name, displayname, size, type)
             self.files.append(the_file)
 
         # Lastly, return the list of file tuples

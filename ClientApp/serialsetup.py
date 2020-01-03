@@ -1,13 +1,14 @@
 from builtins import str
-from .qt.serialwindow import *
 from PyQt5.QtCore import Qt
-
+from .qt.serialwindow import *
+from printer_if import PrinterIF
 
 class SerialWindow(QtWidgets.QWidget, Ui_SerialWindow):
-    def __init__(self, serial, event_handler, parent=None):
+    def __init__(self, printer_if, event_handler, parent=None):
         super(SerialWindow, self).__init__()
         self.setupUi(self)
-        # self.serial = serial
+#        self.printer = printer
+        self.printer_if = printer_if
         self.event_handler = event_handler
         self.event_handler.reconnect_serial.connect(self.reconnect_serial)
         # self.serial.data.checkserial_msg.connect(self.checkserial_msg)
@@ -23,7 +24,7 @@ class SerialWindow(QtWidgets.QWidget, Ui_SerialWindow):
         header.setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
 
         self.scan_serial()
-        self.connect_serial()
+        # self.connect_serial()
 
         self.Back.clicked.connect(self.close)
         self.ScanSerial.clicked.connect(self.scan_serial)
@@ -44,36 +45,37 @@ class SerialWindow(QtWidgets.QWidget, Ui_SerialWindow):
         self.SerialOutput.append(text)
 
     def connect_serial(self):
-        selected = self.COMlist.currentRow()
-        selected_device = self.COMlist.item(selected, 0)
-        if selected_device != None:
-            # self.serial.com = selected_device.text()
-            # response = str(self.serial.attemptconnect())
-            self.output_serial(response)
-        else:
-            self.output_serial("Please select a device")
+        selected_row = self.COMlist.currentRow()
+        selected_device = self.COMlist.item(selected_row, 0).text()
+        self.printer_if.connect(selected_device)
 
     def disconnect_serial(self):
         # self.output_serial(self.serial.disconnect())
-        pass
+        self.printer_if.disconnect()
 
     def scan_serial(self):
-        # comlist = self.serial.scan()
-        comlist = []
+        # Call the printer to get its connection options
+        serial_port_list = self.printer_if.get_connection_options()
+
+        # Reset the port list UI
         self.COMlist.setRowCount(0)
-        for p in comlist:
+
+        # Loop through the serial port options
+        for p in serial_port_list:
+        
             rowpos = self.COMlist.rowCount()
 
             self.COMlist.insertRow(rowpos)
-            device = QtWidgets.QTableWidgetItem(p.device)
+            # device 
+            device = QtWidgets.QTableWidgetItem(p)
             device.setFlags(Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
 
-            descrip = QtWidgets.QTableWidgetItem(p.description)
+            descrip = QtWidgets.QTableWidgetItem("")
             descrip.setFlags(Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
 
             self.COMlist.setItem(rowpos, 0, device)
             self.COMlist.setItem(rowpos, 1, descrip)
 
-            if '/dev/ttyUSB' in p.device:
+            if '/dev/ttyUSB' in p:
                 self.COMlist.selectRow(rowpos)
                 return True
