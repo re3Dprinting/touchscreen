@@ -34,8 +34,8 @@ from touchscreen.Client.g_client import *
 from touchscreen.Client.g_data import *
 
 from touchscreen.touchdisplay import *
-from touchscreen.watchdogthread import WatchdogThread
 from touchscreen.personality import Personality
+from touchscreen.fsutils.watchdogthread import WatchdogThread
 from touchscreen.fsutils.mountfinder import MountFinder
 
 import sys
@@ -132,9 +132,16 @@ if __name__ == "__main__":
     # Create the file manager
     print("Creating file manager")
 
+    # persona = Personality(False, "/Volumes", "/Users/jct/localgcode")
+    persona = Personality(False, "/Volumes", "/Users/jct/Dropbox/re3D/touchscreen/octoprint/localgcode")
+
     storage_managers = dict()
-    local_storage_manager = storage.LocalFileStorage("/Users/jct/Dropbox/re3D/touchscreen/OctoPrint")
+    local_storage_manager = storage.LocalFileStorage(persona.localpath)
     storage_managers[octoprint.filemanager.FileDestinations.LOCAL] = local_storage_manager
+
+#    foobar = DiskFileWrapper("foobar", "/Users/jct/Desktop/foobar.gcode", False)
+#    local_storage_manager.add_file("foobar.gcode", foobar, allow_overwrite=True)
+#    baz.select_file("foobar.gcode", False, True)
 
     file_manager = octoprint.filemanager.FileManager(analysis_queue, None, None, initial_storage_managers=storage_managers)
 
@@ -159,9 +166,6 @@ if __name__ == "__main__":
     serial_conn = g_serial(data_thread)
     data_thread.start()
 
-    # persona = Personality(False, "/Volumes", "/Users/jct/localgcode")
-    persona = Personality(False, "/Volumes", "/Users/jct/Dropbox/re3D/touchscreen/octoprint/localgcode")
-
     print("Creating the UI")
     app = QtWidgets.QApplication(sys.argv)
 
@@ -183,8 +187,8 @@ if __name__ == "__main__":
             display.print_pop.update_usb_create(current_path)
 
     print("Creating the watchdog thread")
-    jt_thread = WatchdogThread(display.print_pop, persona.watchpoint, current_path)
-    jt_thread.start()
+    jt_thread = WatchdogThread(display.print_pop, persona.watchpoint,
+                               current_path, persona.localpath)
 
     print("Connecting the printer (DEBUG USE ONLY)")
 #    printer.connect("/dev/tty.usbserial-DN02B57Q", 250000)

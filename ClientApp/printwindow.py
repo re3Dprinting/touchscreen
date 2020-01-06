@@ -1,14 +1,33 @@
 from __future__ import division
 from builtins import str
 from past.utils import old_div
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, pyqtSignal
 from .qt.printwindow import *
 from .fsutils.subfilesystem import *
 from .fsutils.file import *
 
 class PrintWindow(QtWidgets.QWidget, Ui_PrintWindow):
+
+    # Create the Qt signals we're going to use for updating the list
+    # of USB files. Each signal takes a single argument, which is the
+    # path to the newly mounted (created) or unmounted (deleted)
+    # directory.
+
+    create_signal = pyqtSignal(str)
+    delete_signal = pyqtSignal(str)
+    update_signal = pyqtSignal(str)
+
     def __init__(self, printer_if, temp_pop, personality, parent=None):
         super(PrintWindow, self).__init__()
+
+        # Connect slots to the signals
+
+        self.create_signal.connect(self.update_usb_create)
+        self.delete_signal.connect(self.update_usb_delete)
+        self.update_signal.connect(self.update_local)
+
+        # Set up the rest of the UI
+
         self.setupUi(self)
         self.printer_if = printer_if
 
@@ -112,6 +131,9 @@ class PrintWindow(QtWidgets.QWidget, Ui_PrintWindow):
 #        self.usb_pathlabel.setText(self.usb_subdir.abspath)
         self.clearusbfiles()
         self.usb_pathlabel.setText("")
+
+    def update_local(self, path):
+        print("Update <%s>", path)
 
     def scansd(self):
         self.printer_if.release_sd_card();
