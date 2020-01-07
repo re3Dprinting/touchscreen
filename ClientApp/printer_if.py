@@ -90,6 +90,10 @@ class PrinterIF(PrinterCallback):
         # self.printer.start_print()
         pass
 
+    def select_local_file(self, filename):
+        self.file_name = filename
+        self.printer.select_file(filename, False, True)
+
     def cancel_printing(self):
         self.printer.cancel_print()
 

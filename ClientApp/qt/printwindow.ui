@@ -38,7 +38,7 @@
     <enum>QTabWidget::Rounded</enum>
    </property>
    <property name="currentIndex">
-    <number>2</number>
+    <number>0</number>
    </property>
    <property name="elideMode">
     <enum>Qt::ElideNone</enum>
@@ -63,7 +63,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
-        <widget class="QTableWidget" name="FileList">
+        <widget class="QTableWidget" name="SDFileList">
          <column>
           <property name="text">
            <string>Name</string>
@@ -104,7 +104,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="StartPrint">
+          <widget class="QPushButton" name="sd_pushbutton_print">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
              <horstretch>0</horstretch>

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'qt/printwindow.ui'
+# Form implementation generated from reading ui file 'printwindow.ui'
 #
 # Created by: PyQt5 UI code generator 5.13.1
 #
@@ -34,15 +34,15 @@ class Ui_PrintWindow(object):
         self.uppervertLayout.addWidget(self.sd_pathlabel)
         self.horizontalLayout = QtWidgets.QHBoxLayout()
         self.horizontalLayout.setObjectName("horizontalLayout")
-        self.FileList = QtWidgets.QTableWidget(self.SD)
-        self.FileList.setObjectName("FileList")
-        self.FileList.setColumnCount(2)
-        self.FileList.setRowCount(0)
+        self.SDFileList = QtWidgets.QTableWidget(self.SD)
+        self.SDFileList.setObjectName("SDFileList")
+        self.SDFileList.setColumnCount(2)
+        self.SDFileList.setRowCount(0)
         item = QtWidgets.QTableWidgetItem()
-        self.FileList.setHorizontalHeaderItem(0, item)
+        self.SDFileList.setHorizontalHeaderItem(0, item)
         item = QtWidgets.QTableWidgetItem()
-        self.FileList.setHorizontalHeaderItem(1, item)
-        self.horizontalLayout.addWidget(self.FileList)
+        self.SDFileList.setHorizontalHeaderItem(1, item)
+        self.horizontalLayout.addWidget(self.SDFileList)
         self.verticalLayout = QtWidgets.QVBoxLayout()
         self.verticalLayout.setObjectName("verticalLayout")
         self.ScanSD = QtWidgets.QPushButton(self.SD)
@@ -55,16 +55,16 @@ class Ui_PrintWindow(object):
         self.ScanSD.setMaximumSize(QtCore.QSize(100, 100))
         self.ScanSD.setObjectName("ScanSD")
         self.verticalLayout.addWidget(self.ScanSD)
-        self.StartPrint = QtWidgets.QPushButton(self.SD)
+        self.sd_pushbutton_print = QtWidgets.QPushButton(self.SD)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.StartPrint.sizePolicy().hasHeightForWidth())
-        self.StartPrint.setSizePolicy(sizePolicy)
-        self.StartPrint.setMinimumSize(QtCore.QSize(100, 0))
-        self.StartPrint.setMaximumSize(QtCore.QSize(100, 100))
-        self.StartPrint.setObjectName("StartPrint")
-        self.verticalLayout.addWidget(self.StartPrint)
+        sizePolicy.setHeightForWidth(self.sd_pushbutton_print.sizePolicy().hasHeightForWidth())
+        self.sd_pushbutton_print.setSizePolicy(sizePolicy)
+        self.sd_pushbutton_print.setMinimumSize(QtCore.QSize(100, 0))
+        self.sd_pushbutton_print.setMaximumSize(QtCore.QSize(100, 100))
+        self.sd_pushbutton_print.setObjectName("sd_pushbutton_print")
+        self.verticalLayout.addWidget(self.sd_pushbutton_print)
         self.horizontalLayout.addLayout(self.verticalLayout)
         self.uppervertLayout.addLayout(self.horizontalLayout)
         self.tabWidget.addTab(self.SD, "")
@@ -177,19 +177,19 @@ class Ui_PrintWindow(object):
         self.horizontalLayout_2.addWidget(self.ActivePrint)
 
         self.retranslateUi(PrintWindow)
-        self.tabWidget.setCurrentIndex(2)
+        self.tabWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(PrintWindow)
 
     def retranslateUi(self, PrintWindow):
         _translate = QtCore.QCoreApplication.translate
         PrintWindow.setWindowTitle(_translate("PrintWindow", "ControlWindow"))
         self.sd_pathlabel.setText(_translate("PrintWindow", "Files on Viki SD Card"))
-        item = self.FileList.horizontalHeaderItem(0)
+        item = self.SDFileList.horizontalHeaderItem(0)
         item.setText(_translate("PrintWindow", "Name"))
-        item = self.FileList.horizontalHeaderItem(1)
+        item = self.SDFileList.horizontalHeaderItem(1)
         item.setText(_translate("PrintWindow", "Size"))
         self.ScanSD.setText(_translate("PrintWindow", "Scan SD"))
-        self.StartPrint.setText(_translate("PrintWindow", "Start Print"))
+        self.sd_pushbutton_print.setText(_translate("PrintWindow", "Start Print"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.SD), _translate("PrintWindow", "SD"))
         self.usb_pathlabel.setText(_translate("PrintWindow", "TextLabel"))
         item = self.USBFileList.horizontalHeaderItem(0)

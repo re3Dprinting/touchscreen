@@ -5,6 +5,7 @@ from .file import File
 
 class SubFileSystem(object):
     def __init__(self, rootdir):
+        self.files = []
         self.rootdir = rootdir
         self.setCwd(rootdir)
         self.level = 0
@@ -38,6 +39,7 @@ class SubFileSystem(object):
         self.files = []
         it = []
 
+        # print("List <%s>" % self.cwd)
         os.stat(self.cwd)
 
         try:
@@ -59,11 +61,13 @@ class SubFileSystem(object):
             name = entry.name
             displayname = name
 
-            # Do not display files that don't appear to be gcode files
-            if not (name.endswith(".gcode") or
-                    name.endswith(".gco") or
-                    name.endswith(".g")):
-                continue
+            # Do not display nondirectory files that don't appear to
+            # be gcode files
+            if not entry.is_dir():
+                if not (name.endswith(".gcode") or
+                        name.endswith(".gco") or
+                        name.endswith(".g")):
+                    continue
 
             # Do some filtering. (To-do: create a filter class do do this)
             if name.startswith("."):

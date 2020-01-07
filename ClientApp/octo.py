@@ -184,11 +184,18 @@ if __name__ == "__main__":
         # There seems to be a thumb drive plugged in. Tell the UI
         # print window to use it as the inital file list.
             current_path = possible_usb_mounts[0]
+            print("Current path (possible?) = <%s>" % current_path)
             display.print_pop.update_usb_create(current_path)
 
     print("Creating the watchdog thread")
-    jt_thread = WatchdogThread(display.print_pop, persona.watchpoint,
+    wd_thread = WatchdogThread(display.print_pop, persona.watchpoint,
                                current_path, persona.localpath)
+
+    usb_signal_tup = wd_thread.get_usb_signals()
+    display.print_pop.set_usb_mount_signals(usb_signal_tup)
+
+    content_signal = wd_thread.get_usb_content_signal()
+    display.print_pop.set_usb_content_signal(content_signal)
 
     print("Connecting the printer (DEBUG USE ONLY)")
 #    printer.connect("/dev/tty.usbserial-DN02B57Q", 250000)
