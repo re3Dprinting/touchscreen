@@ -16,13 +16,13 @@ class WatchdogThread():
 
         self.mount_watch_path = mount_watch_path
         
-        self.usb_tracker = USBTracker(ui, mount_watch_path, initial_path, True)
+        self.usb_tracker = USBTracker(mount_watch_path, initial_path, True)
 
         if not exists(self.mount_watch_path):
             print("*** ERROR: mount path does not exist")
             return
 
-        self.content_tracker = ContentTracker(content_watch_path)
+        self.local_tracker = ContentTracker(content_watch_path)
 
         # if initial_path != "":
         #     self.tracker.mountpoint_created(initial_path)
@@ -46,7 +46,7 @@ class WatchdogThread():
         return self.usb_tracker.get_content_signal()
 
     def get_local_content_signal(self):
-        return self.content_tracker.get_content_signal()
+        return self.local_tracker.get_content_signal()
 
     def __del__(self):
         # self.wait()

@@ -7,14 +7,24 @@ class SubFileSystem(object):
     def __init__(self, rootdir):
         self.files = []
         self.rootdir = rootdir
-        self.setCwd(rootdir)
+        self.cwd = ""
+        self.abspath = ""
+        self.setCwd("")
         self.level = 0
         self.dir_stack = []
         self.dir_stack.append(rootdir)
 
+    def dumpstate(self, message):
+        print()
+        print("------")
+        print(message)
+        print("rootdir: <%s>" % self.rootdir)
+        print("cwd: <%s>" % self.cwd)
+        print("abspath: <%s>" % self.abspath)
+
     def setCwd(self, path):
         self.cwd = path
-        self.abspath = os.path.abspath(self.cwd)
+        self.abspath = os.path.abspath(self.rootdir + "/" + self.cwd)
 
     def depth(self):
         return self.level
@@ -26,7 +36,7 @@ class SubFileSystem(object):
 
         self.dir_stack.append(self.cwd)
         self.level += 1
-        self.setCwd(self.cwd + "/" + dir)
+        self.setCwd(dir)
 
     def up(self):
         if self.level == 0:
@@ -40,11 +50,13 @@ class SubFileSystem(object):
         it = []
 
         # print("List <%s>" % self.cwd)
-        os.stat(self.cwd)
+        # os.stat(self.rootdir + "/" + self.cwd)
+
+        # os.stat(self.abspath)
 
         try:
             # Get the list of files in the current working directory
-            it = os.scandir(self.cwd)
+            it = os.scandir(self.abspath)
 
         # There's a number of exceptions that can occur in os.scandir,
         # mostly related to directories to which we do not have read
@@ -97,8 +109,15 @@ class SubFileSystem(object):
             statinfo = entry.stat()
             size = statinfo.st_size
 
+            if self.cwd == "":
+                rel_path = name
+            else:
+                rel_path = self.cwd + "/" + name
+
+            abs_path = self.abspath + "/" + name
+
             # Create a tuple and append it to the list of files
-            the_file = File(name, displayname, size, type)
+            the_file = File(name, displayname, rel_path, abs_path, size, type)
             self.files.append(the_file)
 
         # Lastly, return the list of file tuples

@@ -133,7 +133,8 @@ if __name__ == "__main__":
     print("Creating file manager")
 
     # persona = Personality(False, "/Volumes", "/Users/jct/localgcode")
-    persona = Personality(False, "/Volumes", "/Users/jct/Dropbox/re3D/touchscreen/octoprint/localgcode")
+    # persona = Personality(False, "/Volumes", "/Users/jct/Dropbox/re3D/touchscreen/octoprint/localgcode")
+    persona = Personality(True, "/media/pi", "/home/pi/gcode-cache")
 
     storage_managers = dict()
     local_storage_manager = storage.LocalFileStorage(persona.localpath)
@@ -183,9 +184,15 @@ if __name__ == "__main__":
     if len(possible_usb_mounts) > 0:
         # There seems to be a thumb drive plugged in. Tell the UI
         # print window to use it as the inital file list.
-            current_path = possible_usb_mounts[0]
-            print("Current path (possible?) = <%s>" % current_path)
-            display.print_pop.update_usb_create(current_path)
+            current_path = ""
+            for possible_path in possible_usb_mounts:
+                if possible_path.startswith(persona.watchpoint):
+                    current_path = possible_path
+                    break
+            if current_path != "":
+                    print("current_path: <%s>" % current_path)
+                    print("Current path (possible?) = <%s>" % current_path)
+                    display.print_pop.update_usb_create(current_path)
 
     print("Creating the watchdog thread")
     wd_thread = WatchdogThread(display.print_pop, persona.watchpoint,
@@ -194,12 +201,20 @@ if __name__ == "__main__":
     usb_signal_tup = wd_thread.get_usb_signals()
     display.print_pop.set_usb_mount_signals(usb_signal_tup)
 
-    content_signal = wd_thread.get_usb_content_signal()
-    display.print_pop.set_usb_content_signal(content_signal)
+    usb_content_signal = wd_thread.get_usb_content_signal()
+    display.print_pop.set_usb_content_signal(usb_content_signal)
+
+    local_content_signal = wd_thread.get_local_content_signal()
+    display.print_pop.set_local_content_signal(local_content_signal)
+
+    display.print_pop.set_storage_manager(local_storage_manager)
 
     print("Connecting the printer (DEBUG USE ONLY)")
-#    printer.connect("/dev/tty.usbserial-DN02B57Q", 250000)
-    # printer.connect("/dev/tty.usbserial-14110", 115200)
+    printer.connect("/dev/tty.usbserial-DN02B57Q", 250000)
+    # printer.connect("/dev/tty.usbserial-143320", 115200)
 
+    print("Starting the interpreter thread")
+    
+    
     print("Starting the UI")
     app.exec_()

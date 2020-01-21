@@ -1,11 +1,15 @@
 from builtins import str
+import math
+import traceback
+import pprint
 
 import PyQt5.QtCore
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, pyqtSignal
 
 from .qt.temperaturewindow import *
 from .notactiveprint_wid import *
 from .activeprint_wid import *
+from .runout_handler import RunoutHandlerDialog
 from .event_hand import *
 from .preheatmaterial import *
 from .periph import *
@@ -15,11 +19,16 @@ from .printer_if import PrinterIF
 mats = ['m1', 'm2', 'm3']
 periphs = ['e1', 'e2', 'bed', 'all']
 
-
 class TemperatureWindow(QtWidgets.QWidget, Ui_TemperatureWindow):
+
+    progress_signal = pyqtSignal(str)
+
     def __init__(self, printer_if, event_handler, parent=None):
         super(TemperatureWindow, self).__init__()
+
         self.setupUi(self)
+
+        self.pp = pprint.PrettyPrinter(indent=4)
 
         # if parent.fullscreen: self.fullscreen = True
         # else: self.fullscreen = False
@@ -32,6 +41,8 @@ class TemperatureWindow(QtWidgets.QWidget, Ui_TemperatureWindow):
 
         self.ActivePrintWid = ActivePrintWidget(self)
         self.NotActivePrintWid = NotActivePrintWidget(self)
+        self.w_runout_handler = RunoutHandlerDialog(self, printer_if)
+
         self.gridLayout.addWidget(self.NotActivePrintWid, 2, 0, 1, 1)
         self.gridLayout.addWidget(self.ActivePrintWid, 2, 0, 1, 1)
         self.notactiveprint()
@@ -39,8 +50,12 @@ class TemperatureWindow(QtWidgets.QWidget, Ui_TemperatureWindow):
         # self.serial.data.updateposition.connect(self.updateposition)
 
         # self.event_handler.updatetemperatures.connect(self.updatetemperatures)
+        self.progress_signal.connect(self.update_progress_slot)
+
         self.printer_if.set_temperature_callback(self)
         self.printer_if.set_printer_state_callback(self)
+        self.printer_if.set_position_callback(self)
+        self.printer_if.set_progress_callback(self)
         
         self.inittextformat(self.e1temp)
         self.inittextformat(self.e2temp)
@@ -132,9 +147,25 @@ class TemperatureWindow(QtWidgets.QWidget, Ui_TemperatureWindow):
 
         # self.changeText(self.ActivePrintWid.BabysteppingVal,
         #                 str(self.event_handler.babystep))
+        self.changeText(self.ActivePrintWid.BabysteppingVal, str(self.event_handler.babystep))
         self.changeText(self.ActivePrintWid.FlowrateVal, str(self.printer_if.flow_rate))
 
     def sendfeedrate(self):
+
+        feed_rate = self.ActivePrintWid.FeedrateSlider.value()
+        indicated_feed_rate = feed_rate
+
+        if feed_rate < 50:
+            feed_rate = 50
+
+        if feed_rate > 200:
+            feed_rate = 200
+
+        if feed_rate != indicated_feed_rate:
+            self.ActivePrintWid.FeedrateSlider.setValue(feed_rate)
+
+        self.printer_if.set_feed_rate(self.ActivePrintWid.FeedrateSlider.value())
+
         # self.serial.send_serial(
         #     "M220 S" + str(self.ActivePrintWid.FeedrateSlider.value()))
         pass
@@ -146,30 +177,46 @@ class TemperatureWindow(QtWidgets.QWidget, Ui_TemperatureWindow):
     def babystepneg(self):
         self.event_handler.babystepx10 -= self.event_handler.babystepinc
         self.event_handler.babystep = float(
-            self.event_handler.babystepx10) / float(100)
+            self.event_handler.babystepx10) / float(1000)
         self.changeText(self.ActivePrintWid.BabysteppingVal,
                         str(self.event_handler.babystep))
-        self.event_handler.sendbabystep()
+        # self.event_handler.sendbabystep()
+        self.printer_if.set_babystep(self.event_handler.babystep)
 
     def babysteppos(self):
         self.event_handler.babystepx10 += self.event_handler.babystepinc
         self.event_handler.babystep = float(
-            self.event_handler.babystepx10) / float(100)
+            self.event_handler.babystepx10) / float(1000)
         self.changeText(self.ActivePrintWid.BabysteppingVal,
                         str(self.event_handler.babystep))
-        self.event_handler.sendbabystep()
+        # self.event_handler.sendbabystep()
+        self.printer_if.set_babystep(self.event_handler.babystep)
 
-    def updateposition(self):
+    def updateposition(self, x, y, z):
+
         # pos = self.serial.data.position
         pos = 0
-        tmp = "X: "+str(pos["X"]) + " Y: "+str(pos["Y"]) + " Z: "+str(pos["Z"])
-        self.changeText(self.ActivePrintWid.PositionLabel, tmp)
 
-    def updateprogress(self):
-        # prog = (
-        #     float(self.serial.data.progress[0])/float(self.serial.data.progress[1])) * 100
-        prog = 0
-        self.ActivePrintWid.FileProgress.setValue(prog)
+        # Compute the values to display. Display X and Y as integers,
+        # but Z as a decimal.
+        x = int(math.floor(float(x)))
+        y = int(math.floor(float(y)))
+        z = float(z)
+
+        position_string = "X: %d Y: %d Z:%1.2f" % (x, y, z)
+
+        self.changeText(self.ActivePrintWid.PositionLabel, position_string)
+
+    def update_progress(self, completion, print_time_left):
+        self.progress_signal.emit(str(completion))
+
+    def update_progress_slot(self, completion):
+        # print("Received progress signal", completion)
+
+        if completion != "N/A":
+            completion = int(float(completion))
+            # print("UPDATE PROGRESS: <%d>" % (completion))
+            self.ActivePrintWid.FileProgress.setValue(completion)
 
     def updateflowlabel(self):
         flow_button_text = "Flowrate: " + \
@@ -179,20 +226,32 @@ class TemperatureWindow(QtWidgets.QWidget, Ui_TemperatureWindow):
             self.event_handler.flowrate[self.event_handler.fr_index]))
 
     def flowratelabel(self):
-        if self.event_handler.fr_index < 2:
-            self.event_handler.fr_index += 1
-        elif self.event_handler.fr_index == 2:
-            self.event_handler.fr_index = 0
+        # Select the next of the three:
+        # self.event_handler.fr_index = (self.event_handler.fr_index + 1) % 3
         self.updateflowlabel()
 
     def flowratepos(self):
+        # Increase the flow rate
         self.event_handler.flowrate[self.event_handler.fr_index] += 1
-        self.event_handler.sendflowrate()
+
+        # Limit the flow rate to be at most 150:
+        if self.event_handler.flowrate[self.event_handler.fr_index] > 125:
+            self.event_handler.flowrate[self.event_handler.fr_index] = 125
+
+        self.printer_if.set_flow_rate(self.event_handler.flowrate[self.event_handler.fr_index])
+        # self.event_handler.sendflowrate()
         self.updateflowlabel()
 
     def flowrateneg(self):
+        # Decrease the flow rate
         self.event_handler.flowrate[self.event_handler.fr_index] -= 1
-        self.event_handler.sendflowrate()
+
+        # Limit the flow rate to be at least 75:
+        if self.event_handler.flowrate[self.event_handler.fr_index] < 75:
+            self.event_handler.flowrate[self.event_handler.fr_index] = 75
+
+        self.printer_if.set_flow_rate(self.event_handler.flowrate[self.event_handler.fr_index])
+        # self.event_handler.sendflowrate()
         self.updateflowlabel()
 
     def activeprint(self):
@@ -235,29 +294,31 @@ class TemperatureWindow(QtWidgets.QWidget, Ui_TemperatureWindow):
                 getattr(self.NotActivePrintWid, m + p).clicked.connect(getattr(getattr(self, m), p + 'set'))
 
     def fan(self):
-# if self.serial.is_open:
-            if self.fanon:
-                # self.serial.send_serial('M106 S0')
-                self.printer_if.fans_on()
-                self.ActivePrintWid.Fan.setIcon(self.fanofficon)
-                self.ActivePrintWid.Fan.setIconSize(QtCore.QSize(55, 55))
-                self.NotActivePrintWid.Fan.setIcon(self.fanofficon)
-                self.NotActivePrintWid.Fan.setIconSize(QtCore.QSize(55, 55))
-                self.fanon = False
-            elif not self.fanon:
-                # self.serial.send_serial('M106 S255')
-                self.printer_if.fans_off()
-                self.ActivePrintWid.Fan.setIcon(self.fanonicon)
-                self.ActivePrintWid.Fan.setIconSize(QtCore.QSize(55, 55))
-                self.NotActivePrintWid.Fan.setIcon(self.fanonicon)
-                self.NotActivePrintWid.Fan.setIconSize(QtCore.QSize(55, 55))
-                self.fanon = True
-#        pass
+        print("Foo")
+        self.w_runout_handler.show()
+        # if self.fanon:
+        #     self.printer_if.fans_on()
+        #     self.ActivePrintWid.Fan.setIcon(self.fanofficon)
+        #     self.ActivePrintWid.Fan.setIconSize(QtCore.QSize(55, 55))
+        #     self.NotActivePrintWid.Fan.setIcon(self.fanofficon)
+        #     self.NotActivePrintWid.Fan.setIconSize(QtCore.QSize(55, 55))
+        #     self.fanon = False
+        # elif not self.fanon:
+        #     self.printer_if.fans_off()
+        #     self.ActivePrintWid.Fan.setIcon(self.fanonicon)
+        #     self.ActivePrintWid.Fan.setIconSize(QtCore.QSize(55, 55))
+        #     self.NotActivePrintWid.Fan.setIcon(self.fanonicon)
+        #     self.NotActivePrintWid.Fan.setIconSize(QtCore.QSize(55, 55))
+        #     self.fanon = True
+
 
     def cool(self):
         self.extruder1.setandsend(0)
         self.extruder2.setandsend(0)
         self.heatedbed.setandsend(0)
+
+    def update_position(self, x, y, z):
+        self.updateposition(x, y, z)
 
     def update_printer_state(self, data):
         print("PRINTER STATE CHANGE", data)
@@ -267,63 +328,80 @@ class TemperatureWindow(QtWidgets.QWidget, Ui_TemperatureWindow):
         # Get the tuple of tuples by breaking up the data struct
         temps_tuple = self._break_up_temperature_struct(data)
 
+        # self.pp.pprint(temps_tuple)
+
         # Separate temps into the three tuples
         (bed_tuple, tool0_tuple, tool1_tuple) = temps_tuple
+
+        unknown_temp_str = "----"
 
         ### Heated bed
 
         # break up the tuple containing the target and actual temperatures
         (bed_target_temp, bed_actual_temp) = bed_tuple
 
-        # Display the temperatures on the UI
-        self.changeText(self.bedtemp, str(int(bed_actual_temp + 0.5)))
-        self.changeText(self.bedset, str(int(bed_target_temp + 0.5)))
+        if bed_actual_temp is not None:
+            # print("bed target %d, bed actual %d." % (bed_target_temp, bed_actual_temp))
 
-        # And change the set-temperature in the bed periph
-        if (self.heatedbed.settemp != bed_target_temp):
-            self.heatedbed._set(bed_target_temp)
+            # Display the temperatures on the UI
+            self.changeText(self.bedtemp, str(int(bed_actual_temp + 0.5)))
+            self.changeText(self.bedset, str(int(bed_target_temp + 0.5)))
 
-        # print("bed target %d, bed actual %d." % (bed_target_temp, bed_actual_temp))
+            # And change the set-temperature in the bed periph
+            if (self.heatedbed.settemp != bed_target_temp):
+                self.heatedbed._set(bed_target_temp)
+        else:
+            self.changeText(self.bedtemp, unknown_temp_str)
+            self.changeText(self.bedset, unknown_temp_str)
 
         ### Extruder 0
 
         # break up the tuple containing the target and actual temperatures
         (tool0_target_temp, tool0_actual_temp) = tool0_tuple
 
-        # Display the temperatures on the UI.
-        self.changeText(self.e1temp, str(int(tool0_actual_temp + 0.5)))
-        self.changeText(self.e1set, str(int(tool0_target_temp + 0.5)))
+        if tool0_actual_temp is not None:
+            # print("tool0 target %d, tool0 actual %d." % (tool0_target_temp, tool0_actual_temp))
 
-        if (self.extruder1.settemp != tool0_target_temp):
-            self.extruder1._set(tool0_target_temp)
+            # Display the temperatures on the UI.
+            self.changeText(self.e1temp, str(int(tool0_actual_temp + 0.5)))
+            self.changeText(self.e1set, str(int(tool0_target_temp + 0.5)))
 
-        # print("tool0 target %d, tool0 actual %d." % (tool0_target_temp, tool0_actual_temp))
+            if (self.extruder1.settemp != tool0_target_temp):
+                self.extruder1._set(tool0_target_temp)
+        else:
+            self.changeText(self.e1temp, unknown_temp_str)
+            self.changeText(self.e1set, unknown_temp_str)
 
         ### Extruder 1
 
         # break up the tuple containing the target and actual temperatures
         (tool1_target_temp, tool1_actual_temp) = tool1_tuple
 
-        # Display the temperatures on the UI.
-        self.changeText(self.e2temp, str(int(tool1_actual_temp + 0.5)))
-        self.changeText(self.e2set, str(int(tool1_target_temp + 0.5)))
+        if (tool1_actual_temp is not None) and (tool1_target_temp is not None):
+            # print("tool1 target %d, tool1 actual %d." % (tool1_target_temp, tool1_actual_temp))
+        
+            # Display the temperatures on the UI.
+            self.changeText(self.e2temp, str(int(tool1_actual_temp + 0.5)))
+            self.changeText(self.e2set, str(int(tool1_target_temp + 0.5)))
 
-        if (self.extruder2.settemp != tool1_target_temp):
-            self.extruder2._set(tool1_target_temp)
+            if (self.extruder2.settemp != tool1_target_temp):
+                self.extruder2._set(tool1_target_temp)
 
-        # print("tool1 target %d, tool1 actual %d." % (tool1_target_temp, tool1_actual_temp))
+        else:
+            self.changeText(self.e2temp, unknown_temp_str)
+            self.changeText(self.e2set, unknown_temp_str)
 
 
     def set_bed_temperature(self, value):
-        # print("Setting bed temp to %d." % value)
+        print("Setting bed temp to %d." % value)
         self.printer_if.set_temperature("bed", value)
 
     def set_tool0_temperature(self, value):
-        # print("Setting tool0 temp to %d." % value)
+        print("Setting tool0 temp to %d." % value)
         self.printer_if.set_temperature("tool0", value)
         
     def set_tool1_temperature(self, value):
-        # print("Setting tool1 temp to %d." % value)
+        print("Setting tool1 temp to %d." % value)
         self.printer_if.set_temperature("tool1", value)
         
     def _break_up_temperature_struct(self, data):
@@ -350,25 +428,31 @@ class TemperatureWindow(QtWidgets.QWidget, Ui_TemperatureWindow):
 
         ### Extruder 0
 
-        # Get the dictionary of extruder-0 temperatures and from it
-        # extract the target and actual temperatures.
-        tool0_temp_dict = data["tool0"]
-        tool0_target_temp = tool0_temp_dict["target"]
-        tool0_actual_temp = tool0_temp_dict["actual"]
+        try:
+            # Get the dictionary of extruder-0 temperatures and from it
+            # extract the target and actual temperatures.
+            tool0_temp_dict = data["tool0"]
+            tool0_target_temp = tool0_temp_dict["target"]
+            tool0_actual_temp = tool0_temp_dict["actual"]
 
-        # Gather the tool0 temperatuse into a tuple
-        tool0_tuple = (tool0_target_temp, tool0_actual_temp)
+            # Gather the tool0 temperatuse into a tuple
+            tool0_tuple = (tool0_target_temp, tool0_actual_temp)
+        except:
+            tool0_tuple = (None, None)
 
         ### Extruder 1
 
-        # Get the dictionary of extruder-1 temperatures and from it
-        # extract the target and actual temperatures.
-        tool1_temp_dict = data["tool1"]
-        tool1_target_temp = tool1_temp_dict["target"]
-        tool1_actual_temp = tool1_temp_dict["actual"]
+        try:
+            # Get the dictionary of extruder-1 temperatures and from it
+            # extract the target and actual temperatures.
+            tool1_temp_dict = data["tool1"]
+            tool1_target_temp = tool1_temp_dict["target"]
+            tool1_actual_temp = tool1_temp_dict["actual"]
 
-        # Gather the tool1 temperatuse into a tuple
-        tool1_tuple = (tool1_target_temp, tool1_actual_temp)
+            # Gather the tool1 temperatuse into a tuple
+            tool1_tuple = (tool1_target_temp, tool1_actual_temp)
+        except:
+            tool1_tuple = (None, None)
 
         # Return the broken-apart temperatures as a 3-tuple of 2-tuples
         return (bed_tuple, tool0_tuple, tool1_tuple)

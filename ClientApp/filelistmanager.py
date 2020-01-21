@@ -76,7 +76,7 @@ class FileListManager:
         foolist = list_widget.selectedItems()
 
         if len(foolist) < 1:
-            return (-1, None, None)
+            return (-1, None)
 
         selected_row = list_widget.currentRow()
 
@@ -84,9 +84,14 @@ class FileListManager:
             return (-1, None, None)
 
         selected_file = subdir.files[selected_row]
-        selected_item = list_widget.currentItem()
 
-        return (selected_row, selected_file, selected_item)
+        # selected_item = list_widget.currentItem()
+
+        # selected_file_name = selected_file.name
+        # selected_file_path = subdir.cwd + "/" + selected_file_name
+
+        # return (selected_row, selected_file, selected_item, selected_file_path)
+        return (selected_row, selected_file)
     
     def update_button_states_none(self):
         self.pushbutton_up_wid.setEnabled(False)
@@ -96,7 +101,7 @@ class FileListManager:
     def update_button_states(self):
         select_tuple = self.get_selected_file()
 
-        selected_row, selected_file, selected_item = select_tuple
+        selected_row, selected_file = select_tuple
 
         if self.subdir.depth() > 0:
             self.pushbutton_up_wid.setEnabled(True)
@@ -124,7 +129,7 @@ class FileListManager:
         self.open_subdir()
 
     def open_subdir(self):
-        selected_row, selected_file, selected_item = self.get_selected_file()
+        (selected_row, selected_file) = self.get_selected_file()
 
         if selected_row is None:
             return

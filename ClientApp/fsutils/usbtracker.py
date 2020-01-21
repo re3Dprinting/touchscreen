@@ -16,18 +16,18 @@ class USBTracker(QObject, FileSystemEventHandler):
     delete_signal = pyqtSignal(str)
     content_signal = pyqtSignal(str)
 
-    def __init__(self, ui, watch_path, initial_path, contentonly=False):
+    def __init__(self, watch_path, initial_path, contentonly=False):
         super(USBTracker, self).__init__()
         
-        self.ui = ui
         self.watch_path = watch_path
         self.current_path = ""
 
-        print("Watch path = <%s>" % watch_path)
-        print("Initial path = <%s>" % initial_path)
+        # print("Watch path = <%s>" % watch_path)
+        # print("Initial path = <%s>" % initial_path)
 
         self.content_watcher = ContentWatcher(self)
         self.mountpoint_watcher = MountpointWatcher(self)
+        # self.whatthe_watcher = MountpointWatcher(self)
 
         if initial_path != "":
             self.mountpoint_created(initial_path)
@@ -44,16 +44,26 @@ class USBTracker(QObject, FileSystemEventHandler):
         self.mount_observer.schedule(self.mountpoint_watcher, self.watch_path, recursive=False)
         self.mount_observer.start()
 
+    def delete_mount_observer(self):
+        if self.mount_observer is not None:
+            self.mount_observer.stop()
+            del self.mount_observer
+            self.mmount_observer = None
+
     def create_content_observer(self, path):
+        self.content_observer = None
+        return
         # print("creating content observer on <%s>" % path)
-        self.content_observer = Observer()
-        self.content_observer.schedule(self.content_watcher, path, recursive=True)
-        self.content_observer.start()
+        # self.content_observer = Observer()
+        # self.content_observer.schedule(self.content_watcher, path, recursive=True)
+        # self.content_observer.start()
 
     def delete_content_observer(self):
         if self.content_observer is not None:
             self.content_observer.stop()
+            self.content_observer.unschedule_all()
             del self.content_observer
+            self.content_observer = None
 
     def get_mount_signals(self):
         return (self.create_signal, self.delete_signal)
@@ -62,18 +72,20 @@ class USBTracker(QObject, FileSystemEventHandler):
         return self.content_signal
 
     def mountpoint_created(self, path):
-        # print("Mountpoint created: <%s> Current is: <%s>" % (path, self.current_path))
-        if MountFinder.is_thumb_drive(path):
+        print("Mountpoint created: <%s> Current is: <%s>" % (path, self.current_path))
+        if MountFinder.is_thumb_drive(path) and path.startswith(self.watch_path):
             self.create_content_observer(path)
             self.create_signal.emit(path)
             self.current_path = path
 
     def mountpoint_deleted(self, path):
-        # print("Mountpoint deleted: <%s> Current is: <%s>" % (path, self.current_path))
+        print("Mountpoint deleted: <%s> Current is: <%s>" % (path, self.current_path))
         if self.current_path == path:
             self.delete_signal.emit(path)
             self.current_path = ""
             self.delete_content_observer()
+        # self.delete_mount_observer()
+        # self.create_mount_observer()
 
     def content_modified(self, path):
         print("Content modified: <%s>" % (path))
