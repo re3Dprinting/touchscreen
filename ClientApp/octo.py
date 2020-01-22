@@ -172,7 +172,9 @@ if __name__ == "__main__":
     print("Creating file manager")
 
     # persona = Personality(False, "/Volumes", "/Users/jct/localgcode")
-    persona = Personality(False, "/Volumes", "/Users/jct/Dropbox/re3D/touchscreen/OctoPrint-1.4.0rc3/localgcode")
+
+    # persona = Personality(False, "/Volumes", "/Users/jct/Dropbox/re3D/touchscreen/OctoPrint-1.4.0rc3/localgcode")
+    persona = Personality(True, "/media/pi", "/home/pi/gcode-cache")
 
     storage_managers = dict()
     local_storage_manager = storage.LocalFileStorage(persona.localpath)
@@ -222,9 +224,15 @@ if __name__ == "__main__":
     if len(possible_usb_mounts) > 0:
         # There seems to be a thumb drive plugged in. Tell the UI
         # print window to use it as the inital file list.
-            current_path = possible_usb_mounts[0]
-            print("Current path (possible?) = <%s>" % current_path)
-            display.print_pop.update_usb_create(current_path)
+            current_path = ""
+            for possible_path in possible_usb_mounts:
+                if possible_path.startswith(persona.watchpoint):
+                    current_path = possible_path
+                    break
+            if current_path != "":
+                    print("current_path: <%s>" % current_path)
+                    print("Current path (possible?) = <%s>" % current_path)
+                    display.print_pop.update_usb_create(current_path)
 
     print("Creating the watchdog thread")
     wd_thread = WatchdogThread(display.print_pop, persona.watchpoint,

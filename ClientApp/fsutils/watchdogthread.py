@@ -16,7 +16,7 @@ class WatchdogThread():
 
         self.mount_watch_path = mount_watch_path
         
-        self.usb_tracker = USBTracker(ui, mount_watch_path, initial_path, True)
+        self.usb_tracker = USBTracker(mount_watch_path, initial_path, True)
 
         if not exists(self.mount_watch_path):
             print("*** ERROR: mount path does not exist")

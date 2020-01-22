@@ -10,24 +10,21 @@ class ContentWatcher(FileSystemEventHandler):
     #     print("Any:", event)
 
     def on_modified(self, event):
-        # print("Modified:", event)
+        print("CW Modified:", event)
         self.tracker.content_modified(event.src_path)
 
     def on_created(self, event):
-        # print("Created: ", event)
+        print("CW Created: ", event)
         self.tracker.content_modified(event.src_path)
 
     def on_deleted(self, event):
-        # print("Deleted: ", event)
+        print("CW Deleted: ", event)
         self.tracker.content_modified(event.src_path)
 
     def on_modified(self, event):
-        # print("Modified: ", event)
+        print("CW Modified: ", event)
         self.tracker.content_modified(event.src_path)
 
     def on_moved(self, event):
-        # print("Moved: ", event)
+        print("CW Moved: ", event)
         self.tracker.content_modified(event.src_path)
-
-    
-
