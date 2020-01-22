@@ -25,6 +25,10 @@ from octoprint.events import GenericEventListener
 
 print("Doing touchscreen imports...")
 
+import sys
+import threading
+import os
+
 import time
 import serial
 import serial.tools.list_ports
@@ -38,9 +42,7 @@ from touchscreen.personality import Personality
 from touchscreen.fsutils.watchdogthread import WatchdogThread
 from touchscreen.fsutils.mountfinder import MountFinder
 
-import sys
-import threading
-import os
+from touchscreen.gigabot_profile import gigabot_profile
 
 #################################################################
 
@@ -105,6 +107,41 @@ class JTCallback(PrinterCallback):
         
 
 ### Main ###
+        
+from octoprint.printer.profile import BedFormFactor
+from octoprint.printer.profile import BedOrigin
+
+gigabot_profile = dict(
+		id = "_gigabot",
+		name = "Gigabot",
+		model = "re:3D Gigabot",
+		color = "default",
+		volume=dict(
+			width = 600,
+			depth = 600,
+			height = 600,
+			formFactor = BedFormFactor.RECTANGULAR,
+			origin = BedOrigin.LOWERLEFT,
+			custom_box = False
+		),
+		heatedBed = True,
+		heatedChamber = False,
+		extruder=dict(
+			count = 2,
+			offsets = [
+			    (0, 0),
+                            (0, 0)
+			],
+			nozzleDiameter = 0.4,
+			sharedNozzle = False
+		),
+		axes=dict(
+			x = dict(speed=6000, inverted=False),
+			y = dict(speed=6000, inverted=False),
+			z = dict(speed=200, inverted=False),
+			e = dict(speed=300, inverted=False)
+		)
+	)
 
 if __name__ == "__main__":
 
@@ -125,6 +162,8 @@ if __name__ == "__main__":
     print("Creating profile manager")
     profile_manager = profile.PrinterProfileManager()
 
+    profile_manager.save(gigabot_profile, allow_overwrite = True, make_default = True)
+
     # Create an analysis queue
     print("Creating analysis queue")
     analysis_queue = analysis.AnalysisQueue({})
@@ -133,7 +172,7 @@ if __name__ == "__main__":
     print("Creating file manager")
 
     # persona = Personality(False, "/Volumes", "/Users/jct/localgcode")
-    persona = Personality(False, "/Volumes", "/Users/jct/Dropbox/re3D/touchscreen/octoprint/localgcode")
+    persona = Personality(False, "/Volumes", "/Users/jct/Dropbox/re3D/touchscreen/OctoPrint-1.4.0rc3/localgcode")
 
     storage_managers = dict()
     local_storage_manager = storage.LocalFileStorage(persona.localpath)
@@ -194,12 +233,20 @@ if __name__ == "__main__":
     usb_signal_tup = wd_thread.get_usb_signals()
     display.print_pop.set_usb_mount_signals(usb_signal_tup)
 
-    content_signal = wd_thread.get_usb_content_signal()
-    display.print_pop.set_usb_content_signal(content_signal)
+    usb_content_signal = wd_thread.get_usb_content_signal()
+    display.print_pop.set_usb_content_signal(usb_content_signal)
+
+    local_content_signal = wd_thread.get_local_content_signal()
+    display.print_pop.set_local_content_signal(local_content_signal)
+
+    display.print_pop.set_storage_manager(local_storage_manager)
 
     print("Connecting the printer (DEBUG USE ONLY)")
-#    printer.connect("/dev/tty.usbserial-DN02B57Q", 250000)
-    # printer.connect("/dev/tty.usbserial-14110", 115200)
+    printer.connect("/dev/tty.usbserial-DN02B57Q", 250000)
+    # printer.connect("/dev/tty.usbserial-143320", 115200)
 
+    print("Starting the interpreter thread")
+    
+    
     print("Starting the UI")
     app.exec_()

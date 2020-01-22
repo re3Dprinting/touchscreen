@@ -2,6 +2,10 @@ from __future__ import division
 from builtins import str
 from past.utils import old_div
 from PyQt5.QtCore import Qt, pyqtSignal
+
+from octoprint.filemanager import storage
+from octoprint.filemanager.util import DiskFileWrapper
+
 from .qt.printwindow import *
 from .fsutils.subfilesystem import *
 from .fsutils.file import *
@@ -35,12 +39,7 @@ class PrintWindow(QtWidgets.QWidget, Ui_PrintWindow):
         self.printer_if.set_file_list_update_callback(self.sd_file_list_update_callback)
         # print("Setting print finished callback")
         self.printer_if.set_print_finished_callback(self.print_finished_callback)
-        
-        # self.serial = serial
-        # self.serial.data.updatefiles.connect(self.updatefiles)
 
-#        self.update_signal_
-        
         self.temp_pop = temp_pop
         self.personality = personality
         self.parent = parent
@@ -87,32 +86,24 @@ class PrintWindow(QtWidgets.QWidget, Ui_PrintWindow):
                                                 self.usb_pushbutton_open,
                                                 self.usb_pushbutton_print)
 
+        self.usb_pushbutton_print.clicked.connect(self.usb_start_print)
+
         # Set up the list of local files
 
-        self.LocalFileList.setSelectionBehavior(QtWidgets.QTableView.SelectRows)
-        self.LocalFileList.setSelectionMode(QtWidgets.QTableView.SingleSelection)
-        self.LocalFileList.verticalHeader().hide()
+        self.local_file_manager = FileListManager(self.LocalFileList,
+                                                  self.personality.localpath,
+                                                  self.loc_pathlabel,
+                                                  self.loc_pushbutton_up,
+                                                  self.loc_pushbutton_open,
+                                                  self.loc_pushbutton_print)
 
-        header = self.LocalFileList.horizontalHeader()
-        header.setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
+        self.local_file_manager.update_files()
 
-        self.LocalFileList.itemClicked.connect(self.itemClicked)
-        self.LocalFileList.itemDoubleClicked.connect(self.itemDoubleClicked)
+        self.loc_pushbutton_print.clicked.connect(self.local_start_print)
 
-        self.loc_pushbutton_open.clicked.connect(self.open_loc_subdir)
-        self.loc_pushbutton_up.clicked.connect(self.up_loc_dir)
-
-        self.loc_subdir = SubFileSystem(self.personality.localpath)
-        self.loc_pathlabel.setText(self.loc_subdir.abspath)
-
-        self.sd_pushbutton_print.clicked.connect(self.local_start_print)
-        self.sd_pushbutton_print.setEnabled(False)
-
-        # self.sd_pathlabel.setText("Files on ")
-        self.clearlocalfiles()
-        self.updatelocalfiles()
-        self.update_loc_button_states()
-
+    def set_storage_manager(self, local_storage_manager):
+        self.local_storage_manager = local_storage_manager
+        
     def set_usb_mount_signals(self, tuple):
         (create_signal, delete_signal) = tuple
         create_signal.connect(self.update_usb_create)
@@ -129,6 +120,12 @@ class PrintWindow(QtWidgets.QWidget, Ui_PrintWindow):
 
     def update_usb_content(self, path):
         self.usb_file_manager.update_files()
+
+    def set_local_content_signal(self, signal):
+        signal.connect(self.update_local_content)
+
+    def update_local_content(self, path):
+        self.local_file_manager.update_files()
 
     def update_local(self, path):
         self.clearlocalfiles()
@@ -222,6 +219,7 @@ class PrintWindow(QtWidgets.QWidget, Ui_PrintWindow):
         selected = self.SDFileList.currentRow()
         selected_file_item = self.SDFileList.item(selected, 0)
         selected_file = selected_file_item.text()
+
         # print("Printing <%s>" %(selected_file))
         if selected_file != None:
             self.printer_if.select_sd_file(selected_file)
@@ -238,29 +236,54 @@ class PrintWindow(QtWidgets.QWidget, Ui_PrintWindow):
             self.parent.Control.setEnabled(False)
 
     def local_start_print(self):
-        selected = self.LocalFileList.currentRow()
-        selected_file_item = self.LocalFileList.item(selected, 0)
+        (selected_row, selected_file) = self.local_file_manager.get_selected_file()
+        # print(selected_row, selected_file)
+        # selected_file.dump()
 
-        if selected_file_item is None:
-            return
+        selected_file_name = selected_file.name
+        selected_file_loc_path = selected_file.relative_path
 
-        selected_file = selected_file_item.text()
-        print("Printing local <%s>" %(selected_file))
+        if selected_file_name != None:
 
-        if selected_file != None:
-            # self.printer_if.select_sd_file(selected_file)
-            # self.printer_if.start_print()
+            self.printer_if.select_local_file(selected_file_loc_path)
+            self.printer_if.start_print()
 
-            self.local_pushbutton_print.setEnabled(False)
+            self.loc_pushbutton_print.setEnabled(False)
             self.ActivePrint.setEnabled(True)
             self.StopPrint.setEnabled(True)
-            self.ScanSD.setEnabled(False)
 
             self.temp_pop.activeprint()
             self.temp_pop.update_parameters()
             self.temp_pop.ActivePrintWid.FileProgress.setValue(0)
             self.parent.Control.setEnabled(False)
-        
+
+    def usb_start_print(self):
+        (selected_row, selected_file) = self.usb_file_manager.get_selected_file()
+
+        selected_file_name = selected_file.name
+        selected_file_rel = selected_file.relative_path
+        selected_file_abs = selected_file.absolute_path
+
+        print("USB print <%s>, rel <%s>, abs <%s>" % (selected_file_name,
+                                                      selected_file_rel,
+                                                      selected_file_abs))
+
+        if selected_file_name != None:
+
+            wrapped_file = DiskFileWrapper(selected_file_name, selected_file_abs, False)
+            self.local_storage_manager.add_file(selected_file_name, wrapped_file, allow_overwrite=True)
+
+            self.printer_if.select_local_file(selected_file_name)
+            self.printer_if.start_print()
+
+            self.usb_pushbutton_print.setEnabled(False)
+            self.ActivePrint.setEnabled(True)
+            self.StopPrint.setEnabled(True)
+
+            self.temp_pop.activeprint()
+            self.temp_pop.update_parameters()
+            self.temp_pop.ActivePrintWid.FileProgress.setValue(0)
+            self.parent.Control.setEnabled(False)
 
     def get_selected_widget_file(self, list_widget, subdir):
     

@@ -1,6 +1,12 @@
+import sys, traceback
+import re
+import pprint
 from octoprint.printer.standard import PrinterCallback
 import octoprint.events
 from octoprint.util.comm import MachineCom
+
+position_regex = re.compile("x:([0-9]+\.[0-9]+) y:([0-9]+\.[0-9]+) z:([0-9]+\.[0-9]+)", re.IGNORECASE)
+runout_message_regex = re.compile("echo:(R[0-9]+) (.*)")
 
 class PrinterIF(PrinterCallback):
     def __init__(self, printer):
@@ -10,6 +16,10 @@ class PrinterIF(PrinterCallback):
 
         self.temperature_callback = None
         self.printer_state_callback = None
+        self.position_callback = None
+        self.printer_state_change_callback = None
+        self.printer_progress_callback = None
+        self.runout_callback = None
 
         self.file_list_update_callback = None
         self.print_finished_callback = None
@@ -20,6 +30,18 @@ class PrinterIF(PrinterCallback):
         self.file_name = ""
         self.feed_rate = 100
         self.flow_rate = 100
+
+        self.last_known_position = None
+
+        # The maximum number of M114 commands to send to the printer
+        self.M114_QUEUE_LIMIT = 2
+
+        # The number of M114 commands we have sent to the printer
+        # without a response.
+        self.m114_sent_count = 0
+
+        # A pretty-printer for diagnostic use.
+        self.pp = pprint.PrettyPrinter(indent=4)
 
     def printer(self):
         return self.printer
@@ -44,15 +66,23 @@ class PrinterIF(PrinterCallback):
 
     def set_feed_rate(self, rate):
         self.feed_rate = rate
-        printer.feed_rate(rate)
+        self.printer.feed_rate(rate)
 
     def set_flow_rate(self, rate):
         self.flow_rate = rate
-        printer.flow_rate(rate)
-        
+        self.printer.flow_rate(rate)
+
+    def set_babystep(self, value):
+        babystep_command = "M290 P0 Z" + str(value)
+        print("BABYSTEP command", babystep_command)
+        self.printer.commands(babystep_command)
+        # self.tempwindow.serial.send_serial("M290 Z " + str(self.babystep))        
+
+    def send_acknowledgement(self):
+        self.printer.commands("M108")
+
     def fans_on(self):
         self.printer.commands("M106 S0")
-
         
     def fans_off(self):
         self.printer.commands("M106 S255")
@@ -61,7 +91,7 @@ class PrinterIF(PrinterCallback):
         self.printer.commands('G28 XY')
 
     def homez(self):
-        self.printer.commands("G28 z")
+        self.printer.commands("G28 Z")
 
     def homeall(self):
         self.printer.commands("G28")
@@ -70,8 +100,8 @@ class PrinterIF(PrinterCallback):
         # self.parent.serial.send_serial('G91')
         self.printer.commands("G91")
 
-    def commands(self, command):
-        self.printer.commands(command)
+    def commands(self, command, force=False):
+        self.printer.commands(command, force=force)
 
     def release_sd_card(self):
         self.printer.commands("M22")
@@ -98,54 +128,192 @@ class PrinterIF(PrinterCallback):
         self.printer.cancel_print()
 
     def pause_print(self):
+        # Record the last known position as the position to move back
+        # to when we resume the print. This is necessary because the
+        # park command below (G27) will move the print head and we
+        # need to be able to move it back before resuming.
+        self.resume_position = self.last_known_position
+
+        # Pause the print...
         self.printer.pause_print()
 
+        # ...and park the print head.
+        self.printer.commands("G27")
+
     def resume_print(self):
+        # Set positioning back to absolute. If the control screen was
+        # used to move the print head, then the printer will be in
+        # relative mode. We need to set it back to absolute mode
+        # before printing resumes.
+        self.printer.commands("G90")
+
+        # We also need to undo the homing (G27) when we paused. We do
+        # this by moving back to the last known position.
+        if self.resume_position is not None:
+            resume_pos_str = "G1 X%.3f Y%.3f Z%.3f" % self.resume_position
+            print("Sending resume-position <%s>" % resume_pos_str)
+            self.printer.commands(resume_pos_str)
+
+        # And now we can resume the print.
         self.printer.resume_print()
 
     def get_current_temperatures(self):
         return self.printer.get_current_temperatures()
 
-    ### PrinterCallback stuff:
-
-    def on_printer_add_temperature(self, data):
-
-        # If a temperature callback has been registered, call it now.
-        if self.temperature_callback is not None:
-            self.temperature_callback.update_temperatures(data)
-        else:
-            print("No callback")
+    def set_temperature(self, name, temp):
+        self.printer.set_temperature(name, temp)
+        
+    def set_printer_state_callback(self, callback):
+        self.printer_state_callback = callback
         
     def set_temperature_callback(self, callback):
         # Save the provided object as a temperature callback. NOTE:
         # must implement the update_temperature(self, data) function.
         self.temperature_callback = callback
 
-    def set_temperature(self, name, temp):
-        self.printer.set_temperature(name, temp)
+    def set_runout_callback(self, calback):
+        self.runout_callback = callback
 
-    def on_printer_send_current_data(self, data):
-        if self.printer_state_change_callback is not None:
-            self.printer_state_change_callback.update_printer_stat(data)
-        
-    def set_printer_state_callback(self, callback):
-        self.printer_state_callback = callback
+    ### PrinterCallback stuff:
+
+    show_add_log = False
+    show_add_message = False
+    show_add_temperature = False
+    show_receive_registered_message = False
+    show_send_current_data = False
+
+    def on_printer_add_log(self, data):
+        if self.show_add_log:
+            print("*** PRINTER ADD LOG: <%s>" % data)
 
     def on_printer_add_message(self, data):
-        if type(data) is str:
-            message = data.lower()
-            if message == "begin file list":
-                self.getting_sd_file_list = True
-            elif message == "end file list":
-                if self.getting_sd_file_list:
-                    if self.file_list_update_callback is not None:
-                        sd_file_list = self.printer.get_sd_files()
-                        self.getting_sd_file_list = False
-                        # print("?CALLING CALLBACK?")
-                        self.file_list_update_callback(sd_file_list)
-                else:
-                    print("*** UNEXPECTED end of file list received")
+        if self.show_add_message:
+            if data.startswith("echo:"):
+                print("Printer add message: <%s>" % data)
+
+        # Determin whethe the message contains a filament-change
+        # message
+        match = runout_message_regex.match(data)
+
+        if match:
+            code = match.group(1)
+            mess = match.group(2)
+
+            if self.runout_callback is not None:
+                self.runout_callback.handle_runout_message(code, mess)
+
+        # Determine whether the message contains position data.
+        match = position_regex.match(data)
+
+        # If so, extract and display it...
+        if match:
+
+            # First, reset the M114 counter. This indicates that we're
+            # getting data from the printer.
+            self.m114_sent_count = 0
+
+            # Now extract each of the x, y, z positions using the
+            # regex groups that matched them.
+            x = match.group(1)
+            y = match.group(2)
+            z = match.group(3)
+
+            # Save the last known position. We'll use this in resuming
+            # a print.
+            self.last_known_position = (float(x), float(y), float(z))
+
+            # And, if there's a callback, call it now.
+            if self.position_callback is not None:
+                self.position_callback.update_position(x, y, z)
+
+        # Track incoming messages that list the files on the SD card
+        # in responds to an M20 command.
+
+        message = data.lower()
+        if message == "begin file list":
+            self.getting_sd_file_list = True
+        elif message == "end file list":
+            if self.getting_sd_file_list:
+                if self.file_list_update_callback is not None:
+                    sd_file_list = self.printer.get_sd_files()
+                    self.getting_sd_file_list = False
+                    # print("?CALLING CALLBACK?")
+                    self.file_list_update_callback(sd_file_list)
+            else:
+                print("*** UNEXPECTED end of file list received")
         
+    def on_printer_add_temperature(self, data):
+      try:
+        if self.show_add_temperature:
+            print("*** ADD TEMPERATURE:")
+            self.pp.pprint(data)
+            
+        # If a temperature callback has been registered, call it now.
+        if self.temperature_callback is not None:
+            self.temperature_callback.update_temperatures(data)
+
+        # Because this is a convenient place to do it, send an M114 to
+        # cause the printer to send us its position... BUT don't queue
+        # up too many. The count is reset when we receive the next
+        # position data.
+        # print("B Sent count =", self.m114_sent_count)
+
+        if (self.m114_sent_count < self.M114_QUEUE_LIMIT):
+            # self.printer.commands("M114")
+            self.m114_sent_count += 1
+        else:
+            state_string = self.printer.get_state_string()
+            if state_string == "Operational":
+                self.printer.fake_ack()
+      except Exception as e:
+          print("SOMETHING IS WRONG")
+          traceback.print_exc()
+          
+                
+
+    def on_printer_received_registered_message(name, output):
+        if self.show_receive_registered_message:
+            print("REGISTERED MESSAGE: <%s> - <%s>" % (name, output))
+
+    def on_printer_send_current_data(self, data):
+
+        if self.show_send_current_data:
+            print("PRINTER SEND CURRENT DATA:")
+            self.pp.pprint(data)
+        
+        try:
+            progress = data["progress"]
+
+            if progress is not None:
+                # self.pp.pprint(progress)
+        
+                completion = progress["completion"]
+
+                if completion is None:
+                    completion = "N/A"
+
+                print_time_left = progress["printTimeLeft"]
+
+                if print_time_left is None:
+                    print_time_left = "N/A"
+
+                # print("Percent done: %s, Estimated time remaining: %s" % (completion, print_time_left))
+
+                if self.printer_state_change_callback is not None:
+                    self.printer_state_change_callback.update_printer_state(data)
+
+                if self.printer_progress_callback is not None:
+                    self.printer_progress_callback.update_progress(completion, print_time_left)
+
+        except Exception as e:
+            print("SOMETHING IS WRONG")
+            traceback.print_exc()
+
+            
+    def on_printer_send_initial_data(self, data):
+        print("*** INITIAL DATA:")
+        self.pp.pprint(data)
+
     ### Event stuff:
 
     _printer_state_finishing = "FINISHING"
@@ -173,3 +341,13 @@ class PrinterIF(PrinterCallback):
     def set_print_finished_callback(self, callback):
         # print("Saving print finished callback")
         self.print_finished_callback = callback
+
+    def set_position_callback(self, callback):
+        self.position_callback = callback
+
+    def set_progress_callback(self, callback):
+        self.printer_progress_callback = callback
+
+    def set_runout_callback(self, callback):
+        self.runout_callback = callback
+        

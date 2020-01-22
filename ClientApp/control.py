@@ -70,7 +70,7 @@ class ControlWindow(QtWidgets.QWidget, Ui_ControlWindow):
 
     def disablemotors(self):
         # self.serial.send_serial('M18')
-        self.printer_if.commands("M18")
+        self.printer_if.commands("M18", force=True)
         pass
     
     def homexy(self):
