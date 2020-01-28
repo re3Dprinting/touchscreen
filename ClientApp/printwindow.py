@@ -5,6 +5,7 @@ from PyQt5.QtCore import Qt, pyqtSignal
 
 from octoprint.filemanager import storage
 from octoprint.filemanager.util import DiskFileWrapper
+from .copy_handler import CopyHandlerDialog
 
 from .qt.printwindow import *
 from .fsutils.subfilesystem import *
@@ -100,6 +101,8 @@ class PrintWindow(QtWidgets.QWidget, Ui_PrintWindow):
         self.local_file_manager.update_files()
 
         self.loc_pushbutton_print.clicked.connect(self.local_start_print)
+
+        self.w_copy_handler = CopyHandlerDialog(self)
 
     def set_storage_manager(self, local_storage_manager):
         self.local_storage_manager = local_storage_manager
@@ -198,6 +201,7 @@ class PrintWindow(QtWidgets.QWidget, Ui_PrintWindow):
         # self.scansd()
 
     def stopprint(self):
+        # self.w_copy_handler.show()
         # self.serial.reset()
         self.printer_if.cancel_printing()
         self.notprinting()
@@ -270,8 +274,12 @@ class PrintWindow(QtWidgets.QWidget, Ui_PrintWindow):
 
         if selected_file_name != None:
 
+            self.w_copy_handler.show()
+
             wrapped_file = DiskFileWrapper(selected_file_name, selected_file_abs, False)
             self.local_storage_manager.add_file(selected_file_name, wrapped_file, allow_overwrite=True)
+
+            self.w_copy_handler.hide()
 
             self.printer_if.select_local_file(selected_file_name)
             self.printer_if.start_print()
