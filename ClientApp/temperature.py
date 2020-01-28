@@ -294,22 +294,20 @@ class TemperatureWindow(QtWidgets.QWidget, Ui_TemperatureWindow):
                 getattr(self.NotActivePrintWid, m + p).clicked.connect(getattr(getattr(self, m), p + 'set'))
 
     def fan(self):
-        print("Foo")
-        self.w_runout_handler.show()
-        # if self.fanon:
-        #     self.printer_if.fans_on()
-        #     self.ActivePrintWid.Fan.setIcon(self.fanofficon)
-        #     self.ActivePrintWid.Fan.setIconSize(QtCore.QSize(55, 55))
-        #     self.NotActivePrintWid.Fan.setIcon(self.fanofficon)
-        #     self.NotActivePrintWid.Fan.setIconSize(QtCore.QSize(55, 55))
-        #     self.fanon = False
-        # elif not self.fanon:
-        #     self.printer_if.fans_off()
-        #     self.ActivePrintWid.Fan.setIcon(self.fanonicon)
-        #     self.ActivePrintWid.Fan.setIconSize(QtCore.QSize(55, 55))
-        #     self.NotActivePrintWid.Fan.setIcon(self.fanonicon)
-        #     self.NotActivePrintWid.Fan.setIconSize(QtCore.QSize(55, 55))
-        #     self.fanon = True
+        if self.fanon:
+            self.fanon = False
+            self.printer_if.fans_off()
+            self.ActivePrintWid.Fan.setIcon(self.fanofficon)
+            self.ActivePrintWid.Fan.setIconSize(QtCore.QSize(55, 55))
+            self.NotActivePrintWid.Fan.setIcon(self.fanofficon)
+            self.NotActivePrintWid.Fan.setIconSize(QtCore.QSize(55, 55))
+        elif not self.fanon:
+            self.fanon = True
+            self.printer_if.fans_on()
+            self.ActivePrintWid.Fan.setIcon(self.fanonicon)
+            self.ActivePrintWid.Fan.setIconSize(QtCore.QSize(55, 55))
+            self.NotActivePrintWid.Fan.setIcon(self.fanonicon)
+            self.NotActivePrintWid.Fan.setIconSize(QtCore.QSize(55, 55))
 
 
     def cool(self):
