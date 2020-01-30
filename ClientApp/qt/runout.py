@@ -13,10 +13,10 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_w_runout_dialog(object):
     def setupUi(self, w_runout_dialog):
         w_runout_dialog.setObjectName("w_runout_dialog")
-        w_runout_dialog.resize(344, 188)
+        w_runout_dialog.resize(388, 188)
         w_runout_dialog.setModal(True)
         self.w_buttonBox = QtWidgets.QDialogButtonBox(w_runout_dialog)
-        self.w_buttonBox.setGeometry(QtCore.QRect(30, 140, 291, 32))
+        self.w_buttonBox.setGeometry(QtCore.QRect(70, 140, 291, 32))
         self.w_buttonBox.setOrientation(QtCore.Qt.Horizontal)
         self.w_buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Ok)
         self.w_buttonBox.setObjectName("w_buttonBox")
