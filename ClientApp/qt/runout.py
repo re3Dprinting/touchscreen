@@ -23,7 +23,7 @@ class Ui_w_runout_dialog(object):
         self.w_runout_title = QtWidgets.QLabel(w_runout_dialog)
         self.w_runout_title.setGeometry(QtCore.QRect(50, 10, 241, 31))
         font = QtGui.QFont()
-        font.setPointSize(24)
+        font.setPointSize(20)
         self.w_runout_title.setFont(font)
         self.w_runout_title.setAlignment(QtCore.Qt.AlignCenter)
         self.w_runout_title.setWordWrap(True)
