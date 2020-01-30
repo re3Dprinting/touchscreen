@@ -74,7 +74,7 @@ class TemperatureWindow(QtWidgets.QWidget, Ui_TemperatureWindow):
         self.extruder1 = Periph("e1", self.set_tool0_temperature, 345, self)
         self.extruder2 = Periph("e2", self.set_tool1_temperature, 345, self)
         self.heatedbed = Periph("bed", self.set_bed_temperature, 125, self)
-        self.m1 = Material(210, 180, 60, self)
+        self.m1 = Material(180, 180, 60, self)
         self.m2 = Material(215, 215, 115, self)
         self.m3 = Material(200, 200, 60, self)
 
