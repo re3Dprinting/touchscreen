@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'qt/runout.ui'
 #
-# Created by: PyQt5 UI code generator 5.13.2
+# Created by: PyQt5 UI code generator 5.13.1
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -14,6 +14,7 @@ class Ui_WRunoutDialog(object):
     def setupUi(self, WRunoutDialog):
         WRunoutDialog.setObjectName("WRunoutDialog")
         WRunoutDialog.resize(344, 188)
+        WRunoutDialog.setModal(True)
         self.w_buttonBox = QtWidgets.QDialogButtonBox(WRunoutDialog)
         self.w_buttonBox.setGeometry(QtCore.QRect(30, 140, 291, 32))
         self.w_buttonBox.setOrientation(QtCore.Qt.Horizontal)

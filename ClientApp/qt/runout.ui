@@ -13,6 +13,9 @@
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
+  <property name="modal">
+   <bool>true</bool>
+  </property>
   <widget class="QDialogButtonBox" name="w_buttonBox">
    <property name="geometry">
     <rect>
