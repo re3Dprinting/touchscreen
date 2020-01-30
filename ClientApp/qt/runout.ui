@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>WRunoutDialog</class>
- <widget class="QDialog" name="WRunoutDialog">
+ <class>w_runout_dialog</class>
+ <widget class="QDialog" name="w_runout_dialog">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -86,7 +86,7 @@
   <connection>
    <sender>w_buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>WRunoutDialog</receiver>
+   <receiver>w_runout_dialog</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -102,7 +102,7 @@
   <connection>
    <sender>w_buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>WRunoutDialog</receiver>
+   <receiver>w_runout_dialog</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">

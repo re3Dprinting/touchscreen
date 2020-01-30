@@ -2,7 +2,7 @@ import logging
 from PyQt5.QtCore import Qt, pyqtSignal
 from .qt.runout import *
 
-class RunoutHandlerDialog(QtWidgets.QWidget, Ui_WRunoutDialog):
+class RunoutHandlerDialog(QtWidgets.QDialog, Ui_w_runout_dialog):
     runout_signal = pyqtSignal(str, str)
 
     def __init__(self, parent, printer_if):
