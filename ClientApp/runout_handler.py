@@ -1,3 +1,4 @@
+import logging
 from PyQt5.QtCore import Qt, pyqtSignal
 from .qt.runout import *
 
@@ -6,6 +7,9 @@ class RunoutHandlerDialog(QtWidgets.QWidget, Ui_WRunoutDialog):
 
     def __init__(self, parent, printer_if):
         super(RunoutHandlerDialog, self).__init__()
+        self._logger = logging.getLogger("re3D.runout_handler")
+        self._log("Runout handler starting up")
+
         self.setupUi(self)
         self.w_buttonBox.setEnabled(False)
         self.printer_if = printer_if
@@ -13,6 +17,9 @@ class RunoutHandlerDialog(QtWidgets.QWidget, Ui_WRunoutDialog):
         self.runout_signal.connect(self.runout_handler_slot)
         self.hide_on_ok = False
         self.send_m108_on_ok = False
+
+    def _log(self, message):
+        self._logger.debug(message)
 
     # Called when the user clicks OK:
     def accept(self):
@@ -60,6 +67,7 @@ class RunoutHandlerDialog(QtWidgets.QWidget, Ui_WRunoutDialog):
     # This method runs in the printer thread; emit a signal so we can
     # handle the message in the UI thread.
     def handle_runout_message(self, code, mess):
+        self._log("Received runout message <%s>, <%s>, sending signal..." % (code, mess))
         self.runout_signal.emit(code, mess)
 
     # Slot called when the filament-change signal emits a message. We
@@ -69,6 +77,7 @@ class RunoutHandlerDialog(QtWidgets.QWidget, Ui_WRunoutDialog):
     # Note that in some cases we override the default message with one
     # that makes more sense for a touchscreen
     def runout_handler_slot(self, code, mess):
+        self._log("Received runout signal <%s>, <%s>, handling..." % (code, mess))
 
         # "Wait for start of the filament change."
         if code == "R301":

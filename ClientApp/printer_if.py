@@ -1,6 +1,8 @@
 import sys, traceback
 import re
 import pprint
+import logging
+
 from octoprint.printer.standard import PrinterCallback
 import octoprint.events
 from octoprint.util.comm import MachineCom
@@ -10,6 +12,9 @@ runout_message_regex = re.compile("echo:(R[0-9]+) (.*)")
 
 class PrinterIF(PrinterCallback):
     def __init__(self, printer):
+        self._logger = logging.getLogger("re3D.printer_if")
+        self._log("PrinterIF starting up")
+        
         self.printer = printer
         self.printer.register_callback(self)
         self.state_getting_sd_list = False
@@ -45,6 +50,9 @@ class PrinterIF(PrinterCallback):
 
     def printer(self):
         return self.printer
+
+    def _log(self, message):
+        self._logger.debug(message)
 
     def get_connection_options(self):
 
@@ -194,12 +202,15 @@ class PrinterIF(PrinterCallback):
         # Determin whethe the message contains a filament-change
         # message
         match = runout_message_regex.match(data)
+        self._log("Matched in <%s>" % data)
 
         if match:
             code = match.group(1)
             mess = match.group(2)
+            self._log("Match groups 1:<%s>, 2:<%s>." % (code, mess))
 
             if self.runout_callback is not None:
+                self._log("Have callback, calling...")
                 self.runout_callback.handle_runout_message(code, mess)
 
         # Determine whether the message contains position data.
