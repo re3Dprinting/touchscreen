@@ -295,6 +295,7 @@ class TemperatureWindow(QtWidgets.QWidget, Ui_TemperatureWindow):
 
     def fan(self):
         if self.fanon:
+            # self.w_runout_handler.show()
             self.fanon = False
             self.printer_if.fans_off()
             self.ActivePrintWid.Fan.setIcon(self.fanofficon)
@@ -302,6 +303,7 @@ class TemperatureWindow(QtWidgets.QWidget, Ui_TemperatureWindow):
             self.NotActivePrintWid.Fan.setIcon(self.fanofficon)
             self.NotActivePrintWid.Fan.setIconSize(QtCore.QSize(55, 55))
         elif not self.fanon:
+            # self.w_runout_handler.hide()
             self.fanon = True
             self.printer_if.fans_on()
             self.ActivePrintWid.Fan.setIcon(self.fanonicon)

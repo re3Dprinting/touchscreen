@@ -173,8 +173,8 @@ if __name__ == "__main__":
 
     # persona = Personality(False, "/Volumes", "/Users/jct/localgcode")
 
-    persona = Personality(False, "/Volumes", "/Users/jct/Dropbox/re3D/touchscreen/OctoPrint-1.4.0rc3/localgcode")
-    # persona = Personality(True, "/media/pi", "/home/pi/gcode-cache")
+    # persona = Personality(False, "/Volumes", "/Users/jct/Dropbox/re3D/touchscreen/OctoPrint-1.4.0rc3/localgcode")
+    persona = Personality(True, "/media/pi", "/home/pi/gcode-cache")
 
     storage_managers = dict()
     local_storage_manager = storage.LocalFileStorage(persona.localpath)
