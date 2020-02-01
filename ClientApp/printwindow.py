@@ -209,6 +209,8 @@ class PrintWindow(QtWidgets.QWidget, Ui_PrintWindow):
         self.ActivePrint.setEnabled(False)
         self.StopPrint.setEnabled(False)
         self.sd_pushbutton_print.setEnabled(True)
+        self.usb_pushbutton_print.setEnabled(True)
+        self.loc_pushbutton_print.setEnabled(True)
         self.ScanSD.setEnabled(True)
         # Why?:
         # self.SDFileList.setRowCount(0)
@@ -226,6 +228,8 @@ class PrintWindow(QtWidgets.QWidget, Ui_PrintWindow):
             self.printer_if.start_print()
 
             self.sd_pushbutton_print.setEnabled(False)
+            self.usb_pushbutton_print.setEnabled(False)
+            self.loc_pushbutton_print.setEnabled(False)
             self.ActivePrint.setEnabled(True)
             self.StopPrint.setEnabled(True)
             self.ScanSD.setEnabled(False)
@@ -248,6 +252,8 @@ class PrintWindow(QtWidgets.QWidget, Ui_PrintWindow):
             self.printer_if.select_local_file(selected_file_loc_path)
             self.printer_if.start_print()
 
+            self.sd_pushbutton_print.setEnabled(False)
+            self.usb_pushbutton_print.setEnabled(False)
             self.loc_pushbutton_print.setEnabled(False)
             self.ActivePrint.setEnabled(True)
             self.StopPrint.setEnabled(True)
@@ -276,7 +282,9 @@ class PrintWindow(QtWidgets.QWidget, Ui_PrintWindow):
             self.printer_if.select_local_file(selected_file_name)
             self.printer_if.start_print()
 
+            self.sd_pushbutton_print.setEnabled(False)
             self.usb_pushbutton_print.setEnabled(False)
+            self.loc_pushbutton_print.setEnabled(False)
             self.ActivePrint.setEnabled(True)
             self.StopPrint.setEnabled(True)
 

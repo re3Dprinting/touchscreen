@@ -12,30 +12,41 @@ runout_message_regex = re.compile("echo:(R[0-9]+) (.*)")
 
 class PrinterIF(PrinterCallback):
     def __init__(self, printer):
-        self._logger = logging.getLogger("re3D.printer_if")
-        self._log("PrinterIF starting up")
-        
+
+        # Keep a reference to the OctoPrint printer object and register to receive callbacks
+        # from it.
         self.printer = printer
         self.printer.register_callback(self)
-        self.state_getting_sd_list = False
 
+        # Set up logging
+        self._logger = logging.getLogger("re3D.printer_if")
+        self._log("PrinterIF starting up")
+
+        # Were not received the SD file list or doing an SD print
+        self.state_getting_sd_list = False
+        self.printing_from_sd = False
+
+        # Null out all our callbacks.
         self.temperature_callback = None
         self.printer_state_callback = None
         self.position_callback = None
         self.printer_state_change_callback = None
         self.printer_progress_callback = None
         self.runout_callback = None
-
         self.file_list_update_callback = None
         self.print_finished_callback = None
 
+        # Subscribe to printer state change events so we know what state the OctoPrint
+        # printer is in at all times.
         self.event_manager = octoprint.events.eventManager()
         self.event_manager.subscribe(octoprint.events.Events.PRINTER_STATE_CHANGED, self.cb_printer_state_changed)
 
+        # Set default values
         self.file_name = ""
         self.feed_rate = 100
         self.flow_rate = 100
 
+        # We don't know where the print head is or has been.
         self.last_known_position = None
 
         # The maximum number of M114 commands to send to the printer
@@ -67,16 +78,21 @@ class PrinterIF(PrinterCallback):
     def connect(self, device):
         # print("CONNECT to device <%s>." % (device))
         # self.printer.connect(device, 115200)
+
+        # Connect to the specified device using the default Gigabot bit rate.
         self.printer.connect(device, 250000)
 
     def disconnect(self):
+        # Disconnect
         self.printer.disconnect()
 
     def set_feed_rate(self, rate):
+        # Record the specified feed rate and send it to the printer.
         self.feed_rate = rate
         self.printer.feed_rate(rate)
 
     def set_flow_rate(self, rate):
+        # Record the specified flow rate and send it to the printer.
         self.flow_rate = rate
         self.printer.flow_rate(rate)
 
@@ -87,6 +103,8 @@ class PrinterIF(PrinterCallback):
         # self.tempwindow.serial.send_serial("M290 Z " + str(self.babystep))        
 
     def send_acknowledgement(self):
+        # Send an M108 acknowledgement to the printer. This is how we respond to prompts
+        # during filament change.
         self.printer.commands("M108")
 
     def fans_on(self):
@@ -122,6 +140,7 @@ class PrinterIF(PrinterCallback):
 
     def select_sd_file(self, filename):
         self.file_name = filename
+        self.printing_from_sd = True
         self.printer.select_file(filename, True, True)
 
     def start_print(self):
@@ -130,12 +149,17 @@ class PrinterIF(PrinterCallback):
 
     def select_local_file(self, filename):
         self.file_name = filename
+        self.printing_from_sd = False
         self.printer.select_file(filename, False, True)
 
     def cancel_printing(self):
         self.printer.cancel_print()
 
     def pause_print(self):
+        if self.printing_from_sd:
+            self.printer.pause_print()
+            return
+
         # Record the last known position as the position to move back
         # to when we resume the print. This is necessary because the
         # park command below (G27) will move the print head and we
@@ -149,6 +173,10 @@ class PrinterIF(PrinterCallback):
         self.printer.commands("G27")
 
     def resume_print(self):
+        if self.printing_from_sd:
+            self.printer.resume_print()
+            return
+
         # Set positioning back to absolute. If the control screen was
         # used to move the print head, then the printer will be in
         # relative mode. We need to set it back to absolute mode
@@ -195,23 +223,31 @@ class PrinterIF(PrinterCallback):
             print("*** PRINTER ADD LOG: <%s>" % data)
 
     def on_printer_add_message(self, data):
+        # This is a callback message from the OctoPrint printer object. We handle messages
+        # depending upon their contents.
+
+        # If we're configured to show these messages, do so now.
         if self.show_add_message:
             if data.startswith("echo:"):
                 print("Printer add message: <%s>" % data)
 
-        # Determin whethe the message contains a filament-change
+        # Determine whether the message contains a filament-change
         # message
         match = runout_message_regex.match(data)
         self._log("Matched in <%s>" % data)
 
+        # If it does contain a match...
         if match:
-            code = match.group(1)
-            mess = match.group(2)
-            self._log("Match groups 1:<%s>, 2:<%s>." % (code, mess))
 
+            # Extract the code and text from the message
+            code = match.group(1)
+            text = match.group(2)
+            self._log("Match groups 1:<%s>, 2:<%s>." % (code, text))
+
+            # If a callback is set up for filament-change messages, call it now.
             if self.runout_callback is not None:
-                self._log("Have callback, calling...")
-                self.runout_callback.handle_runout_message(code, mess)
+                self._log("We have callback, calling...")
+                self.runout_callback.handle_runout_message(code, text)
 
         # Determine whether the message contains position data.
         match = position_regex.match(data)

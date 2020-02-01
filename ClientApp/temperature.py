@@ -137,16 +137,8 @@ class TemperatureWindow(QtWidgets.QWidget, Ui_TemperatureWindow):
     def update_parameters(self):
         self.event_handler.resetparameters()
 
-        # self.changeText(self.ActivePrintWid.FileName,
-        #                 str(self.serial.data.currentfile))
         self.changeText(self.ActivePrintWid.FileName, self.printer_if.file_name)
-
-        # self.changeText(self.ActivePrintWid.FeedrateVal,
-        #                 str(self.event_handler.feedrate))
         self.changeText(self.ActivePrintWid.FeedrateVal, str(self.printer_if.feed_rate))
-
-        # self.changeText(self.ActivePrintWid.BabysteppingVal,
-        #                 str(self.event_handler.babystep))
         self.changeText(self.ActivePrintWid.BabysteppingVal, str(self.event_handler.babystep))
         self.changeText(self.ActivePrintWid.FlowrateVal, str(self.printer_if.flow_rate))
 
@@ -256,6 +248,8 @@ class TemperatureWindow(QtWidgets.QWidget, Ui_TemperatureWindow):
 
     def activeprint(self):
         self.NotActivePrintWid.hide()
+        self.ActivePrintWid.ResumePrint.setEnabled(False)
+        self.ActivePrintWid.PausePrint.setEnabled(True)
         self.ActivePrintWid.show()
 
     def pauseprint(self):
