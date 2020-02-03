@@ -4,7 +4,8 @@ from watchdog.events import FileSystemEventHandler
 class Watcher(FileSystemEventHandler):
     def __init__(self):
         self.whatthe_observer = Observer()
-        self.whatthe_observer.schedule(self, "/media/pi", recursive=False)
+#        self.whatthe_observer.schedule(self, "/media/pi", recursive=False)
+        self.whatthe_observer.schedule(self, "/media/", recursive=False)
         self.whatthe_observer.start()
 
     def on_created(self, event):

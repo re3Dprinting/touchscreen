@@ -172,9 +172,9 @@ if __name__ == "__main__":
     print("Creating file manager")
 
     # persona = Personality(False, "/Volumes", "/Users/jct/localgcode")
-
-    persona = Personality(False, "/Volumes", "/Users/jct/Dropbox/re3D/touchscreen/OctoPrint-1.4.0rc3/localgcode")
+    # persona = Personality(False, "/Volumes", "/Users/jct/Dropbox/re3D/touchscreen/OctoPrint-1.4.0rc3/localgcode")
     # persona = Personality(True, "/media/pi", "/home/pi/gcode-cache")
+    persona = Personality(True, "/media", "/home/pi/gcode-cache")
 
     storage_managers = dict()
     local_storage_manager = storage.LocalFileStorage(persona.localpath)
@@ -250,7 +250,7 @@ if __name__ == "__main__":
     display.print_pop.set_storage_manager(local_storage_manager)
 
     print("Connecting the printer (DEBUG USE ONLY)")
-    printer.connect("/dev/tty.usbserial-DN02B57Q", 250000)
+    # printer.connect("/dev/tty.usbserial-DN02B57Q", 250000)
     # printer.connect("/dev/tty.usbserial-143320", 115200)
 
     print("Starting the interpreter thread")
