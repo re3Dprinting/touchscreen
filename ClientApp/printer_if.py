@@ -78,8 +78,8 @@ class PrinterIF(PrinterCallback):
     def connect(self, device):
         # print("CONNECT to device <%s>." % (device))
         # Connect to the specified device using the default Gigabot bit rate.
-        # self.printer.connect(device, 250000)
-        self.printer.connect(device, 115200)
+        self.printer.connect(device, 250000)
+        # self.printer.connect(device, 115200)
 
     def disconnect(self):
         # Disconnect
