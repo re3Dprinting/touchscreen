@@ -20,7 +20,6 @@ from octoprint.filemanager import storage
 from octoprint.events import GenericEventListener
 
 
-
 #################################################################
 
 print("Doing touchscreen imports...")
@@ -43,6 +42,7 @@ from touchscreen.fsutils.watchdogthread import WatchdogThread
 from touchscreen.fsutils.mountfinder import MountFinder
 
 from touchscreen.gigabot_profile import gigabot_profile
+from util.configid import get_touchscreen_commit_id
 
 #################################################################
 
@@ -145,6 +145,9 @@ gigabot_profile = dict(
 
 if __name__ == "__main__":
 
+    config_id = get_touchscreen_commit_id()
+    print("Config ID =", config_id)
+
     #################################################################
     # This is the octoprint area
     print("Setting up logging")
@@ -172,9 +175,9 @@ if __name__ == "__main__":
     print("Creating file manager")
 
     # persona = Personality(False, "/Volumes", "/Users/jct/localgcode")
-    # persona = Personality(False, "/Volumes", "/Users/jct/Dropbox/re3D/touchscreen/OctoPrint-1.4.0rc3/localgcode")
+    persona = Personality(False, "/Volumes", "/Users/jct/Dropbox/re3D/touchscreen/OctoPrint-1.4.0rc3/localgcode")
     # persona = Personality(True, "/media/pi", "/home/pi/gcode-cache")
-    persona = Personality(True, "/media", "/home/pi/gcode-cache")
+    # persona = Personality(True, "/media", "/home/pi/gcode-cache")
 
     storage_managers = dict()
     local_storage_manager = storage.LocalFileStorage(persona.localpath)
@@ -211,6 +214,7 @@ if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
 
     display = TouchDisplay(client_conn, printer_if, persona)
+    display.label.setText("Config ID: %s" % config_id)
     display.show()
 
     print("Starting the events flow")
