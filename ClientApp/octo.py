@@ -37,7 +37,7 @@ from touchscreen.Client.g_client import *
 from touchscreen.Client.g_data import *
 
 from touchscreen.touchdisplay import *
-from touchscreen.personality import Personality
+from touchscreen.util.personality import Personality
 from touchscreen.fsutils.watchdogthread import WatchdogThread
 from touchscreen.fsutils.mountfinder import MountFinder
 
@@ -174,10 +174,19 @@ if __name__ == "__main__":
     # Create the file manager
     print("Creating file manager")
 
-    # persona = Personality(False, "/Volumes", "/Users/jct/localgcode")
-    persona = Personality(False, "/Volumes", "/Users/jct/Dropbox/re3D/touchscreen/OctoPrint-1.4.0rc3/localgcode")
-    # persona = Personality(True, "/media/pi", "/home/pi/gcode-cache")
+    plat = sys.platform
+    if plat.startswith("linux"):
+        # Linux
+        persona = Personality(True, "/media/pi", "/home/pi/gcode-cache")
+    elif plat.startswith("darwin"):
+        # macOS
+        persona = Personality(False, "/Volumes", "/Users/jct/Dropbox/re3D/touchscreen/OctoPrint-1.4.0rc3/localgcode")
+    else:
+        print("Unable to determine operating system, aborting...")
+        sys.exit(1)
+            
     # persona = Personality(True, "/media", "/home/pi/gcode-cache")
+    # persona = Personality(False, "/Volumes", "/Users/jct/localgcode")
 
     storage_managers = dict()
     local_storage_manager = storage.LocalFileStorage(persona.localpath)
