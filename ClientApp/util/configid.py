@@ -58,7 +58,7 @@ def get_touchscreen_commit_id():
         id_string += " [modified]"
 
     if unkfile:
-        id_string += " [unknown]"
+        id_string += " [newfiles]"
 
     os.chdir(pushed)
 
