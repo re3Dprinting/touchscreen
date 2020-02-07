@@ -32,6 +32,9 @@ def get_touchscreen_commit_id():
     unkfile = False
 
     for s in output:
+        print("Checking string <%s>" % s)
+        if s == "":
+            continue
 
         # Select the first two characters of the line.
         s = s[0:2]
