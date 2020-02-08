@@ -66,34 +66,36 @@ class UserUpdateWindow(BaseWindow, Ui_UserUpdate):
 
     def checkupdate(self):
         #Fetch all of the tags from the remote repository.
-        for tag in self.repo.tags:
-            self.repo.delete_tag(tag)
+        try:
+            for tag in self.repo.tags:
+                self.repo.delete_tag(tag)
 
-        self.remote_repo.fetch("--tags")
-        tags = self.repo.tags
-        tags.reverse()
+            self.remote_repo.fetch("--tags")
+            tags = self.repo.tags
+            tags.reverse()
 
-        self.SoftwareList.setRowCount(0)
+            self.SoftwareList.setRowCount(0)
 
-        self.current_tags = []
-        for t in tags:
-            if("release" == t.name.split("/")[0]): #and not self.app.applicationVersion() in t.name #<--- Dont show current version
-                self.current_tags.append(t)
-                tag_date = time.strftime('%I:%M%p %m/%d/%y', time.localtime(t.commit.committed_date))
-                rowpos = self.SoftwareList.rowCount()
-                self.SoftwareList.insertRow(rowpos)
-                version = QtWidgets.QTableWidgetItem(t.name.strip("release/"))
-                self.checkagainstcurrent(t.name.strip("release/"))
-                version.setFlags(Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
+            self.current_tags = []
+            for t in tags:
+                if("release" == t.name.split("/")[0]): #and not self.app.applicationVersion() in t.name #<--- Dont show current version
+                    self.current_tags.append(t)
+                    tag_date = time.strftime('%I:%M%p %m/%d/%y', time.localtime(t.commit.committed_date))
+                    rowpos = self.SoftwareList.rowCount()
+                    self.SoftwareList.insertRow(rowpos)
+                    version = QtWidgets.QTableWidgetItem(t.name.strip("release/"))
+                    self.checkagainstcurrent(t.name.strip("release/"))
+                    version.setFlags(Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
 
-                date = QtWidgets.QTableWidgetItem(tag_date)
-                date.setFlags(Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
-                self.SoftwareList.setItem(rowpos,0,version)
-                self.SoftwareList.setItem(rowpos,1,date)
-        if(self.SoftwareList.rowCount() == 0): self.print_debug("No software versions found. The server might be down, please try again later.")
-        elif(self.new_version_avalible):
-            return Notification("A new software version is available!\nTo update, go to Settings > Software Update")
-
+                    date = QtWidgets.QTableWidgetItem(tag_date)
+                    date.setFlags(Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
+                    self.SoftwareList.setItem(rowpos,0,version)
+                    self.SoftwareList.setItem(rowpos,1,date)
+            if(self.SoftwareList.rowCount() == 0): self.print_debug("No software versions found. The server might be down, please try again later.")
+            elif(self.new_version_avalible):
+                return Notification("A new software version is available!\nTo update, go to Settings > Software Update")
+        except Exception e:
+            print(e)
     def show_tag_message(self):
         item = self.SoftwareList.currentRow()
         selected = self.SoftwareList.item(item, 0)
