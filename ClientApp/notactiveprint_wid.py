@@ -1,4 +1,4 @@
-from qt.notactiveprintwidget import *
+from .qt.notactiveprintwidget import *
 from PyQt5.QtCore import Qt
 
 

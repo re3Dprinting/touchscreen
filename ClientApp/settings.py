@@ -1,7 +1,8 @@
-from basewindow import BaseWindow
-from qt.settingswindow import *
-from serialsetup import *
-from server import *
+from PyQt5.QtCore import Qt
+from .qt.settingswindow import *
+from . import serialsetup
+from . import server
+from .basewindow import BaseWindow
 
 
 class SettingsWindow(BaseWindow, Ui_SettingsWindow):
