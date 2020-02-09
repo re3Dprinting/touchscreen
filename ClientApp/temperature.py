@@ -15,28 +15,26 @@ from .preheatmaterial import *
 from .periph import *
 
 from .printer_if import PrinterIF
+from .basewindow import BaseWindow
+
+from PyQt5 import QtCore, QtGui, QtWidgets
 
 mats = ['m1', 'm2', 'm3']
 periphs = ['e1', 'e2', 'bed', 'all']
 
-class TemperatureWindow(QtWidgets.QWidget, Ui_TemperatureWindow):
+
+class TemperatureWindow(BaseWindow, Ui_TemperatureWindow):
 
     progress_signal = pyqtSignal(str)
 
     def __init__(self, printer_if, event_handler, parent=None):
-        super(TemperatureWindow, self).__init__()
+        super(TemperatureWindow, self).__init__(parent)
 
         self.setupUi(self)
 
         self.pp = pprint.PrettyPrinter(indent=4)
 
-        # if parent.fullscreen: self.fullscreen = True
-        # else: self.fullscreen = False
-        # if self.fullscreen:
-        # 	self.setWindowState(self.windowState() | Qt.WindowFullScreen)
-
         self.printer_if = printer_if
-        self.parent = parent
         self.event_handler = event_handler
 
         self.ActivePrintWid = ActivePrintWidget(self)
@@ -101,14 +99,14 @@ class TemperatureWindow(QtWidgets.QWidget, Ui_TemperatureWindow):
 #		Initilization for Not-Printing Widget.
 
         self.initpreheatbuttons()
-        self.NotActivePrintWid.Back.clicked.connect(self.close)
+        self.NotActivePrintWid.Back.clicked.connect(self.back)
         self.NotActivePrintWid.CoolDown.clicked.connect(self.cool)
         self.NotActivePrintWid.Fan.clicked.connect(self.fan)
 
 
 #		Initilization for Printing Widget.
 
-        self.ActivePrintWid.Back.clicked.connect(self.close)
+        self.ActivePrintWid.Back.clicked.connect(self.back)
         self.ActivePrintWid.Fan.clicked.connect(self.fan)
         self.ActivePrintWid.ResumePrint.setEnabled(False)
         # self.ActivePrintWid.StopPrint.clicked.connect(self.stopprint)

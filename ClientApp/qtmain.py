@@ -9,8 +9,11 @@ from touchdisplay import *
 from watchdogthread import *
 from personality import Personality
 
+from pathlib import Path
+
 import sys
 import threading
+import shutil
 import os
 
 if __name__ == "__main__":
@@ -20,9 +23,21 @@ if __name__ == "__main__":
     serial_conn = g_serial(data_thread)
     data_thread.start()
 
+#   Remove the broken refs/tags
+    if(os.path.isdir(Path(__file__).resolve().parents[1].__str__()+"/.git/refs/tags")):
+        shutil.rmtree(Path(__file__).resolve().parents[1].__str__()+"/.git/refs/tags")
+
     personality = Personality(True, "/media/pi", "/home/pi/localgcode")
 
     app = QtWidgets.QApplication(sys.argv)
+
+    properties = {}
+    for line in open("config.properties"):
+        properties[line.split("=")[0]] = line.split("=")[1].strip()
+
+    app.setApplicationName(properties["name"])
+    app.setApplicationVersion(properties["version"])
+
     display = TouchDisplay(client_conn, serial_conn, personality)
     display.show()
     jt_thread = WatchdogThread(display.print_pop, personality.watchpoint)

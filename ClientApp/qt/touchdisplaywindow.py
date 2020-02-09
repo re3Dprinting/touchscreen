@@ -1,14 +1,12 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'touchdisplaywindow.ui'
+# Form implementation generated from reading ui file 'qt/touchdisplaywindow.ui'
 #
-# Created by: PyQt5 UI code generator 5.13.1
+# Created by: PyQt5 UI code generator 5.5.1
 #
 # WARNING! All changes made in this file will be lost!
 
-
 from PyQt5 import QtCore, QtGui, QtWidgets
-
 
 class Ui_TouchDisplay(object):
     def setupUi(self, TouchDisplay):
@@ -105,19 +103,50 @@ class Ui_TouchDisplay(object):
         self.horizontalLayout_2.addWidget(self.Settings)
         self.verticalLayout.addLayout(self.horizontalLayout_2)
         self.horizontalLayout = QtWidgets.QHBoxLayout()
+        self.horizontalLayout.setSpacing(0)
         self.horizontalLayout.setObjectName("horizontalLayout")
+        self.WifiStatus = QtWidgets.QPushButton(TouchDisplay)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.WifiStatus.sizePolicy().hasHeightForWidth())
+        self.WifiStatus.setSizePolicy(sizePolicy)
+        self.WifiStatus.setMinimumSize(QtCore.QSize(65, 65))
+        self.WifiStatus.setMaximumSize(QtCore.QSize(65, 65))
+        self.WifiStatus.setText("")
+        icon4 = QtGui.QIcon()
+        icon4.addPixmap(QtGui.QPixmap("img/wifi.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.WifiStatus.setIcon(icon4)
+        self.WifiStatus.setIconSize(QtCore.QSize(65, 65))
+        self.WifiStatus.setObjectName("WifiStatus")
+        self.horizontalLayout.addWidget(self.WifiStatus)
+        self.DeviceStatus = QtWidgets.QPushButton(TouchDisplay)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.DeviceStatus.sizePolicy().hasHeightForWidth())
+        self.DeviceStatus.setSizePolicy(sizePolicy)
+        self.DeviceStatus.setMinimumSize(QtCore.QSize(65, 65))
+        self.DeviceStatus.setMaximumSize(QtCore.QSize(65, 65))
+        self.DeviceStatus.setText("")
+        icon5 = QtGui.QIcon()
+        icon5.addPixmap(QtGui.QPixmap("img/usbstatus.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.DeviceStatus.setIcon(icon5)
+        self.DeviceStatus.setIconSize(QtCore.QSize(65, 65))
+        self.DeviceStatus.setObjectName("DeviceStatus")
+        self.horizontalLayout.addWidget(self.DeviceStatus)
         spacerItem = QtWidgets.QSpacerItem(0, 75, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout.addItem(spacerItem)
-        self.label = QtWidgets.QLabel(TouchDisplay)
+        self.SoftwareVersion = QtWidgets.QLabel(TouchDisplay)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Minimum)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.label.sizePolicy().hasHeightForWidth())
-        self.label.setSizePolicy(sizePolicy)
-        self.label.setMinimumSize(QtCore.QSize(0, 70))
-        self.label.setMaximumSize(QtCore.QSize(16777215, 70))
-        self.label.setObjectName("label")
-        self.horizontalLayout.addWidget(self.label)
+        sizePolicy.setHeightForWidth(self.SoftwareVersion.sizePolicy().hasHeightForWidth())
+        self.SoftwareVersion.setSizePolicy(sizePolicy)
+        self.SoftwareVersion.setMinimumSize(QtCore.QSize(0, 70))
+        self.SoftwareVersion.setMaximumSize(QtCore.QSize(16777215, 70))
+        self.SoftwareVersion.setObjectName("SoftwareVersion")
+        self.horizontalLayout.addWidget(self.SoftwareVersion)
         self.verticalLayout.addLayout(self.horizontalLayout)
 
         self.retranslateUi(TouchDisplay)
@@ -127,4 +156,5 @@ class Ui_TouchDisplay(object):
         _translate = QtCore.QCoreApplication.translate
         TouchDisplay.setWindowTitle(_translate("TouchDisplay", "TouchDisplay"))
         self.Title.setText(_translate("TouchDisplay", "<html><head/><body><p><span style=\" font-size:36pt;\">re:3Display</span></p></body></html>"))
-        self.label.setText(_translate("TouchDisplay", "V.1.0.0 re3Display"))
+        self.SoftwareVersion.setText(_translate("TouchDisplay", "V.1.0.0 re3Display"))
+

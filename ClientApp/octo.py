@@ -32,6 +32,7 @@ import os
 import time
 import serial
 import serial.tools.list_ports
+from pathlib import Path
 
 from touchscreen.Client.g_serial import *
 from touchscreen.Client.g_client import *
@@ -174,6 +175,7 @@ if __name__ == "__main__":
     # persona = Personality(False, "/Volumes", "/Users/jct/localgcode")
     # persona = Personality(False, "/Volumes", "/Users/jct/Dropbox/re3D/touchscreen/OctoPrint-1.4.0rc3/localgcode")
     # persona = Personality(True, "/media/pi", "/home/pi/gcode-cache")
+    # persona = Personality(False, "/media/plloppii", "/home/plloppii/devel/gcode-cache")
     persona = Personality(True, "/media", "/home/pi/gcode-cache")
 
     storage_managers = dict()
@@ -209,6 +211,14 @@ if __name__ == "__main__":
 
     print("Creating the UI")
     app = QtWidgets.QApplication(sys.argv)
+
+    properties = {}
+    config_path = Path(__file__).parent.absolute().__str__() + "/config.properties"
+    for line in open(config_path):
+        properties[line.split("=")[0]] = line.split("=")[1].strip()
+
+    app.setApplicationName(properties["name"])
+    app.setApplicationVersion(properties["version"])
 
     display = TouchDisplay(client_conn, printer_if, persona)
     display.show()

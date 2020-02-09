@@ -1,8 +1,11 @@
 from builtins import str
+
+from qt.serverwindow import *
+from .basewindow import BaseWindow
+from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtCore import Qt
 import os
 import time
-from PyQt5.QtCore import Qt
-from .qt.serverwindow import *
 
 hostname = "192.168.1.49"
 
@@ -29,9 +32,9 @@ class serverping(QtCore.QThread):
         self.wait()
 
 
-class ServerWindow(QtWidgets.QWidget, Ui_ServerWindow):
+class ServerWindow(BaseWindow, Ui_ServerWindow):
     def __init__(self, client, parent=None):
-        super(ServerWindow, self).__init__()
+        super(ServerWindow, self).__init__(parent)
         self.client = client
         self.setupUi(self)
 
@@ -40,7 +43,7 @@ class ServerWindow(QtWidgets.QWidget, Ui_ServerWindow):
 
         self.IPText.setText(self.client.host)
         self.client.data.checkserver_msg.connect(self.checkserver_msg)
-        self.Back.clicked.connect(self.close)
+        self.Back.clicked.connect(self.back)
         self.ConnectServer.clicked.connect(self.connect_server)
         self.DisconnectServer.clicked.connect(self.disconnect_server)
         self.Ping.clicked.connect(self.ping)
@@ -84,3 +87,4 @@ class ServerWindow(QtWidgets.QWidget, Ui_ServerWindow):
         self.ServerOutput.moveCursor(QtGui.QTextCursor.End)
         self.ServerOutput.ensureCursorVisible()
         self.ServerOutput.append(text)
+        

@@ -1,4 +1,5 @@
 from __future__ import division
+from basewindow import BaseWindow
 from builtins import str
 from past.utils import old_div
 from PyQt5.QtCore import Qt, pyqtSignal
@@ -11,7 +12,7 @@ from .fsutils.subfilesystem import *
 from .fsutils.file import *
 from .filelistmanager import FileListManager
 
-class PrintWindow(QtWidgets.QWidget, Ui_PrintWindow):
+class PrintWindow(BaseWindow, Ui_PrintWindow):
 
     # Create the Qt signals we're going to use for updating the list
     # of USB files. Each signal takes a single argument, which is the
@@ -24,7 +25,7 @@ class PrintWindow(QtWidgets.QWidget, Ui_PrintWindow):
     sdfile_signal = pyqtSignal(list)
 
     def __init__(self, printer_if, temp_pop, personality, parent=None):
-        super(PrintWindow, self).__init__()
+        super(PrintWindow, self).__init__(parent)
 
         # Connect slots to the signals
         # self.create_signal.connect(self.update_usb_create)
@@ -33,6 +34,7 @@ class PrintWindow(QtWidgets.QWidget, Ui_PrintWindow):
         self.sdfile_signal.connect(self.updatefiles)
 
         # Set up the rest of the UI
+
         self.setupUi(self)
         self.printer_if = printer_if
 
@@ -42,16 +44,10 @@ class PrintWindow(QtWidgets.QWidget, Ui_PrintWindow):
 
         self.temp_pop = temp_pop
         self.personality = personality
-        self.parent = parent
 
         self.item_stack = []
 
-        if parent.fullscreen:
-            self.fullscreen = True
-        else:
-            self.fullscreen = False
-
-        self.Back.clicked.connect(self.close)
+        self.Back.clicked.connect(self.back)
         self.ScanSD.clicked.connect(self.scansd)
         self.sd_pushbutton_print.clicked.connect(self.sd_start_print)
         self.ActivePrint.clicked.connect(self.activeprintpop)

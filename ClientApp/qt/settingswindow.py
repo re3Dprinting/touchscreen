@@ -1,14 +1,12 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'settingswindow.ui'
+# Form implementation generated from reading ui file 'qt/settingswindow.ui'
 #
-# Created by: PyQt5 UI code generator 5.13.1
+# Created by: PyQt5 UI code generator 5.5.1
 #
 # WARNING! All changes made in this file will be lost!
 
-
 from PyQt5 import QtCore, QtGui, QtWidgets
-
 
 class Ui_SettingsWindow(object):
     def setupUi(self, SettingsWindow):
@@ -50,6 +48,36 @@ class Ui_SettingsWindow(object):
         self.Serial.setIconSize(QtCore.QSize(150, 150))
         self.Serial.setObjectName("Serial")
         self.horizontalLayout_2.addWidget(self.Serial)
+        self.UserUpdate = QtWidgets.QPushButton(SettingsWindow)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Expanding)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.UserUpdate.sizePolicy().hasHeightForWidth())
+        self.UserUpdate.setSizePolicy(sizePolicy)
+        self.UserUpdate.setMinimumSize(QtCore.QSize(150, 350))
+        self.UserUpdate.setMaximumSize(QtCore.QSize(150, 16777215))
+        self.UserUpdate.setText("")
+        icon2 = QtGui.QIcon()
+        icon2.addPixmap(QtGui.QPixmap("img/userupdate.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.UserUpdate.setIcon(icon2)
+        self.UserUpdate.setIconSize(QtCore.QSize(150, 150))
+        self.UserUpdate.setObjectName("UserUpdate")
+        self.horizontalLayout_2.addWidget(self.UserUpdate)
+        self.Wifi = QtWidgets.QPushButton(SettingsWindow)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Expanding)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.Wifi.sizePolicy().hasHeightForWidth())
+        self.Wifi.setSizePolicy(sizePolicy)
+        self.Wifi.setMinimumSize(QtCore.QSize(150, 350))
+        self.Wifi.setMaximumSize(QtCore.QSize(150, 16777215))
+        self.Wifi.setText("")
+        icon3 = QtGui.QIcon()
+        icon3.addPixmap(QtGui.QPixmap("img/wifi.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.Wifi.setIcon(icon3)
+        self.Wifi.setIconSize(QtCore.QSize(150, 150))
+        self.Wifi.setObjectName("Wifi")
+        self.horizontalLayout_2.addWidget(self.Wifi)
         self.verticalLayout.addLayout(self.horizontalLayout_2)
         self.horizontalLayout = QtWidgets.QHBoxLayout()
         self.horizontalLayout.setObjectName("horizontalLayout")
@@ -62,24 +90,24 @@ class Ui_SettingsWindow(object):
         self.Back.setMinimumSize(QtCore.QSize(100, 100))
         self.Back.setMaximumSize(QtCore.QSize(100, 100))
         self.Back.setText("")
-        icon2 = QtGui.QIcon()
-        icon2.addPixmap(QtGui.QPixmap("img/back.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.Back.setIcon(icon2)
+        icon4 = QtGui.QIcon()
+        icon4.addPixmap(QtGui.QPixmap("img/back.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.Back.setIcon(icon4)
         self.Back.setIconSize(QtCore.QSize(100, 100))
         self.Back.setObjectName("Back")
         self.horizontalLayout.addWidget(self.Back)
         spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout.addItem(spacerItem)
-        self.label = QtWidgets.QLabel(SettingsWindow)
+        self.SoftwareVersion = QtWidgets.QLabel(SettingsWindow)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.label.sizePolicy().hasHeightForWidth())
-        self.label.setSizePolicy(sizePolicy)
-        self.label.setMinimumSize(QtCore.QSize(0, 65))
-        self.label.setMaximumSize(QtCore.QSize(250, 70))
-        self.label.setObjectName("label")
-        self.horizontalLayout.addWidget(self.label)
+        sizePolicy.setHeightForWidth(self.SoftwareVersion.sizePolicy().hasHeightForWidth())
+        self.SoftwareVersion.setSizePolicy(sizePolicy)
+        self.SoftwareVersion.setMinimumSize(QtCore.QSize(0, 65))
+        self.SoftwareVersion.setMaximumSize(QtCore.QSize(250, 70))
+        self.SoftwareVersion.setObjectName("SoftwareVersion")
+        self.horizontalLayout.addWidget(self.SoftwareVersion)
         self.verticalLayout.addLayout(self.horizontalLayout)
 
         self.retranslateUi(SettingsWindow)
@@ -88,4 +116,5 @@ class Ui_SettingsWindow(object):
     def retranslateUi(self, SettingsWindow):
         _translate = QtCore.QCoreApplication.translate
         SettingsWindow.setWindowTitle(_translate("SettingsWindow", "TouchDisplay"))
-        self.label.setText(_translate("SettingsWindow", "V.1.0.0 re3Display"))
+        self.SoftwareVersion.setText(_translate("SettingsWindow", "V.1.0.0 re3Display"))
+
