@@ -27,11 +27,14 @@ class UserUpdateWindow(BaseWindow, Ui_UserUpdate):
         self.app = QtWidgets.QApplication.instance()
         self.new_version_avalible = False
 
-        self.current_path = Path(__file__).parents
+        tmp_path = Path(__file__).parent.absolute()
+        # print(tmp_path)
+        self.current_path = Path(os.path.realpath(tmp_path)).parent
+        # print(self.current_path.__str__())
 
         #Get the current path (local repository) and make sure that the github link is the current repository.
-        self.git = Git(self.current_path[1].__str__())
-        self.repo = Repo(self.current_path[1].__str__())
+        self.git = Git(self.current_path.__str__())
+        self.repo = Repo(self.current_path.__str__())
         self.current_tags = None
 
         found_remote = False
@@ -66,35 +69,37 @@ class UserUpdateWindow(BaseWindow, Ui_UserUpdate):
 
     def checkupdate(self):
         #Fetch all of the tags from the remote repository.
-        for tag in self.repo.tags:
-            self.repo.delete_tag(tag)
+        try:
+            for tag in self.repo.tags:
+                self.repo.delete_tag(tag)
 
-        self.remote_repo.fetch("--tags")
-        tags = self.repo.tags
-        tags.reverse()
+            self.remote_repo.fetch("--tags")
+            tags = self.repo.tags
+            tags.reverse()
 
-        self.SoftwareList.setRowCount(0)
+            self.SoftwareList.setRowCount(0)
 
-        self.current_tags = []
-        for t in tags:
-            if("release" == t.name.split("/")[0]): #and not self.app.applicationVersion() in t.name #<--- Dont show current version
-                self.current_tags.append(t)
-                tag_date = time.strftime('%I:%M%p %m/%d/%y', time.localtime(t.commit.committed_date))
-                rowpos = self.SoftwareList.rowCount()
-                self.SoftwareList.insertRow(rowpos)
-                version = QtWidgets.QTableWidgetItem(t.name.strip("release/"))
-                self.checkagainstcurrent(t.name.strip("release/"))
-                version.setFlags(Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
+            self.current_tags = []
+            for t in tags:
+                if("release" == t.name.split("/")[0]): #and not self.app.applicationVersion() in t.name #<--- Dont show current version
+                    self.current_tags.append(t)
+                    tag_date = time.strftime('%I:%M%p %m/%d/%y', time.localtime(t.commit.committed_date))
+                    rowpos = self.SoftwareList.rowCount()
+                    self.SoftwareList.insertRow(rowpos)
+                    version = QtWidgets.QTableWidgetItem(t.name.strip("release/"))
+                    self.checkagainstcurrent(t.name.strip("release/"))
+                    version.setFlags(Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
 
-                date = QtWidgets.QTableWidgetItem(tag_date)
-                date.setFlags(Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
-                self.SoftwareList.setItem(rowpos,0,version)
-                self.SoftwareList.setItem(rowpos,1,date)
-        if(self.SoftwareList.rowCount() == 0): self.print_debug("No software versions found. The server might be down, please try again later.")
-        elif(self.new_version_avalible):
-            return Notification("A new software version is available!\nTo update, go to Settings > Software Update")
+                    date = QtWidgets.QTableWidgetItem(tag_date)
+                    date.setFlags(Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
+                    self.SoftwareList.setItem(rowpos,0,version)
+                    self.SoftwareList.setItem(rowpos,1,date)
+            if(self.SoftwareList.rowCount() == 0): self.print_debug("No software versions found. The server might be down, please try again later.")
+            elif(self.new_version_avalible):
+                return Notification("A new software version is available!\nTo update, go to Settings > Software Update")
+        except Exception as e:
+            print(e)
 
-#   Show tag message called when a new item is selected in the software version table. 
     def show_tag_message(self):
         item = self.SoftwareList.currentRow()
         selected = self.SoftwareList.item(item, 0)
@@ -117,8 +122,8 @@ class UserUpdateWindow(BaseWindow, Ui_UserUpdate):
             self.print_debug("Updating....")
 
             self.git.checkout("release/" + selected_version.text())
-            if(self.personality.fullscreen == False): self.restart_program("jtmain.py")
-            else: self.restart_program("qtmain.py")
+            if(self.personality.fullscreen == False): self.restart_program(sys.argv[0])
+            else: self.restart_program(sys.argv[0])
         else:
             self.print_debug("Select a Version on list")
 

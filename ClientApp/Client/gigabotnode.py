@@ -13,6 +13,7 @@ import os
 
 
 baudrate = 250000
+# baudrate = 115200
 
 
 class mainhandler(object):

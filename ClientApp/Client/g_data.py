@@ -23,7 +23,7 @@ class g_data(QtCore.QThread):
         super(g_data, self).__init__()
         # counter[0]: Serial Counter, counter[1]:Server Counter
         self.counter = [0, 0]
-        self.serial = None
+        # self.serial = None
         self.serial_msg = None
         self.client = None
         self.client_msg = None
@@ -53,56 +53,57 @@ class g_data(QtCore.QThread):
     def run(self):
         while True:
             time.sleep(0.1)
-            if self.serial.is_open:
-                # Wait five seconds after connection:
-                # - read initial header
-                # - Send gcode to enable periodic temperature reading
-                # print self.counter[0], " Reset? ",self.serial.just_open
-                self.counter[0] += 1
-                if self.serial.just_open:
-                    if self.counter[0] >= 110:
-                        self.serial.initserial()
-                        self.serial.just_open = False
-                        self.counter[0] = 0
-                else:
-                    err = self.serial.readdata()
-                    if err != None:
-                        if "Disconnected" in err:
-                            self.serial_msg = err
-                            self.checkserial_msg.emit("checkserial")
-                            self.notprinting.emit("notprinting")
-                    if not self.status == "AC" and not self.serial.just_open:
-                        # print "Reset?: ", self.serial.just_open, " Status: ",self.status
-                        if self.counter[0] >= 20:
-                            if not self.busy:
-                                self.serial.send_serial('M105')
-                                self.serial.send_serial('M114')
-                            self.counter[0] = 0
-                    elif self.status == "AC" and not self.serial.just_open:
-                        if self.counter[0] >= 150:
-                            if not self.busy:
-                                self.serial.send_serial("M27")
-                            self.counter[0] = 0
+            # if self.serial.is_open:
+            #     # Wait five seconds after connection:
+            #     # - read initial header
+            #     # - Send gcode to enable periodic temperature reading
+            #     # print self.counter[0], " Reset? ",self.serial.just_open
+            #     self.counter[0] += 1
+            #     if self.serial.just_open:
+            #         if self.counter[0] >= 110:
+            #             self.serial.initserial()
+            #             self.serial.just_open = False
+            #             self.counter[0] = 0
+            #     else:
+            #         err = self.serial.readdata()
+            #         if err != None:
+            #             if "Disconnected" in err:
+            #                 self.serial_msg = err
+            #                 self.checkserial_msg.emit("checkserial")
+            #                 self.notprinting.emit("notprinting")
+            #         if not self.status == "AC" and not self.serial.just_open:
+            #             # print "Reset?: ", self.serial.just_open, " Status: ",self.status
+            #             if self.counter[0] >= 20:
+            #                 if not self.busy:
+            #                     self.serial.send_serial('M105')
+            #                     self.serial.send_serial('M114')
+            #                 self.counter[0] = 0
+            #         elif self.status == "AC" and not self.serial.just_open:
+            #             if self.counter[0] >= 150:
+            #                 if not self.busy:
+            #                     self.serial.send_serial("M27")
+            #                 self.counter[0] = 0
 
-            if self.client.is_conn:
-                if self.client.just_conn and self.serial.is_open:
-                    self.buffer.clear()
-                    self.addtobuffer("HD", self.header)
-                    self.addtobuffer("SS", self.stats)
-                    self.addtobuffer("ST", self.status)
-                    self.addtobuffer("FI", self.currentfile)
-                    self.client_msg = self.client.senddata()
-                    if self.client_msg != None:
-                        self.checkserver_msg.emit("checkserver_msg")
-                    self.client.just_conn = False
-                    self.buffer.clear()
-                if self.counter[1] >= 50:
-                    self.client_msg = self.client.senddata()
-                    if self.client_msg != None:
-                        self.checkserver_msg.emit("checkserver_msg")
-                    self.buffer.clear()
-                    self.counter[1] = 0
-                self.counter[1] += 1
+#             if self.client.is_conn:
+# #                if self.client.just_conn and self.serial.is_open:
+#                 if False:
+#                     self.buffer.clear()
+#                     self.addtobuffer("HD", self.header)
+#                     self.addtobuffer("SS", self.stats)
+#                     self.addtobuffer("ST", self.status)
+#                     self.addtobuffer("FI", self.currentfile)
+#                     self.client_msg = self.client.senddata()
+#                     if self.client_msg != None:
+#                         self.checkserver_msg.emit("checkserver_msg")
+#                     self.client.just_conn = False
+#                     self.buffer.clear()
+#                 if self.counter[1] >= 50:
+#                     self.client_msg = self.client.senddata()
+#                     if self.client_msg != None:
+#                         self.checkserver_msg.emit("checkserver_msg")
+#                     self.buffer.clear()
+#                     self.counter[1] = 0
+#                 self.counter[1] += 1
 
 #   Functions to reset the active temperature and set temperature
     def resettemps(self):
