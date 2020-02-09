@@ -1,18 +1,20 @@
 from builtins import str
-from basewindow import BaseWindow
-from qt.controlwindow import *
-from axis import *
+from PyQt5.QtCore import Qt
+from .qt.controlwindow import *
+from .axis import *
+from .basewindow import BaseWindow
+
 
 increments_str = ["01", "1", "10", "100"]
 increments_int = ['0.1', '1', '10', '100']
 
 
 class ControlWindow(BaseWindow, Ui_ControlWindow):
-    def __init__(self, serial, parent=None):
+    def __init__(self, printer_if, parent=None):
         super(ControlWindow, self).__init__(parent)
         self.setupUi(self)
 
-        self.serial = serial
+        self.printer_if = printer_if
 
         # self.timer.timeout.connect(lambda: self.button_event_check())
         self.xinc = None
@@ -48,7 +50,7 @@ class ControlWindow(BaseWindow, Ui_ControlWindow):
         self.eaxis = Axis("e", "60", self)
 
         self.inittextformat(self.PositionLabel)
-        self.serial.data.updateposition.connect(self.updateposition)
+        # self.serial.data.updateposition.connect(self.updateposition)
 
         self.HomeXY.clicked.connect(self.homexy)
         self.HomeZ.clicked.connect(self.homez)
@@ -57,28 +59,34 @@ class ControlWindow(BaseWindow, Ui_ControlWindow):
         self.DisableMotors.clicked.connect(self.disablemotors)
 
     def updateposition(self):
-        pos = self.serial.data.position
+        # pos = self.serial.data.position
+        pos = 0
         tmp = "X: "+str(pos["X"]) + " Y: "+str(pos["Y"]) + " Z: "+str(pos["Z"])
         self.changeText(self.PositionLabel, tmp)
 
     def disablemotors(self):
-        self.serial.send_serial('M18')
-
+        # self.serial.send_serial('M18')
+        self.printer_if.commands("M18", force=True)
+        pass
+    
     def homexy(self):
-        self.serial.send_serial('G28 XY')
-
+        # self.serial.send_serial('G28 XY')
+        self.printer_if.homexy()
+    
     def homez(self):
-        self.serial.send_serial('G28 Z')
-
+        # self.serial.send_serial('G28 Z')
+        self.printer_if.homez()
+    
     def homeall(self):
-        self.serial.send_serial('G28')
-
+        # self.serial.send_serial('G28')
+        self.printer_if.homeall()
+    
     def updatecurrentextruder(self):
         self.currentextruder = self.extruder.checkedButton().text()
-        if self.currentextruder == "E1":
-            self.serial.send_serial("T0")
-        elif self.currentextruder == "E2":
-            self.serial.send_serial("T1")
+        # if self.currentextruder == "E1":
+        #     self.serial.send_serial("T0")
+        # elif self.currentextruder == "E2":
+        #     self.serial.send_serial("T1")
 
     def AddButtontoGroup(self, axis):
         group = QtWidgets.QButtonGroup(self)

@@ -4,11 +4,11 @@ from functools import total_ordering
 
 @total_ordering
 class File:
-    def __init__(self, name="", displayname="", size=0, type='u'):
+    def __init__(self, name, displayname, rel_path, abs_path, size, type):
         self.name = name
         self.displayname = displayname
-        self.size = size
-        self.type = type
+        self.relative_path = rel_path
+        self.absolute_path = abs_path
 
         # Comparename is the name to be used in filename comparisons,
         # for purposes of sorting. If we want filenames to do a
@@ -18,6 +18,15 @@ class File:
         # repeatedly call lower() in the comparison operators. It
         # takes a bit more memory, but is a bit more efficient.
         self.comparename = self.name.lower()
+        self.size = size
+        self.type = type
+
+    def dump(self):
+        print("Name: <%s>" % self.name)
+        print("Display name: <%s>" % self.displayname)
+        print("Relative path: <%s>" % self.relative_path)
+        print("Absolute path: <%s>" % self.absolute_path)
+        print("Size: <%d> Type: <%s>" % (self.size, self.type))
 
     def __eq__(self, other):
         return (self.comparename, self.size) == \

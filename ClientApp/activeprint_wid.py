@@ -1,4 +1,4 @@
-from qt.activeprintwidget import *
+from .qt.activeprintwidget import *
 from PyQt5.QtCore import Qt
 
 
