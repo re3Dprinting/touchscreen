@@ -5,6 +5,7 @@
 print("Doing OctoPrint imports...")
 
 import logging
+from logging.handlers import RotatingFileHandler
 
 from octoprint import settings
 from octoprint import printer
@@ -143,15 +144,68 @@ gigabot_profile = dict(
 		)
 	)
 
+def setup_local_logger(name):
+    global logger
+    logger = logging.getLogger(name)
+
+def _log(message):
+    global logger
+    # NOTE: All messages logged here are at INFO level. Elsewhere,
+    # always use DEBUG
+    logger.info(message)
+
+def dump_logger_hierarchy(note, log_to_debug):
+    print(note, ": Dumping logger", log_to_debug)
+    while log_to_debug is not None:
+	    print("*** level: %s, name: %s, handlers: %s" % (log_to_debug.level,
+							     log_to_debug.name,
+							     log_to_debug.handlers))
+	    log_to_debug = log_to_debug.parent
+        
+def setup_root_logger():
+    # Get the root logger and set it to DEBUG level.
+    root_logger = logging.getLogger()
+    root_logger.setLevel(logging.DEBUG)
+
+    # print("Octo: got logger", root_logger)
+    # dump_logger_hierarchy("Octo 1", root_logger)
+
+    # Create a rotating log handler with each file 100 megabytes and
+    # 10 files for a total of one gigabyte logging.
+    handler = RotatingFileHandler("ts.log", maxBytes=10**8, backupCount=10)
+    handler.setLevel(logging.DEBUG)
+
+    # Set the formatter to prefix the log message with the date, name,
+    # and log level.
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    handler.setFormatter(formatter)
+
+    # Add the handler to the root logger. We're now all set up.
+    root_logger.addHandler(handler)
+
+
 if __name__ == "__main__":
 
+    # Setup logging first of all
+
+    print("Setting up logging")
+    setup_root_logger()
+    setup_local_logger(__name__)
+
+    # The first log entry will be the config ID.
     config_id = get_touchscreen_commit_id()
     print("Config ID =", config_id)
 
+    # root_logger.info("*** re:3D touchscreen starting. Config ID=<%s>" % config_id)
+    _log("******************************************************************************")
+    _log("* re:3D touchscreen starting. Config ID=<%s>" % config_id)
+    _log("******************************************************************************")
+
+    
     #################################################################
-    # This is the octoprint area
-    print("Setting up logging")
-    logging.basicConfig(filename='jt.log', level=logging.DEBUG)
+    # This is the octoprint section
+
+    # _log("Setting up OctoPrint")
 
     # Initialize settings
     print("Initializing settings.")
@@ -209,11 +263,14 @@ if __name__ == "__main__":
     printer_if = PrinterIF(printer)
 
     #################################################################
-    # This is the touchscreen area
+    # This is the touchscreen section
 
-    print("Doing touchscreen stuff")
+    # _log("Setting up touchscreen UI")
 
-    print("Starting the data thread")
+    print("Starting data threads.")
+    # _log("Starting data threads.")
+
+    # Can we get rid of these now?
     data_thread = g_data()
     client_conn = g_client(data_thread)
     serial_conn = g_serial(data_thread)
@@ -266,8 +323,6 @@ if __name__ == "__main__":
     # printer.connect("/dev/tty.usbserial-DN02B57Q", 250000)
     # printer.connect("/dev/tty.usbserial-143320", 115200)
 
-    print("Starting the interpreter thread")
-    
-    
-    print("Starting the UI")
+    print("Entering the main UI loop")
+    # _log("Entering the main UI loop")
     app.exec_()

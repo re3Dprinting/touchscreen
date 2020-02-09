@@ -21,7 +21,7 @@ class PrinterIF(PrinterCallback):
         self.printer.register_callback(self)
 
         # Set up logging
-        self._logger = logging.getLogger("re3D.printer_if")
+        self._logger = logging.getLogger(__name__)
         self._log("PrinterIF starting up")
 
         # Were not received the SD file list or doing an SD print
