@@ -196,11 +196,9 @@ if __name__ == "__main__":
     config_id = get_touchscreen_commit_id()
     print("Config ID =", config_id)
 
-    # root_logger.info("*** re:3D touchscreen starting. Config ID=<%s>" % config_id)
     _log("******************************************************************************")
     _log("* re:3D touchscreen starting. Config ID=<%s>" % config_id)
     _log("******************************************************************************")
-
     
     #################################################################
     # This is the octoprint section

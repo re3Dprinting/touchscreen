@@ -1,4 +1,5 @@
 import sys
+import logging
 
 from PyQt5.QtCore import Qt
 from PyQt5 import QtCore, QtGui, QtWidgets
@@ -22,10 +23,17 @@ from .qt.touchdisplaywindow import Ui_TouchDisplay
 class TouchDisplay(QtWidgets.QWidget, Ui_TouchDisplay):
     def __init__(self, client, printer_if, personality, parent=None):
         super(TouchDisplay, self).__init__()
-        self.personality = personality
-        
+
+        # Initialize the UI
         self.setupUi(self)
 
+        # Set up logging
+        self._logger = logging.getLogger(__name__)
+        self._log("PrinterIF starting up")
+
+        # Save the personality spec
+        self.personality = personality
+        
 #       Change fullscreen to True if uploading to Raspberrypi
         self.fullscreen = personality.fullscreen
         if self.fullscreen:
@@ -63,25 +71,32 @@ class TouchDisplay(QtWidgets.QWidget, Ui_TouchDisplay):
         self.Settings.clicked.connect(self.settingspop)
         self.Print.clicked.connect(self.printpop)
 
+    def _log(self, message):
+        self._logger.debug(message)
+
     def controlpop(self):
+        self._log("UI: User touched Control")
         if self.fullscreen:
             self.con_pop.showFullScreen()
         else:
             self.con_pop.show()
 
     def temperaturepop(self):
+        self._log("UI: User touched Temperature")
         if self.fullscreen:
             self.temp_pop.showFullScreen()
         else:
             self.temp_pop.show()
 
     def settingspop(self):
+        self._log("UI: User touched Settings")
         if self.fullscreen:
             self.set_pop.showFullScreen()
         else:
             self.set_pop.show()
 
     def printpop(self):
+        self._log("UI: User touched Print")
         if self.fullscreen:
             self.print_pop.showFullScreen()
         else:
