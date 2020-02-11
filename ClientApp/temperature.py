@@ -220,11 +220,10 @@ class TemperatureWindow(QtWidgets.QWidget, Ui_TemperatureWindow):
         self.progress_signal.emit(str(completion))
 
     def update_progress_slot(self, completion):
-        self._log("Received progress signal <%s>" % completion)
 
         if completion != "N/A":
+            self._log("Received progress signal <%s>" % completion)
             completion = int(float(completion))
-            # print("UPDATE PROGRESS: <%d>" % (completion))
             self.ActivePrintWid.FileProgress.setValue(completion)
 
     def updateflowlabel(self):
