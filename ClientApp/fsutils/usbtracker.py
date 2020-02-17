@@ -61,7 +61,7 @@ class USBTracker(QObject, FileSystemEventHandler):
 
     def create_content_observer(self, path):
         self.content_observer = None
-        _log("creating content observer on <%s>" % path)
+        self._log("creating content observer on <%s>" % path)
         return
 
         # self.content_observer = Observer()
@@ -82,14 +82,14 @@ class USBTracker(QObject, FileSystemEventHandler):
         return self.content_signal
 
     def mountpoint_created(self, path):
-        _log("Mountpoint created: <%s> Current is: <%s>" % (path, self.current_path))
+        self._log("Mountpoint created: <%s> Current is: <%s>" % (path, self.current_path))
         if MountFinder.is_thumb_drive(path) and path.startswith(self.watch_path):
             self.create_content_observer(path)
             self.create_signal.emit(path)
             self.current_path = path
 
     def mountpoint_deleted(self, path):
-        _log("Mountpoint deleted: <%s> Current is: <%s>" % (path, self.current_path))
+        self._log("Mountpoint deleted: <%s> Current is: <%s>" % (path, self.current_path))
         if self.current_path == path:
             self.delete_signal.emit(path)
             self.current_path = ""
@@ -98,7 +98,7 @@ class USBTracker(QObject, FileSystemEventHandler):
         # self.create_mount_observer()
 
     def content_modified(self, path):
-        _log("Content modified: <%s>" % (path))
+        self._log("Content modified: <%s>" % (path))
         self.content_signal.emit(path)
 
     # # These two functions override functions in the
