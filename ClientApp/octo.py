@@ -2,8 +2,6 @@
 
 #################################################################
 
-print("Doing OctoPrint imports...")
-
 import logging
 from logging.handlers import RotatingFileHandler
 
@@ -22,8 +20,6 @@ from octoprint.events import GenericEventListener
 
 
 #################################################################
-
-print("Doing touchscreen imports...")
 
 import sys
 import threading
@@ -46,8 +42,6 @@ from touchscreen.gigabot_profile import gigabot_profile
 from util.configid import get_touchscreen_commit_id
 
 #################################################################
-
-print("Doing local imports...")
 
 from printer_if import PrinterIF
 
@@ -183,21 +177,41 @@ def setup_root_logger():
     # Add the handler to the root logger. We're now all set up.
     root_logger.addHandler(handler)
 
+import socket
+def get_ip():
+    IP = 'unknown'
+    try:
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
+        # doesn't even have to be reachable:
+        s.connect(('192.168.1.1', 80))
+
+        IP = s.getsockname()[0]
+    except:
+        IP = '127.0.0.1'
+    finally:
+        s.close()
+    return IP
 
 if __name__ == "__main__":
 
     # Setup logging first of all
 
-    print("Setting up logging")
     setup_root_logger()
     setup_local_logger(__name__)
 
     # The first log entry will be the config ID.
     config_id = get_touchscreen_commit_id()
-    print("Config ID =", config_id)
+
+    ip_addr = get_ip()
+    id_message = "IP: %s, Config ID: %s" % (ip_addr, config_id)
+    
+    print("******************************************************************************")
+    print("re:3D touchscreen starting. " + id_message)
+    print("******************************************************************************")
 
     _log("******************************************************************************")
-    _log("* re:3D touchscreen starting. Config ID=<%s>" % config_id)
+    _log("* re:3D touchscreen starting. " + id_message)
     _log("******************************************************************************")
     
     #################################################################
@@ -206,26 +220,20 @@ if __name__ == "__main__":
     # _log("Setting up OctoPrint")
 
     # Initialize settings
-    print("Initializing settings.")
     settings = octoprint.settings.settings(True)
 
     # Initialize plugin manager
-    print("Initializing plugin manager")
     plugin.plugin_manager(True)
 
     # Initialize profile manager
-    print("Creating profile manager")
     profile_manager = profile.PrinterProfileManager()
 
     profile_manager.save(gigabot_profile, allow_overwrite = True, make_default = True)
 
     # Create an analysis queue
-    print("Creating analysis queue")
     analysis_queue = analysis.AnalysisQueue({})
 
     # Create the file manager
-    print("Creating file manager")
-
     plat = sys.platform
     if plat.startswith("linux"):
         # Linux
@@ -265,7 +273,7 @@ if __name__ == "__main__":
 
     # _log("Setting up touchscreen UI")
 
-    print("Starting data threads.")
+    # print("Starting data threads.")
     # _log("Starting data threads.")
 
     # Can we get rid of these now?
@@ -274,17 +282,16 @@ if __name__ == "__main__":
     serial_conn = g_serial(data_thread)
     data_thread.start()
 
-    print("Creating the UI")
+    # print("Creating the UI")
     app = QtWidgets.QApplication(sys.argv)
 
     display = TouchDisplay(client_conn, printer_if, persona)
-    display.label.setText("Config ID: %s" % config_id)
+    display.label.setText(id_message)
     display.show()
 
-    print("Starting the events flow")
+    # print("Starting the events flow")
     event_manager.fire(octoprint.events.Events.STARTUP)
 
-    print("Figuring out whether a USB drive is plugged in")
     possible_usb_mounts = MountFinder.thumbdrive_candidates()
 
     current_path = ""
@@ -302,7 +309,6 @@ if __name__ == "__main__":
                     print("Current path (possible?) = <%s>" % current_path)
                     display.print_pop.update_usb_create(current_path)
 
-    print("Creating the watchdog thread")
     wd_thread = WatchdogThread(display.print_pop, persona.watchpoint,
                                current_path, persona.localpath)
 
@@ -317,10 +323,10 @@ if __name__ == "__main__":
 
     display.print_pop.set_storage_manager(local_storage_manager)
 
-    print("Connecting the printer (DEBUG USE ONLY)")
+    # print("Connecting the printer (DEBUG USE ONLY)")
     # printer.connect("/dev/tty.usbserial-DN02B57Q", 250000)
     # printer.connect("/dev/tty.usbserial-143320", 115200)
 
-    print("Entering the main UI loop")
+    # print("Entering the main UI loop")
     # _log("Entering the main UI loop")
     app.exec_()

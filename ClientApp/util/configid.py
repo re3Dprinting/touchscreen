@@ -32,7 +32,7 @@ def get_touchscreen_commit_id():
     unkfile = False
 
     for s in output:
-        print("Checking string <%s>" % s)
+        # print("Checking string <%s>" % s)
         if s == "":
             continue
 
