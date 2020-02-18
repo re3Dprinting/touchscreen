@@ -1,3 +1,5 @@
+import logging
+
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import Qt
 
@@ -5,10 +7,16 @@ from .fsutils.subfilesystem import SubFileSystem
 
 class FileListManager:
 
-    def __init__(self, file_list_wid, watchpoint,
+    def __init__(self, name, file_list_wid, watchpoint,
                  pathlabel_wid, pushbutton_up_wid,
                  pushbutton_open_wid, pushbutton_print_wid):
 
+        # Set up logging
+        self._logger = logging.getLogger(__name__)
+        self._log("FileListManager __init__")
+
+        self.name = name
+        
         self.pushbutton_up_wid = pushbutton_up_wid
         self.pushbutton_open_wid = pushbutton_open_wid
         self.pushbutton_print_wid = pushbutton_print_wid
@@ -37,6 +45,9 @@ class FileListManager:
 
         self.clear_files()
         self.update_button_states()
+
+    def _log(self, message):
+        self._logger.debug(message)
 
     def update_files(self):
         self.file_list_wid.clearContents()
@@ -122,6 +133,7 @@ class FileListManager:
             self.pushbutton_print_wid.setEnabled(True)
 
     def itemClicked(self):
+        self._log("UI: User touched item")
         row = self.file_list_wid.currentRow()
         self.update_button_states()
 
@@ -129,6 +141,7 @@ class FileListManager:
         self.open_subdir()
 
     def open_subdir(self):
+        self._log("UI: User touched Open")
         (selected_row, selected_file) = self.get_selected_file()
 
         if selected_row is None:
@@ -146,6 +159,7 @@ class FileListManager:
         self.pathlabel_wid.setText(self.subdir.abspath)
 
     def up_dir(self):
+        self._log("UI: User touched Up")
         self.subdir.up()
         self.update_files()
 

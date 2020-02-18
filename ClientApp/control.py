@@ -1,4 +1,5 @@
 from builtins import str
+import logging
 from PyQt5.QtCore import Qt
 from .qt.controlwindow import *
 from .axis import *
@@ -8,13 +9,18 @@ from .basewindow import BaseWindow
 increments_str = ["01", "1", "10", "100"]
 increments_int = ['0.1', '1', '10', '100']
 
-
 class ControlWindow(BaseWindow, Ui_ControlWindow):
     def __init__(self, printer_if, parent=None):
         super(ControlWindow, self).__init__(parent)
-        self.setupUi(self)
+
+        # Set up logging
+        self._logger = logging.getLogger(__name__)
+        self._log("SerialWindow __init__()")
 
         self.printer_if = printer_if
+
+        # Set up UI
+        self.setupUi(self)
 
         # self.timer.timeout.connect(lambda: self.button_event_check())
         self.xinc = None
@@ -55,8 +61,18 @@ class ControlWindow(BaseWindow, Ui_ControlWindow):
         self.HomeXY.clicked.connect(self.homexy)
         self.HomeZ.clicked.connect(self.homez)
         self.HomeAll.clicked.connect(self.homeall)
+
         self.Back.clicked.connect(self.back)
+
         self.DisableMotors.clicked.connect(self.disablemotors)
+        self.Back.clicked.connect(self.user_back)
+
+    def _log(self, message):
+        self._logger.debug(message)
+
+    def user_back(self):
+        self._log("UI: User touched Back")
+        self.close()
 
     def updateposition(self):
         # pos = self.serial.data.position
@@ -66,27 +82,36 @@ class ControlWindow(BaseWindow, Ui_ControlWindow):
 
     def disablemotors(self):
         # self.serial.send_serial('M18')
+        self._log("UI: User touched Motor enable/disable")
         self.printer_if.commands("M18", force=True)
         pass
     
     def homexy(self):
         # self.serial.send_serial('G28 XY')
+        self._log("UI: User touched Home XY")
         self.printer_if.homexy()
     
     def homez(self):
         # self.serial.send_serial('G28 Z')
+        self._log("UI: User touched Home Z")
         self.printer_if.homez()
     
     def homeall(self):
         # self.serial.send_serial('G28')
+        self._log("UI: User touched Home All")
         self.printer_if.homeall()
     
     def updatecurrentextruder(self):
-        self.currentextruder = self.extruder.checkedButton().text()
-        # if self.currentextruder == "E1":
-        #     self.serial.send_serial("T0")
-        # elif self.currentextruder == "E2":
-        #     self.serial.send_serial("T1")
+        extruder = self.extruder.checkedButton().text()
+        self._log("UI: User touched Extruder <%s>" % extruder)
+        self.currentextruder = extruder
+
+        if self.currentextruder == "E1":
+            # self.serial.send_serial("T0")
+            self.printer_if.commands("T0")
+        elif self.currentextruder == "E2":
+            # self.serial.send_serial("T1")
+            self.printer_if.commands("T1")
 
     def AddButtontoGroup(self, axis):
         group = QtWidgets.QButtonGroup(self)

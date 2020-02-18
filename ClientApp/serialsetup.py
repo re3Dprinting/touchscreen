@@ -1,4 +1,7 @@
 from builtins import str
+import logging
+
+from PyQt5.QtCore import Qt
 
 from .qt.serialwindow import *
 from .basewindow import BaseWindow
@@ -9,6 +12,12 @@ from printer_if import PrinterIF
 class SerialWindow(BaseWindow, Ui_SerialWindow):
     def __init__(self, printer_if, event_handler, parent=None):
         super(SerialWindow, self).__init__(parent)
+
+        # Set up logging
+        self._logger = logging.getLogger(__name__)
+        self._log("SerialWindow __init__()")
+
+        # Set up the UI
         self.setupUi(self)
         self.printer_if = printer_if
 
@@ -30,9 +39,13 @@ class SerialWindow(BaseWindow, Ui_SerialWindow):
         # self.connect_serial()
 
         self.Back.clicked.connect(self.back)
+
         self.ScanSerial.clicked.connect(self.scan_serial)
-        self.ConnectSerial.clicked.connect(self.connect_serial)
+        self.ConnectSerial.clicked.connect(self.user_connect_serial)
         self.DisconnectSerial.clicked.connect(self.disconnect_serial)
+
+    def _log(self, message):
+        self._logger.debug(message)
 
     def reconnect_serial(self):
         if self.scan_serial():
@@ -47,16 +60,23 @@ class SerialWindow(BaseWindow, Ui_SerialWindow):
         self.SerialOutput.ensureCursorVisible()
         self.SerialOutput.append(text)
 
+    def user_connect_serial(self):
+        self._log("UI: User touched Connect")
+        self.connect_serial()
+
     def connect_serial(self):
         selected_row = self.COMlist.currentRow()
         selected_device = self.COMlist.item(selected_row, 0).text()
+        self._log("Connecting to device <%s>." % selected_device)
         self.printer_if.connect(selected_device)
 
     def disconnect_serial(self):
+        self._log("UI: User touched Disconnect")
         # self.output_serial(self.serial.disconnect())
         self.printer_if.disconnect()
 
     def scan_serial(self):
+        self._log("UI: User touched Scan")
         # Call the printer to get its connection options
         serial_port_list = self.printer_if.get_connection_options()
 

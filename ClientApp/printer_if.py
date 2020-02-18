@@ -1,3 +1,5 @@
+# Dummy comment - delete me.
+# Delete me too
 import sys, traceback
 import re
 import pprint
@@ -19,7 +21,7 @@ class PrinterIF(PrinterCallback):
         self.printer.register_callback(self)
 
         # Set up logging
-        self._logger = logging.getLogger("re3D.printer_if")
+        self._logger = logging.getLogger(__name__)
         self._log("PrinterIF starting up")
 
         # Were not received the SD file list or doing an SD print
@@ -219,6 +221,8 @@ class PrinterIF(PrinterCallback):
 
     def on_printer_add_log(self, data):
         if self.show_add_log:
+            # By definition, these are already in the log, so we don't log them again (but
+            # we might want to print them out.)
             print("*** PRINTER ADD LOG: <%s>" % data)
 
     def on_printer_add_message(self, data):
@@ -233,7 +237,7 @@ class PrinterIF(PrinterCallback):
         # Determine whether the message contains a filament-change
         # message
         match = runout_message_regex.match(data)
-        self._log("Matched in <%s>" % data)
+        # self._log("Matched in <%s>" % data)
 
         # If it does contain a match...
         if match:

@@ -1,3 +1,5 @@
+import logging
+
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
@@ -7,15 +9,24 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class BaseWindow(QtWidgets.QWidget):
 	def __init__(self, parent = None):
 		super(BaseWindow,self).__init__()
+
+		# Set up logging
+		self._logger = logging.getLogger(__name__)
+		self._log("BaseWindow __init__")
+
 		self.fullscreen = False
 		self.parent = parent
 		self.notification = None
-		self.setWindowFlags(self.windowFlags() | QtCore.Qt.FramelessWindowHint)
+		self.setWindowFlags(self.windowFlags())
 		if(parent != None and self.parent.fullscreen):
 			self.fullscreen = True
 			self.setWindowState(self.windowState() | QtCore.Qt.WindowFullScreen)
 
+	def _log(self, message):
+		self._logger.debug(message)
+
 	def back(self):
+		self._log("User touched Back")
 		self.parent.show()
 		self.close()
 

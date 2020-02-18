@@ -69,7 +69,7 @@ class MountFinder:
         if False:
             pass
 
-        print("Partition type = <%s>" % partition.fstype)
+        # print("Partition type = <%s>" % partition.fstype)
 
         # Detect whether the filesystem type is a windows-type fs.
         if (partition.fstype == "msdos") or (partition.fstype == "exfat") or (partition.fstype == "vfat"):

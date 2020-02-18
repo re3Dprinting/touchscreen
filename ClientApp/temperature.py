@@ -1,7 +1,9 @@
 from builtins import str
+
 import math
 import traceback
 import pprint
+import logging
 
 import PyQt5.QtCore
 from PyQt5.QtCore import Qt, pyqtSignal
@@ -19,7 +21,10 @@ from .basewindow import BaseWindow
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-mats = ['m1', 'm2', 'm3']
+mats = [('PLA', 'm1'),
+        ('PC', 'm2'),
+        ('PETG', 'm3')]
+
 periphs = ['e1', 'e2', 'bed', 'all']
 
 
@@ -30,9 +35,12 @@ class TemperatureWindow(BaseWindow, Ui_TemperatureWindow):
     def __init__(self, printer_if, event_handler, parent=None):
         super(TemperatureWindow, self).__init__(parent)
 
+        # Set up the UI
         self.setupUi(self)
 
-        self.pp = pprint.PrettyPrinter(indent=4)
+        # Set up logging
+        self._logger = logging.getLogger(__name__)
+        self._log("TemperatureWindow __init__")
 
         self.printer_if = printer_if
         self.event_handler = event_handler
@@ -69,12 +77,13 @@ class TemperatureWindow(BaseWindow, Ui_TemperatureWindow):
         self.setbuttonstyle(self.e2img)
         self.setbuttonstyle(self.bedimg)
 
-        self.extruder1 = Periph("e1", self.set_tool0_temperature, 345, self)
-        self.extruder2 = Periph("e2", self.set_tool1_temperature, 345, self)
-        self.heatedbed = Periph("bed", self.set_bed_temperature, 125, self)
-        self.m1 = Material(180, 180, 60, self)
-        self.m2 = Material(215, 215, 115, self)
-        self.m3 = Material(200, 200, 60, self)
+        self.extruder1 = Periph("Extruder 0", "e1", self.set_tool0_temperature, 345, self)
+        self.extruder2 = Periph("Extruder 1", "e2", self.set_tool1_temperature, 345, self)
+        self.heatedbed = Periph("Bed", "bed", self.set_bed_temperature, 125, self)
+
+        self.m1 = Material("PLA", 180, 180, 60, self)
+        self.m2 = Material("PC", 215, 215, 115, self)
+        self.m3 = Material("PETG", 200, 200, 60, self)
 
 #		Dynamic Icons
         self.fanon = False
@@ -100,15 +109,16 @@ class TemperatureWindow(BaseWindow, Ui_TemperatureWindow):
 
         self.initpreheatbuttons()
         self.NotActivePrintWid.Back.clicked.connect(self.back)
-        self.NotActivePrintWid.CoolDown.clicked.connect(self.cool)
-        self.NotActivePrintWid.Fan.clicked.connect(self.fan)
+        self.NotActivePrintWid.CoolDown.clicked.connect(self.notactive_cool)
+        self.NotActivePrintWid.Fan.clicked.connect(self.notactive_fan)
 
 
 #		Initilization for Printing Widget.
 
-        self.ActivePrintWid.Back.clicked.connect(self.back)
-        self.ActivePrintWid.Fan.clicked.connect(self.fan)
+        self.ActivePrintWid.Back.clicked.connect(self.active_close)
+        self.ActivePrintWid.Fan.clicked.connect(self.active_fan)
         self.ActivePrintWid.ResumePrint.setEnabled(False)
+
         # self.ActivePrintWid.StopPrint.clicked.connect(self.stopprint)
         self.ActivePrintWid.PausePrint.clicked.connect(self.pauseprint)
         self.ActivePrintWid.ResumePrint.clicked.connect(self.resumeprint)
@@ -140,7 +150,11 @@ class TemperatureWindow(BaseWindow, Ui_TemperatureWindow):
         self.changeText(self.ActivePrintWid.BabysteppingVal, str(self.event_handler.babystep))
         self.changeText(self.ActivePrintWid.FlowrateVal, str(self.printer_if.flow_rate))
 
+    def _log(self, message):
+        self._logger.debug(message)
+
     def sendfeedrate(self):
+        self._log("UI: User released Feed Rate slider")
 
         feed_rate = self.ActivePrintWid.FeedrateSlider.value()
         indicated_feed_rate = feed_rate
@@ -161,10 +175,12 @@ class TemperatureWindow(BaseWindow, Ui_TemperatureWindow):
         pass
 
     def feedrateslider(self):
+        self._log("UI: User moved Feed Rate slider")
         val = self.ActivePrintWid.FeedrateSlider.value()
         self.changeText(self.ActivePrintWid.FeedrateVal, str(val))
 
     def babystepneg(self):
+        self._log("UI: User touched Baby Step Decrement")
         self.event_handler.babystepx10 -= self.event_handler.babystepinc
         self.event_handler.babystep = float(
             self.event_handler.babystepx10) / float(1000)
@@ -174,6 +190,7 @@ class TemperatureWindow(BaseWindow, Ui_TemperatureWindow):
         self.printer_if.set_babystep(self.event_handler.babystep)
 
     def babysteppos(self):
+        self._log("UI: User touched Baby Step Increment")
         self.event_handler.babystepx10 += self.event_handler.babystepinc
         self.event_handler.babystep = float(
             self.event_handler.babystepx10) / float(1000)
@@ -201,11 +218,10 @@ class TemperatureWindow(BaseWindow, Ui_TemperatureWindow):
         self.progress_signal.emit(str(completion))
 
     def update_progress_slot(self, completion):
-        # print("Received progress signal", completion)
 
         if completion != "N/A":
+            self._log("Received progress signal <%s>" % completion)
             completion = int(float(completion))
-            # print("UPDATE PROGRESS: <%d>" % (completion))
             self.ActivePrintWid.FileProgress.setValue(completion)
 
     def updateflowlabel(self):
@@ -218,9 +234,12 @@ class TemperatureWindow(BaseWindow, Ui_TemperatureWindow):
     def flowratelabel(self):
         # Select the next of the three:
         # self.event_handler.fr_index = (self.event_handler.fr_index + 1) % 3
+        self._log("UI: User touched Flow Rate Label")
         self.updateflowlabel()
 
     def flowratepos(self):
+        self._log("UI: User touched Flow Rate Increase")
+
         # Increase the flow rate
         self.event_handler.flowrate[self.event_handler.fr_index] += 1
 
@@ -233,6 +252,8 @@ class TemperatureWindow(BaseWindow, Ui_TemperatureWindow):
         self.updateflowlabel()
 
     def flowrateneg(self):
+        self._log("UI: User touched Flow Rate Decrease")
+
         # Decrease the flow rate
         self.event_handler.flowrate[self.event_handler.fr_index] -= 1
 
@@ -251,14 +272,14 @@ class TemperatureWindow(BaseWindow, Ui_TemperatureWindow):
         self.ActivePrintWid.show()
 
     def pauseprint(self):
-        # self.serial.send_serial("M25")
+        self._log("UI: User touched Pause")
         self.parent.printer_if.pause_print()
         self.ActivePrintWid.ResumePrint.setEnabled(True)
         self.ActivePrintWid.PausePrint.setEnabled(False)
         self.parent.Control.setEnabled(True)
 
     def resumeprint(self):
-        # self.serial.send_serial("M24")
+        self._log("UI: User touched Resume")
         self.parent.printer_if.resume_print()
         self.ActivePrintWid.ResumePrint.setEnabled(False)
         self.ActivePrintWid.PausePrint.setEnabled(True)
@@ -281,9 +302,17 @@ class TemperatureWindow(BaseWindow, Ui_TemperatureWindow):
     # 		getattr(self, p+ "neg").clicked.connect(getattr(self.event_handler, "decrement_"+p))
 
     def initpreheatbuttons(self):
-        for m in mats:
+        for name, m in mats:
             for p in periphs:
                 getattr(self.NotActivePrintWid, m + p).clicked.connect(getattr(getattr(self, m), p + 'set'))
+
+    def notactive_fan(self):
+        self._log("UI: User touched (not active) Fan")
+        self.fan()
+
+    def active_fan(self):
+        self._log("UI: User touched (active) Fan")
+        self.fan()
 
     def fan(self):
         if self.fanon:
@@ -303,8 +332,16 @@ class TemperatureWindow(BaseWindow, Ui_TemperatureWindow):
             self.NotActivePrintWid.Fan.setIcon(self.fanonicon)
             self.NotActivePrintWid.Fan.setIconSize(QtCore.QSize(55, 55))
 
+    def active_close(self):
+        self._log("UI: User touched (active) Back")
+        self.close()
 
-    def cool(self):
+    def notactive_close(self):
+        self._log("UI: User touched (not active) Back")
+        self.close()
+
+    def notactive_cool(self):
+        self._log("UI: User touched Cooldown")
         self.extruder1.setandsend(0)
         self.extruder2.setandsend(0)
         self.heatedbed.setandsend(0)

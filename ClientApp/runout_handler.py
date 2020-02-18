@@ -7,7 +7,7 @@ class RunoutHandlerDialog(QtWidgets.QDialog, Ui_w_runout_dialog):
 
     def __init__(self, parent, printer_if):
         super(RunoutHandlerDialog, self).__init__()
-        self._logger = logging.getLogger("re3D.runout_handler")
+        self._logger = logging.getLogger(__name__)
         self._log("Runout handler starting up")
 
         self.setupUi(self)

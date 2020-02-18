@@ -1,11 +1,20 @@
-import sys, traceback
 from builtins import str
 from builtins import object
+
+import sys
+import logging
+import traceback
+
 import PyQt5
 
 
 class Periph(object):
-    def __init__(self, name, callback, maxtemp, parent):
+    def __init__(self, fullname, name, callback, maxtemp, parent):
+        # Set up logging
+        self._logger = logging.getLogger(__name__)
+        self._log("TemperatureWindow __init__")
+
+        self.fullname = fullname
         self.name = name
         self.callback = callback
         self.maxtemp = maxtemp
@@ -16,6 +25,8 @@ class Periph(object):
         self.button_held_time = 0
         self.direction = "inc"
 
+        self.held_count = 0
+
         # self.reflect_delay_timer = PyQt5.QtCore.QTimer()
         # self.reflect_delay_timer.timeout.connect(self.reflect_delay_check)
         # self.local_set_time = 0
@@ -25,6 +36,9 @@ class Periph(object):
         self.has_external_settemp = False
 
         self.init_posneg()
+
+    def _log(self, message):
+        self._logger.debug(message)
 
     def init_posneg(self):
         getattr(self.parent, self.name +
@@ -43,14 +57,21 @@ class Periph(object):
                 "neg").released.connect(self.buttonreleased)
 
     def incrementbuttonpressed(self):
+        self._log("UI: <%s> Increment button pressed " % self.fullname)
+        self.held_count = 0
         self.timer.start(12)
         self.direction = "inc"
 
     def decrementbuttonpressed(self):
+        self._log("UI: <%s> Decrement button pressed " % self.fullname)
+        self.held_count = 0
         self.timer.start(12)
         self.direction = "dec"
 
     def buttonreleased(self):
+        if self.held_count > 0 :
+            self._log("UI: <%s> button released after %d repeats" % (self.fullname, self.held_count))
+            self.held_count = 0
         self.timer.stop()
         if (self.button_held_time == 0 and self.direction == "inc"):
             self.increment()
@@ -63,6 +84,7 @@ class Periph(object):
         self.button_held_time += 0.012
         self.parent.event_handler.sendtempcount = 0
         if self.button_held_time >= 1:
+            self.held_count += 1
             if self.direction == "inc":
                 self.increment()
             elif self.direction == "dec":

@@ -1,6 +1,9 @@
 from __future__ import division
 from basewindow import BaseWindow
 from builtins import str
+
+import logging
+
 from past.utils import old_div
 from PyQt5.QtCore import Qt, pyqtSignal
 
@@ -27,6 +30,10 @@ class PrintWindow(BaseWindow, Ui_PrintWindow):
     def __init__(self, printer_if, temp_pop, personality, parent=None):
         super(PrintWindow, self).__init__(parent)
 
+        # Set up logging
+        self._logger = logging.getLogger(__name__)
+        self._log("TemperatureWindow __init__")
+
         # Connect slots to the signals
         # self.create_signal.connect(self.update_usb_create)
         # self.delete_signal.connect(self.update_usb_delete)
@@ -48,6 +55,12 @@ class PrintWindow(BaseWindow, Ui_PrintWindow):
         self.item_stack = []
 
         self.Back.clicked.connect(self.back)
+
+        if parent.fullscreen:
+            self.fullscreen = True
+        else:
+            self.fullscreen = False
+
         self.ScanSD.clicked.connect(self.scansd)
         self.sd_pushbutton_print.clicked.connect(self.sd_start_print)
         self.ActivePrint.clicked.connect(self.activeprintpop)
@@ -75,7 +88,8 @@ class PrintWindow(BaseWindow, Ui_PrintWindow):
         ) + "QTabBar::tab { width: " + str(tabWidth) + "px; height: 35px; font-size: 12pt;}")
 
         # Set up the list of USB files
-        self.usb_file_manager = FileListManager(self.USBFileList,
+        self.usb_file_manager = FileListManager("USB",
+                                                self.USBFileList,
                                                 self.personality.watchpoint,
                                                 self.usb_pathlabel,
                                                 self.usb_pushbutton_up,
@@ -86,7 +100,8 @@ class PrintWindow(BaseWindow, Ui_PrintWindow):
 
         # Set up the list of local files
 
-        self.local_file_manager = FileListManager(self.LocalFileList,
+        self.local_file_manager = FileListManager("Local",
+                                                  self.LocalFileList,
                                                   self.personality.localpath,
                                                   self.loc_pathlabel,
                                                   self.loc_pushbutton_up,
@@ -96,6 +111,9 @@ class PrintWindow(BaseWindow, Ui_PrintWindow):
         self.local_file_manager.update_files()
 
         self.loc_pushbutton_print.clicked.connect(self.local_start_print)
+
+    def _log(self, message):
+        self._logger.debug(message)
 
     def set_storage_manager(self, local_storage_manager):
         self.local_storage_manager = local_storage_manager
@@ -128,6 +146,7 @@ class PrintWindow(BaseWindow, Ui_PrintWindow):
         self.updatelocalfiles()
 
     def scansd(self):
+        self._log("UI: User touched Scan")
         self.printer_if.release_sd_card();
         self.printer_if.init_sd_card();
         self.printer_if.list_sd_card();
@@ -194,6 +213,7 @@ class PrintWindow(BaseWindow, Ui_PrintWindow):
         # self.scansd()
 
     def stopprint(self):
+        self._log("UI: User touched Stop Print")
         # self.serial.reset()
         self.printer_if.cancel_printing()
         self.notprinting()
@@ -214,6 +234,7 @@ class PrintWindow(BaseWindow, Ui_PrintWindow):
         ## self.serial.data.changestatus("ON")
 
     def sd_start_print(self):
+        self._log("UI: User touched (SD) Start Print")
         selected = self.SDFileList.currentRow()
         selected_file_item = self.SDFileList.item(selected, 0)
         selected_file = selected_file_item.text()
@@ -236,12 +257,14 @@ class PrintWindow(BaseWindow, Ui_PrintWindow):
             self.parent.Control.setEnabled(False)
 
     def local_start_print(self):
+        self._log("UI: User touched (Local) Start Print")
         (selected_row, selected_file) = self.local_file_manager.get_selected_file()
         # print(selected_row, selected_file)
         # selected_file.dump()
 
         selected_file_name = selected_file.name
         selected_file_loc_path = selected_file.relative_path
+        self._log("File name <%s>, local path <%s>." % (selected_file_name, selected_file_loc_path))
 
         if selected_file_name != None:
 
@@ -260,15 +283,13 @@ class PrintWindow(BaseWindow, Ui_PrintWindow):
             self.parent.Control.setEnabled(False)
 
     def usb_start_print(self):
+        self._log("UI: User touched (USB) Start Print")
         (selected_row, selected_file) = self.usb_file_manager.get_selected_file()
 
         selected_file_name = selected_file.name
         selected_file_rel = selected_file.relative_path
         selected_file_abs = selected_file.absolute_path
-
-        print("USB print <%s>, rel <%s>, abs <%s>" % (selected_file_name,
-                                                      selected_file_rel,
-                                                      selected_file_abs))
+        self._log("File name <%s>, relative path <%s>, absolute path <%s>." % (selected_file_name, selected_file_rel, selected_file_abs))
 
         if selected_file_name != None:
 
@@ -311,6 +332,7 @@ class PrintWindow(BaseWindow, Ui_PrintWindow):
         return self.get_selected_widget_file(self.LocalFileList, self.loc_subdir)
 
     def activeprintpop(self):
+        self._log("UI: User touched Active Print")
         if self.fullscreen:
             self.temp_pop.showFullScreen()
         else:
