@@ -111,7 +111,10 @@ class UserUpdateWindow(BaseWindow, Ui_UserUpdate):
             version = "release/"+ selected.text()
             for tag in self.current_tags:
                 if(version == tag.name):
-                    self.print_debug(tag.tag.message)
+                    if tag.tag is None:
+                        self.print_debug("(No description)")
+                    else:
+                        self.print_debug(tag.tag.message)
             self.DebugOutput.moveCursor(QtGui.QTextCursor.Start)
             self.DebugOutput.ensureCursorVisible()
 
