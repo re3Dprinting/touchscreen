@@ -43,7 +43,8 @@ class UserUpdateWindow(BaseWindow, Ui_UserUpdate):
             if r.name == "re3d":
                 self.remote_repo = r
                 found_remote = True
-            else: self.repo.delete_remote(r) 
+            # Why delete existing remotes? This is a hostile act.
+            # else: self.repo.delete_remote(r) 
         #If re3d repo does not exist, add it as a remote.
         if not found_remote:
             self.remote_repo = self.repo.create_remote("re3d", "https://github.com/re3Dprinting/touchscreen")
@@ -70,8 +71,9 @@ class UserUpdateWindow(BaseWindow, Ui_UserUpdate):
     def checkupdate(self):
         #Fetch all of the tags from the remote repository.
         try:
-            for tag in self.repo.tags:
-                self.repo.delete_tag(tag)
+            # WHY delete other tags??? No, bad code.
+            # for tag in self.repo.tags:
+            #    self.repo.delete_tag(tag)
 
             self.remote_repo.fetch("--tags")
             tags = self.repo.tags
