@@ -205,14 +205,14 @@ if __name__ == "__main__":
     config_id = get_touchscreen_commit_id()
 
     ip_addr = get_ip()
-    id_message = "IP: %s, Config ID: %s" % (ip_addr, config_id)
+    id_string = "IP: %s, Config ID: %s" % (ip_addr, config_id)
     
     print("******************************************************************************")
-    print("re:3D touchscreen starting. " + id_message)
+    print("re:3D touchscreen starting. " + id_string)
     print("******************************************************************************")
 
     _log("******************************************************************************")
-    _log("* re:3D touchscreen starting. " + id_message)
+    _log("* re:3D touchscreen starting. " + id_string)
     _log("******************************************************************************")
     
     #################################################################
@@ -290,11 +290,15 @@ if __name__ == "__main__":
     for line in open(config_path):
         properties[line.split("=")[0]] = line.split("=")[1].strip()
 
+    version_string = properties["version"]
+
     app.setApplicationName(properties["name"])
-    app.setApplicationVersion(properties["version"])
+    app.setApplicationVersion(version_string)
+
+    id_string = 'v' + version_string + ", " + id_string
 
     display = TouchDisplay(client_conn, printer_if, persona)
-    display.SoftwareVersion.setText(id_message)
+    display.SoftwareVersion.setText(id_string)
     display.show()
 
     # print("Starting the events flow")

@@ -42,6 +42,11 @@ class TemperatureWindow(BaseWindow, Ui_TemperatureWindow):
         self._logger = logging.getLogger(__name__)
         self._log("TemperatureWindow __init__")
 
+        # if parent.fullscreen: self.fullscreen = True
+        # else: self.fullscreen = False
+        # if self.fullscreen:
+        # 	self.setWindowState(self.windowState() | Qt.WindowFullScreen)
+
         self.printer_if = printer_if
         self.event_handler = event_handler
 

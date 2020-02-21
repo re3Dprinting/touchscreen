@@ -34,6 +34,10 @@ class PrintWindow(BaseWindow, Ui_PrintWindow):
         self._logger = logging.getLogger(__name__)
         self._log("TemperatureWindow __init__")
 
+        # Set up logging
+        self._logger = logging.getLogger(__name__)
+        self._log("TemperatureWindow __init__")
+
         # Connect slots to the signals
         # self.create_signal.connect(self.update_usb_create)
         # self.delete_signal.connect(self.update_usb_delete)

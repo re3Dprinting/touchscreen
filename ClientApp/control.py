@@ -17,6 +17,13 @@ class ControlWindow(BaseWindow, Ui_ControlWindow):
         self._logger = logging.getLogger(__name__)
         self._log("SerialWindow __init__()")
 
+        # Set up UI
+        self.setupUi(self)
+
+        # Set up logging
+        self._logger = logging.getLogger(__name__)
+        self._log("SerialWindow __init__()")
+
         self.printer_if = printer_if
 
         # Set up UI

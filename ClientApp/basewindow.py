@@ -6,6 +6,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 #BaseWindow that is inherited from all windows. 
 #Overrides basic functions like close and show
 #Implements Fullscreen flags, cleaning up code in the individual windows
+
 class BaseWindow(QtWidgets.QWidget):
 	def __init__(self, parent = None):
 		super(BaseWindow,self).__init__()
