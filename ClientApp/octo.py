@@ -1,4 +1,5 @@
-#!/usr/bin/env python
+if __name__ == "__main__":
+    print("Octo.py is not the main application; use main.py")
 
 #################################################################
 
