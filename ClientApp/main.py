@@ -43,9 +43,12 @@ def _log(message):
     # always use DEBUG
     logger.info(message)
 
+def _except(message, e):
+    global logger
+    logger.exception(message)
+    logger.exception(e)
 
-if __name__ == "__main__":
-
+def main():
     # Setup logging first of all
 
     setup_root_logger()
@@ -162,3 +165,19 @@ if __name__ == "__main__":
     # ...and kick off the UI event loop. This function does not
     # return.
     app.exec_()
+
+# Define an exception hook to log exceptions that would normally be
+# caught and handled by PyQt5. We do our own handling to ensure that
+# the stack trace goes into the log.
+
+def exception_hook(exctype, value, traceback):
+    logger.exception("**** Logging an uncaught exception", exc_info=(exctype, value, traceback))
+    sys._excepthook(exctype, value, traceback)
+    sys.exit(1)
+
+# Hook up our exception handler
+sys._excepthook = sys.excepthook
+sys.excepthook = exception_hook
+
+if __name__ == "__main__":
+    main()
