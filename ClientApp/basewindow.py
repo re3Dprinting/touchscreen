@@ -13,7 +13,6 @@ class BaseWindow(QtWidgets.QWidget):
 
 		# Set up logging
 		self._logger = logging.getLogger(__name__)
-		self._log("BaseWindow __init__")
 
 		self.fullscreen = False
 		self.parent = parent
