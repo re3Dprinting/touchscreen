@@ -43,8 +43,6 @@ class UserUpdateWindow(BaseWindow, Ui_UserUpdate):
             if r.name == "re3d":
                 self.remote_repo = r
                 found_remote = True
-            # Why delete existing remotes? This is a hostile act.
-            # else: self.repo.delete_remote(r) 
         #If re3d repo does not exist, add it as a remote.
         if not found_remote:
             self.remote_repo = self.repo.create_remote("re3d", "https://github.com/re3Dprinting/touchscreen")
@@ -53,6 +51,7 @@ class UserUpdateWindow(BaseWindow, Ui_UserUpdate):
         # Make the selection Behavior as selecting the entire row
         self.SoftwareList.setSelectionBehavior(QtWidgets.QTableView.SelectRows)
         self.SoftwareList.setSelectionMode(QtWidgets.QTableView.SingleSelection)
+        # Update the side dialog box when a software version is selected. 
         self.SoftwareList.itemSelectionChanged.connect(self.show_tag_message)
         # Hide the vertical header which contains the Index of the row.
         self.SoftwareList.verticalHeader().hide()
@@ -61,6 +60,7 @@ class UserUpdateWindow(BaseWindow, Ui_UserUpdate):
         header.setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
         header.setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
 
+        #  Append the version to the current version window. 
         temp = self.CurrentVersion.text()+ " " + self.app.applicationVersion()
         self.CurrentVersion.setText(temp)
 
@@ -72,6 +72,7 @@ class UserUpdateWindow(BaseWindow, Ui_UserUpdate):
         #Fetch all of the tags from the remote repository.
         try:
             # WHY delete other tags??? No, bad code.
+            # Check if tags can be updated without deleting them. 
             # for tag in self.repo.tags:
             #    self.repo.delete_tag(tag)
 
@@ -81,6 +82,8 @@ class UserUpdateWindow(BaseWindow, Ui_UserUpdate):
 
             self.SoftwareList.setRowCount(0)
 
+            # Check each tag and if it is a "release" tag. 
+            # Append the tag to the list on the table widget. 
             self.current_tags = []
             for t in tags:
                 if("release" == t.name.split("/")[0]): #and not self.app.applicationVersion() in t.name #<--- Dont show current version
@@ -89,6 +92,7 @@ class UserUpdateWindow(BaseWindow, Ui_UserUpdate):
                     rowpos = self.SoftwareList.rowCount()
                     self.SoftwareList.insertRow(rowpos)
                     version = QtWidgets.QTableWidgetItem(t.name.strip("release/"))
+                    #Check if there is a newer software version avalible. 
                     self.checkagainstcurrent(t.name.strip("release/"))
                     version.setFlags(Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
 
@@ -96,12 +100,24 @@ class UserUpdateWindow(BaseWindow, Ui_UserUpdate):
                     date.setFlags(Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
                     self.SoftwareList.setItem(rowpos,0,version)
                     self.SoftwareList.setItem(rowpos,1,date)
+            # If no versions are found, push a debug message to the window. 
+            # If there is a newer version avalible, create a notification object and return it to be caught by the window. 
             if(self.SoftwareList.rowCount() == 0): self.print_debug("No software versions found. The server might be down, please try again later.")
             elif(self.new_version_avalible):
                 return Notification("A new software version is available!\nTo update, go to Settings > Software Update")
         except Exception as e:
             print(e)
 
+    # Check if there is a newer software version avalible. 
+    def checkagainstcurrent(self, version):
+        current_v = self.app.applicationVersion().split(".")
+        given_v = version.split(".")
+        for i in range(len(current_v)):
+            if(int(current_v[i]) < int(given_v[i])):
+                self.new_version_avalible = True
+                return
+
+    #Grab the tag message and display it. 
     def show_tag_message(self):
         item = self.SoftwareList.currentRow()
         selected = self.SoftwareList.item(item, 0)
@@ -118,8 +134,8 @@ class UserUpdateWindow(BaseWindow, Ui_UserUpdate):
             self.DebugOutput.moveCursor(QtGui.QTextCursor.Start)
             self.DebugOutput.ensureCursorVisible()
 
-#   Update function called by clicking the Update/Rollback button
-#   Uses psutil to kill the current process, then reexecutes the original python command. 
+    #   Update function called by clicking the Update/Rollback button
+    #   Uses psutil to kill the current process, then reexecutes the original python command. 
     def update(self):
         software = self.SoftwareList.currentRow()
         selected_version = self.SoftwareList.item(software, 0)
@@ -131,21 +147,12 @@ class UserUpdateWindow(BaseWindow, Ui_UserUpdate):
             else: self.restart_program(sys.argv[0])
         else:
             self.print_debug("Select a Version on list")
-
-    def checkagainstcurrent(self, version):
-        current_v = self.app.applicationVersion().split(".")
-        given_v = version.split(".")
-        for i in range(len(current_v)):
-            if(int(current_v[i]) < int(given_v[i])):
-                self.new_version_avalible = True
-                return
-                
+    
     def print_debug(self, text):
         self.DebugOutput.append(text)
     
-
+    # Restart the program by using psutil. Grab the PID of the python application and kill it. 
     def restart_program(self, argument):
-        # Restarts the current program, with file objects and descriptors cleanup
         try:
             p = psutil.Process(os.getpid())
             for handler in p.open_files() + p.connections():
@@ -153,6 +160,7 @@ class UserUpdateWindow(BaseWindow, Ui_UserUpdate):
         except Exception as e:
             logging.error(e)
 
+        #Restart the program with the original arguments and python executable. 
         python = sys.executable
         os.execl(python, python, argument)
 
