@@ -1,5 +1,6 @@
 if __name__ == "__main__":
-    print("Octo.py is not the main application; use main.py")
+    print("Octo.py is no longer the main application; please use main.py")
+    exit(1)
 
 #################################################################
 

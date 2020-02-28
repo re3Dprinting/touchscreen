@@ -188,7 +188,7 @@ class TemperatureWindow(BaseWindow, Ui_TemperatureWindow):
         self._log("UI: User touched Baby Step Decrement")
         self.event_handler.babystepx10 -= self.event_handler.babystepinc
         self.event_handler.babystep = float(
-            self.event_handler.babystepx10) / float(1000)
+            self.event_handler.babystepx10) / float(100)
         self.changeText(self.ActivePrintWid.BabysteppingVal,
                         str(self.event_handler.babystep))
         # self.event_handler.sendbabystep()
@@ -198,7 +198,7 @@ class TemperatureWindow(BaseWindow, Ui_TemperatureWindow):
         self._log("UI: User touched Baby Step Increment")
         self.event_handler.babystepx10 += self.event_handler.babystepinc
         self.event_handler.babystep = float(
-            self.event_handler.babystepx10) / float(1000)
+            self.event_handler.babystepx10) / float(100)
         self.changeText(self.ActivePrintWid.BabysteppingVal,
                         str(self.event_handler.babystep))
         # self.event_handler.sendbabystep()

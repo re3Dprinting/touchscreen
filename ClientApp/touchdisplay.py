@@ -59,7 +59,7 @@ class TouchDisplay(BaseWindow, Ui_TouchDisplay):
 #       Event handler object that handles temperature materials, flowrate, etc.
         self.event_handler = event_handler(self.printer_if)
 
-        self.set_pop = SettingsWindow(self.client, self.printer_if, self)
+        self.set_pop = SettingsWindow(personality, self.client, None, self.printer_if, self)
         self.server_pop = ServerWindow(self.client, self.set_pop)
 
         self.userupdate_pop = UserUpdateWindow(self.personality, self.set_pop)

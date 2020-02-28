@@ -18,7 +18,7 @@ class BaseWindow(QtWidgets.QWidget):
 		self.parent = parent
 		self.notification = None
 		self.setWindowFlags(self.windowFlags())
-		if(parent != None and self.parent.fullscreen):
+		if (parent != None) and (self.parent.fullscreen):
 			self.fullscreen = True
 			self.setWindowState(self.windowState() | QtCore.Qt.WindowFullScreen)
 

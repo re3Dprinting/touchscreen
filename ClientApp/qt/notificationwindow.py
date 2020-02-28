@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'qt/notificationwindow.ui'
+# Form implementation generated from reading ui file 'notificationwindow.ui'
 #
-# Created by: PyQt5 UI code generator 5.5.1
+# Created by: PyQt5 UI code generator 5.13.1
 #
 # WARNING! All changes made in this file will be lost!
 
+
 from PyQt5 import QtCore, QtGui, QtWidgets
+
 
 class Ui_NotificationWindow(object):
     def setupUi(self, NotificationWindow):
@@ -45,4 +47,3 @@ class Ui_NotificationWindow(object):
         NotificationWindow.setWindowTitle(_translate("NotificationWindow", "Notification"))
         self.Text.setText(_translate("NotificationWindow", "A new Software Version is avalible!"))
         self.Close.setText(_translate("NotificationWindow", "X"))
-

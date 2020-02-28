@@ -1,4 +1,5 @@
 import logging
+from constants import *
 from logging.handlers import RotatingFileHandler
 
 def dump_logger_hierarchy(note, log_to_debug):
@@ -17,9 +18,8 @@ def setup_root_logger():
     # print("Octo: got logger", root_logger)
     # dump_logger_hierarchy("Octo 1", root_logger)
 
-    # Create a rotating log handler with each file 100 megabytes and
-    # 10 files for a total of one gigabyte logging.
-    handler = RotatingFileHandler("ts.log", maxBytes=10**8, backupCount=10)
+    # Create a rotating log handler:
+    handler = RotatingFileHandler(k_logname, k_logmaxbytes, k_logcount)
     handler.setLevel(logging.DEBUG)
 
     # Set the formatter to prefix the log message with the date, name,

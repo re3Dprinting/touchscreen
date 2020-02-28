@@ -3,6 +3,8 @@
 
 all: activeprintwidget.py \
      controlwindow.py \
+     debugwindow.py \
+     infowindow.py \
      notactiveprintwidget.py \
      notificationwindow.py \
      printwindow.py \

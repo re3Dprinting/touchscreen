@@ -75,12 +75,14 @@ def main():
 
     if plat.startswith("linux"):
         # Linux
-        persona = Personality(True, "/media/pi", "/home/pi/gcode-cache")
+        persona = Personality(True, "/media/pi", "/home/pi/gcode-cache", "/home/pi/log-cache")
         # persona = Personality(True, "/media", "/home/pi/gcode-cache")
 
     elif plat.startswith("darwin"):
         # macOS
-        persona = Personality(False, "/Volumes", "/Users/jct/Dropbox/re3D/touchscreen/OctoPrint-1.4.0rc3/localgcode")
+        octopath = "/Users/jct/Dropbox/re3D/touchscreen/OctoPrint"
+        persona = Personality(False, "/Volumes", octopath + "/localgcode",
+                              octopath + "/log-cache")
 
     else:
         print("Unable to determine operating system, aborting...")
