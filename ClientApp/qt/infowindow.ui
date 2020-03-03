@@ -59,7 +59,7 @@
    </property>
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
-     <widget class="QPushButton" name="w_info_button">
+     <widget class="QPushButton" name="w_pushbutton_info">
       <property name="maximumSize">
        <size>
         <width>100</width>
@@ -72,7 +72,7 @@
      </widget>
     </item>
     <item>
-     <widget class="QPushButton" name="w_stats_button">
+     <widget class="QPushButton" name="w_pushbutton_stats">
       <property name="maximumSize">
        <size>
         <width>100</width>
@@ -86,7 +86,7 @@
     </item>
    </layout>
   </widget>
-  <widget class="QTextBrowser" name="w_message_text">
+  <widget class="QTextEdit" name="w_message_text">
    <property name="geometry">
     <rect>
      <x>139</x>

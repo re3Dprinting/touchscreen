@@ -9,6 +9,17 @@ def dump_logger_hierarchy(note, log_to_debug):
 							     log_to_debug.name,
 							     log_to_debug.handlers))
 	    log_to_debug = log_to_debug.parent
+
+def find_root_logger():
+    logger = logging.getLogger()
+
+    if logger is None:
+        return logger
+
+    while logger.parent is not None:
+        logger = logger.parent
+
+    return logger
         
 def setup_root_logger():
     # Get the root logger and set it to DEBUG level.

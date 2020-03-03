@@ -22,7 +22,7 @@ class SettingsWindow(BaseWindow, Ui_SettingsWindow):
         # Save reference to printer interface
         self.printer_if = printer_if
 
-        self.debug_window = DebugWindow(personality, self)
+        self.debug_window = DebugWindow(printer_if, personality, self)
         self.info_window = InfoWindow(printer_if, self)
         
         self.client_obj = client_obj
@@ -96,7 +96,7 @@ class SettingsWindow(BaseWindow, Ui_SettingsWindow):
 
     def handle_term(self):
         self._log("UI: User touched Term")
-        print("UI: User touched Term")
+        # is_not_defined()
 
     def user_back(self):
         self._log("UI: User touched Back")

@@ -1,5 +1,3 @@
-# Dummy comment - delete me.
-# Delete me too
 import sys, traceback
 import re
 import pprint
@@ -61,7 +59,7 @@ class PrinterIF(PrinterCallback):
         # A pretty-printer for diagnostic use.
         self.pp = pprint.PrettyPrinter(indent=4)
 
-    def printer(self):
+    def get_printer(self):
         return self.printer
 
     def _log(self, message):
@@ -108,6 +106,9 @@ class PrinterIF(PrinterCallback):
         # during filament change.
         self.printer.commands("M108")
 
+    def commands(self, command, force=False):
+        self.printer.commands(command, force=force)
+
     def fans_on(self):
         self.printer.commands("M106 S0")
         
@@ -124,11 +125,7 @@ class PrinterIF(PrinterCallback):
         self.printer.commands("G28")
 
     def relative_positioning(self):
-        # self.parent.serial.send_serial('G91')
         self.printer.commands("G91")
-
-    def commands(self, command, force=False):
-        self.printer.commands(command, force=force)
 
     def release_sd_card(self):
         self.printer.commands("M22")
@@ -234,64 +231,16 @@ class PrinterIF(PrinterCallback):
             if data.startswith("echo:"):
                 print("Printer add message: <%s>" % data)
 
-        # Determine whether the message contains a filament-change
-        # message
-        match = runout_message_regex.match(data)
-        # self._log("Matched in <%s>" % data)
+        self.maybe_handle_info_message(data)
+        self.maybe_handle_filament_change(data)
 
-        # If it does contain a match...
-        if match:
+    def maybe_handle_info_message(self, data):
+        if self.info_callback is not None:
+            if data.startswith("FIRMWARE_NAME") or \
+               data.startswith("Cap:") or \
+               data.startswith("Stats:"):
+                        self.info_callback(data)
 
-            # Extract the code and text from the message
-            code = match.group(1)
-            text = match.group(2)
-            self._log("Match groups 1:<%s>, 2:<%s>." % (code, text))
-
-            # If a callback is set up for filament-change messages, call it now.
-            if self.runout_callback is not None:
-                self._log("We have callback, calling...")
-                self.runout_callback.handle_runout_message(code, text)
-
-        # Determine whether the message contains position data.
-        match = position_regex.match(data)
-
-        # If so, extract and display it...
-        if match:
-
-            # First, reset the M114 counter. This indicates that we're
-            # getting data from the printer.
-            self.m114_sent_count = 0
-
-            # Now extract each of the x, y, z positions using the
-            # regex groups that matched them.
-            x = match.group(1)
-            y = match.group(2)
-            z = match.group(3)
-
-            # Save the last known position. We'll use this in resuming
-            # a print.
-            self.last_known_position = (float(x), float(y), float(z))
-
-            # And, if there's a callback, call it now.
-            if self.position_callback is not None:
-                self.position_callback.update_position(x, y, z)
-
-        # Track incoming messages that list the files on the SD card
-        # in responds to an M20 command.
-
-        message = data.lower()
-        if message == "begin file list":
-            self.getting_sd_file_list = True
-        elif message == "end file list":
-            if self.getting_sd_file_list:
-                if self.file_list_update_callback is not None:
-                    sd_file_list = self.printer.get_sd_files()
-                    self.getting_sd_file_list = False
-                    # print("?CALLING CALLBACK?")
-                    self.file_list_update_callback(sd_file_list)
-            else:
-                print("*** UNEXPECTED end of file list received")
-        
     def on_printer_add_temperature(self, data):
       try:
         if self.show_add_temperature:
@@ -319,7 +268,8 @@ class PrinterIF(PrinterCallback):
           print("SOMETHING IS WRONG")
           traceback.print_exc()
           
-                
+    def send_fake_ack(self):
+        self.printer.fake_ack()
 
     def on_printer_received_registered_message(name, output):
         if self.show_receive_registered_message:
@@ -400,4 +350,68 @@ class PrinterIF(PrinterCallback):
 
     def set_runout_callback(self, callback):
         self.runout_callback = callback
+
+    def set_info_callback(self, callback):
+        self.info_callback = callback
+
+    def maybe_handle_filament_change(self, data):
+        
+        # Determine whether the message contains a filament-change
+        # message
+        match = runout_message_regex.match(data)
+        # self._log("Matched in <%s>" % data)
+
+        # If it does contain a match...
+        if match:
+
+            # Extract the code and text from the message
+            code = match.group(1)
+            text = match.group(2)
+            self._log("Match groups 1:<%s>, 2:<%s>." % (code, text))
+
+            # If a callback is set up for filament-change messages, call it now.
+            if self.runout_callback is not None:
+                self._log("We have callback, calling...")
+                self.runout_callback.handle_runout_message(code, text)
+
+        # Determine whether the message contains position data.
+        match = position_regex.match(data)
+
+        # If so, extract and display it...
+        if match:
+
+            # First, reset the M114 counter. This indicates that we're
+            # getting data from the printer.
+            self.m114_sent_count = 0
+
+            # Now extract each of the x, y, z positions using the
+            # regex groups that matched them.
+            x = match.group(1)
+            y = match.group(2)
+            z = match.group(3)
+
+            # Save the last known position. We'll use this in resuming
+            # a print.
+            self.last_known_position = (float(x), float(y), float(z))
+
+            # And, if there's a callback, call it now.
+            if self.position_callback is not None:
+                self.position_callback.update_position(x, y, z)
+
+        # Track incoming messages that list the files on the SD card
+        # in responds to an M20 command.
+
+        message = data.lower()
+        if message == "begin file list":
+            self.getting_sd_file_list = True
+        elif message == "end file list":
+            if self.getting_sd_file_list:
+                if self.file_list_update_callback is not None:
+                    sd_file_list = self.printer.get_sd_files()
+                    self.getting_sd_file_list = False
+                    # print("?CALLING CALLBACK?")
+                    self.file_list_update_callback(sd_file_list)
+            else:
+                print("*** UNEXPECTED end of file list received")
+        
         
