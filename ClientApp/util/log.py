@@ -19,7 +19,7 @@ def setup_root_logger():
     # dump_logger_hierarchy("Octo 1", root_logger)
 
     # Create a rotating log handler:
-    handler = RotatingFileHandler(k_logname, k_logmaxbytes, k_logcount)
+    handler = RotatingFileHandler(k_logname, maxBytes=k_logmaxbytes, backupCount=k_logcount)
     handler.setLevel(logging.DEBUG)
 
     # Set the formatter to prefix the log message with the date, name,
@@ -29,3 +29,5 @@ def setup_root_logger():
 
     # Add the handler to the root logger. We're now all set up.
     root_logger.addHandler(handler)
+
+    return root_logger
