@@ -4,18 +4,13 @@ if __name__ == "__main__":
 
 #################################################################
 
-import logging
-
 from octoprint.settings import settings
-from octoprint import printer
 from octoprint import plugin
 
 from octoprint.printer.standard import Printer
 from octoprint.printer import profile
 
 from octoprint.filemanager import analysis, storage, FileDestinations, FileManager
-
-from octoprint.events import GenericEventListener
 
 from octoprint import filemanager
 from octoprint import events
