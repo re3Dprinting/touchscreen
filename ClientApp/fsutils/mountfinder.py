@@ -1,5 +1,3 @@
-# import os
-# import stat
 import psutil
 
 class MountFinder:
@@ -15,7 +13,8 @@ class MountFinder:
         candidates = []
 
         # Get the list of mounted filesystems (False argument means
-        # only return actual physical drives and ignore stuff like 
+        # only return actual physical drives and ignore stuff like
+        # /proc.
         partitions = psutil.disk_partitions(False)
 
         # Loop through the list and return the first that is (a)
@@ -66,14 +65,20 @@ class MountFinder:
     def _is_thumb_drive(partition):
 
         # Detect whether the mount point is a USB-type mount point.
-        if False:
-            pass
+        # We're going to rely on the (admittedly naive) assumption
+        # that only thumb drives will have the nosuid and nodev mount
+        # options. If the mount point doesn't have these options,
+        # assume it's not a thumb drive
+        opts = partition.opts
+        if ("nosuid" in opts) and ("nodev" in opts):
+            return True
 
         # print("Partition type = <%s>" % partition.fstype)
 
-        # Detect whether the filesystem type is a windows-type fs.
-        if (partition.fstype == "msdos") or (partition.fstype == "exfat") or (partition.fstype == "vfat"):
-            return True
+        # # Detect whether the filesystem type is a windows-type
+        # # fs. Most thumb drives are formatted as one of these types.
+        # if (partition.fstype == "msdos") or (partition.fstype == "exfat") or (partition.fstype == "vfat"):
+        #     return True
 
         return False
         
