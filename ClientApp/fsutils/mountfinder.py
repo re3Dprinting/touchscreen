@@ -66,11 +66,11 @@ class MountFinder:
 
         # Detect whether the mount point is a USB-type mount point.
         # We're going to rely on the (admittedly naive) assumption
-        # that only thumb drives will have the nosuid and nodev mount
-        # options. If the mount point doesn't have these options,
-        # assume it's not a thumb drive
-        opts = partition.opts
-        if ("nosuid" in opts) and ("nodev" in opts):
+        # that only thumb drives will have the nosuid mount option. If
+        # the mount point doesn't have this option, assume it's not a
+        # thumb drive. (Note: this works for both linux and macOS.)
+
+        if ("nosuid" in partition.opts):
             return True
 
         # print("Partition type = <%s>" % partition.fstype)
