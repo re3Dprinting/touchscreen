@@ -76,7 +76,6 @@ class SettingsWindow(BaseWindow, Ui_SettingsWindow):
 
     def handle_debug(self):
         self._log("UI: User touched Debug")
-        print("UI: User touched Debug")
         if self.fullscreen:
             self.debug_window.showFullScreen()
         else:
@@ -84,7 +83,6 @@ class SettingsWindow(BaseWindow, Ui_SettingsWindow):
 
     def handle_info(self):
         self._log("UI: User touched Info")
-        print("UI: User touched Info")
         if self.fullscreen:
             self.info_window.showFullScreen()
         else:
@@ -92,7 +90,6 @@ class SettingsWindow(BaseWindow, Ui_SettingsWindow):
 
     def handle_stats(self):
         self._log("UI: User touched Stats")
-        print("UI: User touched Stats")
 
     def handle_term(self):
         self._log("UI: User touched Term")

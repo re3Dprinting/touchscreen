@@ -1,3 +1,4 @@
+import logging
 from watchdog.events import FileSystemEventHandler
 
 class MountpointWatcher(FileSystemEventHandler):
@@ -5,14 +6,21 @@ class MountpointWatcher(FileSystemEventHandler):
     def __init__(self, tracker):
         self.tracker = tracker
 
+        # Set up logging
+        self._logger = logging.getLogger(__name__)
+        self._log("MountpointWatcher __init__")
+
+    def _log(self, message):
+        self._logger.debug(message)
+
     def dispatch(self, event):
-        print("mpw DISPATCH!")
+        self._log("MountpointWatcher received dispatch.")
         super().dispatch(event)
 
     def on_created(self, event):
-        print("mpw on_created", event.src_path)
+        self._log("MountpointWatcher received on_created <%s>" % event.src_path)
         self.tracker.mountpoint_created(event.src_path)
         
     def on_deleted(self, event):
-        print("mpw on_deleted", event.src_path)
+        self._log("MountpointWatcher received on_deleted <%s>" % event.src_path)
         self.tracker.mountpoint_deleted(event.src_path)

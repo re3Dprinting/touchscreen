@@ -155,9 +155,6 @@ class TemperatureWindow(BaseWindow, Ui_TemperatureWindow):
         self.changeText(self.ActivePrintWid.BabysteppingVal, str(self.event_handler.babystep))
         self.changeText(self.ActivePrintWid.FlowrateVal, str(self.printer_if.flow_rate))
 
-    def _log(self, message):
-        self._logger.debug(message)
-
     def sendfeedrate(self):
         self._log("UI: User released Feed Rate slider")
 
@@ -427,15 +424,15 @@ class TemperatureWindow(BaseWindow, Ui_TemperatureWindow):
 
 
     def set_bed_temperature(self, value):
-        print("Setting bed temp to %d." % value)
+        self._log("Setting bed temp to %d." % value)
         self.printer_if.set_temperature("bed", value)
 
     def set_tool0_temperature(self, value):
-        print("Setting tool0 temp to %d." % value)
+        self._log("Setting tool0 temp to %d." % value)
         self.printer_if.set_temperature("tool0", value)
         
     def set_tool1_temperature(self, value):
-        print("Setting tool1 temp to %d." % value)
+        self._log("Setting tool1 temp to %d." % value)
         self.printer_if.set_temperature("tool1", value)
         
     def _break_up_temperature_struct(self, data):

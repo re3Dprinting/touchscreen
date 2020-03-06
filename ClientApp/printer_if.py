@@ -76,7 +76,7 @@ class PrinterIF(PrinterCallback):
         return ports
     
     def connect(self, device):
-        print("CONNECT to device <%s>." % (device))
+        self._log("CONNECT to device <%s>." % (device))
         # Connect to the specified device using the default Gigabot bit rate.
         self.printer.connect(device, 250000)
         # self.printer.connect(device, 115200)
@@ -97,7 +97,7 @@ class PrinterIF(PrinterCallback):
 
     def set_babystep(self, value):
         babystep_command = "M290 P0 Z" + str(value)
-        print("BABYSTEP command", babystep_command)
+        self._log("BABYSTEP command", babystep_command)
         self.printer.commands(babystep_command)
         # self.tempwindow.serial.send_serial("M290 Z " + str(self.babystep))        
 
@@ -185,7 +185,7 @@ class PrinterIF(PrinterCallback):
         # this by moving back to the last known position.
         if self.resume_position is not None:
             resume_pos_str = "G1 X%.3f Y%.3f Z%.3f" % self.resume_position
-            print("Sending resume-position <%s>" % resume_pos_str)
+            self._log("Sending resume-position <%s>" % resume_pos_str)
             self.printer.commands(resume_pos_str)
 
         # And now we can resume the print.
