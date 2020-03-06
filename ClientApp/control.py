@@ -15,19 +15,13 @@ class ControlWindow(BaseWindow, Ui_ControlWindow):
 
         # Set up logging
         self._logger = logging.getLogger(__name__)
-        self._log("SerialWindow __init__()")
+        self._log("ControlWindow __init__()")
 
         # Set up UI
         self.setupUi(self)
 
-        # Set up logging
-        self._logger = logging.getLogger(__name__)
-        self._log("SerialWindow __init__()")
-
+        # Save reference to Printer Interface
         self.printer_if = printer_if
-
-        # Set up UI
-        self.setupUi(self)
 
         # self.timer.timeout.connect(lambda: self.button_event_check())
         self.xinc = None

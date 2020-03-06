@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'qt/userupdatewindow.ui'
+# Form implementation generated from reading ui file 'userupdatewindow.ui'
 #
-# Created by: PyQt5 UI code generator 5.5.1
+# Created by: PyQt5 UI code generator 5.13.1
 #
 # WARNING! All changes made in this file will be lost!
 
+
 from PyQt5 import QtCore, QtGui, QtWidgets
+
 
 class Ui_UserUpdate(object):
     def setupUi(self, UserUpdate):
@@ -81,4 +83,3 @@ class Ui_UserUpdate(object):
         item.setText(_translate("UserUpdate", "Version"))
         item = self.SoftwareList.horizontalHeaderItem(1)
         item.setText(_translate("UserUpdate", "Release Time"))
-

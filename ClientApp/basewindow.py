@@ -13,13 +13,12 @@ class BaseWindow(QtWidgets.QWidget):
 
 		# Set up logging
 		self._logger = logging.getLogger(__name__)
-		self._log("BaseWindow __init__")
 
 		self.fullscreen = False
 		self.parent = parent
 		self.notification = None
 		self.setWindowFlags(self.windowFlags())
-		if(parent != None and self.parent.fullscreen):
+		if (parent != None) and (self.parent.fullscreen):
 			self.fullscreen = True
 			self.setWindowState(self.windowState() | QtCore.Qt.WindowFullScreen)
 
