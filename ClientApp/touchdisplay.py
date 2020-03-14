@@ -25,7 +25,7 @@ from .qt.touchdisplaywindow import Ui_TouchDisplay
 
 
 class TouchDisplay(BaseWindow, Ui_TouchDisplay):
-    def __init__(self, client, printer_if, personality, parent=None):
+    def __init__(self, printer_if, personality, parent=None):
         super(TouchDisplay, self).__init__(parent)
         self.personality = personality
         
@@ -46,7 +46,6 @@ class TouchDisplay(BaseWindow, Ui_TouchDisplay):
         versiontext = "v"+ QtWidgets.QApplication.instance().applicationVersion()
         self.SoftwareVersion.setText(versiontext)
 
-        self.client = client
         self.printer_if = printer_if
 
         self.setbuttonstyle(self.Print)
@@ -57,8 +56,9 @@ class TouchDisplay(BaseWindow, Ui_TouchDisplay):
 #       Event handler object that handles temperature materials, flowrate, etc.
         self.event_handler = event_handler(self.printer_if)
 
-        self.set_pop = SettingsWindow(personality, self.client, None, self.printer_if, self)
-        self.server_pop = ServerWindow(self.client, self.set_pop)
+        self.set_pop = SettingsWindow(personality, self.printer_if, self)
+        self.server_pop = ServerWindow(self.set_pop)
+
 
         self.userupdate_pop = UserUpdateWindow(self.personality, self.set_pop)
         self.notification = self.userupdate_pop.checkupdate()

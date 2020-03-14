@@ -33,21 +33,21 @@ class serverping(QtCore.QThread):
 
 
 class ServerWindow(BaseWindow, Ui_ServerWindow):
-    def __init__(self, client, parent=None):
+    def __init__(self, parent=None):
         super(ServerWindow, self).__init__(parent)
-        self.client = client
+        # self.client = client
         self.setupUi(self)
 
-        self.pingthread = serverping(self.client.host)
-        self.pingthread.checkreturnmsg.connect(self.checkping)
+        # self.pingthread = serverping(self.client.host)
+        # self.pingthread.checkreturnmsg.connect(self.checkping)
 
-        self.IPText.setText(self.client.host)
-        self.client.data.checkserver_msg.connect(self.checkserver_msg)
+        # self.IPText.setText(self.client.host)
+        # self.client.data.checkserver_msg.connect(self.checkserver_msg)
         self.Back.clicked.connect(self.back)
-        self.ConnectServer.clicked.connect(self.connect_server)
-        self.DisconnectServer.clicked.connect(self.disconnect_server)
-        self.Ping.clicked.connect(self.ping)
-        self.StopPing.clicked.connect(self.stopping)
+        # self.ConnectServer.clicked.connect(self.connect_server)
+        # self.DisconnectServer.clicked.connect(self.disconnect_server)
+        # self.Ping.clicked.connect(self.ping)
+        # self.StopPing.clicked.connect(self.stopping)
         # self.DisconnectServer.clicked.connect(self.disconnect_server)
 
     def ping(self):

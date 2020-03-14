@@ -26,6 +26,7 @@ class UserUpdateWindow(BaseWindow, Ui_UserUpdate):
         self.personality = personality
         self.app = QtWidgets.QApplication.instance()
         self.new_version_avalible = False
+        self.debug = (self.properties["debug"] == "true")
 
         tmp_path = Path(__file__).parent.absolute()
         # print(tmp_path)
@@ -89,17 +90,30 @@ class UserUpdateWindow(BaseWindow, Ui_UserUpdate):
                 if("release" == t.name.split("/")[0]): #and not self.app.applicationVersion() in t.name #<--- Dont show current version
                     self.current_tags.append(t)
                     tag_date = time.strftime('%I:%M%p %m/%d/%y', time.localtime(t.commit.committed_date))
-                    rowpos = self.SoftwareList.rowCount()
-                    self.SoftwareList.insertRow(rowpos)
-                    version = QtWidgets.QTableWidgetItem(t.name.strip("release/"))
-                    #Check if there is a newer software version avalible. 
-                    self.checkagainstcurrent(t.name.strip("release/"))
-                    version.setFlags(Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
 
-                    date = QtWidgets.QTableWidgetItem(tag_date)
-                    date.setFlags(Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
-                    self.SoftwareList.setItem(rowpos,0,version)
-                    self.SoftwareList.setItem(rowpos,1,date)
+                    #Strip out the release/ part of the tag. 
+                    ver = t.name.lstrip("release/")
+
+                    #Attempt to split up the current version and given version into three vars in an array
+                    current_v = self.app.applicationVersion().split(".")
+                    given_v = ver.split(".")
+
+                    #Check for an update if and only if the current version and given version both follow the X.X.X sematic versioning. 
+                    if(len(current_v) == 3 and len(given_v) == 3):
+                        #Check if there is a newer software version avalible. 
+                        self.checkagainstcurrent(current_v, given_v)
+                    
+                    #Show tag only if the given tag is following X.X.X OR if debug mode is turned on. 
+                    if(self.debug or len(given_v) == 3):
+                        rowpos = self.SoftwareList.rowCount()
+                        self.SoftwareList.insertRow(rowpos)
+                        version = QtWidgets.QTableWidgetItem(t.name.lstrip("release/"))
+
+                        version.setFlags(Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
+                        date = QtWidgets.QTableWidgetItem(tag_date)
+                        date.setFlags(Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
+                        self.SoftwareList.setItem(rowpos,0,version)
+                        self.SoftwareList.setItem(rowpos,1,date)
             # If no versions are found, push a debug message to the window. 
             # If there is a newer version avalible, create a notification object and return it to be caught by the window. 
             if(self.SoftwareList.rowCount() == 0): self.print_debug("No software versions found. The server might be down, please try again later.")
@@ -109,11 +123,9 @@ class UserUpdateWindow(BaseWindow, Ui_UserUpdate):
             print(e)
 
     # Check if there is a newer software version avalible. 
-    def checkagainstcurrent(self, version):
-        current_v = self.app.applicationVersion().split(".")
-        given_v = version.split(".")
-        for i in range(len(current_v)):
-            if(int(current_v[i]) < int(given_v[i])):
+    def checkagainstcurrent(self, current_version, given_version):
+        for i in range(len(current_version)):
+            if(int(current_version[i]) < int(given_version[i])):
                 self.new_version_avalible = True
                 return
 

@@ -8,10 +8,6 @@ from pathlib import Path
 
 from octo import setup_octoprint
 
-from touchscreen.Client.g_serial import *
-from touchscreen.Client.g_client import *
-from touchscreen.Client.g_data import *
-
 from touchscreen.touchdisplay import *
 from touchscreen.util.personality import Personality
 from touchscreen.fsutils.watchdogthread import WatchdogThread
@@ -68,7 +64,9 @@ def main():
     # Get the Git information. This will be the ID of the HEAD commit
     # plus indicators of whether any file has been changed, or if
     # GIT-unknown files are present.
+    # Breaks in Python3.6
     config_id = get_touchscreen_commit_id()
+    # config_id = "temp"
 
     # Now, the ID string is essentially just the concatenation of
     # these three bits of information.
@@ -107,6 +105,9 @@ def main():
         print("Unable to determine operating system, aborting...")
         persona = None
         sys.exit(1)
+
+    #Personality object for Ubuntu
+    persona = Personality(False, "/media/plloppii", "/home/plloppii/devel/gcode-cache", "/home/plloppii/devel/log-cache")
             
     # Set up all the OctoPrint stuff. We need two bits of information
     # from that: the printer and the storage manager.
@@ -116,12 +117,6 @@ def main():
     # printer go through this object.
     printer_if = PrinterIF(printer)
 
-    # Can we get rid of these now?
-    data_thread = g_data()
-    client_conn = g_client(data_thread)
-    serial_conn = g_serial(data_thread)
-    data_thread.start()
-
     # Create the PyQt application
     app = QtWidgets.QApplication(sys.argv)
 
@@ -129,7 +124,7 @@ def main():
     app.setApplicationVersion(version_string)
 
     # Create the top-level UI screen.
-    display = TouchDisplay(client_conn, printer_if, persona)
+    display = TouchDisplay(printer_if, persona)
     display.SoftwareVersion.setText(id_string)
 
     # Check to see whether any USB filesystems are currently mounted.
