@@ -7,6 +7,9 @@ from basewindow import BaseWindow
 from fsutils.tarballer import Tarballer
 from util.log import find_root_logger
 
+from touchscreen.qt.debugwindow import Ui_DebugWindow
+
+
 class DebugWindow(BaseWindow, Ui_DebugWindow):
 
     display_signal = pyqtSignal(str)
@@ -85,5 +88,3 @@ class DebugWindow(BaseWindow, Ui_DebugWindow):
     def handle_copy_log(self):
         tarballer = Tarballer(self, self.personality)
         tarballer.do_copy_log()
-
-    

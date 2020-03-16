@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'infowindow.ui'
 #
-# Created by: PyQt5 UI code generator 5.13.1
+# Created by: PyQt5 UI code generator 5.14.1
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -25,7 +25,7 @@ class Ui_InfoWindow(object):
         self.Back.setIconSize(QtCore.QSize(100, 100))
         self.Back.setObjectName("Back")
         self.layoutWidget = QtWidgets.QWidget(InfoWindow)
-        self.layoutWidget.setGeometry(QtCore.QRect(20, 30, 111, 201))
+        self.layoutWidget.setGeometry(QtCore.QRect(20, 30, 112, 331))
         self.layoutWidget.setObjectName("layoutWidget")
         self.verticalLayout = QtWidgets.QVBoxLayout(self.layoutWidget)
         self.verticalLayout.setContentsMargins(0, 0, 0, 0)
@@ -34,10 +34,18 @@ class Ui_InfoWindow(object):
         self.w_pushbutton_info.setMaximumSize(QtCore.QSize(100, 100))
         self.w_pushbutton_info.setObjectName("w_pushbutton_info")
         self.verticalLayout.addWidget(self.w_pushbutton_info)
+        self.w_pushbutton_capabilities = QtWidgets.QPushButton(self.layoutWidget)
+        self.w_pushbutton_capabilities.setMaximumSize(QtCore.QSize(100, 100))
+        self.w_pushbutton_capabilities.setObjectName("w_pushbutton_capabilities")
+        self.verticalLayout.addWidget(self.w_pushbutton_capabilities)
         self.w_pushbutton_stats = QtWidgets.QPushButton(self.layoutWidget)
         self.w_pushbutton_stats.setMaximumSize(QtCore.QSize(100, 100))
         self.w_pushbutton_stats.setObjectName("w_pushbutton_stats")
         self.verticalLayout.addWidget(self.w_pushbutton_stats)
+        self.w_pushbutton_settings = QtWidgets.QPushButton(self.layoutWidget)
+        self.w_pushbutton_settings.setMaximumSize(QtCore.QSize(100, 100))
+        self.w_pushbutton_settings.setObjectName("w_pushbutton_settings")
+        self.verticalLayout.addWidget(self.w_pushbutton_settings)
         self.w_message_text = QtWidgets.QTextEdit(InfoWindow)
         self.w_message_text.setGeometry(QtCore.QRect(139, 30, 601, 391))
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Expanding)
@@ -55,4 +63,8 @@ class Ui_InfoWindow(object):
         _translate = QtCore.QCoreApplication.translate
         InfoWindow.setWindowTitle(_translate("InfoWindow", "ControlWindow"))
         self.w_pushbutton_info.setText(_translate("InfoWindow", "Printer Info"))
+        self.w_pushbutton_capabilities.setText(_translate("InfoWindow", "Printer\n"
+"Capabilities"))
         self.w_pushbutton_stats.setText(_translate("InfoWindow", "Printer Stats"))
+        self.w_pushbutton_settings.setText(_translate("InfoWindow", "Printer\n"
+"Settings"))

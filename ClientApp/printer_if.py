@@ -222,6 +222,10 @@ class PrinterIF(PrinterCallback):
             # we might want to print them out.)
             print("*** PRINTER ADD LOG: <%s>" % data)
 
+        if self.info_callback is not None:
+            if data == "Recv: ok":
+                self.info_callback("ok")
+
     def on_printer_add_message(self, data):
         # This is a callback message from the OctoPrint printer object. We handle messages
         # depending upon their contents.
@@ -236,9 +240,9 @@ class PrinterIF(PrinterCallback):
 
     def maybe_handle_info_message(self, data):
         if self.info_callback is not None:
-            if data.startswith("FIRMWARE_NAME") or \
-               data.startswith("Cap:") or \
-               data.startswith("Stats:"):
+            # if data.startswith("FIRMWARE_NAME") or \
+            #    data.startswith("Cap:") or \
+            #    data.startswith("Stats:"):
                         self.info_callback(data)
 
     def on_printer_add_temperature(self, data):
