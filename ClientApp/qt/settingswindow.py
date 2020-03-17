@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'settingswindow.ui'
 #
-# Created by: PyQt5 UI code generator 5.13.1
+# Created by: PyQt5 UI code generator 5.14.1
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -109,21 +109,21 @@ class Ui_SettingsWindow(object):
         self.w_pushbutton_info.setIconSize(QtCore.QSize(100, 100))
         self.w_pushbutton_info.setObjectName("w_pushbutton_info")
         self.horizontalLayout_3.addWidget(self.w_pushbutton_info)
-        self.w_pushbutton_stats = QtWidgets.QPushButton(SettingsWindow)
+        self.w_pushbutton_duex = QtWidgets.QPushButton(SettingsWindow)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.w_pushbutton_stats.sizePolicy().hasHeightForWidth())
-        self.w_pushbutton_stats.setSizePolicy(sizePolicy)
-        self.w_pushbutton_stats.setMinimumSize(QtCore.QSize(150, 150))
-        self.w_pushbutton_stats.setMaximumSize(QtCore.QSize(150, 150))
-        self.w_pushbutton_stats.setText("")
+        sizePolicy.setHeightForWidth(self.w_pushbutton_duex.sizePolicy().hasHeightForWidth())
+        self.w_pushbutton_duex.setSizePolicy(sizePolicy)
+        self.w_pushbutton_duex.setMinimumSize(QtCore.QSize(150, 150))
+        self.w_pushbutton_duex.setMaximumSize(QtCore.QSize(150, 150))
+        self.w_pushbutton_duex.setText("")
         icon6 = QtGui.QIcon()
-        icon6.addPixmap(QtGui.QPixmap("img/stats.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.w_pushbutton_stats.setIcon(icon6)
-        self.w_pushbutton_stats.setIconSize(QtCore.QSize(100, 100))
-        self.w_pushbutton_stats.setObjectName("w_pushbutton_stats")
-        self.horizontalLayout_3.addWidget(self.w_pushbutton_stats)
+        icon6.addPixmap(QtGui.QPixmap("img/duex.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.w_pushbutton_duex.setIcon(icon6)
+        self.w_pushbutton_duex.setIconSize(QtCore.QSize(100, 100))
+        self.w_pushbutton_duex.setObjectName("w_pushbutton_duex")
+        self.horizontalLayout_3.addWidget(self.w_pushbutton_duex)
         self.w_pushbutton_term = QtWidgets.QPushButton(SettingsWindow)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)

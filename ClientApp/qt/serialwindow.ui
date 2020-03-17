@@ -48,7 +48,7 @@
     </size>
    </property>
   </widget>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>50</x>
@@ -103,21 +103,16 @@
         </item>
        </layout>
       </item>
-      <item>
-       <widget class="QTableWidget" name="COMlist">
-        <column>
-         <property name="text">
-          <string>Device</string>
-         </property>
-        </column>
-        <column>
-         <property name="text">
-          <string>Description</string>
-         </property>
-        </column>
-       </widget>
-      </item>
      </layout>
+    </item>
+    <item>
+     <widget class="QTableWidget" name="COMlist">
+      <column>
+       <property name="text">
+        <string>Device</string>
+       </property>
+      </column>
+     </widget>
     </item>
     <item>
      <widget class="QTextBrowser" name="SerialOutput"/>

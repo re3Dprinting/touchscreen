@@ -240,7 +240,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="w_pushbutton_stats">
+      <widget class="QPushButton" name="w_pushbutton_duex">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
          <horstretch>0</horstretch>
@@ -264,7 +264,7 @@
        </property>
        <property name="icon">
         <iconset>
-         <normaloff>img/stats.png</normaloff>img/stats.png</iconset>
+         <normaloff>img/duex.png</normaloff>img/duex.png</iconset>
        </property>
        <property name="iconSize">
         <size>

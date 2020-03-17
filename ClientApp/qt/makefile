@@ -4,6 +4,7 @@
 all: activeprintwidget.py \
      controlwindow.py \
      debugwindow.py \
+     duexsetupwindow.py \
      infowindow.py \
      notactiveprintwidget.py \
      notificationwindow.py \

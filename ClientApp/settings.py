@@ -5,6 +5,7 @@ from . import serialsetup
 from . import server
 from .info import InfoWindow
 from .debug import DebugWindow
+from .dualex import DuExSetupWindow
 from .basewindow import BaseWindow
 
 
@@ -24,6 +25,7 @@ class SettingsWindow(BaseWindow, Ui_SettingsWindow):
 
         self.debug_window = DebugWindow(printer_if, personality, self)
         self.info_window = InfoWindow(printer_if, self)
+        self.duex_window = DuExSetupWindow(printer_if, self)
         
         self.client_obj = client_obj
         self.serial_obj = serial_obj
@@ -32,7 +34,7 @@ class SettingsWindow(BaseWindow, Ui_SettingsWindow):
         self.parent.setbuttonstyle(self.UserUpdate)
         self.parent.setbuttonstyle(self.Wifi)
         self.parent.setbuttonstyle(self.w_pushbutton_debug)
-        self.parent.setbuttonstyle(self.w_pushbutton_stats)
+        self.parent.setbuttonstyle(self.w_pushbutton_duex)
         self.parent.setbuttonstyle(self.w_pushbutton_info)
         self.parent.setbuttonstyle(self.w_pushbutton_term)
 
@@ -45,7 +47,7 @@ class SettingsWindow(BaseWindow, Ui_SettingsWindow):
 
         self.w_pushbutton_debug.clicked.connect(self.handle_debug)
         self.w_pushbutton_info.clicked.connect(self.handle_info)
-        self.w_pushbutton_stats.clicked.connect(self.handle_stats)
+        self.w_pushbutton_duex.clicked.connect(self.handle_duex)
         self.w_pushbutton_term.clicked.connect(self.handle_term)
 
         # self.Wifi.clicked.connect(self.wifipop)
@@ -88,8 +90,13 @@ class SettingsWindow(BaseWindow, Ui_SettingsWindow):
         else:
             self.info_window.show()
 
-    def handle_stats(self):
-        self._log("UI: User touched Stats")
+    def handle_duex(self):
+        self._log("UI: User touched Dual Extruder")
+        self.duex_window.get_settings()
+        if self.fullscreen:
+            self.duex_window.showFullScreen()
+        else:
+            self.duex_window.show()
 
     def handle_term(self):
         self._log("UI: User touched Term")

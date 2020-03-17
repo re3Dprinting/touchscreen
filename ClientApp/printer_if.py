@@ -35,6 +35,8 @@ class PrinterIF(PrinterCallback):
         self.runout_callback = None
         self.file_list_update_callback = None
         self.print_finished_callback = None
+        self.info_callback = None
+        self.duex_callback = None
 
         # Subscribe to printer state change events so we know what state the OctoPrint
         # printer is in at all times.
@@ -84,6 +86,12 @@ class PrinterIF(PrinterCallback):
     def disconnect(self):
         # Disconnect
         self.printer.disconnect()
+
+    def save_settings(self):
+        self.commands("M500")
+
+    def restore_settings(self):
+        self.commands("M501")
 
     def set_feed_rate(self, rate):
         # Record the specified feed rate and send it to the printer.
@@ -222,9 +230,13 @@ class PrinterIF(PrinterCallback):
             # we might want to print them out.)
             print("*** PRINTER ADD LOG: <%s>" % data)
 
-        if self.info_callback is not None:
-            if data == "Recv: ok":
+        if data == "Recv: ok":
+            if self.info_callback is not None:
                 self.info_callback("ok")
+
+            if self.duex_callback is not None:
+                self.duex_callback("ok")
+                
 
     def on_printer_add_message(self, data):
         # This is a callback message from the OctoPrint printer object. We handle messages
@@ -240,10 +252,9 @@ class PrinterIF(PrinterCallback):
 
     def maybe_handle_info_message(self, data):
         if self.info_callback is not None:
-            # if data.startswith("FIRMWARE_NAME") or \
-            #    data.startswith("Cap:") or \
-            #    data.startswith("Stats:"):
-                        self.info_callback(data)
+            self.info_callback(data)
+        if self.duex_callback is not None:
+            self.duex_callback(data)
 
     def on_printer_add_temperature(self, data):
       try:
@@ -357,6 +368,9 @@ class PrinterIF(PrinterCallback):
 
     def set_info_callback(self, callback):
         self.info_callback = callback
+
+    def set_duex_callback(self, callback):
+        self.duex_callback = callback
 
     def maybe_handle_filament_change(self, data):
         

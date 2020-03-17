@@ -33,7 +33,7 @@ class SerialWindow(BaseWindow, Ui_SerialWindow):
         # Stretch out the horizontal header to take up the entire view
         header = self.COMlist.horizontalHeader()
         header.setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
-        header.setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
+        # header.setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
 
         self.scan_serial()
         # self.connect_serial()
@@ -93,11 +93,11 @@ class SerialWindow(BaseWindow, Ui_SerialWindow):
             device = QtWidgets.QTableWidgetItem(p)
             device.setFlags(Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
 
-            descrip = QtWidgets.QTableWidgetItem("")
-            descrip.setFlags(Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
+            # descrip = QtWidgets.QTableWidgetItem("")
+            # descrip.setFlags(Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
 
             self.COMlist.setItem(rowpos, 0, device)
-            self.COMlist.setItem(rowpos, 1, descrip)
+            # self.COMlist.setItem(rowpos, 1, descrip)
 
             if '/dev/ttyUSB' in p:
                 self.COMlist.selectRow(rowpos)
