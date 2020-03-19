@@ -5,6 +5,7 @@ import time
 from PyQt5.QtCore import QObject, pyqtSignal
 
 from .basewindow import BaseWindow
+from .numeric_keypad import NumericKeypad
 from qt.duexsetupwindow import *
 
 duex_regex = re.compile("echo:Hotend offsets: ([\\.0-9]+),([\\.0-9]+) ([\\.0-9]+),([\\.0-9]+)", re.IGNORECASE)
@@ -33,10 +34,74 @@ class DuExSetupWindow(BaseWindow, Ui_duexSetupWindow):
         self.w_pushbutton_temporary.clicked.connect(self.handle_temporary_touch)
         self.w_pushbutton_permanent.clicked.connect(self.handle_permanent_touch)
         self.w_pushbutton_revert.clicked.connect(self.handle_revert_touch)
+
+        self.w_lineedit_x1.focus_in.connect(self.handle_x1_focus_in)
+        self.w_lineedit_x1.focus_out.connect(self.handle_x1_focus_out)
+        self.w_lineedit_y1.focus_in.connect(self.handle_y1_focus_in)
+        self.w_lineedit_y1.focus_out.connect(self.handle_y1_focus_out)
+
         self.Back.clicked.connect(self.back)
         # self.info_signal.connect(self.info_do_it)
 
         self.filter_output = False
+
+        self.num_keys = NumericKeypad(self)
+        self.num_keys.changed.connect(self.handle_change)
+        self.num_keys.entered.connect(self.handle_enter)
+
+        self.focused_lineedit = None
+
+    def handle_x1_focus_in(self):
+        self.num_keys.setEnabled(True);
+        self.focused_lineedit = self.w_lineedit_x1
+        self.num_keys.load(self.focused_lineedit.text())
+
+    def handle_x1_focus_out(self):
+        self.num_keys.setEnabled(False);
+        self.focused_lineedit = self.w_lineedit_x1
+        self.handle_focus_out()
+        self.focused_lineedit = None
+
+    def handle_y1_focus_in(self):
+        self.num_keys.setEnabled(True);
+        self.focused_lineedit = self.w_lineedit_y1
+        self.num_keys.load(self.focused_lineedit.text())
+
+    def handle_y1_focus_out(self):
+        self.num_keys.setEnabled(False);
+        self.focused_lineedit = self.w_lineedit_y1
+        self.handle_focus_out()
+        self.focused_lineedit = None
+
+    def handle_change(self, value):
+        if self.focused_lineedit is None:
+            return
+
+        self.focused_lineedit.setText(value)
+
+    def handle_focus_out(self):
+        # We need to look at the text in the focused LineEdit, to
+        # ensure that its value makes sense as a number.
+        value_str = self.focused_lineedit.text()
+
+        if value_str == "" or value_str == "-" or value_str == "0.":
+            value = 0.0
+        else:
+            value = float(value_str)
+
+        value_str = "%0.2f" % value
+        self.focused_lineedit.setText(value_str)
+
+    def handle_enter(self, value):
+        if self.focused_lineedit is None:
+            self.w_lineedit_x1.setFocus()
+            return
+
+        elif self.focused_lineedit == self.w_lineedit_x1:
+            self.w_lineedit_y1.setFocus()
+    
+        elif self.focused_lineedit == self.w_lineedit_y1:
+            self.w_lineedit_x1.setFocus()
 
     def get_settings(self):
         self._log("Dual Extruder window getting current settings...")
