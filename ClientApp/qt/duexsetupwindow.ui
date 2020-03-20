@@ -500,7 +500,8 @@
          <enum>Qt::NoFocus</enum>
         </property>
         <property name="text">
-         <string>Enter</string>
+         <string>Enter
+</string>
         </property>
        </widget>
       </item>

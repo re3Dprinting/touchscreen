@@ -243,5 +243,6 @@ class Ui_duexSetupWindow(object):
         self.w_pushbutton_3.setText(_translate("duexSetupWindow", "3"))
         self.w_pushbutton_decimal.setText(_translate("duexSetupWindow", "."))
         self.w_pushbutton_delete.setText(_translate("duexSetupWindow", "☜"))
-        self.w_pushbutton_enter.setText(_translate("duexSetupWindow", "Enter"))
+        self.w_pushbutton_enter.setText(_translate("duexSetupWindow", "Enter\n"
+""))
 from jtlineedit import JTLineEdit
