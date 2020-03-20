@@ -4,6 +4,7 @@
 
 import sys
 import logging
+import getpass
 from pathlib import Path
 
 from octo import setup_octoprint
@@ -97,9 +98,10 @@ def main():
 
     elif plat.startswith("darwin"):
         # macOS
-        octopath = "/Users/jct/Dropbox/re3D/touchscreen/OctoPrint"
-        persona = Personality(False, "/Volumes", octopath + "/localgcode",
-                              octopath + "/log-cache")
+        if getpass.getuser() == "jct":
+            octopath = "/Users/jct/Dropbox/re3D/touchscreen/OctoPrint"
+            persona = Personality(False, "/Volumes", octopath + "/localgcode",
+                                  octopath + "/log-cache")
 
     else:
         print("Unable to determine operating system, aborting...")
@@ -107,7 +109,8 @@ def main():
         sys.exit(1)
 
     #Personality object for Ubuntu
-    persona = Personality(False, "/media/plloppii", "/home/plloppii/devel/gcode-cache", "/home/plloppii/devel/log-cache")
+    # Please put this into the 'linux' section above.
+    # persona = Personality(False, "/media/plloppii", "/home/plloppii/devel/gcode-cache", "/home/plloppii/devel/log-cache")
             
     # Set up all the OctoPrint stuff. We need two bits of information
     # from that: the printer and the storage manager.
