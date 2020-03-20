@@ -477,7 +477,7 @@
         </property>
         <property name="font">
          <font>
-          <pointsize>24</pointsize>
+          <pointsize>18</pointsize>
          </font>
         </property>
         <property name="focusPolicy">
@@ -489,7 +489,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="w_pushbutton_enter">
+       <widget class="QPushButton" name="w_pushbutton_clear">
         <property name="minimumSize">
          <size>
           <width>60</width>
@@ -500,8 +500,7 @@
          <enum>Qt::NoFocus</enum>
         </property>
         <property name="text">
-         <string>Enter
-</string>
+         <string>Clear</string>
         </property>
        </widget>
       </item>

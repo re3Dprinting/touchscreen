@@ -47,7 +47,7 @@ class DuExSetupWindow(BaseWindow, Ui_duexSetupWindow):
 
         self.num_keys = NumericKeypad(self)
         self.num_keys.changed.connect(self.handle_change)
-        self.num_keys.entered.connect(self.handle_enter)
+        self.num_keys.cleared.connect(self.handle_clear)
 
         self.focused_lineedit = None
 
@@ -89,19 +89,16 @@ class DuExSetupWindow(BaseWindow, Ui_duexSetupWindow):
         else:
             value = float(value_str)
 
-        value_str = "%0.2f" % value
+        value_str = "%0.4f" % value
         self.focused_lineedit.setText(value_str)
 
-    def handle_enter(self, value):
+    def handle_clear(self, value):
         if self.focused_lineedit is None:
             self.w_lineedit_x1.setFocus()
             return
 
-        elif self.focused_lineedit == self.w_lineedit_x1:
-            self.w_lineedit_y1.setFocus()
-    
-        elif self.focused_lineedit == self.w_lineedit_y1:
-            self.w_lineedit_x1.setFocus()
+        self.focused_lineedit.setText("")
+        self.num_keys.load("")
 
     def get_settings(self):
         self._log("Dual Extruder window getting current settings...")
