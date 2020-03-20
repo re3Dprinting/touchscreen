@@ -169,10 +169,12 @@ class NumericKeypad(QObject):
         if "." not in self.value_str:
 
             # As a special case, if the value string is empty when the
-            # user touches ".", then prepend a leading zero.
-            if "" == self.value_str:
-                self.handle_digit("0")
-            self.handle_digit(".")
+            # or contains only a "-" when the user touches ".", then
+            # prepend a leading zero.
+            if "" == self.value_str or "-" == self.value_str:
+                self.handle_digit("0.")
+            else:
+                self.handle_digit(".")
 
     def handle_delete_touch(self):
         self._log("UI: User touched delete")
