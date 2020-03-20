@@ -1,4 +1,5 @@
 import logging
+from pathlib import Path
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
@@ -13,6 +14,11 @@ class BaseWindow(QtWidgets.QWidget):
 
 		# Set up logging
 		self._logger = logging.getLogger(__name__)
+
+		self.properties = {}
+		config_path = Path(__file__).parent.absolute().__str__() + "/config.properties"
+		for line in open(config_path):
+			self.properties[line.split("=")[0]] = line.split("=")[1].strip()
 
 		self.fullscreen = False
 		self.parent = parent

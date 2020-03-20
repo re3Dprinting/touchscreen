@@ -10,7 +10,8 @@ from .basewindow import BaseWindow
 
 
 class SettingsWindow(BaseWindow, Ui_SettingsWindow):
-    def __init__(self, personality, client_obj, serial_obj, printer_if, parent=None):
+    def __init__(self, personality, printer_if, parent=None):
+
         super(SettingsWindow, self).__init__(parent)
 
         # Set up logging
@@ -27,8 +28,7 @@ class SettingsWindow(BaseWindow, Ui_SettingsWindow):
         self.info_window = InfoWindow(printer_if, self)
         self.duex_window = DuExSetupWindow(printer_if, self)
         
-        self.client_obj = client_obj
-        self.serial_obj = serial_obj
+
         self.parent.setbuttonstyle(self.Serial)
         self.parent.setbuttonstyle(self.Server)
         self.parent.setbuttonstyle(self.UserUpdate)
