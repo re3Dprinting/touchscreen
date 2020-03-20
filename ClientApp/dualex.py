@@ -8,7 +8,7 @@ from .basewindow import BaseWindow
 from .numeric_keypad import NumericKeypad
 from qt.duexsetupwindow import *
 
-duex_regex = re.compile("echo:Hotend offsets: ([\\.0-9]+),([\\.0-9]+) ([\\.0-9]+),([\\.0-9]+)", re.IGNORECASE)
+duex_regex = re.compile("echo:Hotend offsets: ([-\\.0-9]+),([-\\.0-9]+) ([-\\.0-9]+),([-\\.0-9]+)", re.IGNORECASE)
 
 class DuExSetupWindow(BaseWindow, Ui_duexSetupWindow):
 
