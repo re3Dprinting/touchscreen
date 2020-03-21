@@ -72,16 +72,21 @@ class UserUpdateWindow(BaseWindow, Ui_UserUpdate):
     def checkupdate(self):
         #Fetch all of the tags from the remote repository.
         try:
-            # WHY delete other tags??? No, bad code.
-            # Check if tags can be updated without deleting them. 
-            # for tag in self.repo.tags:
-            #    self.repo.delete_tag(tag)
+
+            #Delete tags if they contain "release/"
+            for tag in self.repo.tags:
+                if("release/" in tag.name):
+                    self.repo.delete_tag(tag)
 
             self.remote_repo.fetch("--tags")
             tags = self.repo.tags
             tags.reverse()
 
             self.SoftwareList.setRowCount(0)
+
+            #Grab the current version and check if it is a beta version. 
+            current_v = self.app.applicationVersion()
+            current_is_beta = self.check_isbeta(current_v)
 
             # Check each tag and if it is a "release" tag. 
             # Append the tag to the list on the table widget. 
@@ -94,17 +99,17 @@ class UserUpdateWindow(BaseWindow, Ui_UserUpdate):
                     #Strip out the release/ part of the tag. 
                     ver = t.name.lstrip("release/")
 
-                    #Attempt to split up the current version and given version into three vars in an array
-                    current_v = self.app.applicationVersion().split(".")
-                    given_v = ver.split(".")
+                    #Grabh the current Version and the given version and see if they are beta versions. 
+                    given_v = t.name.lstrip("release/")
+                    given_is_beta = self.check_isbeta(given_v)
 
                     #Check for an update if and only if the current version and given version both follow the X.X.X sematic versioning. 
-                    if(len(current_v) == 3 and len(given_v) == 3):
+                    if(not current_is_beta and not given_is_beta):
                         #Check if there is a newer software version avalible. 
                         self.checkagainstcurrent(current_v, given_v)
                     
                     #Show tag only if the given tag is following X.X.X OR if debug mode is turned on. 
-                    if(self.debug or len(given_v) == 3):
+                    if(self.debug or not given_is_beta):
                         rowpos = self.SoftwareList.rowCount()
                         self.SoftwareList.insertRow(rowpos)
                         version = QtWidgets.QTableWidgetItem(t.name.lstrip("release/"))
@@ -122,8 +127,20 @@ class UserUpdateWindow(BaseWindow, Ui_UserUpdate):
         except Exception as e:
             print(e)
 
+    #Input is string of the version.
+    def check_isbeta(self, version):
+        version = version.split(".")
+        is_beta = False
+        if(len(version) < 3): return True
+        for v in version:
+            if(not v.isdigit()):
+                is_beta = True
+        return is_beta
+
     # Check if there is a newer software version avalible. 
     def checkagainstcurrent(self, current_version, given_version):
+        current_version = current_version.split(".")
+        given_version = given_version.split(".")
         for i in range(len(current_version)):
             if(int(current_version[i]) < int(given_version[i])):
                 self.new_version_avalible = True
