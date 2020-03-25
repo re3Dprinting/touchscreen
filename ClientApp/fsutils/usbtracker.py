@@ -92,7 +92,7 @@ class USBTracker(QObject, FileSystemEventHandler):
         # include the new mount point in the partitions list. A short
         # delay will allow the partitions list catch up to the now
         # mount point.
-        time.sleep(0.1)
+        # time.sleep(0.1)
 
         if MountFinder.is_thumb_drive(path) and path.startswith(self.watch_path):
             self.create_content_observer(path)

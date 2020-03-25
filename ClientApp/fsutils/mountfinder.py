@@ -1,3 +1,4 @@
+import time
 import logging
 import psutil
 from .ostype import *
@@ -43,6 +44,8 @@ class MountFinder:
     @staticmethod
     def is_thumb_drive(path):
 
+        time.sleep(0.1)
+
         # We need to get the partition object that corresponds to this
         # mount point. The psutils package doesn't seem to offer a way
         # to go from a path directly to a partition object, so we'll
@@ -55,14 +58,26 @@ class MountFinder:
         MountFinder._log("Trying to determine whether <%s> is a thumb drive." % path)
         partitions = psutil.disk_partitions(False)
 
-        for partition in partitions:
-            MountFinder._log("  checking partition: <%s>" % partition.mountpoint)
+        mountpoint_matched = False
+        attempts = 1
 
-            if partition.mountpoint == path:
-                # Good, we've found the matching mountpoint. Now let
-                # _is_thumb_drive determine whether it's probably a
-                # thumb drive:
-                return MountFinder._is_thumb_drive(partition)
+        while (not mountpoint_matched) and (attempts <= 10):
+
+            MountFinder._log("Attempts to check mountpoint: %d" % attempts)
+
+            time.sleep(1.0)
+
+            for partition in partitions:
+                MountFinder._log("  checking partition: <%s>" % partition.mountpoint)
+
+                if partition.mountpoint == path:
+                    mountpoint_matched = True
+                    # Good, we've found the matching mountpoint. Now let
+                    # _is_thumb_drive determine whether it's probably a
+                    # thumb drive:
+                    return MountFinder._is_thumb_drive(partition)
+
+            attempts += 1
 
     @staticmethod
     def _is_thumb_drive(partition):
