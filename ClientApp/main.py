@@ -17,6 +17,8 @@ from touchscreen.fsutils.mountfinder import MountFinder
 from util.configid import get_touchscreen_commit_id
 from util.log import setup_root_logger
 
+from touchscreen.fsutils.ostype import *
+
 #################################################################
 
 from printer_if import PrinterIF
@@ -88,15 +90,18 @@ def main():
     # based on whether we're running Linux (including Raspbian) or
     # macOS.
 
-    # Get the platform name.
-    plat = sys.platform
+    # # Get the platform name.
+    # plat = sys.platform
 
-    if plat.startswith("linux"):
+    # if plat.startswith("linux"):
+    if os_is_linux():
+
         # Linux
         persona = Personality(True, "/media/pi", "/home/pi/gcode-cache", "/home/pi/log-cache")
         # persona = Personality(True, "/media", "/home/pi/gcode-cache")
 
-    elif plat.startswith("darwin"):
+    # elif plat.startswith("darwin"):
+    elif os_is_macos():
         # macOS
         if getpass.getuser() == "jct":
             octopath = "/Users/jct/Dropbox/re3D/touchscreen/OctoPrint"

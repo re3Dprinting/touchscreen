@@ -1,6 +1,7 @@
 ### A class to watch as filesystems are mounted and unmounted, and
 ### notify the UI when a USB thumb drive is connected.
 
+import time
 import logging
 
 from watchdog.observers import Observer
@@ -83,6 +84,16 @@ class USBTracker(QObject, FileSystemEventHandler):
 
     def mountpoint_created(self, path):
         self._log("Mountpoint created: <%s> Current is: <%s>" % (path, self.current_path))
+
+        # The MountFinder.is_thumb_drive (below) relies on a list of
+        # partitions, but sometimes there are occasions when we
+        # receive an event indicating that a thumb drive has been
+        # mounted, but the psutil.disk_partitions call does NOT
+        # include the new mount point in the partitions list. A short
+        # delay will allow the partitions list catch up to the now
+        # mount point.
+        time.sleep(0.1)
+
         if MountFinder.is_thumb_drive(path) and path.startswith(self.watch_path):
             self.create_content_observer(path)
             self.create_signal.emit(path)

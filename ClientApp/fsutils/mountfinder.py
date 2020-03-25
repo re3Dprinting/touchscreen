@@ -1,4 +1,6 @@
+import logging
 import psutil
+from .ostype import *
 
 class MountFinder:
 
@@ -30,18 +32,17 @@ class MountFinder:
                 # Might be! Add to the list of candidates
                 candidates.append(partition.mountpoint)
 
-            # dev = os.stat(m)[stat.ST_DEV]
-            # major = os.major(dev)
-            # minor = os.minor(dev)
-
-            # print(p, "major: %d, minor: %d" % (major, minor))
-
         # Return the list of candidates
         return candidates
 
     @staticmethod
+    def _log(message):
+        logger = logging.getLogger(__name__)
+        logger.debug(message)
+
+    @staticmethod
     def is_thumb_drive(path):
-        
+
         # We need to get the partition object that corresponds to this
         # mount point. The psutils package doesn't seem to offer a way
         # to go from a path directly to a partition object, so we'll
@@ -51,9 +52,11 @@ class MountFinder:
         # often, there typically aren't many mount points, and the
         # disk_partitions call seems very fast.
 
+        MountFinder._log("Trying to determine whether <%s> is a thumb drive." % path)
         partitions = psutil.disk_partitions(False)
 
         for partition in partitions:
+            MountFinder._log("  checking partition: <%s>" % partition.mountpoint)
 
             if partition.mountpoint == path:
                 # Good, we've found the matching mountpoint. Now let
@@ -64,22 +67,28 @@ class MountFinder:
     @staticmethod
     def _is_thumb_drive(partition):
 
-        # Detect whether the mount point is a USB-type mount point.
-        # We're going to rely on the (admittedly naive) assumption
-        # that only thumb drives will have the nosuid mount option. If
-        # the mount point doesn't have this option, assume it's not a
-        # thumb drive. (Note: this works for both linux and macOS.)
+        # Detect whether the mount point is a USB-type mount
+        # point.  We're going to rely on the (admittedly naive)
+        # assumption that only thumb drives will have the nosuid
+        # mount option. If the mount point doesn't have this
+        # option, assume it's not a thumb drive. (Note: this only
+        # works for linux.)
 
-        if ("nosuid" in partition.opts):
-            return True
+        if os_is_linux():
+            MountFinder._log("    testing for linux, partition options <%s>" % partition.opts)
+            if ("nosuid" in partition.opts):
+                return True
 
-        # print("Partition type = <%s>" % partition.fstype)
+        elif os_is_macos():
+            MountFinder._log("    testing for macOS, partition type <%s>" % partition.fstype)
 
-        # # Detect whether the filesystem type is a windows-type
-        # # fs. Most thumb drives are formatted as one of these types.
-        # if (partition.fstype == "msdos") or (partition.fstype == "exfat") or (partition.fstype == "vfat"):
-        #     return True
+            # Detect whether the filesystem type is a windows-type
+            # fs. Most thumb drives are formatted as one of these types.
+            if (partition.fstype == "msdos") or (partition.fstype == "exfat") or (partition.fstype == "vfat"):
+                return True
 
+        # If we can't determine the operating system, we can't
+        # recognize a thumb drive.
         return False
         
 
