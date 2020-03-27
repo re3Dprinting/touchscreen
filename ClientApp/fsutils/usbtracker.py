@@ -11,6 +11,7 @@ from watchdog.events import FileSystemEventHandler
 from PyQt5.QtCore import QObject, pyqtSignal
 
 from .mountfinder import MountFinder
+from .mountpoint import MountPoint
 from .mountpointwatcher import MountpointWatcher
 from .contentwatcher import ContentWatcher
 
@@ -40,7 +41,7 @@ class USBTracker(QObject, FileSystemEventHandler):
         # self.whatthe_watcher = MountpointWatcher(self)
 
         if initial_path != "":
-            self.mountpoint_created(initial_path)
+            self.mountpoint_created(MountPoint(initial_path))
 
         self.create_mount_observer()
 
@@ -48,8 +49,6 @@ class USBTracker(QObject, FileSystemEventHandler):
         #     print("Content only")
         # else:
         #     print("NOT content only")
-
-        self.nominal_path = ""
 
     def _log(self, message):
         self._logger.debug(message)
@@ -87,10 +86,10 @@ class USBTracker(QObject, FileSystemEventHandler):
     def get_content_signal(self):
         return self.content_signal
 
-    def mountpoint_created(self, path):
-        self._log("MOUNTPOINT CREATED: <%s> Current is: <%s>" % (path, self.current_path))
+    def mountpoint_created(self, mountpoint):
+        self._log("MOUNTPOINT CREATED: path <%s>, actual <%s>, Current is: <%s>" % (mountpoint.path, mountpoint.actual_path, self.current_path))
 
-        self.nominal_path = path
+        self.mountpoint = mountpoint
 
         # The MountFinder.is_thumb_drive (below) relies on a list of
         # partitions, but sometimes there are occasions when we
@@ -101,11 +100,8 @@ class USBTracker(QObject, FileSystemEventHandler):
         # mount point.
         # time.sleep(0.1)
 
-        if os.path.islink(path):
-            actual_path = os.readlink(path)
-            self._log("Read symlink as <%s>" % path)
-        else:
-            actual_path = path
+        path = mountpoint.path
+        actual_path = mountpoint.actual_path
 
         if MountFinder.is_thumb_drive(actual_path) and path.startswith(self.watch_path):
             self.create_content_observer(actual_path)
@@ -115,11 +111,7 @@ class USBTracker(QObject, FileSystemEventHandler):
     def mountpoint_deleted(self, path):
         self._log("Mountpoint deleted: <%s> Current is: <%s>" % (path, self.current_path))
 
-        self._log("Current path = <%s>, Path = <%s>, Nominal path = <%s>" % (self.current_path,
-                                                                             path,
-                                                                             self.nominal_path))
-
-        if self.nominal_path == path:
+        if self.current_path == path:
             self.delete_signal.emit(path)
             self.current_path = ""
             self.delete_content_observer()

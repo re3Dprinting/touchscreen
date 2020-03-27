@@ -56,13 +56,13 @@ class MountFinder:
         # disk_partitions call seems very fast.
 
         MountFinder._log("Trying to determine whether <%s> is a thumb drive." % path)
-        partitions = psutil.disk_partitions(False)
 
         mountpoint_matched = False
         attempts = 1
 
         while (not mountpoint_matched) and (attempts <= 10):
 
+            partitions = psutil.disk_partitions(False)
             MountFinder._log("Attempts to check mountpoint: %d" % attempts)
 
             time.sleep(1.0)
@@ -78,6 +78,7 @@ class MountFinder:
                     return MountFinder._is_thumb_drive(partition)
 
             attempts += 1
+
 
     @staticmethod
     def _is_thumb_drive(partition):
