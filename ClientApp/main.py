@@ -97,8 +97,8 @@ def main():
     if os_is_linux():
 
         # Linux
-        persona = Personality(True, "/media/pi", "/home/pi/gcode-cache", "/home/pi/log-cache")
-        # persona = Personality(True, "/media", "/home/pi/gcode-cache")
+        # persona = Personality(True, "/media/usb0", "/home/pi/gcode-cache", "/home/pi/log-cache")
+        persona = Personality(True, "/usb", "/home/pi/gcode-cache", "/home/pi/log-cache")
 
     # elif plat.startswith("darwin"):
     elif os_is_macos():

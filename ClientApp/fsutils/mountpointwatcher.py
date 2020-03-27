@@ -18,7 +18,7 @@ class MountpointWatcher(FileSystemEventHandler):
         super().dispatch(event)
 
     def on_created(self, event):
-        self._log("MountpointWatcher received on_created <%s>" % event.src_path)
+        self._log("MountpointWatcher received ON_CREATED <%s>" % event.src_path)
         self.tracker.mountpoint_created(event.src_path)
         
     def on_deleted(self, event):

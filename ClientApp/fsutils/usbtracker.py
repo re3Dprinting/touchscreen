@@ -1,6 +1,7 @@
 ### A class to watch as filesystems are mounted and unmounted, and
 ### notify the UI when a USB thumb drive is connected.
 
+import os
 import time
 import logging
 
@@ -24,13 +25,15 @@ class USBTracker(QObject, FileSystemEventHandler):
         
         # Set up logging
         self._logger = logging.getLogger(__name__)
-        self._log("SerialWindow __init__()")
+        self._log("USBTracker __init__()")
 
         self.watch_path = watch_path
         self.current_path = ""
 
         # print("Watch path = <%s>" % watch_path)
         # print("Initial path = <%s>" % initial_path)
+
+        self._log("Initializing with watch path = <%s>, initial path = <%s>" % (watch_path, initial_path))
 
         self.content_watcher = ContentWatcher(self)
         self.mountpoint_watcher = MountpointWatcher(self)
@@ -45,6 +48,8 @@ class USBTracker(QObject, FileSystemEventHandler):
         #     print("Content only")
         # else:
         #     print("NOT content only")
+
+        self.nominal_path = ""
 
     def _log(self, message):
         self._logger.debug(message)
@@ -83,7 +88,9 @@ class USBTracker(QObject, FileSystemEventHandler):
         return self.content_signal
 
     def mountpoint_created(self, path):
-        self._log("Mountpoint created: <%s> Current is: <%s>" % (path, self.current_path))
+        self._log("MOUNTPOINT CREATED: <%s> Current is: <%s>" % (path, self.current_path))
+
+        self.nominal_path = path
 
         # The MountFinder.is_thumb_drive (below) relies on a list of
         # partitions, but sometimes there are occasions when we
@@ -94,17 +101,29 @@ class USBTracker(QObject, FileSystemEventHandler):
         # mount point.
         # time.sleep(0.1)
 
-        if MountFinder.is_thumb_drive(path) and path.startswith(self.watch_path):
-            self.create_content_observer(path)
-            self.create_signal.emit(path)
-            self.current_path = path
+        if os.path.islink(path):
+            actual_path = os.readlink(path)
+            self._log("Read symlink as <%s>" % path)
+        else:
+            actual_path = path
+
+        if MountFinder.is_thumb_drive(actual_path) and path.startswith(self.watch_path):
+            self.create_content_observer(actual_path)
+            self.create_signal.emit(actual_path)
+            self.current_path = actual_path
 
     def mountpoint_deleted(self, path):
         self._log("Mountpoint deleted: <%s> Current is: <%s>" % (path, self.current_path))
-        if self.current_path == path:
+
+        self._log("Current path = <%s>, Path = <%s>, Nominal path = <%s>" % (self.current_path,
+                                                                             path,
+                                                                             self.nominal_path))
+
+        if self.nominal_path == path:
             self.delete_signal.emit(path)
             self.current_path = ""
             self.delete_content_observer()
+
         # self.delete_mount_observer()
         # self.create_mount_observer()
 

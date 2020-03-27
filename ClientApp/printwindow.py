@@ -131,6 +131,7 @@ class PrintWindow(BaseWindow, Ui_PrintWindow):
         signal.connect(self.update_usb_content)
 
     def update_usb_create(self, path):
+        self._log("UPDATE_USB_CREATE: <%s>" % path)
         self.usb_file_manager.update_create(path)
 
     def update_usb_delete(self, path):

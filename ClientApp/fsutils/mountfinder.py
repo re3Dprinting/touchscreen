@@ -89,21 +89,25 @@ class MountFinder:
         # option, assume it's not a thumb drive. (Note: this only
         # works for linux.)
 
-        if os_is_linux():
-            MountFinder._log("    testing for linux, partition options <%s>" % partition.opts)
-            if ("nosuid" in partition.opts):
-                return True
+        MountFinder._log("    Partition type is <%s>" % partition.fstype)
 
-        elif os_is_macos():
-            MountFinder._log("    testing for macOS, partition type <%s>" % partition.fstype)
+        # if os_is_linux():
+        #     MountFinder._log("    testing for linux, partition options <%s>" % partition.opts)
+        #     if ("nosuid" in partition.opts):
+        #         return True
 
-            # Detect whether the filesystem type is a windows-type
-            # fs. Most thumb drives are formatted as one of these types.
-            if (partition.fstype == "msdos") or (partition.fstype == "exfat") or (partition.fstype == "vfat"):
-                return True
+        # elif os_is_macos():
+        #     MountFinder._log("    testing for macOS, partition type <%s>" % partition.fstype)
+
+        #     # Detect whether the filesystem type is a windows-type
+        #     # fs. Most thumb drives are formatted as one of these types.
+        if (partition.fstype == "msdos") or (partition.fstype == "exfat") or (partition.fstype == "vfat"):
+            MountFinder._log("It IS a thumb drive.")
+            return True
 
         # If we can't determine the operating system, we can't
         # recognize a thumb drive.
+        MountFinder._log("It is not a thumb drive.")
         return False
         
 
