@@ -1,3 +1,4 @@
+import traceback
 import logging
 from watchdog.events import FileSystemEventHandler
 
@@ -20,10 +21,18 @@ class MountpointWatcher(FileSystemEventHandler):
         super().dispatch(event)
 
     def on_created(self, event):
-        self._log("MountpointWatcher received ON_CREATED <%s>" % event.src_path)
-        mountpoint = MountPoint(event.src_path)
-        self.tracker.mountpoint_created(mountpoint)
+        try:
+            self._log("MountpointWatcher received ON_CREATED <%s>" % event.src_path)
+            mountpoint = MountPoint(event.src_path)
+            self.tracker.mountpoint_created(mountpoint)
+        except Exception:
+            stack = traceback.format_exc()
+            self._log(stack)
         
     def on_deleted(self, event):
-        self._log("MountpointWatcher received on_deleted <%s>" % event.src_path)
-        self.tracker.mountpoint_deleted(event.src_path)
+        try:
+            self._log("MountpointWatcher received on_deleted <%s>" % event.src_path)
+            self.tracker.mountpoint_deleted(event.src_path)
+        except Exception:
+            stack = traceback.format_exc()
+            self._log(stack)

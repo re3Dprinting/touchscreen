@@ -17,7 +17,7 @@ from .contentwatcher import ContentWatcher
 
 class USBTracker(QObject, FileSystemEventHandler):
 
-    create_signal = pyqtSignal(str)
+    create_signal = pyqtSignal(MountPoint)
     delete_signal = pyqtSignal(str)
     content_signal = pyqtSignal(str)
 
@@ -29,7 +29,7 @@ class USBTracker(QObject, FileSystemEventHandler):
         self._log("USBTracker __init__()")
 
         self.watch_path = watch_path
-        self.current_path = ""
+        self.current_mountpoint = MountPoint("")
 
         # print("Watch path = <%s>" % watch_path)
         # print("Initial path = <%s>" % initial_path)
@@ -87,7 +87,7 @@ class USBTracker(QObject, FileSystemEventHandler):
         return self.content_signal
 
     def mountpoint_created(self, mountpoint):
-        self._log("MOUNTPOINT CREATED: path <%s>, actual <%s>, Current is: <%s>" % (mountpoint.path, mountpoint.actual_path, self.current_path))
+        self._log("MOUNTPOINT CREATED: path <%s>, actual <%s>, Current is: <%s>, current actual: <%s>" % (mountpoint.path, mountpoint.actual_path, self.current_mountpoint.path, self.current_mountpoint.actual_path))
 
         self.mountpoint = mountpoint
 
@@ -105,15 +105,15 @@ class USBTracker(QObject, FileSystemEventHandler):
 
         if MountFinder.is_thumb_drive(actual_path) and path.startswith(self.watch_path):
             self.create_content_observer(actual_path)
-            self.create_signal.emit(actual_path)
-            self.current_path = actual_path
+            self.current_mountpoint = mountpoint
+            self.create_signal.emit(mountpoint)
 
     def mountpoint_deleted(self, path):
-        self._log("Mountpoint deleted: <%s> Current is: <%s>" % (path, self.current_path))
+        self._log("Mountpoint deleted: <%s> Current is: <%s>, current actual: <%s>" % (path, self.current_mountpoint.path, self.current_mountpoint.actual_path))
 
-        if self.current_path == path:
+        if self.current_mountpoint.path == path:
             self.delete_signal.emit(path)
-            self.current_path = ""
+            self.current_mountpoint = MountPoint("")
             self.delete_content_observer()
 
         # self.delete_mount_observer()

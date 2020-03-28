@@ -13,6 +13,7 @@ from octoprint.filemanager.util import DiskFileWrapper
 from .qt.printwindow import *
 from .fsutils.subfilesystem import *
 from .fsutils.file import *
+from .fsutils.mountpoint import MountPoint
 from .filelistmanager import FileListManager
 
 class PrintWindow(BaseWindow, Ui_PrintWindow):
@@ -130,9 +131,9 @@ class PrintWindow(BaseWindow, Ui_PrintWindow):
     def set_usb_content_signal(self, signal):
         signal.connect(self.update_usb_content)
 
-    def update_usb_create(self, path):
-        self._log("UPDATE_USB_CREATE: <%s>" % path)
-        self.usb_file_manager.update_create(path)
+    def update_usb_create(self, mountpoint):
+        self._log("UPDATE_USB_CREATE: path <%s>, actual path <%s>" % (mountpoint.path, mountpoint.actual_path))
+        self.usb_file_manager.update_create(mountpoint.path)
 
     def update_usb_delete(self, path):
         self.usb_file_manager.clear_files()
