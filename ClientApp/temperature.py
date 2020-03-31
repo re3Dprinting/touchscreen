@@ -336,10 +336,12 @@ class TemperatureWindow(BaseWindow, Ui_TemperatureWindow):
 
     def active_close(self):
         self._log("UI: User touched (active) Back")
+        self.parent.show()
         self.close()
 
     def notactive_close(self):
         self._log("UI: User touched (not active) Back")
+        self.parent.show()
         self.close()
 
     def notactive_cool(self):
