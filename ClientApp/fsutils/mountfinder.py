@@ -103,8 +103,9 @@ class MountFinder:
         #     # Detect whether the filesystem type is a windows-type
         #     # fs. Most thumb drives are formatted as one of these types.
         if (partition.fstype == "msdos") or (partition.fstype == "exfat") or (partition.fstype == "vfat"):
-            MountFinder._log("It IS a thumb drive.")
-            return True
+            if not partition.device.startswith("/dev/mmc"):
+                MountFinder._log("It IS a thumb drive.")
+                return True
 
         # If we can't determine the operating system, we can't
         # recognize a thumb drive.

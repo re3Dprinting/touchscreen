@@ -157,9 +157,9 @@ class Tarballer(QRunnable):
             # as not to confuse people (we expect it to happen, so
             # it's not really an error).
 
-            if 'ts.log: Truncated write; file may have grown while being archived' in line:
-                self._log(line)
-                continue
+            if 'ts.log: Truncated write; file may have grown while being archived' in line or 'file changed as we read it' in line:
+               self._log(line)
+               continue
 
             # Display and log the error line
             self.display(line)
