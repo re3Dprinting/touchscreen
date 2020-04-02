@@ -13,6 +13,7 @@ from touchscreen.touchdisplay import *
 from touchscreen.util.personality import Personality
 from touchscreen.fsutils.watchdogthread import WatchdogThread
 from touchscreen.fsutils.mountfinder import MountFinder
+from fsutils.mountpoint import MountPoint
 
 from util.configid import get_touchscreen_commit_id
 from util.log import setup_root_logger
@@ -154,7 +155,8 @@ def main():
         if current_path != "":
             # There seems to be a thumb drive plugged in. Tell the UI
             # print window to use it as the inital file list.
-            display.print_pop.update_usb_create(current_path)
+            current_mountpoint = MountPoint(current_path)
+            display.print_pop.update_usb_create(current_mountpoint)
 
     # Set up the watchdog thread that watches the filesystem for
     # mounts of USB drives.

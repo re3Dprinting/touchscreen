@@ -137,6 +137,9 @@
     </item>
     <item>
      <widget class="QPushButton" name="w_pushbutton_temporary">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
       <property name="maximumSize">
        <size>
         <width>400</width>
@@ -197,7 +200,7 @@
      <x>450</x>
      <y>60</y>
      <width>272</width>
-     <height>248</height>
+     <height>271</height>
     </rect>
    </property>
    <layout class="QHBoxLayout" name="horizontalLayout_3">
@@ -276,14 +279,14 @@
         </property>
         <property name="font">
          <font>
-          <pointsize>24</pointsize>
+          <pointsize>18</pointsize>
          </font>
         </property>
         <property name="focusPolicy">
          <enum>Qt::NoFocus</enum>
         </property>
         <property name="text">
-         <string>-</string>
+         <string>+/-</string>
         </property>
        </widget>
       </item>
