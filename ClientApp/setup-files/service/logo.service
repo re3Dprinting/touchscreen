@@ -1,0 +1,11 @@
+[Unit]
+Description=Display re:3D logo on vt 1.
+After=multi-user.target
+
+[Service]
+Type=idle
+ExecStart=/home/pi/service/fbi.sh > /home/pi/service/fbi.out
+User=pi
+
+[Install]
+WantedBy=multi-user.target
