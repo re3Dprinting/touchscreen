@@ -6,7 +6,7 @@ cd /home/pi/setup-files || (echo FATAL: Expected to find setup files in /home/pi
 
 cp hosts /etc/hosts
 cp interfaces /etc/network/interfaces
-#cp keyboard /etc/default/keyboard
+cp keyboard /etc/default/keyboard
 cp shadow /etc/shadow
 chown 640 /etc/shadow
 cp wpa_supplicant.conf /etc/wpa_supplicant/wpa_supplicant.conf
