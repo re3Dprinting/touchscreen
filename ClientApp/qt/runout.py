@@ -14,6 +14,8 @@ class Ui_w_runout_dialog(object):
     def setupUi(self, w_runout_dialog):
         w_runout_dialog.setObjectName("w_runout_dialog")
         w_runout_dialog.resize(612, 353)
+        w_runout_dialog.setWindowOpacity(1.0)
+        w_runout_dialog.setSizeGripEnabled(True)
         w_runout_dialog.setModal(True)
         self.w_buttonBox = QtWidgets.QDialogButtonBox(w_runout_dialog)
         self.w_buttonBox.setGeometry(QtCore.QRect(180, 190, 291, 32))
