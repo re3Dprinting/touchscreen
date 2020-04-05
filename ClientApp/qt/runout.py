@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'runout.ui'
 #
-# Created by: PyQt5 UI code generator 5.13.1
+# Created by: PyQt5 UI code generator 5.14.1
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -13,15 +13,15 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_w_runout_dialog(object):
     def setupUi(self, w_runout_dialog):
         w_runout_dialog.setObjectName("w_runout_dialog")
-        w_runout_dialog.resize(388, 188)
+        w_runout_dialog.resize(612, 353)
         w_runout_dialog.setModal(True)
         self.w_buttonBox = QtWidgets.QDialogButtonBox(w_runout_dialog)
-        self.w_buttonBox.setGeometry(QtCore.QRect(70, 140, 291, 32))
+        self.w_buttonBox.setGeometry(QtCore.QRect(180, 190, 291, 32))
         self.w_buttonBox.setOrientation(QtCore.Qt.Horizontal)
         self.w_buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Ok)
         self.w_buttonBox.setObjectName("w_buttonBox")
         self.w_runout_title = QtWidgets.QLabel(w_runout_dialog)
-        self.w_runout_title.setGeometry(QtCore.QRect(50, 10, 241, 31))
+        self.w_runout_title.setGeometry(QtCore.QRect(160, 60, 241, 31))
         font = QtGui.QFont()
         font.setPointSize(20)
         self.w_runout_title.setFont(font)
@@ -29,7 +29,7 @@ class Ui_w_runout_dialog(object):
         self.w_runout_title.setWordWrap(True)
         self.w_runout_title.setObjectName("w_runout_title")
         self.w_runout_message_label = QtWidgets.QLabel(w_runout_dialog)
-        self.w_runout_message_label.setGeometry(QtCore.QRect(30, 60, 291, 71))
+        self.w_runout_message_label.setGeometry(QtCore.QRect(140, 110, 291, 71))
         font = QtGui.QFont()
         font.setPointSize(16)
         self.w_runout_message_label.setFont(font)
