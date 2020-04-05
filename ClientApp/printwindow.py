@@ -340,9 +340,13 @@ class PrintWindow(BaseWindow, Ui_PrintWindow):
     def activeprintpop(self):
         self._log("UI: User touched Active Print")
         if self.fullscreen:
+            self._log("UI: showing temp fullscreen")
             self.temp_pop.showFullScreen()
+            self.close()
         else:
+            self._log("UI: showing temp")
             self.temp_pop.show()
+            self.close()
 
     def update_loc_button_states_none(self):
         self.loc_pushbutton_up.setEnabled(False)

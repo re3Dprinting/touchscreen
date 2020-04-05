@@ -70,8 +70,7 @@ class TouchDisplay(BaseWindow, Ui_TouchDisplay):
         self.set_pop.server_pop = self.server_pop
         self.set_pop.userupdate_pop = self.userupdate_pop
 
-        self.temp_pop = TemperatureWindow(
-            self.printer_if, self.event_handler, self)
+        self.temp_pop = TemperatureWindow(self.printer_if, self.event_handler, self)
         self.con_pop = ControlWindow(self.printer_if, self)
         self.print_pop = PrintWindow(self.printer_if, self.temp_pop, self.personality, self)
 
