@@ -18,6 +18,8 @@ class RunoutHandlerDialog(QtWidgets.QDialog, Ui_w_runout_dialog):
         self.hide_on_ok = False
         self.send_m108_on_ok = False
 
+        self.w_buttonBox.clicked.connect(self.accept)
+
     def _log(self, message):
         self._logger.debug(message)
 

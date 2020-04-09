@@ -6,6 +6,7 @@ from qt.debugwindow import *
 from basewindow import BaseWindow
 from fsutils.tarballer import Tarballer
 from util.log import find_root_logger
+from .runout_handler import RunoutHandlerDialog
 
 from touchscreen.qt.debugwindow import Ui_DebugWindow
 
@@ -39,6 +40,8 @@ class DebugWindow(BaseWindow, Ui_DebugWindow):
         self.w_combobox_debuglevel.currentIndexChanged.connect(self.debug_level_changed)
         self.display_signal.connect(self.slot_display)
 
+        self.w_runout_handler = RunoutHandlerDialog(self, self.printer_if)
+
     def signal_display(self, str):
         self.display_signal.emit(str)
 
@@ -54,11 +57,19 @@ class DebugWindow(BaseWindow, Ui_DebugWindow):
 
         if new_index == 0:
             root_logger.setLevel(logging.DEBUG)
+            new_level_str = "DEBUG"
             self._log("Set debug level to DEBUG")
 
         if new_index == 1:
             self._log("Set debug level to INFO")
+            new_level_str = "INFO"
             root_logger.setLevel(logging.INFO)
+
+        self.w_runout_handler.w_runout_message_label.setText("New logging level = " + new_level_str)
+        self.w_runout_handler.enable_ok()
+        self.w_runout_handler.send_m108_on_ok = False
+        self.w_runout_handler.hide_on_ok = True
+        self.w_runout_handler.show()
 
     def handle_add_marker(self):
         self._log("UI: User touched Add Marker")
