@@ -182,14 +182,18 @@ class UserUpdateWindow(BaseWindow, Ui_UserUpdate):
     
     # Restart the program by using psutil. Grab the PID of the python application and kill it. 
     def restart_program(self, argument):
-        try:
-            p = psutil.Process(os.getpid())
-            for handler in p.open_files() + p.connections():
-                os.close(handler.fd)
-        except Exception as e:
-            logging.error(e)
+        # A quick hack: just exit and let the script restart
+        # us. (Re-execing is a better long-term solution.)
+        sys.exit(0)
 
-        #Restart the program with the original arguments and python executable. 
-        python = sys.executable
-        os.execl(python, python, argument)
+        # try:
+        #     p = psutil.Process(os.getpid())
+        #     for handler in p.open_files() + p.connections():
+        #         os.close(handler.fd)
+        # except Exception as e:
+        #     logging.error(e)
+
+        # #Restart the program with the original arguments and python executable. 
+        # python = sys.executable
+        # os.execl(python, python, argument)
 
