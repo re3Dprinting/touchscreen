@@ -105,7 +105,7 @@ class PrinterIF(PrinterCallback):
 
     def set_babystep(self, value):
         babystep_command = "M290 P0 Z" + str(value)
-        self._log("BABYSTEP command", babystep_command)
+        self._log("BABYSTEP command <%s>" % babystep_command)
         self.printer.commands(babystep_command)
         # self.tempwindow.serial.send_serial("M290 Z " + str(self.babystep))        
 
