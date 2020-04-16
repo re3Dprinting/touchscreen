@@ -3,6 +3,7 @@
 #################################################################
 
 import sys
+import glob
 import logging
 import getpass
 from pathlib import Path
@@ -138,13 +139,17 @@ def main():
 
     # Check to see whether any USB filesystems are currently mounted.
     current_path = ""
-    possible_usb_mounts = MountFinder.thumbdrive_candidates()
+    # possible_usb_mounts = MountFinder.thumbdrive_candidates()
+    possible_usb_mounts = glob.glob("/usb/*")
 
+    logger.debug("persona watchpoint = <%s>", persona.watchpoint)
+    
     # If the mount finder located any possible USB mountpoints...
     if len(possible_usb_mounts) > 0:
 
         # ...loop through the possible USB mount points
         for possible_path in possible_usb_mounts:
+            logger.debug("Possible path: <%s>", possible_path)
 
             # Break the first time we find a USB drive mounted on the
             # mount point we're watching.
@@ -153,6 +158,8 @@ def main():
                 break
 
         if current_path != "":
+            logger.debug("Initial USB path = <%s>" % current_path)
+            
             # There seems to be a thumb drive plugged in. Tell the UI
             # print window to use it as the inital file list.
             current_mountpoint = MountPoint(current_path)
