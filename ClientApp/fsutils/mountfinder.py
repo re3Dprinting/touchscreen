@@ -90,7 +90,7 @@ class MountFinder:
         # option, assume it's not a thumb drive. (Note: this only
         # works for linux.)
 
-        MountFinder._log("    Partition type is <%s>" % partition.fstype)
+        MountFinder._log("Partition <%s>: type is <%s>" % (partition.mountpoint, partition.fstype))
 
         # if os_is_linux():
         #     MountFinder._log("    testing for linux, partition options <%s>" % partition.opts)
@@ -104,12 +104,12 @@ class MountFinder:
         #     # fs. Most thumb drives are formatted as one of these types.
         if (partition.fstype == "msdos") or (partition.fstype == "exfat") or (partition.fstype == "vfat"):
             if not partition.device.startswith("/dev/mmc"):
-                MountFinder._log("It IS a thumb drive.")
+                MountFinder._log("    It IS a thumb drive.")
                 return True
 
         # If we can't determine the operating system, we can't
         # recognize a thumb drive.
-        MountFinder._log("It is not a thumb drive.")
+        MountFinder._log("    It is not a thumb drive.")
         return False
         
 
