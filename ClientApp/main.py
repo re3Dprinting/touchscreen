@@ -109,6 +109,11 @@ def main():
             octopath = "/Users/jct/Dropbox/re3D/touchscreen/OctoPrint"
             persona = Personality(False, "/Volumes", octopath + "/localgcode",
                                   octopath + "/log-cache")
+        if getpass.getuser() == "npan":
+            octopath = "/Users/npan/re3D/OctoPrint"
+            persona = Personality(False, "/Volumes", octopath + "/localgcode",
+                                  octopath + "/log-cache") 
+                                  
 
     else:
         print("Unable to determine operating system, aborting...")
