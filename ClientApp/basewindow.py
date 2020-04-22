@@ -1,4 +1,6 @@
 import logging
+import os
+import json
 from pathlib import Path
 
 from PyQt5 import QtCore, QtGui, QtWidgets
@@ -15,10 +17,10 @@ class BaseWindow(QtWidgets.QWidget):
 		# Set up logging
 		self._logger = logging.getLogger(__name__)
 
-		self.properties = {}
-		config_path = Path(__file__).parent.absolute().__str__() + "/config.properties"
-		for line in open(config_path):
-			self.properties[line.split("=")[0]] = line.split("=")[1].strip()
+		tmp_path = Path(__file__).parent.absolute()
+		config_path = Path(os.path.realpath(tmp_path)).parent.parent.__str__()+ "/config.properties"
+		with open(config_path) as config_in:
+			self.properties = json.load(config_in)
 
 		self.fullscreen = False
 		self.parent = parent

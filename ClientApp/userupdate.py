@@ -31,23 +31,25 @@ class UserUpdateWindow(BaseWindow, Ui_UserUpdate):
         tmp_path = Path(__file__).parent.absolute()
         # print(tmp_path)
         self.current_path = Path(os.path.realpath(tmp_path)).parent
-        # print(self.current_path.__str__())
+        print(self.current_path.__str__())
 
         #Get the current path (local repository) and make sure that the github link is the current repository.
-        self.git = Git(self.current_path.__str__())
-        self.repo = Repo(self.current_path.__str__())
-        self.current_tags = None
+        try:
+            self.git = Git(self.current_path.__str__())
+            self.repo = Repo(self.current_path.__str__())
+            self.current_tags = None
 
-        found_remote = False
-        #Check if re3d remote repository is in current remote tree
-        for r in self.repo.remotes:
-            if r.name == "re3d":
-                self.remote_repo = r
-                found_remote = True
-        #If re3d repo does not exist, add it as a remote.
-        if not found_remote:
-            self.remote_repo = self.repo.create_remote("re3d", "https://github.com/re3Dprinting/touchscreen")
-
+            found_remote = False
+            #Check if re3d remote repository is in current remote tree
+            for r in self.repo.remotes:
+                if r.name == "re3d":
+                    self.remote_repo = r
+                    found_remote = True
+            #If re3d repo does not exist, add it as a remote.
+            if not found_remote:
+                self.remote_repo = self.repo.create_remote("re3d", "https://github.com/re3Dprinting/touchscreen")
+        except Exception as e:
+            print(e)
         # Make the selection Behavior as selecting the entire row
         self.SoftwareList.setSelectionBehavior(QtWidgets.QTableView.SelectRows)
         self.SoftwareList.setSelectionMode(QtWidgets.QTableView.SingleSelection)
