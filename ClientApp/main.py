@@ -3,12 +3,17 @@
 #################################################################
 
 import sys
+import os
 import glob
 import logging
 import getpass
+import json
 from pathlib import Path
 
 from octo import setup_octoprint
+
+from git import Repo, Git
+from basewindow import BaseWindow
 
 from touchscreen.touchdisplay import *
 from touchscreen.util.personality import Personality
@@ -37,13 +42,32 @@ def _log(message):
     # always use DEBUG
     logger.info(message)
 
+#Load the config.properties file that should be located in the same location as Octoprint and touchscreen.
+#A sample config.properties file is located within the setup-files directory.
 def _load_properties():
     properties = {}
 
-    config_path = Path(__file__).parent.absolute().__str__() + "/config.properties"
-    for line in open(config_path):
-        properties[line.split("=")[0]] = line.split("=")[1].strip()
+    #Grab the current directory were the git repository is initialized.
+    tmp_path = Path(__file__).parent.absolute()
+    current_path = Path(os.path.realpath(tmp_path)).parent
 
+    #Move up one directory to grab the config.properties file
+    config_path = current_path.parent.__str__() + "/config.properties"
+    with open(config_path) as config_in:
+        properties = json.load(config_in)
+
+    #Grab the version from the current git repository. 
+    #Will have to be adjusted if the user is updating software locally!!!!
+    try:
+        repo = Repo(current_path.__str__())
+        properties["version"] = repo.active_branch.name
+    except TypeError as e:
+        print(e)
+        properties["version"] = repo.git.describe()
+    except Exception as e:
+        print(e)
+        properties["version"] = "Local"
+        
     return properties
 
 # This function takes care of all the high-level application
