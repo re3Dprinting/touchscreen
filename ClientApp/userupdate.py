@@ -31,7 +31,6 @@ class UserUpdateWindow(BaseWindow, Ui_UserUpdate):
         tmp_path = Path(__file__).parent.absolute()
         # print(tmp_path)
         self.current_path = Path(os.path.realpath(tmp_path)).parent
-        print(self.current_path.__str__())
 
         #Get the current path (local repository) and make sure that the github link is the current repository.
         try:
