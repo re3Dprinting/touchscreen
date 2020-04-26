@@ -17,10 +17,19 @@ class BaseWindow(QtWidgets.QWidget):
 		# Set up logging
 		self._logger = logging.getLogger(__name__)
 
+		self.properties = {"name": "", 
+                "motherboard" : "", 
+                "wifissd" : "",
+                "wifipassword" : "",
+                "mode" : ""
+                }
 		tmp_path = Path(__file__).parent.absolute()
 		config_path = Path(os.path.realpath(tmp_path)).parent.parent.__str__()+ "/config.properties"
-		with open(config_path) as config_in:
-			self.properties = json.load(config_in)
+		if(Path(config_path).is_file()):
+			with open(config_path) as config_in:
+				self.properties = json.load(config_in)
+		else:
+			self._log("Please create a config.properties file within the same directory as Octoprint and Touchscreen!")
 
 		self.fullscreen = False
 		self.parent = parent

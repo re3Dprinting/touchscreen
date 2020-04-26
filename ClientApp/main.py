@@ -45,7 +45,12 @@ def _log(message):
 #Load the config.properties file that should be located in the same location as Octoprint and touchscreen.
 #A sample config.properties file is located within the setup-files directory.
 def _load_properties():
-    properties = {}
+    properties = {"name": "", 
+                "motherboard" : "", 
+                "wifissd" : "",
+                "wifipassword" : "",
+                "mode" : ""
+                }
 
     #Grab the current directory were the git repository is initialized.
     tmp_path = Path(__file__).parent.absolute()
@@ -53,8 +58,11 @@ def _load_properties():
 
     #Move up one directory to grab the config.properties file
     config_path = current_path.parent.__str__() + "/config.properties"
-    with open(config_path) as config_in:
-        properties = json.load(config_in)
+    if(Path(config_path).is_file()):
+        with open(config_path) as config_in:
+            properties = json.load(config_in)
+    else:
+        _log("Please create a config.properties file within the same directory as Octoprint and Touchscreen!")
 
     #Grab the version from the current git repository. 
     #Will have to be adjusted if the user is updating software locally!!!!
