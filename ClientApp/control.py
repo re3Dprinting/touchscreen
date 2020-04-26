@@ -127,8 +127,8 @@ class ControlWindow(BaseWindow, Ui_ControlWindow):
 
     def SetButtonSettings(self, obj):
         obj.setCheckable(True)
-        obj.setStyleSheet("QPushButton:checked {background: rgba(255,255,255,1); font: 14pt 'Ubuntu'; border: 2px solid #888} \
-			QPushButton{background: rgba(255,255,255,0); font: 14pt 'Ubuntu'; outline: none;}")
+        obj.setStyleSheet("QPushButton:checked {background: rgba(255,255,255,1); border: 2px solid #888} \
+			QPushButton{background: rgba(255,255,255,0); outline: none;}")
 
     def changeText(self, label, text):
         tmp = QtWidgets.QApplication.translate(

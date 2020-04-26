@@ -433,9 +433,6 @@
         <property name="toolTip">
          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:24pt;&quot;&gt;0.1&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
-        <property name="styleSheet">
-         <string notr="true">font: 14pt &quot;Ubuntu&quot;;</string>
-        </property>
         <property name="text">
          <string>0.1</string>
         </property>
@@ -463,9 +460,6 @@
         </property>
         <property name="toolTip">
          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:24pt;&quot;&gt;0.1&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">font: 14pt &quot;Ubuntu&quot;;</string>
         </property>
         <property name="text">
          <string>1</string>
@@ -495,9 +489,6 @@
         <property name="toolTip">
          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:24pt;&quot;&gt;0.1&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
-        <property name="styleSheet">
-         <string notr="true">font: 14pt &quot;Ubuntu&quot;;</string>
-        </property>
         <property name="text">
          <string>10</string>
         </property>
@@ -525,9 +516,6 @@
         </property>
         <property name="toolTip">
          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:24pt;&quot;&gt;0.1&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">font: 14pt &quot;Ubuntu&quot;;</string>
         </property>
         <property name="text">
          <string>100</string>
@@ -562,9 +550,6 @@
         <property name="toolTip">
          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:24pt;&quot;&gt;0.1&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
-        <property name="styleSheet">
-         <string notr="true">font: 14pt &quot;Ubuntu&quot;;</string>
-        </property>
         <property name="text">
          <string>0.1</string>
         </property>
@@ -592,9 +577,6 @@
         </property>
         <property name="toolTip">
          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:24pt;&quot;&gt;0.1&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">font: 14pt &quot;Ubuntu&quot;;</string>
         </property>
         <property name="text">
          <string>1</string>
@@ -624,9 +606,6 @@
         <property name="toolTip">
          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:24pt;&quot;&gt;0.1&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
-        <property name="styleSheet">
-         <string notr="true">font: 14pt &quot;Ubuntu&quot;;</string>
-        </property>
         <property name="text">
          <string>10</string>
         </property>
@@ -654,9 +633,6 @@
         </property>
         <property name="toolTip">
          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:24pt;&quot;&gt;0.1&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">font: 14pt &quot;Ubuntu&quot;;</string>
         </property>
         <property name="text">
          <string>100</string>
@@ -691,9 +667,6 @@
         <property name="toolTip">
          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:24pt;&quot;&gt;0.1&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
-        <property name="styleSheet">
-         <string notr="true">font: 14pt &quot;Ubuntu&quot;;</string>
-        </property>
         <property name="text">
          <string>0.1</string>
         </property>
@@ -721,9 +694,6 @@
         </property>
         <property name="toolTip">
          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:24pt;&quot;&gt;0.1&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">font: 14pt &quot;Ubuntu&quot;;</string>
         </property>
         <property name="text">
          <string>1</string>
@@ -753,9 +723,6 @@
         <property name="toolTip">
          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:24pt;&quot;&gt;0.1&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
-        <property name="styleSheet">
-         <string notr="true">font: 14pt &quot;Ubuntu&quot;;</string>
-        </property>
         <property name="text">
          <string>10</string>
         </property>
@@ -783,9 +750,6 @@
         </property>
         <property name="toolTip">
          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:24pt;&quot;&gt;0.1&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">font: 14pt &quot;Ubuntu&quot;;</string>
         </property>
         <property name="text">
          <string>100</string>
@@ -820,9 +784,6 @@
         <property name="toolTip">
          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:24pt;&quot;&gt;0.1&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
-        <property name="styleSheet">
-         <string notr="true">font: 14pt &quot;Ubuntu&quot;;</string>
-        </property>
         <property name="text">
          <string>0.1</string>
         </property>
@@ -850,9 +811,6 @@
         </property>
         <property name="toolTip">
          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:24pt;&quot;&gt;0.1&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">font: 14pt &quot;Ubuntu&quot;;</string>
         </property>
         <property name="text">
          <string>1</string>
@@ -882,9 +840,6 @@
         <property name="toolTip">
          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:24pt;&quot;&gt;0.1&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
-        <property name="styleSheet">
-         <string notr="true">font: 14pt &quot;Ubuntu&quot;;</string>
-        </property>
         <property name="text">
          <string>10</string>
         </property>
@@ -912,9 +867,6 @@
         </property>
         <property name="toolTip">
          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:24pt;&quot;&gt;0.1&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">font: 14pt &quot;Ubuntu&quot;;</string>
         </property>
         <property name="text">
          <string>100</string>
@@ -958,9 +910,6 @@
       <property name="toolTip">
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:24pt;&quot;&gt;0.1&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
-      <property name="styleSheet">
-       <string notr="true">font: 14pt &quot;Ubuntu&quot;;</string>
-      </property>
       <property name="text">
        <string>E1</string>
       </property>
@@ -988,9 +937,6 @@
       </property>
       <property name="toolTip">
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:24pt;&quot;&gt;0.1&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">font: 14pt &quot;Ubuntu&quot;;</string>
       </property>
       <property name="text">
        <string>E2</string>
