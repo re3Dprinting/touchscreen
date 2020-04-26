@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'notactiveprintwidget.ui'
 #
-# Created by: PyQt5 UI code generator 5.13.1
+# Created by: PyQt5 UI code generator 5.14.2
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -69,7 +69,6 @@ class Ui_NotActivePrintWidget(object):
         self.m1e1 = QtWidgets.QPushButton(NotActivePrintWidget)
         self.m1e1.setMinimumSize(QtCore.QSize(70, 30))
         self.m1e1.setMaximumSize(QtCore.QSize(75, 35))
-        self.m1e1.setStyleSheet("font: 14pt \"Ubuntu\";")
         self.m1e1.setObjectName("m1e1")
         self.horizontalLayout.addWidget(self.m1e1)
         self.m1e2 = QtWidgets.QPushButton(NotActivePrintWidget)
@@ -80,7 +79,6 @@ class Ui_NotActivePrintWidget(object):
         self.m1e2.setSizePolicy(sizePolicy)
         self.m1e2.setMinimumSize(QtCore.QSize(70, 30))
         self.m1e2.setMaximumSize(QtCore.QSize(75, 35))
-        self.m1e2.setStyleSheet("font: 14pt \"Ubuntu\";")
         self.m1e2.setObjectName("m1e2")
         self.horizontalLayout.addWidget(self.m1e2)
         self.m1bed = QtWidgets.QPushButton(NotActivePrintWidget)
@@ -91,7 +89,6 @@ class Ui_NotActivePrintWidget(object):
         self.m1bed.setSizePolicy(sizePolicy)
         self.m1bed.setMinimumSize(QtCore.QSize(70, 30))
         self.m1bed.setMaximumSize(QtCore.QSize(75, 35))
-        self.m1bed.setStyleSheet("font: 14pt \"Ubuntu\";")
         self.m1bed.setObjectName("m1bed")
         self.horizontalLayout.addWidget(self.m1bed)
         self.m1all = QtWidgets.QPushButton(NotActivePrintWidget)
@@ -102,7 +99,6 @@ class Ui_NotActivePrintWidget(object):
         self.m1all.setSizePolicy(sizePolicy)
         self.m1all.setMinimumSize(QtCore.QSize(70, 30))
         self.m1all.setMaximumSize(QtCore.QSize(75, 35))
-        self.m1all.setStyleSheet("font: 14pt \"Ubuntu\";")
         self.m1all.setObjectName("m1all")
         self.horizontalLayout.addWidget(self.m1all)
         self.verticalLayout.addLayout(self.horizontalLayout)
@@ -111,7 +107,6 @@ class Ui_NotActivePrintWidget(object):
         self.m2e1 = QtWidgets.QPushButton(NotActivePrintWidget)
         self.m2e1.setMinimumSize(QtCore.QSize(70, 30))
         self.m2e1.setMaximumSize(QtCore.QSize(75, 35))
-        self.m2e1.setStyleSheet("font: 14pt \"Ubuntu\";")
         self.m2e1.setObjectName("m2e1")
         self.horizontalLayout_2.addWidget(self.m2e1)
         self.m2e2 = QtWidgets.QPushButton(NotActivePrintWidget)
@@ -122,7 +117,6 @@ class Ui_NotActivePrintWidget(object):
         self.m2e2.setSizePolicy(sizePolicy)
         self.m2e2.setMinimumSize(QtCore.QSize(70, 30))
         self.m2e2.setMaximumSize(QtCore.QSize(75, 35))
-        self.m2e2.setStyleSheet("font: 14pt \"Ubuntu\";")
         self.m2e2.setObjectName("m2e2")
         self.horizontalLayout_2.addWidget(self.m2e2)
         self.m2bed = QtWidgets.QPushButton(NotActivePrintWidget)
@@ -133,7 +127,6 @@ class Ui_NotActivePrintWidget(object):
         self.m2bed.setSizePolicy(sizePolicy)
         self.m2bed.setMinimumSize(QtCore.QSize(70, 30))
         self.m2bed.setMaximumSize(QtCore.QSize(75, 35))
-        self.m2bed.setStyleSheet("font: 14pt \"Ubuntu\";")
         self.m2bed.setObjectName("m2bed")
         self.horizontalLayout_2.addWidget(self.m2bed)
         self.m2all = QtWidgets.QPushButton(NotActivePrintWidget)
@@ -144,7 +137,6 @@ class Ui_NotActivePrintWidget(object):
         self.m2all.setSizePolicy(sizePolicy)
         self.m2all.setMinimumSize(QtCore.QSize(70, 30))
         self.m2all.setMaximumSize(QtCore.QSize(75, 35))
-        self.m2all.setStyleSheet("font: 14pt \"Ubuntu\";")
         self.m2all.setObjectName("m2all")
         self.horizontalLayout_2.addWidget(self.m2all)
         self.verticalLayout.addLayout(self.horizontalLayout_2)
@@ -153,7 +145,6 @@ class Ui_NotActivePrintWidget(object):
         self.m3e1 = QtWidgets.QPushButton(NotActivePrintWidget)
         self.m3e1.setMinimumSize(QtCore.QSize(70, 30))
         self.m3e1.setMaximumSize(QtCore.QSize(75, 35))
-        self.m3e1.setStyleSheet("font: 14pt \"Ubuntu\";")
         self.m3e1.setObjectName("m3e1")
         self.horizontalLayout_3.addWidget(self.m3e1)
         self.m3e2 = QtWidgets.QPushButton(NotActivePrintWidget)
@@ -164,7 +155,6 @@ class Ui_NotActivePrintWidget(object):
         self.m3e2.setSizePolicy(sizePolicy)
         self.m3e2.setMinimumSize(QtCore.QSize(70, 30))
         self.m3e2.setMaximumSize(QtCore.QSize(75, 35))
-        self.m3e2.setStyleSheet("font: 14pt \"Ubuntu\";")
         self.m3e2.setObjectName("m3e2")
         self.horizontalLayout_3.addWidget(self.m3e2)
         self.m3bed = QtWidgets.QPushButton(NotActivePrintWidget)
@@ -175,7 +165,6 @@ class Ui_NotActivePrintWidget(object):
         self.m3bed.setSizePolicy(sizePolicy)
         self.m3bed.setMinimumSize(QtCore.QSize(70, 30))
         self.m3bed.setMaximumSize(QtCore.QSize(75, 35))
-        self.m3bed.setStyleSheet("font: 14pt \"Ubuntu\";")
         self.m3bed.setObjectName("m3bed")
         self.horizontalLayout_3.addWidget(self.m3bed)
         self.m3all = QtWidgets.QPushButton(NotActivePrintWidget)
@@ -186,7 +175,6 @@ class Ui_NotActivePrintWidget(object):
         self.m3all.setSizePolicy(sizePolicy)
         self.m3all.setMinimumSize(QtCore.QSize(70, 30))
         self.m3all.setMaximumSize(QtCore.QSize(75, 35))
-        self.m3all.setStyleSheet("font: 14pt \"Ubuntu\";")
         self.m3all.setObjectName("m3all")
         self.horizontalLayout_3.addWidget(self.m3all)
         self.verticalLayout.addLayout(self.horizontalLayout_3)
