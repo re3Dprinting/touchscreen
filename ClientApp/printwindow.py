@@ -117,9 +117,6 @@ class PrintWindow(BaseWindow, Ui_PrintWindow):
 
         self.loc_pushbutton_print.clicked.connect(self.local_start_print)
 
-    def _log(self, message):
-        self._logger.debug(message)
-
     def set_storage_manager(self, local_storage_manager):
         self.local_storage_manager = local_storage_manager
         

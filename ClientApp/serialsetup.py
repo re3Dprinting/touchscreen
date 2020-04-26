@@ -44,8 +44,6 @@ class SerialWindow(BaseWindow, Ui_SerialWindow):
         self.ConnectSerial.clicked.connect(self.user_connect_serial)
         self.DisconnectSerial.clicked.connect(self.disconnect_serial)
 
-    def _log(self, message):
-        self._logger.debug(message)
 
     def reconnect_serial(self):
         if self.scan_serial():

@@ -66,14 +66,7 @@ class ControlWindow(BaseWindow, Ui_ControlWindow):
         self.Back.clicked.connect(self.back)
 
         self.DisableMotors.clicked.connect(self.disablemotors)
-        self.Back.clicked.connect(self.user_back)
-
-    def _log(self, message):
-        self._logger.debug(message)
-
-    def user_back(self):
-        self._log("UI: User touched Back")
-        self.close()
+        self.Back.clicked.connect(self.back)
 
     def updateposition(self):
         # pos = self.serial.data.position

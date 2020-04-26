@@ -43,7 +43,7 @@ class BaseWindow(QtWidgets.QWidget):
 		self._logger.debug(message)
 
 	def back(self):
-		self._log("User touched Back")
+		self._log("UI: User touched Back")
 		self.parent.show()
 		self.close()
 
@@ -59,4 +59,7 @@ class BaseWindow(QtWidgets.QWidget):
 			# self.notification.activateWindow()
 			# print(self.notification.visibleRegion().isEmpty())
 
-			
+	#Global function that allows windows to create a borderless button
+	def setbuttonstyle(self, obj):
+		obj.setStyleSheet(
+		"QPushButton{background: rgba(255,255,255,0); outline: none; border: none;} QPushButton:checked{background: rgba(255,255,255,0); outline: none; border: none;} QPushButton:pressed {background: rgba(0,0,0,0.08); outline: none; border: none;}")
