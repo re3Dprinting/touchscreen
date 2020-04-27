@@ -2,7 +2,6 @@
 	pyuic5-3.7 $< -o $@
 
 all: activeprintwidget.py \
-     controlwindow.py \
      debugwindow.py \
      duexsetupwindow.py \
      infowindow.py \
@@ -16,4 +15,5 @@ all: activeprintwidget.py \
      userupdatewindow.py \
      home_qt.py \
      printpage_qt.py \
+     controlpage_qt.py \
      mainwindow_qt.py

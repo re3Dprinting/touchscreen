@@ -1,27 +1,30 @@
 from builtins import str
 import logging
-from PyQt5.QtCore import Qt
-from .qt.controlwindow import *
-from .axis import *
-from .basewindow import BaseWindow
 
+from PyQt5 import QtWidgets
+from PyQt5.QtCore import Qt
+
+from .qt.controlpage_qt import Ui_ControlPage
+from .axis import Axis
+from .basepage import BasePage
 
 increments_str = ["01", "1", "10", "100"]
 increments_int = ['0.1', '1', '10', '100']
 
-class ControlWindow(BaseWindow, Ui_ControlWindow):
-    def __init__(self, printer_if, parent=None):
-        super(ControlWindow, self).__init__(parent)
+class ControlPage(BasePage, Ui_ControlPage):
+    def __init__(self, context):
+        super(ControlPage, self).__init__()
 
         # Set up logging
         self._logger = logging.getLogger(__name__)
-        self._log("ControlWindow __init__()")
+        self._log("ControlPage __init__()")
 
         # Set up UI
         self.setupUi(self)
 
-        # Save reference to Printer Interface
-        self.printer_if = printer_if
+        # Save reference to context objects
+        self.printer_if = context.printer_if
+        self.ui_controller = context.ui_controller
 
         # self.timer.timeout.connect(lambda: self.button_event_check())
         self.xinc = None
@@ -30,11 +33,11 @@ class ControlWindow(BaseWindow, Ui_ControlWindow):
         self.einc = None
         self.currentextruder = None
 
-        self.parent.setbuttonstyle(self.Back)
-        self.parent.setbuttonstyle(self.DisableMotors)
-        self.parent.setbuttonstyle(self.HomeAll)
-        self.parent.setbuttonstyle(self.HomeXY)
-        self.parent.setbuttonstyle(self.HomeZ)
+        self.setbuttonstyle(self.Back)
+        self.setbuttonstyle(self.DisableMotors)
+        self.setbuttonstyle(self.HomeAll)
+        self.setbuttonstyle(self.HomeXY)
+        self.setbuttonstyle(self.HomeZ)
         self.xbutton = self.AddButtontoGroup("x")
         self.ybutton = self.AddButtontoGroup("y")
         self.zbutton = self.AddButtontoGroup("z")
@@ -67,9 +70,6 @@ class ControlWindow(BaseWindow, Ui_ControlWindow):
 
         self.DisableMotors.clicked.connect(self.disablemotors)
         self.Back.clicked.connect(self.user_back)
-
-    def _log(self, message):
-        self._logger.debug(message)
 
     def user_back(self):
         self._log("UI: User touched Back")

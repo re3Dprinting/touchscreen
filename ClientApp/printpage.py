@@ -118,10 +118,6 @@ class PrintPage(BasePage, Ui_PrintPage):
         self.setbuttonstyle(self.pushbutton_back)
         self.pushbutton_loc_print.clicked.connect(self.local_start_print)
 
-    def back(self):
-        self._log("UI: User touched Back")
-        self.ui_controller.pop()
-
     def set_storage_manager(self, local_storage_manager):
         self.local_storage_manager = local_storage_manager
         

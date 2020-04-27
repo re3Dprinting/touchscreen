@@ -3,10 +3,13 @@ import logging
 from PyQt5 import QtWidgets
 
 from .qt.mainwindow_qt import Ui_MainWindow
-from .homepage import HomePage
-from .printpage import PrintPage
+
 from constants import *
 from context import Context
+
+from .homepage import HomePage
+from .printpage import PrintPage
+from .controlpage import ControlPage
 
 class MainWindow(Ui_MainWindow, QtWidgets.QMainWindow):
     def __init__(self, printer_if, persona):
@@ -31,9 +34,25 @@ class MainWindow(Ui_MainWindow, QtWidgets.QMainWindow):
 
         self.pages = {}
 
-        self.print_page = PrintPage(self.context)
-        self.stack.addWidget(self.print_page)
-        self.pages[k_print_page] = self.print_page
+        # Create the Print page
+        context = self.context
+        self.add_page(PrintPage(context), k_print_page)
+        self.add_page(ControlPage(context), k_control_page)
+        
+        # self.print_page = PrintPage(self.context)
+        # self.add_page(self.print_page, k_print_page)
+        # self.stack.addWidget(self.print_page)
+        # self.pages[k_print_page] = self.print_page
+
+        # Create the Control page
+        # self.control_page = ControlPage(self.context)
+        # self.stack.addWidget(self.control_page)
+        # self.pages[k_control_page] = self.control_page
+
+    def add_page(self, page, page_name):
+        self.stack.addWidget(page)
+        self.pages[page_name] = page
+        return page
 
     def _log(self, message):
         self._logger.debug(message)
