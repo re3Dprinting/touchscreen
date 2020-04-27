@@ -8,7 +8,7 @@ import logging
 import PyQt5.QtCore
 from PyQt5.QtCore import Qt, pyqtSignal
 
-from .qt.temperaturewindow import *
+from .qt.temperaturepage_qt import Ui_TemperaturePage
 from .notactiveprint_wid import *
 from .activeprint_wid import *
 from .runout_handler import RunoutHandlerDialog
@@ -17,7 +17,7 @@ from .preheatmaterial import *
 from .periph import *
 
 from .printer_if import PrinterIF
-from .basewindow import BaseWindow
+from .basepage import BasePage
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
@@ -28,34 +28,39 @@ mats = [('PLA', 'm1'),
 periphs = ['e1', 'e2', 'bed', 'all']
 
 
-class TemperatureWindow(BaseWindow, Ui_TemperatureWindow):
+class TemperaturePage(BasePage, Ui_TemperaturePage):
 
     progress_signal = pyqtSignal(str)
 
-    def __init__(self, printer_if, event_handler, parent=None):
-        super(TemperatureWindow, self).__init__(parent)
+    def __init__(self, context):
+        super(TemperaturePage, self).__init__()
 
         # Set up the UI
         self.setupUi(self)
 
         # Set up logging
         self._logger = logging.getLogger(__name__)
-        self._log("TemperatureWindow __init__")
+        self._log("TemperaturePage __init__")
 
         # if parent.fullscreen: self.fullscreen = True
         # else: self.fullscreen = False
         # if self.fullscreen:
         # 	self.setWindowState(self.windowState() | Qt.WindowFullScreen)
 
-        self.printer_if = printer_if
-        self.event_handler = event_handler
+        self.printer_if = context.printer_if
+        self.ui_controller = context.ui_controller
+
+        self.event_handler = event_handler()
 
         self.ActivePrintWid = ActivePrintWidget(self)
         self.NotActivePrintWid = NotActivePrintWidget(self)
-        self.w_runout_handler = RunoutHandlerDialog(self, printer_if)
+        self.w_runout_handler = RunoutHandlerDialog(self, self.printer_if)
 
         self.gridLayout.addWidget(self.NotActivePrintWid, 2, 0, 1, 1)
         self.gridLayout.addWidget(self.ActivePrintWid, 2, 0, 1, 1)
+        self.gridLayout.setGeometry(QtCore.QRect(0, 0, 800, 400))
+        
+
         self.notactiveprint()
         # self.serial.data.updateprogress.connect(self.updateprogress)
         # self.serial.data.updateposition.connect(self.updateposition)
@@ -113,7 +118,7 @@ class TemperatureWindow(BaseWindow, Ui_TemperatureWindow):
 #		Initilization for Not-Printing Widget.
 
         self.initpreheatbuttons()
-        self.NotActivePrintWid.Back.clicked.connect(self.back)
+        self.Back.clicked.connect(self.back)
         self.NotActivePrintWid.CoolDown.clicked.connect(self.notactive_cool)
         self.NotActivePrintWid.Fan.clicked.connect(self.notactive_fan)
 
@@ -143,6 +148,7 @@ class TemperatureWindow(BaseWindow, Ui_TemperatureWindow):
         self.inittextformat(self.ActivePrintWid.FeedrateVal)
         self.inittextformat(self.ActivePrintWid.BabysteppingVal)
         self.inittextformat(self.ActivePrintWid.PositionLabel)
+        self.setbuttonstyle(self.Back)
         self.setbuttonstyle(self.ActivePrintWid.FileLabel)
         self.setbuttonstyle(self.ActivePrintWid.FeedrateLabel)
         self.setbuttonstyle(self.ActivePrintWid.BabysteppingLabel)
@@ -490,7 +496,7 @@ class TemperatureWindow(BaseWindow, Ui_TemperatureWindow):
         
     def changeText(self, label, text):
         tmp = QtWidgets.QApplication.translate(
-            "TemperatureWindow", label.format[0]+text+label.format[1], None, -1)
+            "TemperaturePage", label.format[0]+text+label.format[1], None, -1)
         label.setText(tmp)
 
     def inittextformat(self, label):

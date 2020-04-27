@@ -10,7 +10,7 @@ from PyQt5 import QtCore
 class event_handler(QtCore.QThread):
     reconnect_serial = QtCore.pyqtSignal([str], [str])
 
-    def __init__(self, serial, tempwindow=None, serialwindow=None):
+    def __init__(self, serial=None, tempwindow=None, serialwindow=None):
         super(event_handler, self).__init__()
         self.tempwindow = tempwindow
         self.serialwindow = serialwindow

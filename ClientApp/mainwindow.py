@@ -10,6 +10,7 @@ from context import Context
 from .homepage import HomePage
 from .printpage import PrintPage
 from .controlpage import ControlPage
+from .temperaturepage import TemperaturePage
 
 class MainWindow(Ui_MainWindow, QtWidgets.QMainWindow):
     def __init__(self, printer_if, persona):
@@ -38,16 +39,7 @@ class MainWindow(Ui_MainWindow, QtWidgets.QMainWindow):
         context = self.context
         self.add_page(PrintPage(context), k_print_page)
         self.add_page(ControlPage(context), k_control_page)
-        
-        # self.print_page = PrintPage(self.context)
-        # self.add_page(self.print_page, k_print_page)
-        # self.stack.addWidget(self.print_page)
-        # self.pages[k_print_page] = self.print_page
-
-        # Create the Control page
-        # self.control_page = ControlPage(self.context)
-        # self.stack.addWidget(self.control_page)
-        # self.pages[k_control_page] = self.control_page
+        self.add_page(TemperaturePage(context), k_temperature_page)
 
     def add_page(self, page, page_name):
         self.stack.addWidget(page)

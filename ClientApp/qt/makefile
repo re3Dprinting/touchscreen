@@ -11,9 +11,9 @@ all: activeprintwidget.py \
      serialwindow.py \
      serverwindow.py \
      settingswindow.py \
-     temperaturewindow.py \
      userupdatewindow.py \
      home_qt.py \
      printpage_qt.py \
      controlpage_qt.py \
+     temperaturepage_qt.py \
      mainwindow_qt.py
