@@ -1,6 +1,7 @@
 from __future__ import division
 from basewindow import BaseWindow
 from builtins import str
+from constants import *
 
 import logging
 
@@ -10,13 +11,14 @@ from PyQt5.QtCore import Qt, pyqtSignal
 from octoprint.filemanager import storage
 from octoprint.filemanager.util import DiskFileWrapper
 
-from .qt.printwindow import *
+from .qt.printpage_qt import *
 from .fsutils.subfilesystem import *
 from .fsutils.file import *
 from .fsutils.mountpoint import MountPoint
 from .filelistmanager import FileListManager
+from basepage import BasePage
 
-class PrintWindow(BaseWindow, Ui_PrintWindow):
+class PrintPage(BasePage, Ui_PrintPage):
 
     # Create the Qt signals we're going to use for updating the list
     # of USB files. Each signal takes a single argument, which is the
@@ -28,16 +30,16 @@ class PrintWindow(BaseWindow, Ui_PrintWindow):
     update_signal = pyqtSignal(str)
     sdfile_signal = pyqtSignal(list)
 
-    def __init__(self, printer_if, temp_pop, personality, parent=None):
-        super(PrintWindow, self).__init__(parent)
+    def __init__(self, context):
+        super(PrintPage, self).__init__()
+
+        self.printer_if = context.printer_if
+        self.personality = context.personality
+        self.ui_controller = context.ui_controller
 
         # Set up logging
         self._logger = logging.getLogger(__name__)
-        self._log("TemperatureWindow __init__")
-
-        # Set up logging
-        self._logger = logging.getLogger(__name__)
-        self._log("TemperatureWindow __init__")
+        self._log("PrintPage __init__")
 
         # Connect slots to the signals
         # self.create_signal.connect(self.update_usb_create)
@@ -48,31 +50,29 @@ class PrintWindow(BaseWindow, Ui_PrintWindow):
         # Set up the rest of the UI
 
         self.setupUi(self)
-        self.printer_if = printer_if
 
         self.printer_if.set_file_list_update_callback(self.sd_file_list_update_callback)
         # print("Setting print finished callback")
         self.printer_if.set_print_finished_callback(self.print_finished_callback)
 
-        self.temp_pop = temp_pop
-        self.personality = personality
+        # self.temp_pop = temp_pop
 
         self.item_stack = []
 
-        self.Back.clicked.connect(self.back)
+        self.pushbutton_back.clicked.connect(self.back)
 
-        if parent.fullscreen:
-            self.fullscreen = True
-        else:
-            self.fullscreen = False
+        # if parent.fullscreen:
+        #     self.fullscreen = True
+        # else:
+        #     self.fullscreen = False
 
-        self.ScanSD.clicked.connect(self.scansd)
-        self.sd_pushbutton_print.clicked.connect(self.sd_start_print)
-        self.ActivePrint.clicked.connect(self.activeprintpop)
-        self.StopPrint.clicked.connect(self.stopprint)
-        self.ActivePrint.setEnabled(False)
-        self.StopPrint.setEnabled(False)
-        self.sd_pushbutton_print.setEnabled(False)
+        self.pushbutton_scan_sd.clicked.connect(self.scansd)
+        self.pushbutton_sd_print.clicked.connect(self.sd_start_print)
+        self.pushbutton_active_print.clicked.connect(self.activeprintpop)
+        self.pushbutton_stop_print.clicked.connect(self.stopprint)
+        self.pushbutton_active_print.setEnabled(False)
+        self.pushbutton_stop_print.setEnabled(False)
+        self.pushbutton_sd_print.setEnabled(False)
         # self.serial.data.notprinting.connect(self.notprinting)
         # self.serial.data.printfinished.connect(self.finished)
 
@@ -97,11 +97,11 @@ class PrintWindow(BaseWindow, Ui_PrintWindow):
                                                 self.USBFileList,
                                                 self.personality.watchpoint,
                                                 self.usb_pathlabel,
-                                                self.usb_pushbutton_up,
-                                                self.usb_pushbutton_open,
-                                                self.usb_pushbutton_print)
+                                                self.pushbutton_usb_up,
+                                                self.pushbutton_usb_open,
+                                                self.pushbutton_usb_print)
 
-        self.usb_pushbutton_print.clicked.connect(self.usb_start_print)
+        self.pushbutton_usb_print.clicked.connect(self.usb_start_print)
 
         # Set up the list of local files
 
@@ -109,16 +109,18 @@ class PrintWindow(BaseWindow, Ui_PrintWindow):
                                                   self.LocalFileList,
                                                   self.personality.localpath,
                                                   self.loc_pathlabel,
-                                                  self.loc_pushbutton_up,
-                                                  self.loc_pushbutton_open,
-                                                  self.loc_pushbutton_print)
+                                                  self.pushbutton_loc_up,
+                                                  self.pushbutton_loc_open,
+                                                  self.pushbutton_loc_print)
 
         self.local_file_manager.update_files()
 
-        self.loc_pushbutton_print.clicked.connect(self.local_start_print)
+        self.setbuttonstyle(self.pushbutton_back)
+        self.pushbutton_loc_print.clicked.connect(self.local_start_print)
 
-    def _log(self, message):
-        self._logger.debug(message)
+    def back(self):
+        self._log("UI: User touched Back")
+        self.ui_controller.pop()
 
     def set_storage_manager(self, local_storage_manager):
         self.local_storage_manager = local_storage_manager
@@ -178,7 +180,7 @@ class PrintWindow(BaseWindow, Ui_PrintWindow):
             self.SDFileList.setItem(rowpos, 0, file_wid)
             self.SDFileList.setItem(rowpos, 1, size_wid)
 
-        self.sd_pushbutton_print.setEnabled(True)
+        self.pushbutton_sd_print.setEnabled(True)
 
     def clearlocalfiles(self):
         self.LocalFileList.clearContents()
@@ -227,13 +229,13 @@ class PrintWindow(BaseWindow, Ui_PrintWindow):
         # self.serial.data.resetsettemps()
 
     def notprinting(self):
-        self.temp_pop.notactiveprint()
-        self.ActivePrint.setEnabled(False)
-        self.StopPrint.setEnabled(False)
-        self.sd_pushbutton_print.setEnabled(True)
-        self.usb_pushbutton_print.setEnabled(True)
-        self.loc_pushbutton_print.setEnabled(True)
-        self.ScanSD.setEnabled(True)
+        # self.temp_pop.notactiveprint()
+        self.pushbutton_active_print.setEnabled(False)
+        self.pushbutton_stop_print.setEnabled(False)
+        self.pushbutton_sd_print.setEnabled(True)
+        self.pushbutton_usb_print.setEnabled(True)
+        self.pushbutton_loc_print.setEnabled(True)
+        self.pushbutton_scan_sd.setEnabled(True)
         # Why?:
         # self.SDFileList.setRowCount(0)
         self.parent.Control.setEnabled(True)
@@ -250,16 +252,16 @@ class PrintWindow(BaseWindow, Ui_PrintWindow):
             self.printer_if.select_sd_file(selected_file)
             self.printer_if.start_print()
 
-            self.sd_pushbutton_print.setEnabled(False)
-            self.usb_pushbutton_print.setEnabled(False)
-            self.loc_pushbutton_print.setEnabled(False)
-            self.ActivePrint.setEnabled(True)
-            self.StopPrint.setEnabled(True)
-            self.ScanSD.setEnabled(False)
+            self.pushbutton_sd_print.setEnabled(False)
+            self.pushbutton_usb_print.setEnabled(False)
+            self.pushbutton_loc_print.setEnabled(False)
+            self.pushbutton_active_print.setEnabled(True)
+            self.pushbutton_stop_print.setEnabled(True)
+            self.pushbutton_scan_sd.setEnabled(False)
 
-            self.temp_pop.activeprint()
-            self.temp_pop.update_parameters()
-            self.temp_pop.ActivePrintWid.FileProgress.setValue(0)
+            # self.temp_pop.activeprint()
+            # self.temp_pop.update_parameters()
+            # self.temp_pop.ActivePrintWid.FileProgress.setValue(0)
             self.parent.Control.setEnabled(False)
 
     def local_start_print(self):
@@ -277,15 +279,15 @@ class PrintWindow(BaseWindow, Ui_PrintWindow):
             self.printer_if.select_local_file(selected_file_loc_path)
             self.printer_if.start_print()
 
-            self.sd_pushbutton_print.setEnabled(False)
-            self.usb_pushbutton_print.setEnabled(False)
-            self.loc_pushbutton_print.setEnabled(False)
-            self.ActivePrint.setEnabled(True)
-            self.StopPrint.setEnabled(True)
+            self.pushbutton_sd_print.setEnabled(False)
+            self.pushbutton_usb_print.setEnabled(False)
+            self.pushbutton_loc_print.setEnabled(False)
+            self.pushbutton_active_print.setEnabled(True)
+            self.pushbutton_stop_print.setEnabled(True)
 
-            self.temp_pop.activeprint()
-            self.temp_pop.update_parameters()
-            self.temp_pop.ActivePrintWid.FileProgress.setValue(0)
+            # self.temp_pop.activeprint()
+            # self.temp_pop.update_parameters()
+            # self.temp_pop.ActivePrintWid.FileProgress.setValue(0)
             self.parent.Control.setEnabled(False)
 
     def usb_start_print(self):
@@ -305,15 +307,15 @@ class PrintWindow(BaseWindow, Ui_PrintWindow):
             self.printer_if.select_local_file(selected_file_name)
             self.printer_if.start_print()
 
-            self.sd_pushbutton_print.setEnabled(False)
-            self.usb_pushbutton_print.setEnabled(False)
-            self.loc_pushbutton_print.setEnabled(False)
-            self.ActivePrint.setEnabled(True)
-            self.StopPrint.setEnabled(True)
+            self.pushbutton_sd_print.setEnabled(False)
+            self.pushbutton_usb_print.setEnabled(False)
+            self.pushbutton_loc_print.setEnabled(False)
+            self.pushbutton_active_print.setEnabled(True)
+            self.pushbutton_stop_print.setEnabled(True)
 
-            self.temp_pop.activeprint()
-            self.temp_pop.update_parameters()
-            self.temp_pop.ActivePrintWid.FileProgress.setValue(0)
+            # self.temp_pop.activeprint()
+            # self.temp_pop.update_parameters()
+            # self.temp_pop.ActivePrintWid.FileProgress.setValue(0)
             self.parent.Control.setEnabled(False)
 
     def get_selected_widget_file(self, list_widget, subdir):
@@ -341,38 +343,38 @@ class PrintWindow(BaseWindow, Ui_PrintWindow):
         self._log("UI: User touched Active Print")
         if self.fullscreen:
             self._log("UI: showing temp fullscreen")
-            self.temp_pop.showFullScreen()
-            self.close()
+            # self.temp_pop.showFullScreen()
+            # self.close()
         else:
             self._log("UI: showing temp")
-            self.temp_pop.show()
-            self.close()
+            # self.temp_pop.show()
+            # self.close()
 
     def update_loc_button_states_none(self):
-        self.loc_pushbutton_up.setEnabled(False)
-        self.loc_pushbutton_open.setEnabled(False)
-        self.loc_pushbutton_print.setEnabled(False)
+        self.pushbutton_loc_up.setEnabled(False)
+        self.pushbutton_loc_open.setEnabled(False)
+        self.pushbutton_loc_print.setEnabled(False)
 
     def update_loc_button_states(self):
         selected_row, selected_file, selected_item = self.get_selected_loc_file()
 
         if self.loc_subdir.depth() > 0:
-            self.loc_pushbutton_up.setEnabled(True)
+            self.pushbutton_loc_up.setEnabled(True)
         else:
-            self.loc_pushbutton_up.setEnabled(False)
+            self.pushbutton_loc_up.setEnabled(False)
 
         if selected_row == -1:
-            self.loc_pushbutton_open.setEnabled(False)
-            self.loc_pushbutton_print.setEnabled(False)
+            self.pushbutton_loc_open.setEnabled(False)
+            self.pushbutton_loc_print.setEnabled(False)
             return
 
         if selected_file.type == 'd':
-            self.loc_pushbutton_open.setEnabled(True)
-            self.loc_pushbutton_print.setEnabled(False)
+            self.pushbutton_loc_open.setEnabled(True)
+            self.pushbutton_loc_print.setEnabled(False)
 
         elif selected_file.type == 'f':
-            self.loc_pushbutton_open.setEnabled(False)
-            self.loc_pushbutton_print.setEnabled(True)
+            self.pushbutton_loc_open.setEnabled(False)
+            self.pushbutton_loc_print.setEnabled(True)
 
     def open_loc_subdir(self):
         selected_row, selected_file, selected_item = self.get_selected_loc_file()

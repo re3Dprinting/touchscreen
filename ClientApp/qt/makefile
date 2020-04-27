@@ -8,11 +8,12 @@ all: activeprintwidget.py \
      infowindow.py \
      notactiveprintwidget.py \
      notificationwindow.py \
-     printwindow.py \
      runout.py \
      serialwindow.py \
      serverwindow.py \
      settingswindow.py \
      temperaturewindow.py \
-     touchdisplaywindow.py \
-     userupdatewindow.py
+     userupdatewindow.py \
+     home_qt.py \
+     printpage_qt.py \
+     mainwindow_qt.py

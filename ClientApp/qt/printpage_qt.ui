@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>PrintWindow</class>
- <widget class="QDialog" name="PrintWindow">
+ <class>PrintPage</class>
+ <widget class="QDialog" name="PrintPage">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
     <width>800</width>
-    <height>480</height>
+    <height>448</height>
    </rect>
   </property>
   <property name="maximumSize">
    <size>
     <width>800</width>
-    <height>480</height>
+    <height>448</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -25,7 +25,7 @@
      <x>9</x>
      <y>9</y>
      <width>781</width>
-     <height>341</height>
+     <height>331</height>
     </rect>
    </property>
    <property name="layoutDirection">
@@ -79,7 +79,7 @@
        <item>
         <layout class="QVBoxLayout" name="verticalLayout">
          <item>
-          <widget class="QPushButton" name="ScanSD">
+          <widget class="QPushButton" name="pushbutton_scan_sd">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
              <horstretch>0</horstretch>
@@ -104,7 +104,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="sd_pushbutton_print">
+          <widget class="QPushButton" name="pushbutton_sd_print">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
              <horstretch>0</horstretch>
@@ -170,7 +170,7 @@
        <item>
         <layout class="QVBoxLayout" name="verticalLayout">
          <item>
-          <widget class="QPushButton" name="usb_pushbutton_up">
+          <widget class="QPushButton" name="pushbutton_usb_up">
            <property name="minimumSize">
             <size>
              <width>0</width>
@@ -183,7 +183,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="usb_pushbutton_open">
+          <widget class="QPushButton" name="pushbutton_usb_open">
            <property name="minimumSize">
             <size>
              <width>0</width>
@@ -209,7 +209,7 @@
           </spacer>
          </item>
          <item>
-          <widget class="QPushButton" name="usb_pushbutton_print">
+          <widget class="QPushButton" name="pushbutton_usb_print">
            <property name="minimumSize">
             <size>
              <width>0</width>
@@ -263,7 +263,7 @@
        <item>
         <layout class="QVBoxLayout" name="verticalLayout">
          <item>
-          <widget class="QPushButton" name="loc_pushbutton_up">
+          <widget class="QPushButton" name="pushbutton_loc_up">
            <property name="minimumSize">
             <size>
              <width>0</width>
@@ -276,7 +276,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="loc_pushbutton_open">
+          <widget class="QPushButton" name="pushbutton_loc_open">
            <property name="minimumSize">
             <size>
              <width>0</width>
@@ -302,7 +302,7 @@
           </spacer>
          </item>
          <item>
-          <widget class="QPushButton" name="loc_pushbutton_print">
+          <widget class="QPushButton" name="pushbutton_loc_print">
            <property name="minimumSize">
             <size>
              <width>0</width>
@@ -321,23 +321,29 @@
     </layout>
    </widget>
   </widget>
-  <widget class="QWidget" name="layoutWidget">
+  <widget class="QWidget" name="widget" native="true">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>350</y>
-     <width>781</width>
-     <height>121</height>
+     <x>0</x>
+     <y>334</y>
+     <width>800</width>
+     <height>120</height>
     </rect>
    </property>
-   <layout class="QHBoxLayout" name="horizontalLayout_2">
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
+   <layout class="QHBoxLayout" name="horizontalLayout_3">
     <item>
-     <widget class="QPushButton" name="Back">
+     <widget class="QPushButton" name="pushbutton_back">
       <property name="maximumSize">
        <size>
         <width>100</width>
         <height>100</height>
        </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">* { border: 0px; }</string>
       </property>
       <property name="text">
        <string/>
@@ -364,14 +370,14 @@
       </property>
       <property name="sizeHint" stdset="0">
        <size>
-        <width>0</width>
+        <width>455</width>
         <height>20</height>
        </size>
       </property>
      </spacer>
     </item>
     <item>
-     <widget class="QPushButton" name="StopPrint">
+     <widget class="QPushButton" name="pushbutton_stop_print">
       <property name="minimumSize">
        <size>
         <width>100</width>
@@ -390,7 +396,7 @@
      </widget>
     </item>
     <item>
-     <widget class="QPushButton" name="ActivePrint">
+     <widget class="QPushButton" name="pushbutton_active_print">
       <property name="minimumSize">
        <size>
         <width>100</width>

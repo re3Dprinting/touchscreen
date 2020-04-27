@@ -38,6 +38,10 @@
 ehthumbs.db
 Thumbs.db
 
+# Qt generated files #
+######################
+ClientApp/qt/*.py
+
 # Emacs #
 #########
 *~

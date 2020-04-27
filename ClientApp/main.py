@@ -8,9 +8,12 @@ import logging
 import getpass
 from pathlib import Path
 
+from PyQt5 import QtWidgets
+
 from octo import setup_octoprint
 
-from touchscreen.touchdisplay import *
+from touchscreen.mainwindow import MainWindow
+#from touchscreen.touchdisplay import *
 from touchscreen.util.personality import Personality
 from touchscreen.fsutils.watchdogthread import WatchdogThread
 from touchscreen.fsutils.mountfinder import MountFinder
@@ -134,8 +137,10 @@ def main():
     app.setApplicationVersion(version_string)
 
     # Create the top-level UI screen.
-    display = TouchDisplay(printer_if, persona)
-    display.SoftwareVersion.setText(id_string)
+    mainwindow = MainWindow(printer_if, persona)
+
+    # mainwindow = Home(printer_if, persona)
+    #mainwindow.SoftwareVersion.setText(id_string)
 
     # Check to see whether any USB filesystems are currently mounted.
     current_path = ""
@@ -163,30 +168,30 @@ def main():
             # There seems to be a thumb drive plugged in. Tell the UI
             # print window to use it as the inital file list.
             current_mountpoint = MountPoint(current_path)
-            display.print_pop.update_usb_create(current_mountpoint)
+            mainwindow.print_pop.update_usb_create(current_mountpoint)
 
     # Set up the watchdog thread that watches the filesystem for
     # mounts of USB drives.
-    wd_thread = WatchdogThread(display.print_pop, persona.watchpoint,
-                               current_path, persona.localpath)
+    # wd_thread = WatchdogThread(mainwindow.print_pop, persona.watchpoint,
+    #                            current_path, persona.localpath)
 
     # Set up the signals that let us safely communicate between
     # threads that watch the filesystem and the UI.
-    usb_signal_tup = wd_thread.get_usb_signals()
-    display.print_pop.set_usb_mount_signals(usb_signal_tup)
+    # usb_signal_tup = wd_thread.get_usb_signals()
+    # mainwindow.print_pop.set_usb_mount_signals(usb_signal_tup)
     
-    usb_content_signal = wd_thread.get_usb_content_signal()
-    display.print_pop.set_usb_content_signal(usb_content_signal)
+    # usb_content_signal = wd_thread.get_usb_content_signal()
+    # mainwindow.print_pop.set_usb_content_signal(usb_content_signal)
 
-    local_content_signal = wd_thread.get_local_content_signal()
-    display.print_pop.set_local_content_signal(local_content_signal)
+    # local_content_signal = wd_thread.get_local_content_signal()
+    # mainwindow.print_pop.set_local_content_signal(local_content_signal)
 
     # The print screen needs a reference to the local storage manager
     # so it can copy files from the USB into local storage.
-    display.print_pop.set_storage_manager(local_storage_manager)
+    # mainwindow.print_pop.set_storage_manager(local_storage_manager)
 
     # Show the top-level UI display...
-    display.show()
+    mainwindow.show()
 
     # ...and kick off the UI event loop. This function does not
     # return.
