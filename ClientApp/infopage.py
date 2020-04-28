@@ -40,6 +40,8 @@ class InfoPage(BasePage, Ui_InfoPage):
         self.Back.clicked.connect(self.user_back)
         self.info_signal.connect(self.info_do_it)
 
+        self.setbuttonstyle(self.Back)
+
     def user_back(self):
         self.back()
         self.w_message_text.clear()
