@@ -1,18 +1,20 @@
 import logging
+
 from PyQt5.QtCore import Qt
-from .qt.settingswindow import *
+
 from . import serialsetup
 from . import server
 from .info import InfoWindow
 from .debug import DebugWindow
 from .dualex import DuExSetupWindow
-from .basewindow import BaseWindow
+from .basepage import BasePage
 
+from .qt.settingspage_qt import Ui_SettingsPage
 
-class SettingsWindow(BaseWindow, Ui_SettingsWindow):
-    def __init__(self, personality, printer_if, parent=None):
+class SettingsPage(BasePage, Ui_SettingsPage):
+    def __init__(self, context):
 
-        super(SettingsWindow, self).__init__(parent)
+        super(SettingsPage, self).__init__()
 
         # Set up logging
         self._logger = logging.getLogger(__name__)
@@ -22,35 +24,38 @@ class SettingsWindow(BaseWindow, Ui_SettingsWindow):
         self.setupUi(self)
 
         # Save reference to printer interface
-        self.printer_if = printer_if
+        self.printer_if = context.printer_if
+        self.personality = context.personality
+        self.ui_controller = context.ui_controller
 
-        self.debug_window = DebugWindow(printer_if, personality, self)
-        self.info_window = InfoWindow(printer_if, self)
-        self.duex_window = DuExSetupWindow(printer_if, self)
-        
+        # self.debug_window = DebugWindow(self.printer_if, self.personality, self)
+        # self.info_window = InfoWindow(self.printer_if, self)
+        # self.duex_window = DuExSetupWindow(self.printer_if, self)
 
-        self.parent.setbuttonstyle(self.Serial)
-        self.parent.setbuttonstyle(self.Server)
-        self.parent.setbuttonstyle(self.UserUpdate)
-        self.parent.setbuttonstyle(self.Wifi)
-        self.parent.setbuttonstyle(self.w_pushbutton_debug)
-        self.parent.setbuttonstyle(self.w_pushbutton_duex)
-        self.parent.setbuttonstyle(self.w_pushbutton_info)
-        self.parent.setbuttonstyle(self.w_pushbutton_term)
+        self.setbuttonstyle(self.Serial)
+        self.setbuttonstyle(self.Server)
+        self.setbuttonstyle(self.UserUpdate)
+        self.setbuttonstyle(self.Wifi)
+        self.setbuttonstyle(self.Back)
 
-        versiontext = "v"+QtWidgets.QApplication.instance().applicationVersion()
-        self.SoftwareVersion.setText(versiontext)
+        self.setbuttonstyle(self.w_pushbutton_debug)
+        self.setbuttonstyle(self.w_pushbutton_duex)
+        self.setbuttonstyle(self.w_pushbutton_info)
+        self.setbuttonstyle(self.w_pushbutton_term)
 
-        self.Serial.clicked.connect(self.serialpop)
-        self.Server.clicked.connect(self.serverpop)
-        self.UserUpdate.clicked.connect(self.userupdatepop)
+        # versiontext = "v"+QtWidgets.QApplication.instance().applicationVersion()
+        # self.SoftwareVersion.setText(versiontext)
 
-        self.w_pushbutton_debug.clicked.connect(self.handle_debug)
-        self.w_pushbutton_info.clicked.connect(self.handle_info)
-        self.w_pushbutton_duex.clicked.connect(self.handle_duex)
-        self.w_pushbutton_term.clicked.connect(self.handle_term)
+        # self.Serial.clicked.connect(self.serialpop)
+        # self.Server.clicked.connect(self.serverpop)
+        # self.UserUpdate.clicked.connect(self.userupdatepop)
+        # self.w_pushbutton_debug.clicked.connect(self.handle_debug)
+        # self.w_pushbutton_info.clicked.connect(self.handle_info)
+        # self.w_pushbutton_duex.clicked.connect(self.handle_duex)
+        # self.w_pushbutton_term.clicked.connect(self.handle_term)
 
         # self.Wifi.clicked.connect(self.wifipop)
+        # self.Back.clicked.connect(self.back)
         self.Back.clicked.connect(self.back)
 
     def _log(self, message):

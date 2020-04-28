@@ -1,7 +1,8 @@
 %.py: %.ui
-	pyuic5-3.7 $< -o $@
+	pyuic5 $< -o $@
 
-all: activeprintwidget.py \
+OBJS = \
+     activeprintwidget.py \
      debugwindow.py \
      duexsetupwindow.py \
      infowindow.py \
@@ -10,10 +11,15 @@ all: activeprintwidget.py \
      runout.py \
      serialwindow.py \
      serverwindow.py \
-     settingswindow.py \
      userupdatewindow.py \
      home_qt.py \
      printpage_qt.py \
      controlpage_qt.py \
      temperaturepage_qt.py \
+     settingspage_qt.py \
      mainwindow_qt.py
+
+all: $(OBJS)
+
+clean:
+	rm -f $(OBJS)
