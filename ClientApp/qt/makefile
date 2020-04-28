@@ -3,7 +3,6 @@
 
 OBJS = \
      activeprintwidget.py \
-     debugwindow.py \
      duexsetupwindow.py \
      infowindow.py \
      notactiveprintwidget.py \
@@ -17,6 +16,7 @@ OBJS = \
      controlpage_qt.py \
      temperaturepage_qt.py \
      settingspage_qt.py \
+     debugpage_qt.py \
      mainwindow_qt.py
 
 all: $(OBJS)

@@ -12,6 +12,7 @@ from .printpage import PrintPage
 from .controlpage import ControlPage
 from .temperaturepage import TemperaturePage
 from .settingspage import SettingsPage
+from .debugpage import DebugPage
 
 class MainWindow(Ui_MainWindow, QtWidgets.QMainWindow):
     def __init__(self, printer_if, persona):
@@ -41,9 +42,12 @@ class MainWindow(Ui_MainWindow, QtWidgets.QMainWindow):
         self.add_page(ControlPage(context), k_control_page)
         self.add_page(TemperaturePage(context), k_temperature_page)
         self.add_page(SettingsPage(context), k_settings_page)
+        self.add_page(DebugPage(context), k_debug_page)
 
         # Start the UI on the Home page
         self.stack.setCurrentWidget(self.home_page)
+
+        self.page_stack = []
 
     def add_page(self, page, page_name):
         self.stack.addWidget(page)
@@ -55,10 +59,30 @@ class MainWindow(Ui_MainWindow, QtWidgets.QMainWindow):
 
     def push(self, page_name):
         try:
+            # Get the widget we're going to display next.
             widget = self.pages[page_name]
+
+            # Get the current widget being display and push it onto
+            # the page stack so we can pop back to it later.
+            self.page_stack.append(self.stack.currentWidget())
+
+            # Display the next widget
             self.stack.setCurrentWidget(widget)
+
         except KeyError:
+            # If the name of the requested widget to push doesn't
+            # exist, log an error.
             self._log("MainWindow: page \"%s\" not found." % page_name)
         
     def pop(self):
-        self.stack.setCurrentWidget(self.home_page)
+        try:
+            # Pop the previously pushed widget...
+            widget = self.page_stack.pop()
+
+            # ...And display it.
+            self.stack.setCurrentWidget(widget)
+
+        except IndexError:
+            # An index error indicates we tried to pop when the stack
+            # was empty.
+            self._log("ERROR: popping from an empty stack!")

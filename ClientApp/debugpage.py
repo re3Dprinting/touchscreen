@@ -1,46 +1,46 @@
 import logging
 
+from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import pyqtSignal
 
-from qt.debugwindow import *
-from basewindow import BaseWindow
 from fsutils.tarballer import Tarballer
 from util.log import find_root_logger
 from .runout_handler import RunoutHandlerDialog
 
-from touchscreen.qt.debugwindow import Ui_DebugWindow
+from basepage import BasePage
+from touchscreen.qt.debugpage_qt import Ui_DebugPage
 
-
-class DebugWindow(BaseWindow, Ui_DebugWindow):
+class DebugPage(BasePage, Ui_DebugPage):
 
     display_signal = pyqtSignal(str)
     
-    def __init__(self, printer_if, personality, parent=None):
-        super(DebugWindow, self).__init__(parent)
+    def __init__(self, context):
+        super(DebugPage, self).__init__()
 
-        # Save reference to printer interface
-        self.printer_if = printer_if
+        # Save context data
+        self.printer_if = context.printer_if
+        self.personality = context.personality
+        self.ui_controller = context.ui_controller
 
         # Set up logging
         self._logger = logging.getLogger(__name__)
-        self._log("DebugWindow __init__()")
+        self._log("DebugPage __init__()")
 
-        # Savepersonality
-        self.personality = personality
 
         # Set up user interface
         self.setupUi(self)
-        self.parent = parent
 
         # Set up callback functions
         self.w_pushbutton_add_marker.clicked.connect(self.handle_add_marker)
         self.w_pushbutton_copy_log.clicked.connect(self.handle_copy_log)
         self.w_pushbutton_send_fake_ack.clicked.connect(self.send_fake_ack)
-        self.Back.clicked.connect(self.back)
         self.w_combobox_debuglevel.currentIndexChanged.connect(self.debug_level_changed)
+
         self.display_signal.connect(self.slot_display)
+        self.Back.clicked.connect(self.back)
 
         self.w_runout_handler = RunoutHandlerDialog(self, self.printer_if)
+        self.setbuttonstyle(self.Back)
 
     def signal_display(self, str):
         self.display_signal.emit(str)
