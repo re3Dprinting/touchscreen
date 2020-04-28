@@ -2,29 +2,31 @@ import logging
 
 from PyQt5.QtCore import QObject, pyqtSignal
 
-from .basewindow import BaseWindow
-from qt.infowindow import *
+from .basepage import BasePage
+from qt.infopage_qt import Ui_InfoPage
 
-class InfoWindow(BaseWindow, Ui_InfoWindow):
+class InfoPage(BasePage, Ui_InfoPage):
 
     info_signal = pyqtSignal(str)
 
-    def __init__(self, printer_if, parent=None):
-        super(InfoWindow, self).__init__(parent)
+    def __init__(self, context):
+        super(InfoPage, self).__init__()
 
         # Set up logging
         self._logger = logging.getLogger(__name__)
-        self._log("InfoWindow __init__()")
+        self._log("InfoPage __init__()")
 
         # Keep a reference to the OctoPrint printer object and register to receive callbacks
         # from it.
-        self.printer_if = printer_if
+        self.printer_if = context.printer_if
         self.printer_if.set_info_callback(self.info_callback)
+
+        self.ui_controller = context.ui_controller
+
         # printer = self.printer_if.get_printer().register_callback(self)
 
         # Set up user interface
         self.setupUi(self)
-        self.parent = parent
         self.w_message_text.setReadOnly(True)
 
         #

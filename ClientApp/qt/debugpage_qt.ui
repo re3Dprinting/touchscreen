@@ -51,16 +51,81 @@
     </size>
    </property>
   </widget>
-  <widget class="QWidget" name="layoutWidget">
+  <widget class="QTextBrowser" name="w_message_text">
+   <property name="geometry">
+    <rect>
+     <x>160</x>
+     <y>80</y>
+     <width>580</width>
+     <height>291</height>
+    </rect>
+   </property>
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>115200</width>
+     <height>1000</height>
+    </size>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="w_lineedit_message">
+   <property name="geometry">
+    <rect>
+     <x>160</x>
+     <y>30</y>
+     <width>580</width>
+     <height>41</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QWidget" name="horizontalLayoutWidget">
+   <property name="geometry">
+    <rect>
+     <x>160</x>
+     <y>380</y>
+     <width>181</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <item>
+     <widget class="QLabel" name="label">
+      <property name="text">
+       <string>Logging level:</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QComboBox" name="w_combobox_debuglevel">
+      <item>
+       <property name="text">
+        <string>DEBUG</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>INFO</string>
+       </property>
+      </item>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWidget" name="widget" native="true">
    <property name="geometry">
     <rect>
      <x>40</x>
      <y>30</y>
-     <width>111</width>
-     <height>281</height>
+     <width>112</width>
+     <height>251</height>
     </rect>
    </property>
-   <layout class="QVBoxLayout" name="verticalLayout">
+   <layout class="QVBoxLayout" name="verticalLayout_2">
     <item>
      <widget class="QPushButton" name="w_pushbutton_add_marker">
       <property name="maximumSize">
@@ -110,71 +175,6 @@ Files</string>
        <string>Send Fake
 ACK</string>
       </property>
-     </widget>
-    </item>
-   </layout>
-  </widget>
-  <widget class="QTextBrowser" name="w_message_text">
-   <property name="geometry">
-    <rect>
-     <x>160</x>
-     <y>80</y>
-     <width>581</width>
-     <height>291</height>
-    </rect>
-   </property>
-   <property name="sizePolicy">
-    <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
-     <horstretch>0</horstretch>
-     <verstretch>0</verstretch>
-    </sizepolicy>
-   </property>
-   <property name="maximumSize">
-    <size>
-     <width>115200</width>
-     <height>1000</height>
-    </size>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="w_lineedit_message">
-   <property name="geometry">
-    <rect>
-     <x>160</x>
-     <y>30</y>
-     <width>581</width>
-     <height>41</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QWidget" name="horizontalLayoutWidget">
-   <property name="geometry">
-    <rect>
-     <x>140</x>
-     <y>380</y>
-     <width>181</width>
-     <height>41</height>
-    </rect>
-   </property>
-   <layout class="QHBoxLayout" name="horizontalLayout">
-    <item>
-     <widget class="QLabel" name="label">
-      <property name="text">
-       <string>Logging level:</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QComboBox" name="w_combobox_debuglevel">
-      <item>
-       <property name="text">
-        <string>DEBUG</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>INFO</string>
-       </property>
-      </item>
      </widget>
     </item>
    </layout>

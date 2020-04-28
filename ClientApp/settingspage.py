@@ -6,9 +6,8 @@ from constants import *
 
 from . import serialsetup
 from . import server
-from .info import InfoWindow
-from .debugpage import DebugPage
-from .dualex import DuExSetupWindow
+# from .dualex import DuExSetupWindow
+
 from .basepage import BasePage
 
 from .qt.settingspage_qt import Ui_SettingsPage
@@ -52,7 +51,7 @@ class SettingsPage(BasePage, Ui_SettingsPage):
         # self.Server.clicked.connect(self.serverpop)
         # self.UserUpdate.clicked.connect(self.userupdatepop)
         self.w_pushbutton_debug.clicked.connect(self.handle_debug)
-        # self.w_pushbutton_info.clicked.connect(self.handle_info)
+        self.w_pushbutton_info.clicked.connect(self.handle_info)
         # self.w_pushbutton_duex.clicked.connect(self.handle_duex)
         # self.w_pushbutton_term.clicked.connect(self.handle_term)
 
@@ -86,17 +85,10 @@ class SettingsPage(BasePage, Ui_SettingsPage):
     def handle_debug(self):
         self._log("UI: User touched Debug")
         self.ui_controller.push(k_debug_page)
-        # if self.fullscreen:
-        #     self.debug_window.showFullScreen()
-        # else:
-        #     self.debug_window.show()
 
     def handle_info(self):
         self._log("UI: User touched Info")
-        if self.fullscreen:
-            self.info_window.showFullScreen()
-        else:
-            self.info_window.show()
+        self.ui_controller.push(k_info_page)
 
     def handle_duex(self):
         self._log("UI: User touched Dual Extruder")
