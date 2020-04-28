@@ -7,7 +7,6 @@ OBJS = \
      notactiveprintwidget.py \
      notificationwindow.py \
      runout.py \
-     serialwindow.py \
      serverwindow.py \
      userupdatewindow.py \
      home_qt.py \
@@ -17,6 +16,7 @@ OBJS = \
      settingspage_qt.py \
      debugpage_qt.py \
      infopage_qt.py \
+     serialpage_qt.py \
      mainwindow_qt.py
 
 all: $(OBJS)

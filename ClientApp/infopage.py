@@ -1,5 +1,6 @@
 import logging
 
+from PyQt5 import QtGui
 from PyQt5.QtCore import QObject, pyqtSignal
 
 from .basepage import BasePage

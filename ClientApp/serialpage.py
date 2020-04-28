@@ -1,28 +1,29 @@
 from builtins import str
 import logging
 
+from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtCore import Qt
 
-from .qt.serialwindow import *
-from .basewindow import BaseWindow
-from PyQt5.QtCore import Qt
 from printer_if import PrinterIF
+from .basepage import BasePage
+from .qt.serialpage_qt import Ui_SerialPage
 
-
-class SerialWindow(BaseWindow, Ui_SerialWindow):
-    def __init__(self, printer_if, event_handler, parent=None):
-        super(SerialWindow, self).__init__(parent)
+class SerialPage(BasePage, Ui_SerialPage):
+    def __init__(self, context):
+        super(SerialPage, self).__init__()
 
         # Set up logging
         self._logger = logging.getLogger(__name__)
-        self._log("SerialWindow __init__()")
+        self._log("SerialPage __init__()")
 
         # Set up the UI
         self.setupUi(self)
-        self.printer_if = printer_if
+        self.printer_if = context.printer_if
+        self.ui_controller = context.ui_controller
 
-        self.event_handler = event_handler
-        self.event_handler.reconnect_serial.connect(self.reconnect_serial)
+        # self.event_handler = event_handler
+        # self.event_handler.reconnect_serial.connect(self.reconnect_serial)
+
         # self.serial.data.checkserial_msg.connect(self.checkserial_msg)
 
         # Make the selection Behavior as selecting the entire row

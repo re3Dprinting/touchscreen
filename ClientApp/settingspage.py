@@ -4,8 +4,8 @@ from PyQt5.QtCore import Qt
 
 from constants import *
 
-from . import serialsetup
-from . import server
+#from . import serialsetup
+#from . import server
 # from .dualex import DuExSetupWindow
 
 from .basepage import BasePage
@@ -19,7 +19,7 @@ class SettingsPage(BasePage, Ui_SettingsPage):
 
         # Set up logging
         self._logger = logging.getLogger(__name__)
-        self._log("SerialWindow __init__()")
+        self._log("SettingsPage __init__()")
 
         # Set up UI
         self.setupUi(self)
@@ -47,7 +47,7 @@ class SettingsPage(BasePage, Ui_SettingsPage):
         # versiontext = "v"+QtWidgets.QApplication.instance().applicationVersion()
         # self.SoftwareVersion.setText(versiontext)
 
-        # self.Serial.clicked.connect(self.serialpop)
+        self.Serial.clicked.connect(self.serialpop)
         # self.Server.clicked.connect(self.serverpop)
         # self.UserUpdate.clicked.connect(self.userupdatepop)
         self.w_pushbutton_debug.clicked.connect(self.handle_debug)
@@ -70,10 +70,7 @@ class SettingsPage(BasePage, Ui_SettingsPage):
 
     def serialpop(self):
         self._log("UI: User touched Serial")
-        if self.fullscreen:
-            self.serial_pop.showFullScreen()
-        else:
-            self.serial_pop.show()
+        self.ui_controller.push(k_serial_page)
 
     def serverpop(self):
         self._log("UI: User touched Server")

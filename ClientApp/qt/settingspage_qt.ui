@@ -34,7 +34,7 @@
      <x>10</x>
      <y>20</y>
      <width>781</width>
-     <height>281</height>
+     <height>301</height>
     </rect>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout">
@@ -45,6 +45,9 @@
      <layout class="QHBoxLayout" name="horizontalLayout_lower">
       <item>
        <widget class="QPushButton" name="Server">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
           <horstretch>0</horstretch>
@@ -150,6 +153,9 @@
       </item>
       <item>
        <widget class="QPushButton" name="Wifi">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
           <horstretch>0</horstretch>
@@ -288,6 +294,9 @@
       </item>
       <item>
        <widget class="QPushButton" name="w_pushbutton_term">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
           <horstretch>0</horstretch>

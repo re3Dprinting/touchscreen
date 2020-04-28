@@ -494,9 +494,9 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
         return (bed_tuple, tool0_tuple, tool1_tuple)
         
     def changeText(self, label, text):
-        tmp = QtWidgets.QApplication.translate(
-            "TemperaturePage", label.format[0]+text+label.format[1], None, -1)
-        label.setText(tmp)
+        # tmp = QtWidgets.QApplication.translate(
+        #     "TemperaturePage", label.format[0]+text+label.format[1], None, -1)
+        label.setText(text)
 
     def inittextformat(self, label):
         label.format = label.text()

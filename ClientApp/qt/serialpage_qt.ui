@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>DebugPage</class>
- <widget class="QDialog" name="DebugPage">
+ <class>SerialPage</class>
+ <widget class="QDialog" name="SerialPage">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -51,71 +51,6 @@
     </size>
    </property>
   </widget>
-  <widget class="QTextBrowser" name="w_message_text">
-   <property name="geometry">
-    <rect>
-     <x>160</x>
-     <y>80</y>
-     <width>580</width>
-     <height>291</height>
-    </rect>
-   </property>
-   <property name="sizePolicy">
-    <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
-     <horstretch>0</horstretch>
-     <verstretch>0</verstretch>
-    </sizepolicy>
-   </property>
-   <property name="maximumSize">
-    <size>
-     <width>115200</width>
-     <height>1000</height>
-    </size>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="w_lineedit_message">
-   <property name="geometry">
-    <rect>
-     <x>160</x>
-     <y>30</y>
-     <width>580</width>
-     <height>41</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QWidget" name="horizontalLayoutWidget">
-   <property name="geometry">
-    <rect>
-     <x>160</x>
-     <y>380</y>
-     <width>181</width>
-     <height>41</height>
-    </rect>
-   </property>
-   <layout class="QHBoxLayout" name="horizontalLayout">
-    <item>
-     <widget class="QLabel" name="label">
-      <property name="text">
-       <string>Logging level:</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QComboBox" name="w_combobox_debuglevel">
-      <item>
-       <property name="text">
-        <string>DEBUG</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>INFO</string>
-       </property>
-      </item>
-     </widget>
-    </item>
-   </layout>
-  </widget>
   <widget class="QWidget" name="widget" native="true">
    <property name="geometry">
     <rect>
@@ -125,7 +60,7 @@
      <height>240</height>
     </rect>
    </property>
-   <layout class="QVBoxLayout" name="verticalLayout_2">
+   <layout class="QVBoxLayout" name="verticalLayout">
     <property name="leftMargin">
      <number>0</number>
     </property>
@@ -139,7 +74,7 @@
      <number>0</number>
     </property>
     <item>
-     <widget class="QPushButton" name="w_pushbutton_add_marker">
+     <widget class="QPushButton" name="ScanSerial">
       <property name="maximumSize">
        <size>
         <width>100</width>
@@ -150,13 +85,12 @@
        <enum>Qt::NoFocus</enum>
       </property>
       <property name="text">
-       <string>Add Log
-Marker</string>
+       <string>Scan</string>
       </property>
      </widget>
     </item>
     <item>
-     <widget class="QPushButton" name="w_pushbutton_copy_log">
+     <widget class="QPushButton" name="ConnectSerial">
       <property name="maximumSize">
        <size>
         <width>100</width>
@@ -167,13 +101,12 @@ Marker</string>
        <enum>Qt::NoFocus</enum>
       </property>
       <property name="text">
-       <string>Copy Log
-Files</string>
+       <string>Connect</string>
       </property>
      </widget>
     </item>
     <item>
-     <widget class="QPushButton" name="w_pushbutton_send_fake_ack">
+     <widget class="QPushButton" name="DisconnectSerial">
       <property name="maximumSize">
        <size>
         <width>100</width>
@@ -184,10 +117,51 @@ Files</string>
        <enum>Qt::NoFocus</enum>
       </property>
       <property name="text">
-       <string>Send Fake
-ACK</string>
+       <string>Disconnect</string>
       </property>
      </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QFrame" name="frame">
+   <property name="geometry">
+    <rect>
+     <x>160</x>
+     <y>30</y>
+     <width>580</width>
+     <height>360</height>
+    </rect>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::StyledPanel</enum>
+   </property>
+   <property name="frameShadow">
+    <enum>QFrame::Raised</enum>
+   </property>
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
+     <number>0</number>
+    </property>
+    <item>
+     <widget class="QTableWidget" name="COMlist">
+      <column>
+       <property name="text">
+        <string>Device</string>
+       </property>
+      </column>
+     </widget>
+    </item>
+    <item>
+     <widget class="QTextBrowser" name="SerialOutput"/>
     </item>
    </layout>
   </widget>

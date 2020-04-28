@@ -14,6 +14,7 @@ from .temperaturepage import TemperaturePage
 from .settingspage import SettingsPage
 from .debugpage import DebugPage
 from .infopage import InfoPage
+from .serialpage import SerialPage
 
 class MainWindow(Ui_MainWindow, QtWidgets.QMainWindow):
     def __init__(self, printer_if, persona):
@@ -45,6 +46,7 @@ class MainWindow(Ui_MainWindow, QtWidgets.QMainWindow):
         self.add_page(SettingsPage(context), k_settings_page)
         self.add_page(DebugPage(context), k_debug_page)
         self.add_page(InfoPage(context), k_info_page)
+        self.add_page(SerialPage(context), k_serial_page)
 
         # Start the UI on the Home page
         self.stack.setCurrentWidget(self.home_page)
