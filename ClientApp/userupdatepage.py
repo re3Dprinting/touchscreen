@@ -1,29 +1,36 @@
 #!/usr/bin/python3.4
 
 from builtins import str
-from qt.userupdatewindow import Ui_UserUpdate
-from notification import Notification
-from basewindow import BaseWindow
-
-from PyQt5.QtCore import Qt
-from PyQt5 import QtCore, QtGui, QtWidgets
-
-from git import Repo
-from git import Git
 import os
 import psutil
 from pathlib import Path
 import time
 import sys
 
+from PyQt5.QtCore import Qt
+from PyQt5 import QtCore, QtGui, QtWidgets
 
-class UserUpdateWindow(BaseWindow, Ui_UserUpdate):
-    def __init__(self, personality, parent=None):
-        super(UserUpdateWindow, self).__init__(parent)
+from git import Repo
+from git import Git
+
+from qt.userupdatepage_qt import Ui_UserUpdatePage
+from notification import Notification
+from basepage import BasePage
+from basewindow import BaseWindow
+
+
+class UserUpdatePage(BasePage, Ui_UserUpdatePage, BaseWindow):
+    def __init__(self, context):
+        super(UserUpdatePage, self).__init__()
+        self.base_init()
+
         self.setupUi(self)
-        self.parent = parent
 
-        self.personality = personality
+        self.personality = context.personality
+        self.ui_controller = context.ui_controller
+
+        self.setbuttonstyle(self.Back)
+
         self.app = QtWidgets.QApplication.instance()
         self.new_version_avalible = False
         self.debug = (self.properties["debug"] == "true")
@@ -68,6 +75,8 @@ class UserUpdateWindow(BaseWindow, Ui_UserUpdate):
         self.Back.clicked.connect(self.back)
         self.CheckUpdate.clicked.connect(self.checkupdate)
         self.Update.clicked.connect(self.update)
+
+        self.checkupdate()
 
     def checkupdate(self):
         #Fetch all of the tags from the remote repository.

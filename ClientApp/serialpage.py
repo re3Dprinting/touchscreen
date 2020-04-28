@@ -29,8 +29,10 @@ class SerialPage(BasePage, Ui_SerialPage):
         # Make the selection Behavior as selecting the entire row
         self.COMlist.setSelectionBehavior(QtWidgets.QTableView.SelectRows)
         self.COMlist.setSelectionMode(QtWidgets.QTableView.SingleSelection)
+
         # Hide the vertical header which contains the Index of the row.
         self.COMlist.verticalHeader().hide()
+
         # Stretch out the horizontal header to take up the entire view
         header = self.COMlist.horizontalHeader()
         header.setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
@@ -38,6 +40,8 @@ class SerialPage(BasePage, Ui_SerialPage):
 
         self.scan_serial()
         # self.connect_serial()
+
+        self.setbuttonstyle(self.Back)
 
         self.Back.clicked.connect(self.back)
 

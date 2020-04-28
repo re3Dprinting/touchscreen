@@ -49,7 +49,7 @@ class SettingsPage(BasePage, Ui_SettingsPage):
 
         self.Serial.clicked.connect(self.serialpop)
         # self.Server.clicked.connect(self.serverpop)
-        # self.UserUpdate.clicked.connect(self.userupdatepop)
+        self.UserUpdate.clicked.connect(self.userupdatepop)
         self.w_pushbutton_debug.clicked.connect(self.handle_debug)
         self.w_pushbutton_info.clicked.connect(self.handle_info)
         # self.w_pushbutton_duex.clicked.connect(self.handle_duex)
@@ -64,9 +64,7 @@ class SettingsPage(BasePage, Ui_SettingsPage):
 
     def userupdatepop(self):
         self._log("UI: User touched Update")
-        self.userupdate_pop.show()
-        self.close()
-        self.Back.clicked.connect(self.user_back)
+        self.ui_controller.push(k_userupdate_page)
 
     def serialpop(self):
         self._log("UI: User touched Serial")
