@@ -58,10 +58,10 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
 
         self.gridLayout.addWidget(self.NotActivePrintWid, 2, 0, 1, 1)
         self.gridLayout.addWidget(self.ActivePrintWid, 2, 0, 1, 1)
-        self.gridLayout.setGeometry(QtCore.QRect(0, 0, 800, 400))
-        
 
         self.notactiveprint()
+        self.pushbutton_back.clicked.connect(self.back)
+
         # self.serial.data.updateprogress.connect(self.updateprogress)
         # self.serial.data.updateposition.connect(self.updateposition)
 
@@ -118,14 +118,12 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
 #		Initilization for Not-Printing Widget.
 
         self.initpreheatbuttons()
-        self.Back.clicked.connect(self.back)
         self.NotActivePrintWid.CoolDown.clicked.connect(self.notactive_cool)
         self.NotActivePrintWid.Fan.clicked.connect(self.notactive_fan)
 
 
 #		Initilization for Printing Widget.
 
-        self.ActivePrintWid.Back.clicked.connect(self.active_close)
         self.ActivePrintWid.Fan.clicked.connect(self.active_fan)
         self.ActivePrintWid.ResumePrint.setEnabled(False)
 
@@ -148,7 +146,8 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
         self.inittextformat(self.ActivePrintWid.FeedrateVal)
         self.inittextformat(self.ActivePrintWid.BabysteppingVal)
         self.inittextformat(self.ActivePrintWid.PositionLabel)
-        self.setbuttonstyle(self.Back)
+
+#        self.setbuttonstyle(self.pushbutton_back)
         self.setbuttonstyle(self.ActivePrintWid.FileLabel)
         self.setbuttonstyle(self.ActivePrintWid.FeedrateLabel)
         self.setbuttonstyle(self.ActivePrintWid.BabysteppingLabel)
