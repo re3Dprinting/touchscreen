@@ -3,7 +3,6 @@
 
 OBJS = \
      activeprintwidget.py \
-     duexsetupwindow.py \
      notactiveprintwidget.py \
      notificationwindow.py \
      runout.py \
@@ -17,6 +16,7 @@ OBJS = \
      infopage_qt.py \
      serialpage_qt.py \
      userupdatepage_qt.py \
+     duexsetuppage_qt.py \
      mainwindow_qt.py
 
 all: $(OBJS)

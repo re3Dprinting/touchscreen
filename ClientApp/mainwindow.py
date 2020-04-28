@@ -16,6 +16,7 @@ from .debugpage import DebugPage
 from .infopage import InfoPage
 from .serialpage import SerialPage
 from .userupdatepage import UserUpdatePage
+from .duexsetuppage import DuExSetupPage
 
 class MainWindow(Ui_MainWindow, QtWidgets.QMainWindow):
     def __init__(self, printer_if, persona):
@@ -49,6 +50,7 @@ class MainWindow(Ui_MainWindow, QtWidgets.QMainWindow):
         self.add_page(InfoPage(context), k_info_page)
         self.add_page(SerialPage(context), k_serial_page)
         self.add_page(UserUpdatePage(context), k_userupdate_page)
+        self.add_page(DuExSetupPage(context), k_duexsetup_page)
 
         # Start the UI on the Home page
         self.stack.setCurrentWidget(self.home_page)
@@ -59,6 +61,13 @@ class MainWindow(Ui_MainWindow, QtWidgets.QMainWindow):
         self.stack.addWidget(page)
         self.pages[page_name] = page
         return page
+
+    def get_page(self, page_name):
+        try:
+            widget = self.pages[page_name]
+            return widget
+        except KeyError:
+            return None
 
     def _log(self, message):
         self._logger.debug(message)

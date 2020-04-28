@@ -52,7 +52,7 @@ class SettingsPage(BasePage, Ui_SettingsPage):
         self.UserUpdate.clicked.connect(self.userupdatepop)
         self.w_pushbutton_debug.clicked.connect(self.handle_debug)
         self.w_pushbutton_info.clicked.connect(self.handle_info)
-        # self.w_pushbutton_duex.clicked.connect(self.handle_duex)
+        self.w_pushbutton_duex.clicked.connect(self.handle_duex)
         # self.w_pushbutton_term.clicked.connect(self.handle_term)
 
         # self.Wifi.clicked.connect(self.wifipop)
@@ -87,12 +87,11 @@ class SettingsPage(BasePage, Ui_SettingsPage):
 
     def handle_duex(self):
         self._log("UI: User touched Dual Extruder")
-        self.duex_window.get_settings()
-        if self.fullscreen:
-            self.duex_window.showFullScreen()
-        else:
-            self.duex_window.show()
-
+        duex_page = self.ui_controller.get_page(k_duexsetup_page)
+        if duex_page is not None:
+            duex_page.get_settings()
+            self.ui_controller.push(k_duexsetup_page)
+            
     def handle_term(self):
         self._log("UI: User touched Term")
         # is_not_defined()
