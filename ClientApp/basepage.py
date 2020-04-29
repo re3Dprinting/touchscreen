@@ -8,9 +8,10 @@ class BasePage(QtWidgets.QWidget):
         self._logger.debug(message)
 
     def setbuttonstyle(self, obj):
-        obj.setStyleSheet(
-            "QPushButton { background: rgba(255,255,255,0); outline: none; border: none; } QPushButton:checked{background: rgba(255,255,255,0); outline: none; border: none;} QPushButton:pressed { background: rgba(0,0,0,0.1); outline: none; border: none; }")
-
+#        obj.setStyleSheet(
+#            "QPushButton { background: rgba(255,255,255,0); outline: none; border: none; } QPushButton:checked{background: rgba(255,255,255,0); outline: none; border: none;} QPushButton:pressed { background: rgba(0,0,0,0.1); outline: none; border: none; }")
+        pass
+    
     def back(self):
         self._log("UI: User touched Back")
         self.ui_controller.pop()
