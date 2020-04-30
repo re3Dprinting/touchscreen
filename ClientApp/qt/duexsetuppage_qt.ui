@@ -16,9 +16,6 @@
     <height>448</height>
    </size>
   </property>
-  <property name="focusPolicy">
-   <enum>Qt::StrongFocus</enum>
-  </property>
   <property name="windowTitle">
    <string>ControlWindow</string>
   </property>
@@ -105,9 +102,6 @@
          <font>
           <pointsize>18</pointsize>
          </font>
-        </property>
-        <property name="focusPolicy">
-         <enum>Qt::StrongFocus</enum>
         </property>
        </widget>
       </item>
