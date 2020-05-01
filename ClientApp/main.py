@@ -190,7 +190,7 @@ def main():
     print_page.set_storage_manager(local_storage_manager)
 
     mainwindow.set_left_status(ip_string)
-    mainwindow.set_middle_status("")
+    mainwindow.set_middle_status("Printer: Offline")
     mainwindow.set_right_status(config_string)
 
     # Show the top-level UI display...
