@@ -13,7 +13,6 @@ from PyQt5 import QtWidgets
 from octo import setup_octoprint
 
 from touchscreen.mainwindow import MainWindow
-#from touchscreen.touchdisplay import *
 from touchscreen.util.personality import Personality
 from touchscreen.fsutils.watchdogthread import WatchdogThread
 from touchscreen.fsutils.mountfinder import MountFinder
@@ -23,6 +22,7 @@ from util.configid import get_touchscreen_commit_id
 from util.log import setup_root_logger
 
 from touchscreen.fsutils.ostype import *
+from constants import *
 
 #################################################################
 
@@ -172,23 +172,24 @@ def main():
 
     # Set up the watchdog thread that watches the filesystem for
     # mounts of USB drives.
-    # wd_thread = WatchdogThread(mainwindow.print_pop, persona.watchpoint,
-    #                            current_path, persona.localpath)
+    print_page = mainwindow.get_page(k_print_page)
+    wd_thread = WatchdogThread(print_page, persona.watchpoint,
+                               current_path, persona.localpath)
 
     # Set up the signals that let us safely communicate between
     # threads that watch the filesystem and the UI.
-    # usb_signal_tup = wd_thread.get_usb_signals()
-    # mainwindow.print_pop.set_usb_mount_signals(usb_signal_tup)
+    usb_signal_tup = wd_thread.get_usb_signals()
+    print_page.set_usb_mount_signals(usb_signal_tup)
     
-    # usb_content_signal = wd_thread.get_usb_content_signal()
-    # mainwindow.print_pop.set_usb_content_signal(usb_content_signal)
+    usb_content_signal = wd_thread.get_usb_content_signal()
+    print_page.set_usb_content_signal(usb_content_signal)
 
-    # local_content_signal = wd_thread.get_local_content_signal()
-    # mainwindow.print_pop.set_local_content_signal(local_content_signal)
+    local_content_signal = wd_thread.get_local_content_signal()
+    print_page.set_local_content_signal(local_content_signal)
 
     # The print screen needs a reference to the local storage manager
     # so it can copy files from the USB into local storage.
-    # mainwindow.print_pop.set_storage_manager(local_storage_manager)
+    print_page.set_storage_manager(local_storage_manager)
 
     # Show the top-level UI display...
     mainwindow.show()
