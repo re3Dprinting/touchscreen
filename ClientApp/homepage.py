@@ -42,9 +42,6 @@ class HomePage(BasePage, Ui_Home):
 
         # Save the personality spec
         
-        versiontext = "v"+ QtWidgets.QApplication.instance().applicationVersion()
-        self.SoftwareVersion.setText(versiontext)
-
         self.setbuttonstyle(self.pushbutton_print)
         self.setbuttonstyle(self.pushbutton_control)
         self.setbuttonstyle(self.pushbutton_temperature)
