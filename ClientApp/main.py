@@ -168,7 +168,7 @@ def main():
             # There seems to be a thumb drive plugged in. Tell the UI
             # print window to use it as the inital file list.
             current_mountpoint = MountPoint(current_path)
-            mainwindow.print_pop.update_usb_create(current_mountpoint)
+            mainwindow.print_page.update_usb_create(current_mountpoint)
 
     # Set up the watchdog thread that watches the filesystem for
     # mounts of USB drives.
