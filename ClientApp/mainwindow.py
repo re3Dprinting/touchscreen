@@ -66,7 +66,7 @@ class MainWindow(Ui_MainWindow, QtWidgets.QMainWindow):
 
     def state_changed_callback(self, payload):
         state = "Printer: %s" % payload["state_string"]
-        print(state)
+        self._log("NEW PRINTER STATE " + state)
         self.set_middle_status(state)
 
     def list_children(self, widget):
