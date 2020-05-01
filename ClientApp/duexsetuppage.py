@@ -56,6 +56,7 @@ class DuExSetupPage(BasePage, Ui_DuExSetupPage):
 
     def just_pushed(self):
         self._log("just_pushed callback called!")
+        self.get_settings();
         self.w_lineedit_x1.setFocus()
 
     def handle_x1_focus_in(self):
