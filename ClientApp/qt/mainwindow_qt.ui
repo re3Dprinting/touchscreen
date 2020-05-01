@@ -43,7 +43,7 @@
     </sizepolicy>
    </property>
    <property name="styleSheet">
-    <string notr="true">* { border-top: 1px solid #ccc; }</string>
+    <string notr="true">* { border-top: 1px solid #ccc; background: black; color: white; }</string>
    </property>
    <layout class="QHBoxLayout" name="horizontalLayout">
     <property name="leftMargin">
@@ -81,7 +81,7 @@
     <item>
      <widget class="QLabel" name="middle">
       <property name="text">
-       <string/>
+       <string>middle</string>
       </property>
      </widget>
     </item>
