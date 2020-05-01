@@ -46,7 +46,7 @@ class HomePage(BasePage, Ui_Home):
         self.setbuttonstyle(self.pushbutton_control)
         self.setbuttonstyle(self.pushbutton_temperature)
         self.setbuttonstyle(self.pushbutton_settings)
-        self.setbuttonstyle(self.pushbutton_back)
+#        self.setbuttonstyle(self.pushbutton_back)
 
         self.pushbutton_print.clicked.connect(self.handle_print_touch)
         self.pushbutton_control.clicked.connect(self.handle_control_touch)
@@ -97,5 +97,4 @@ class HomePage(BasePage, Ui_Home):
 
     def handle_back_touch(self):
         self._log("UI: User touched Back")
-        self.ui_controller.pop()
         
