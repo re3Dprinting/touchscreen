@@ -1,7 +1,8 @@
 import logging
 
 from PyQt5 import QtWidgets
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QObject
+from PyQt5.QtWidgets import QWidget, QLabel
 
 from .qt.mainwindow_qt import Ui_MainWindow
 
@@ -32,14 +33,31 @@ class MainWindow(Ui_MainWindow, QtWidgets.QMainWindow):
         # Initialize the UI
         self.setupUi(self)
 
-        self.status = QtWidgets.QLabel()
-        self.statusbar.addWidget(self.status)
+        # # Initialize the widgets in the status bar.
+        # status_parent = QWidget()
+        # status_content = Ui_Status()
+        # status_content.setupUi(status_parent)
+        # self.status_content = status_content
+        # self.statusbar.addPermanentWidget(status_parent)
 
-        self.centralwidget.setFixedHeight(448)
-        self.statusbar.setFixedHeight(32)
+        # stat_parent2 = QWidget()
+        # self.stat2 = Ui_Status()
+        # self.stat2.setupUi(stat_parent2)
+        # self.statusbar.addWidget(stat_parent2)
 
-        # self.statusBar().showMessage("Hello, world")
-        self.status.setText("This is a test.")
+        # # foo = QLabel()
+        # # foo.setText("foo")
+        # # self.statusbar.addWidget(foo)
+
+        # # bar = QLabel()
+        # # bar.setText("bar")
+        # # self.statusbar.addWidget(bar)
+
+        # # self.status_content.left.setText("Hello, world, again.")
+
+        # self.centralwidget.setFixedHeight(448)
+        # self.statusbar.setFixedWidth(800)
+        # self.statusbar.setFixedHeight(32)
 
         self.home_page = HomePage(self.context)
         self.stack.addWidget(self.home_page)
@@ -66,6 +84,11 @@ class MainWindow(Ui_MainWindow, QtWidgets.QMainWindow):
         # Activate the window to take keyboard focus.
         self.setWindowState(Qt.WindowActive)
         self.activateWindow()
+
+    def list_children(self, widget):
+        children = widget.findChildren(QObject, "")
+        for child in children:
+            print("Child", child)
 
     def add_page(self, page, page_name):
         self.stack.addWidget(page)
