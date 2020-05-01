@@ -31,10 +31,15 @@ class MainWindow(Ui_MainWindow, QtWidgets.QMainWindow):
 
         # Initialize the UI
         self.setupUi(self)
+
+        self.status = QtWidgets.QLabel()
+        self.statusbar.addWidget(self.status)
+
         self.centralwidget.setFixedHeight(448)
         self.statusbar.setFixedHeight(32)
 
-        self.statusBar().showMessage("Hello, world")
+        # self.statusBar().showMessage("Hello, world")
+        self.status.setText("This is a test.")
 
         self.home_page = HomePage(self.context)
         self.stack.addWidget(self.home_page)
@@ -79,15 +84,25 @@ class MainWindow(Ui_MainWindow, QtWidgets.QMainWindow):
 
     def push(self, page_name):
         try:
-            # Get the widget we're going to display next.
+            # Get the page we're going to display next.
             widget = self.pages[page_name]
 
-            # Get the current widget being display and push it onto
+            # Get the current paget being display and push it onto
             # the page stack so we can pop back to it later.
             self.page_stack.append(self.stack.currentWidget())
 
-            # Display the next widget
+            # Display the next page
             self.stack.setCurrentWidget(widget)
+
+            # Call the page's "just_pushed" method, if it exists. This
+            # callback enables pages to perform processing after being
+            # pushed, such as focusing a particular widget.
+
+            just_pushed_op = getattr(widget, "just_pushed", None)
+
+            if callable(just_pushed_op):
+                self._log("<%s> just_pushed callback exists, calling..." % page_name)
+                widget.just_pushed()
 
         except KeyError:
             # If the name of the requested widget to push doesn't

@@ -54,6 +54,10 @@ class DuExSetupPage(BasePage, Ui_DuExSetupPage):
 
         self.setbuttonstyle(self.Back)
 
+    def just_pushed(self):
+        self._log("just_pushed callback called!")
+        self.w_lineedit_x1.setFocus()
+
     def handle_x1_focus_in(self):
         self.num_keys.setEnabled(True);
         self.focused_lineedit = self.w_lineedit_x1
