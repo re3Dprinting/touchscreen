@@ -91,7 +91,7 @@
            </font>
           </property>
           <property name="text">
-           <string>190</string>
+           <string>-----</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
@@ -144,7 +144,7 @@
            </font>
           </property>
           <property name="text">
-           <string>210</string>
+           <string>-----</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
@@ -197,7 +197,7 @@
            </font>
           </property>
           <property name="text">
-           <string>60</string>
+           <string>-----</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
@@ -256,13 +256,13 @@
          <widget class="QLabel" name="e1set">
           <property name="font">
            <font>
-            <pointsize>24</pointsize>
+            <pointsize>18</pointsize>
             <weight>75</weight>
             <bold>true</bold>
            </font>
           </property>
           <property name="text">
-           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:22pt;&quot;&gt;-----&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           <string>-----</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
@@ -323,7 +323,7 @@
          <widget class="QLabel" name="e2set">
           <property name="font">
            <font>
-            <pointsize>24</pointsize>
+            <pointsize>18</pointsize>
             <weight>75</weight>
             <bold>true</bold>
            </font>
@@ -390,7 +390,7 @@
          <widget class="QLabel" name="bedset">
           <property name="font">
            <font>
-            <pointsize>24</pointsize>
+            <pointsize>18</pointsize>
             <weight>75</weight>
             <bold>true</bold>
            </font>
