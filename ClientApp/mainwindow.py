@@ -26,7 +26,7 @@ class MainWindow(Ui_MainWindow, QtWidgets.QMainWindow):
 
         # Set up logging
         self._logger = logging.getLogger(__name__)
-        self._log("PrinterIF starting up")
+        self._log("MainWindow starting up")
 
         self.context = Context(printer_if, persona, self)
 
@@ -61,6 +61,13 @@ class MainWindow(Ui_MainWindow, QtWidgets.QMainWindow):
         # Activate the window to take keyboard focus.
         self.setWindowState(Qt.WindowActive)
         self.activateWindow()
+
+        context.printer_if.set_state_changed_callback(self.state_changed_callback)
+
+    def state_changed_callback(self, payload):
+        state = "Printer: %s" % payload["state_string"]
+        print(state)
+        self.set_middle_status(state)
 
     def list_children(self, widget):
         children = widget.findChildren(QObject, "")

@@ -339,6 +339,9 @@ class PrinterIF(PrinterCallback):
         # pre = "####"
         # print("%s Received event: %s (Payload: %r)" % (pre, event, payload))
 
+        if self._state_changed_callback is not None:
+            self._state_changed_callback(payload)
+
         if payload['state_id'] == self._printer_state_finishing:
             # print("******** FINISHING")
             self._printer_state = self._printer_state_finishing
@@ -349,6 +352,9 @@ class PrinterIF(PrinterCallback):
                 if self.print_finished_callback is not None:
                     # print("Transition from finishing to operational, do print-finished stuff.")
                     self.print_finished_callback()
+
+    def set_state_changed_callback(self, callback):
+        self._state_changed_callback = callback
         
     def set_file_list_update_callback(self, callback):
         self.file_list_update_callback = callback
