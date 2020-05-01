@@ -19,6 +19,9 @@
   <property name="windowTitle">
    <string>ControlWindow</string>
   </property>
+  <property name="focusPolicy">
+    <enum>Qt::NoFocus</enum>
+  </property>
   <widget class="QPushButton" name="Back">
    <property name="geometry">
     <rect>
@@ -92,6 +95,9 @@
       </item>
       <item>
        <widget class="JTLineEdit" name="w_lineedit_x1">
+        <property name="focusPolicy">
+         <enum>Qt::StrongFocus</enum>
+        </property>
         <property name="maximumSize">
          <size>
           <width>16777215</width>
@@ -123,6 +129,9 @@
       </item>
       <item>
        <widget class="JTLineEdit" name="w_lineedit_y1">
+        <property name="focusPolicy">
+         <enum>Qt::StrongFocus</enum>
+        </property>
         <property name="maximumSize">
          <size>
           <width>16777215</width>

@@ -1,6 +1,7 @@
 import logging
 
 from PyQt5 import QtWidgets
+from PyQt5.QtCore import Qt
 
 from .qt.mainwindow_qt import Ui_MainWindow
 
@@ -56,6 +57,10 @@ class MainWindow(Ui_MainWindow, QtWidgets.QMainWindow):
         self.stack.setCurrentWidget(self.home_page)
 
         self.page_stack = []
+
+        # Activate the window to take keyboard focus.
+        self.setWindowState(Qt.WindowActive)
+        self.activateWindow()
 
     def add_page(self, page, page_name):
         self.stack.addWidget(page)
