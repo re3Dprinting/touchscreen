@@ -68,26 +68,23 @@ def main():
 
     # Get the IP address.
     ip_addr = get_ip()
+    ip_string = "IP: " + ip_addr
 
     # Get the Git information. This will be the ID of the HEAD commit
     # plus indicators of whether any file has been changed, or if
     # GIT-unknown files are present.
     # Breaks in Python3.6
     config_id = get_touchscreen_commit_id()
-    # config_id = "temp"
-
-    # Now, the ID string is essentially just the concatenation of
-    # these three bits of information.
-    id_string = 'v' + version_string + ", IP: %s, Config ID: %s" % (ip_addr, config_id)
+    config_string = "%s/%s" % (version_string, config_id)
 
     # Print a banner to stdout.
     print("******************************************************************************")
-    print("re:3D touchscreen starting. " + id_string)
+    print("re:3D touchscreen starting %s %s " % (ip_string, version_string))
     print("******************************************************************************")
 
     # And log the same banner.
     _log("******************************************************************************")
-    _log("* re:3D touchscreen starting. " + id_string)
+    _log("re:3D touchscreen starting %s %s " % (ip_string, version_string))
     _log("******************************************************************************")
 
     # The 'personality' mechanism is a way of specifying things that
@@ -191,6 +188,10 @@ def main():
     # The print screen needs a reference to the local storage manager
     # so it can copy files from the USB into local storage.
     print_page.set_storage_manager(local_storage_manager)
+
+    mainwindow.set_left_status(ip_string)
+    mainwindow.set_middle_status("")
+    mainwindow.set_right_status(config_string)
 
     # Show the top-level UI display...
     mainwindow.show()

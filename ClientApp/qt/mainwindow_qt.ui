@@ -59,7 +59,7 @@
      <number>0</number>
     </property>
     <item>
-     <widget class="QLabel" name="left2">
+     <widget class="QLabel" name="left_status">
       <property name="font">
        <font>
         <pointsize>14</pointsize>
@@ -86,7 +86,7 @@
      </spacer>
     </item>
     <item>
-     <widget class="QLabel" name="middle">
+     <widget class="QLabel" name="middle_status">
       <property name="font">
        <font>
         <pointsize>14</pointsize>
@@ -113,7 +113,7 @@
      </spacer>
     </item>
     <item>
-     <widget class="QLabel" name="right">
+     <widget class="QLabel" name="right_status">
       <property name="font">
        <font>
         <pointsize>14</pointsize>

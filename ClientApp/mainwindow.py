@@ -33,39 +33,14 @@ class MainWindow(Ui_MainWindow, QtWidgets.QMainWindow):
         # Initialize the UI
         self.setupUi(self)
 
-        # # Initialize the widgets in the status bar.
-        # status_parent = QWidget()
-        # status_content = Ui_Status()
-        # status_content.setupUi(status_parent)
-        # self.status_content = status_content
-        # self.statusbar.addPermanentWidget(status_parent)
-
-        # stat_parent2 = QWidget()
-        # self.stat2 = Ui_Status()
-        # self.stat2.setupUi(stat_parent2)
-        # self.statusbar.addWidget(stat_parent2)
-
-        # # foo = QLabel()
-        # # foo.setText("foo")
-        # # self.statusbar.addWidget(foo)
-
-        # # bar = QLabel()
-        # # bar.setText("bar")
-        # # self.statusbar.addWidget(bar)
-
-        # # self.status_content.left.setText("Hello, world, again.")
-
-        # self.centralwidget.setFixedHeight(448)
-        # self.statusbar.setFixedWidth(800)
-        # self.statusbar.setFixedHeight(32)
-
+        # Setup the home page
         self.home_page = HomePage(self.context)
         self.stack.addWidget(self.home_page)
 
         self.pages = {}
         context = self.context
 
-        # Create the various pages
+        # Create the various other pages
         self.add_page(PrintPage(context), k_print_page)
         self.add_page(ControlPage(context), k_control_page)
         self.add_page(TemperaturePage(context), k_temperature_page)
@@ -79,6 +54,8 @@ class MainWindow(Ui_MainWindow, QtWidgets.QMainWindow):
         # Start the UI on the Home page
         self.stack.setCurrentWidget(self.home_page)
 
+        # Create the data structure that will contain the stack of
+        # pages to display.
         self.page_stack = []
 
         # Activate the window to take keyboard focus.
@@ -104,6 +81,15 @@ class MainWindow(Ui_MainWindow, QtWidgets.QMainWindow):
 
     def _log(self, message):
         self._logger.debug(message)
+
+    def set_left_status(self, text):
+        self.left_status.setText(text)
+
+    def set_middle_status(self, text):
+        self.middle_status.setText(text)
+
+    def set_right_status(self, text):
+        self.right_status.setText(text)
 
     def push(self, page_name):
         try:
