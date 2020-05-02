@@ -9,6 +9,7 @@ import logging
 import getpass
 import json
 from pathlib import Path
+from shutil import copyfile
 
 from octo import setup_octoprint
 
@@ -58,11 +59,16 @@ def _load_properties():
 
     #Move up one directory to grab the config.properties file
     config_path = current_path.parent.__str__() + "/config.properties"
+    example_config_path = Path(os.path.realpath(tmp_path)).__str__() + "/setup-files/config.properties"
     if(Path(config_path).is_file()):
         with open(config_path) as config_in:
             properties = json.load(config_in)
     else:
-        _log("Please create a config.properties file within the same directory as Octoprint and Touchscreen!")
+        #If the file does not exist, move the file over to the correct directory. 
+        if(Path(example_config_path).is_file()):
+            copyfile(example_config_path, config_path)
+            with open(config_path) as config_in:
+                properties = json.load(config_in)
 
     #Grab the version from the current git repository. 
     #Will have to be adjusted if the user is updating software locally!!!!
@@ -141,6 +147,7 @@ def main():
             octopath = "/Users/jct/Dropbox/re3D/touchscreen/OctoPrint"
             persona = Personality(False, "/Volumes", octopath + "/localgcode",
                                   octopath + "/log-cache")
+            
         if getpass.getuser() == "npan":
             octopath = "/Users/npan/re3D/OctoPrint"
             persona = Personality(False, "/Volumes", octopath + "/localgcode",
