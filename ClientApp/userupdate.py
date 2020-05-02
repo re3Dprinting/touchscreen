@@ -26,7 +26,7 @@ class UserUpdateWindow(BaseWindow, Ui_UserUpdate):
         self.personality = personality
         self.app = QtWidgets.QApplication.instance()
         self.new_version_avalible = False
-        self.mode = self.properties["mode"]
+        self.permission = self.properties["permission"]
 
         tmp_path = Path(__file__).parent.absolute()
         # print(tmp_path)
@@ -48,7 +48,7 @@ class UserUpdateWindow(BaseWindow, Ui_UserUpdate):
             if not found_remote:
                 self.remote_repo = self.repo.create_remote("re3d", "https://github.com/re3Dprinting/touchscreen")
         except Exception as e:
-            print(e)
+            print("userupdate: __init__() exception: ", e)
         # Make the selection Behavior as selecting the entire row
         self.SoftwareList.setSelectionBehavior(QtWidgets.QTableView.SelectRows)
         self.SoftwareList.setSelectionMode(QtWidgets.QTableView.SingleSelection)
@@ -95,9 +95,9 @@ class UserUpdateWindow(BaseWindow, Ui_UserUpdate):
                 #Skip over all tags that contain archive
                 if("archive" in t.name): continue
 
-                if("release" in t.name and (not self.mode == "developer")): continue
+                if("release" in t.name and (not self.permission == "developer")): continue
 
-                if("beta" in t.name and not(self.mode == "developer" or self.mode =="beta-tester")): continue
+                if("beta" in t.name and not(self.permission == "developer" or self.permission =="beta-tester")): continue
 
                 self.current_tags.append(t)
                 tag_date = time.strftime('%I:%M%p %m/%d/%y', time.localtime(t.commit.committed_date))
@@ -112,7 +112,7 @@ class UserUpdateWindow(BaseWindow, Ui_UserUpdate):
                     #Check if there is a newer software version avalible. 
                     self.checkagainstcurrent(current_v, given_v)
                 
-                #Show tag only if the given tag is following X.X.X OR if debug mode is turned on. 
+                #TODO Only show releases if it follows X.X.X
                 rowpos = self.SoftwareList.rowCount()
                 self.SoftwareList.insertRow(rowpos)
                 version = QtWidgets.QTableWidgetItem(t.name)
@@ -129,7 +129,7 @@ class UserUpdateWindow(BaseWindow, Ui_UserUpdate):
             elif(self.new_version_avalible):
                 return Notification("A new software version is available!\nTo update, go to Settings > Software Update")
         except Exception as e:
-            print(e)
+            print("userupdate: checkupdate() exception: ", e)
 
     #Is Customer Release only if version is in format of X.X.X
     def isCustomerRelease(self, version):

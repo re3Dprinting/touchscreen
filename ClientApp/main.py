@@ -43,16 +43,18 @@ def _log(message):
     # always use DEBUG
     logger.info(message)
 
-#Load the config.properties file that should be located in the same location as Octoprint and touchscreen.
-#A sample config.properties file is located within the setup-files directory.
-def _load_properties():
+
+#Load the properties from the json file, config.properties
+#   -config.properties acts as a static file that all windows can access
+#   -the permission is set if the specified. 
+#   -if the config.properties file is not found, create it in the correct directory.
+def _load_properties(permission = "Default"):
     properties = {"name": "", 
                 "motherboard" : "", 
                 "wifissd" : "",
                 "wifipassword" : "",
-                "mode" : ""
+                "permission" : ""
                 }
-
     #Grab the current directory were the git repository is initialized.
     tmp_path = Path(__file__).parent.absolute()
     current_path = Path(os.path.realpath(tmp_path)).parent
@@ -60,26 +62,33 @@ def _load_properties():
     #Move up one directory to grab the config.properties file
     config_path = current_path.parent.__str__() + "/config.properties"
     example_config_path = Path(os.path.realpath(tmp_path)).__str__() + "/setup-files/config.properties"
-    if(Path(config_path).is_file()):
-        with open(config_path) as config_in:
-            properties = json.load(config_in)
-    else:
-        #If the file does not exist, move the file over to the correct directory. 
-        if(Path(example_config_path).is_file()):
-            copyfile(example_config_path, config_path)
-            with open(config_path) as config_in:
-                properties = json.load(config_in)
+    
+    #If the file does not exist, move the file over to the correct directory. 
+    if( not Path(config_path).is_file() and Path(example_config_path).is_file() ):
+        copyfile(example_config_path, config_path)
+
+    #Catch exception if config_path still does not exist. 
+    with open(config_path, "r+") as config_in:
+        loaded_properties = json.load(config_in)
+        properties = {**properties, **loaded_properties}
+        #Set the permission if specified. Otherwise, keep as default.
+        if not permission == "Default" and "permission" in properties: 
+            properties["permission"] = permission
+            config_in.seek(0)
+            json.dump(properties, config_in, indent=4)
+            config_in.truncate()
 
     #Grab the version from the current git repository. 
     #Will have to be adjusted if the user is updating software locally!!!!
     try:
         repo = Repo(current_path.__str__())
+        current_version = next((tag for tag in repo.tags if tag.commit == repo.head.commit), None)
+        properties["version"] = current_version.name
+    #If no tag found, check for current branch
+    except AttributeError as e:
         properties["version"] = repo.active_branch.name
-    except TypeError as e:
-        print(e)
-        properties["version"] = repo.git.describe()
+    #If no branch/repo found, default to local. 
     except Exception as e:
-        print(e)
         properties["version"] = "Local"
         
     return properties
@@ -92,13 +101,40 @@ def main():
     setup_root_logger()
     setup_local_logger(__name__)
 
+    # The 'personality' mechanism is a way of specifying things that
+    # will change from one OS to another. We create the personality
+    # based on whether we're running Linux (including Raspbian) or
+    # macOS.
+    if os_is_linux():
+        # Linux
+        # persona = Personality(True, "/media/usb0", "/home/pi/gcode-cache", "/home/pi/log-cache")
+        persona = Personality(True, "/usb", "/home/pi/gcode-cache", "/home/pi/log-cache")
+        properties = _load_properties()
+    # elif plat.startswith("darwin"):
+    elif os_is_macos():
+        # macOS
+        if getpass.getuser() == "jct":
+            octopath = "/Users/jct/Dropbox/re3D/touchscreen/OctoPrint"
+            persona = Personality(False, "/Volumes", octopath + "/localgcode",
+                                  octopath + "/log-cache")
+            properties = _load_properties("developer")
+        if getpass.getuser() == "npan":
+            octopath = "/Users/npan/re3D/OctoPrint"
+            persona = Personality(False, "/Volumes", octopath + "/localgcode",
+                                  octopath + "/log-cache") 
+            properties = _load_properties("developer")
+    else:
+        print("Unable to determine operating system, aborting...")
+        persona = None
+        sys.exit(1)
+       
+
     # We want to build a string to be displayed on the touchscreen
     # main screen that has helpful information for diagnestic
     # purposes. The string will consist of the application version,
     # our IP address, and some Git information.
 
     # Get the application version
-    properties = _load_properties()
     version_string = properties["version"]
 
     # Get the IP address.
@@ -125,44 +161,7 @@ def main():
     _log("* re:3D touchscreen starting. " + id_string)
     _log("******************************************************************************")
 
-    # The 'personality' mechanism is a way of specifying things that
-    # will change from one OS to another. We create the personality
-    # based on whether we're running Linux (including Raspbian) or
-    # macOS.
 
-    # # Get the platform name.
-    # plat = sys.platform
-
-    # if plat.startswith("linux"):
-    if os_is_linux():
-
-        # Linux
-        # persona = Personality(True, "/media/usb0", "/home/pi/gcode-cache", "/home/pi/log-cache")
-        persona = Personality(True, "/usb", "/home/pi/gcode-cache", "/home/pi/log-cache")
-
-    # elif plat.startswith("darwin"):
-    elif os_is_macos():
-        # macOS
-        if getpass.getuser() == "jct":
-            octopath = "/Users/jct/Dropbox/re3D/touchscreen/OctoPrint"
-            persona = Personality(False, "/Volumes", octopath + "/localgcode",
-                                  octopath + "/log-cache")
-            
-        if getpass.getuser() == "npan":
-            octopath = "/Users/npan/re3D/OctoPrint"
-            persona = Personality(False, "/Volumes", octopath + "/localgcode",
-                                  octopath + "/log-cache") 
-                                  
-
-    else:
-        print("Unable to determine operating system, aborting...")
-        persona = None
-        sys.exit(1)
-
-    #Personality object for Ubuntu
-    # Please put this into the 'linux' section above.
-    # persona = Personality(False, "/media/plloppii", "/home/plloppii/devel/gcode-cache", "/home/plloppii/devel/log-cache")
-            
     # Set up all the OctoPrint stuff. We need two bits of information
     # from that: the printer and the storage manager.
     (printer, local_storage_manager) = setup_octoprint(persona)
