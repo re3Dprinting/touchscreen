@@ -8,6 +8,7 @@ import logging
 import PyQt5.QtCore
 from PyQt5.QtCore import Qt, pyqtSignal
 
+from constants import *
 from .qt.temperaturepage_qt import Ui_TemperaturePage
 from .notactiveprint_wid import *
 from .activeprint_wid import *
@@ -280,17 +281,21 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
 
     def pauseprint(self):
         self._log("UI: User touched Pause")
-        self.parent.printer_if.pause_print()
+        self.printer_if.pause_print()
         self.ActivePrintWid.ResumePrint.setEnabled(True)
         self.ActivePrintWid.PausePrint.setEnabled(False)
-        self.parent.Control.setEnabled(True)
+        #self.parent.Control.setEnabled(True)
+        home = self.ui_controller.get_page(k_home_page)
+        home.pushbutton_control.setEnabled(True)
 
     def resumeprint(self):
         self._log("UI: User touched Resume")
-        self.parent.printer_if.resume_print()
+        self.printer_if.resume_print()
         self.ActivePrintWid.ResumePrint.setEnabled(False)
         self.ActivePrintWid.PausePrint.setEnabled(True)
-        self.parent.Control.setEnabled(False)
+        #self.parent.Control.setEnabled(False)
+        home = self.ui_controller.get_page(k_home_page)
+        home.pushbutton_control.setEnabled(False)
 
     def notactiveprint(self):
         self.NotActivePrintWid.show()
@@ -507,3 +512,6 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
     def setbuttonstyle(self, obj):
         obj.setStyleSheet(
             "QPushButton{background: rgba(255,255,255,0); outline: none; border: none;}")
+
+    def set_progress(self, value):
+        pass

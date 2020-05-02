@@ -118,6 +118,14 @@ class PrintPage(BasePage, Ui_PrintPage):
         self.setbuttonstyle(self.pushbutton_back)
         self.pushbutton_loc_print.clicked.connect(self.local_start_print)
 
+    def enable_control(self):
+        home_page = self.ui_controller.get_page(k_home_page)
+        home_page.pushbutton_control.setEnabled(True)
+
+    def disable_control(self):
+        home_page = self.ui_controller.get_page(k_home_page)
+        home_page.pushbutton_control.setEnabled(False)
+
     def set_storage_manager(self, local_storage_manager):
         self.local_storage_manager = local_storage_manager
         
@@ -234,8 +242,21 @@ class PrintPage(BasePage, Ui_PrintPage):
         self.pushbutton_scan_sd.setEnabled(True)
         # Why?:
         # self.SDFileList.setRowCount(0)
-        self.parent.Control.setEnabled(True)
+        #self.parent.Control.setEnabled(True)
         ## self.serial.data.changestatus("ON")
+        self.enable_control()
+
+    def temperature_active(self):
+        temperature_page = self.ui_controller.get_page(k_temperature_page)
+        temperature_page.activeprint()
+        temperature_page.update_parameters()
+        temperature_page.set_progress(0)
+
+    def temperature_inactive(self):
+        temperature_page = self.ui_controller.get_page(k_temperature_page)
+        temperature_page.notactiveprint()
+        temperature_page.update_parameters()
+        temperature_page.set_progress(0)
 
     def sd_start_print(self):
         self._log("UI: User touched (SD) Start Print")
@@ -258,7 +279,9 @@ class PrintPage(BasePage, Ui_PrintPage):
             # self.temp_pop.activeprint()
             # self.temp_pop.update_parameters()
             # self.temp_pop.ActivePrintWid.FileProgress.setValue(0)
-            self.parent.Control.setEnabled(False)
+            #self.parent.Control.setEnabled(False)
+            self.temperature_active()
+            self.disable_control()
 
     def local_start_print(self):
         self._log("UI: User touched (Local) Start Print")
@@ -284,7 +307,11 @@ class PrintPage(BasePage, Ui_PrintPage):
             # self.temp_pop.activeprint()
             # self.temp_pop.update_parameters()
             # self.temp_pop.ActivePrintWid.FileProgress.setValue(0)
-            self.parent.Control.setEnabled(False)
+            # control_page = self.ui_controller.get_page(k_control_page)
+            # control_page.setEnabled(False)
+            #self.parent.Control.setEnabled(False)
+            self.disable_control()
+            self.temperature_active()
 
     def usb_start_print(self):
         self._log("UI: User touched (USB) Start Print")
@@ -312,7 +339,9 @@ class PrintPage(BasePage, Ui_PrintPage):
             # self.temp_pop.activeprint()
             # self.temp_pop.update_parameters()
             # self.temp_pop.ActivePrintWid.FileProgress.setValue(0)
-            self.parent.Control.setEnabled(False)
+            # self.parent.Control.setEnabled(False)
+            self.disable_control()
+            self.temperature_active()
 
     def get_selected_widget_file(self, list_widget, subdir):
     
@@ -337,14 +366,15 @@ class PrintPage(BasePage, Ui_PrintPage):
 
     def activeprintpop(self):
         self._log("UI: User touched Active Print")
-        if self.fullscreen:
-            self._log("UI: showing temp fullscreen")
-            # self.temp_pop.showFullScreen()
-            # self.close()
-        else:
-            self._log("UI: showing temp")
-            # self.temp_pop.show()
-            # self.close()
+        self.ui_controller.push(k_temperature_page)
+        # if self.fullscreen:
+        #     self._log("UI: showing temp fullscreen")
+        #     # self.temp_pop.showFullScreen()
+        #     # self.close()
+        # else:
+        #     self._log("UI: showing temp")
+        #     # self.temp_pop.show()
+        #     # self.close()
 
     def update_loc_button_states_none(self):
         self.pushbutton_loc_up.setEnabled(False)

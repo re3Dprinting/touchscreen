@@ -41,6 +41,7 @@ class MainWindow(Ui_MainWindow, QtWidgets.QMainWindow):
         context = self.context
 
         # Create the various other pages
+        self.add_page(self.home_page, k_home_page)
         self.add_page(PrintPage(context), k_print_page)
         self.add_page(ControlPage(context), k_control_page)
         self.add_page(TemperaturePage(context), k_temperature_page)
