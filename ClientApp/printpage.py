@@ -234,6 +234,8 @@ class PrintPage(BasePage, Ui_PrintPage):
 
     def notprinting(self):
         # self.temp_pop.notactiveprint()
+        temperature_page = self.ui_controller.get_page(k_temperature_page)
+        temperature_page.notactiveprint()
         self.pushbutton_active_print.setEnabled(False)
         self.pushbutton_stop_print.setEnabled(False)
         self.pushbutton_sd_print.setEnabled(True)
