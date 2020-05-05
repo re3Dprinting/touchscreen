@@ -19,7 +19,7 @@
   <property name="windowTitle">
    <string>ControlWindow</string>
   </property>
-  <widget class="QPushButton" name="Back">
+  <widget class="QPushButton" name="w_pushbutton_back">
    <property name="geometry">
     <rect>
      <x>4</x>
@@ -74,7 +74,7 @@
      <number>0</number>
     </property>
     <item>
-     <widget class="QPushButton" name="ScanSerial">
+     <widget class="QPushButton" name="w_pushbutton_scan">
       <property name="maximumSize">
        <size>
         <width>100</width>
@@ -90,7 +90,7 @@
      </widget>
     </item>
     <item>
-     <widget class="QPushButton" name="ConnectSerial">
+     <widget class="QPushButton" name="w_pushbutton_connect">
       <property name="maximumSize">
        <size>
         <width>100</width>
@@ -106,7 +106,7 @@
      </widget>
     </item>
     <item>
-     <widget class="QPushButton" name="DisconnectSerial">
+     <widget class="QPushButton" name="w_pushbutton_disconnect">
       <property name="maximumSize">
        <size>
         <width>100</width>
@@ -152,7 +152,7 @@
      <number>0</number>
     </property>
     <item>
-     <widget class="QTableWidget" name="COMlist">
+     <widget class="QTableWidget" name="w_table_ports">
       <column>
        <property name="text">
         <string>Device</string>
@@ -161,7 +161,7 @@
      </widget>
     </item>
     <item>
-     <widget class="QTextBrowser" name="SerialOutput"/>
+     <widget class="QTextBrowser" name="w_textb_output"/>
     </item>
    </layout>
   </widget>

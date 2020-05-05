@@ -10,6 +10,8 @@ class RunoutHandlerDialog(QtWidgets.QDialog, Ui_w_runout_dialog):
         self._logger = logging.getLogger(__name__)
         self._log("Runout handler starting up")
 
+        self.parent = parent
+
         self.setupUi(self)
         self.w_buttonBox.setEnabled(False)
         self.printer_if = printer_if
@@ -36,6 +38,11 @@ class RunoutHandlerDialog(QtWidgets.QDialog, Ui_w_runout_dialog):
         # dialog.
         if self.hide_on_ok:
             self.hide()
+
+            # We have to activate the parent window to ensure it will
+            # receive keyboard focus again.
+            self.parent.activateWindow()
+            self.parent.setWindowState(Qt.WindowActive)
 
     # Called when the user clicks Cancel; we have no cancel button,
     # but the UI code seems to expect a reject function anyway.
@@ -122,5 +129,6 @@ class RunoutHandlerDialog(QtWidgets.QDialog, Ui_w_runout_dialog):
             # mess = "Print resuming. Touch OK."
 
         # Make sure the dialog box is showing.
+        self.w_runout_title = "Filament Change"
         self.w_runout_message_label.setText(mess)
         self.show()

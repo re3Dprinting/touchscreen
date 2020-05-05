@@ -65,6 +65,7 @@ class DebugPage(BasePage, Ui_DebugPage):
             new_level_str = "INFO"
             root_logger.setLevel(logging.INFO)
 
+        self.w_runout_handler.w_runout_title.setText("")
         self.w_runout_handler.w_runout_message_label.setText("New logging level = " + new_level_str)
         self.w_runout_handler.enable_ok()
         self.w_runout_handler.send_m108_on_ok = False

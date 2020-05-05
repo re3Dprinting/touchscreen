@@ -7,6 +7,7 @@ from PyQt5.QtCore import Qt
 from printer_if import PrinterIF
 from .basepage import BasePage
 from .qt.serialpage_qt import Ui_SerialPage
+from .runout_handler import RunoutHandlerDialog
 
 class SerialPage(BasePage, Ui_SerialPage):
     def __init__(self, context):
@@ -21,33 +22,65 @@ class SerialPage(BasePage, Ui_SerialPage):
         self.printer_if = context.printer_if
         self.ui_controller = context.ui_controller
 
+        ctor = self.printer_if.state_change_connector()
+        ctor.register(self.state_change_callback)
+
         # self.event_handler = event_handler
         # self.event_handler.reconnect_serial.connect(self.reconnect_serial)
 
         # self.serial.data.checkserial_msg.connect(self.checkserial_msg)
 
         # Make the selection Behavior as selecting the entire row
-        self.COMlist.setSelectionBehavior(QtWidgets.QTableView.SelectRows)
-        self.COMlist.setSelectionMode(QtWidgets.QTableView.SingleSelection)
+        self.w_table_ports.setSelectionBehavior(QtWidgets.QTableView.SelectRows)
+        self.w_table_ports.setSelectionMode(QtWidgets.QTableView.SingleSelection)
 
         # Hide the vertical header which contains the Index of the row.
-        self.COMlist.verticalHeader().hide()
+        self.w_table_ports.verticalHeader().hide()
 
         # Stretch out the horizontal header to take up the entire view
-        header = self.COMlist.horizontalHeader()
+        header = self.w_table_ports.horizontalHeader()
         header.setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
         # header.setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
 
         self.scan_serial()
         # self.connect_serial()
 
-        self.setbuttonstyle(self.Back)
+        self.setbuttonstyle(self.w_pushbutton_back)
 
-        self.Back.clicked.connect(self.back)
+        self.w_pushbutton_back.clicked.connect(self.back)
 
-        self.ScanSerial.clicked.connect(self.scan_serial)
-        self.ConnectSerial.clicked.connect(self.user_connect_serial)
-        self.DisconnectSerial.clicked.connect(self.disconnect_serial)
+        self.w_pushbutton_scan.clicked.connect(self.scan_serial)
+        self.w_pushbutton_connect.clicked.connect(self.user_connect_serial)
+        self.w_pushbutton_disconnect.clicked.connect(self.disconnect_serial)
+
+        self.w_runout_handler = RunoutHandlerDialog(self, self.printer_if)
+
+    def is_connection_transition_state(self, state):
+        if state == "OPEN_SERIAL" or \
+           state == "DETECT_SERIAL" or \
+           state == "DETECT_BAUDRATE" or \
+           state == "CONNECTING":
+                return True
+        return False
+
+    def state_change_callback(self, from_state, to_state):
+        self._log("################################################################################################")
+        self._log("STATE CHANGE from %s to %s." % (from_state, to_state))
+
+        # If we have transition from connecting state to any other
+        # state, re-enable the page.
+        if not self.is_connection_transition_state(to_state):
+            self.enable_page()
+
+        # If we have successfulling connected, pop up a dialog.
+        if (from_state == "CONNECTING") and (to_state == "OPERATIONAL"):
+            self.w_runout_handler.w_runout_title.setText("")
+            self.w_runout_handler.w_runout_message_label.setText("Printer connected.")
+            self.w_runout_handler.enable_ok()
+            self.w_runout_handler.send_m108_on_ok = False
+            self.w_runout_handler.hide_on_ok = True
+            self.w_runout_handler.show()
+            
 
     def _log(self, message):
         self._logger.debug(message)
@@ -61,17 +94,32 @@ class SerialPage(BasePage, Ui_SerialPage):
         self.scan_serial()
 
     def output_serial(self, text):
-        self.SerialOutput.moveCursor(QtGui.QTextCursor.End)
-        self.SerialOutput.ensureCursorVisible()
-        self.SerialOutput.append(text)
+        self.w_textb_output.moveCursor(QtGui.QTextCursor.End)
+        self.w_textb_output.ensureCursorVisible()
+        self.w_textb_output.append(text)
 
     def user_connect_serial(self):
         self._log("UI: User touched Connect")
+        self.disable_page()
         self.connect_serial()
 
+    def disable_page(self):
+        self.w_pushbutton_scan.setEnabled(False)
+        self.w_pushbutton_connect.setEnabled(False)
+        self.w_pushbutton_disconnect.setEnabled(False)
+        self.w_pushbutton_back.setEnabled(False)
+        self.w_table_ports.setEnabled(False)
+
+    def enable_page(self):
+        self.w_pushbutton_scan.setEnabled(True)
+        self.w_pushbutton_connect.setEnabled(True)
+        self.w_pushbutton_disconnect.setEnabled(True)
+        self.w_pushbutton_back.setEnabled(True)
+        self.w_table_ports.setEnabled(True)
+
     def connect_serial(self):
-        selected_row = self.COMlist.currentRow()
-        selected_device = self.COMlist.item(selected_row, 0).text()
+        selected_row = self.w_table_ports.currentRow()
+        selected_device = self.w_table_ports.item(selected_row, 0).text()
         self._log("Connecting to device <%s>." % selected_device)
         self.printer_if.connect(selected_device)
 
@@ -86,14 +134,14 @@ class SerialPage(BasePage, Ui_SerialPage):
         serial_port_list = self.printer_if.get_connection_options()
 
         # Reset the port list UI
-        self.COMlist.setRowCount(0)
+        self.w_table_ports.setRowCount(0)
 
         # Loop through the serial port options
         for p in serial_port_list:
         
-            rowpos = self.COMlist.rowCount()
+            rowpos = self.w_table_ports.rowCount()
 
-            self.COMlist.insertRow(rowpos)
+            self.w_table_ports.insertRow(rowpos)
             # device 
             device = QtWidgets.QTableWidgetItem(p)
             device.setFlags(Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
@@ -101,9 +149,9 @@ class SerialPage(BasePage, Ui_SerialPage):
             # descrip = QtWidgets.QTableWidgetItem("")
             # descrip.setFlags(Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
 
-            self.COMlist.setItem(rowpos, 0, device)
-            # self.COMlist.setItem(rowpos, 1, descrip)
+            self.w_table_ports.setItem(rowpos, 0, device)
+            # self.w_table_ports.setItem(rowpos, 1, descrip)
 
             if '/dev/ttyUSB' in p:
-                self.COMlist.selectRow(rowpos)
+                self.w_table_ports.selectRow(rowpos)
                 return True

@@ -10,6 +10,8 @@ from octoprint.util.comm import MachineCom
 position_regex = re.compile("x:([0-9]+\.[0-9]+) y:([0-9]+\.[0-9]+) z:([0-9]+\.[0-9]+)", re.IGNORECASE)
 runout_message_regex = re.compile("echo:(R[0-9]+) (.*)")
 
+from util.ctor import Ctor
+
 class PrinterIF(PrinterCallback):
     def __init__(self, printer):
 
@@ -17,6 +19,10 @@ class PrinterIF(PrinterCallback):
         # from it.
         self.printer = printer
         self.printer.register_callback(self)
+
+        self.printer_state = "OFFLINE"
+
+        self.state_change_ctor = Ctor()
 
         # Set up logging
         self._logger = logging.getLogger(__name__)
@@ -329,26 +335,34 @@ class PrinterIF(PrinterCallback):
         print("*** INITIAL DATA:")
         self.pp.pprint(data)
 
+    def state_change_connector(self):
+        return self.state_change_ctor
+
     ### Event stuff:
 
-    _printer_state_finishing = "FINISHING"
-    _printer_state_operational = "OPERATIONAL"
-    _printer_state = None
+    _PRINTER_STATE_FINISHING = "FINISHING"
+    _PRINTER_STATE_OPERATIONAL = "OPERATIONAL"
+    _PRINTER_STATE = None
     
     def cb_printer_state_changed (self, event, payload):
         # pre = "####"
         # print("%s Received event: %s (Payload: %r)" % (pre, event, payload))
 
+        new_state = payload['state_id']
+        self._log("type of state is %s" % new_state.__class__.__name__)
+        self.state_change_ctor.notify(self.printer_state, new_state)
+        self.printer_state = new_state
+
         if self._state_changed_callback is not None:
             self._state_changed_callback(payload)
 
-        if payload['state_id'] == self._printer_state_finishing:
+        if payload['state_id'] == self._PRINTER_STATE_FINISHING:
             # print("******** FINISHING")
-            self._printer_state = self._printer_state_finishing
+            self._printer_state = self._PRINTER_STATE_FINISHING
 
-        if payload['state_id'] == self._printer_state_finishing:
+        if payload['state_id'] == self._PRINTER_STATE_FINISHING:
             # print("******** OPERATIONAL")
-            if self._printer_state == self._printer_state_finishing:
+            if self._printer_state == self._PRINTER_STATE_FINISHING:
                 if self.print_finished_callback is not None:
                     # print("Transition from finishing to operational, do print-finished stuff.")
                     self.print_finished_callback()

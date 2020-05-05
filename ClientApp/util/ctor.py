@@ -1,0 +1,17 @@
+from PyQt5.QtCore import QObject, pyqtSignal
+
+class Ctor(QObject):
+
+    # PyQt signals have to be created here. The QObject constructor
+    # will bind them to local names.
+    signal = pyqtSignal(str, str)
+
+    def __init__(self):
+        super(Ctor, self).__init__()
+
+    def register(self, slot):
+        self.signal.connect(slot)
+
+    def notify(self, from_state, to_state):
+        self.signal.emit(from_state, to_state)
+    
