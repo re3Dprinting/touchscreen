@@ -35,11 +35,11 @@ class InfoWindow(BaseWindow, Ui_InfoWindow):
         self.w_pushbutton_capabilities.clicked.connect(self.handle_capabilities_touch)
         self.w_pushbutton_stats.clicked.connect(self.handle_stats_touch)
         self.w_pushbutton_settings.clicked.connect(self.handle_settings_touch)
-        self.Back.clicked.connect(self.user_back)
+        self.Back.clicked.connect(self.back)
         self.info_signal.connect(self.info_do_it)
 
-    def user_back(self):
-        self.back()
+    def back(self):
+        super(InfoWindow, self).back()
         self.w_message_text.clear()
 
     # This is called externally from the Printer thread. We need to go
