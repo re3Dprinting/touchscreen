@@ -19,6 +19,7 @@ from .periph import *
 
 from .printer_if import PrinterIF
 from .basepage import BasePage
+from .tempolcontrol import TempOLControl, TempUIContext
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
@@ -48,6 +49,7 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
         # if self.fullscreen:
         # 	self.setWindowState(self.windowState() | Qt.WindowFullScreen)
 
+        self.context = context
         self.printer_if = context.printer_if
         self.ui_controller = context.ui_controller
 
@@ -88,7 +90,9 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
         self.setbuttonstyle(self.e2img)
         self.setbuttonstyle(self.bedimg)
 
-        self.extruder1 = Periph("Extruder 0", "e1", self.set_tool0_temperature, 345, self)
+#        self.extruder1 = Periph("Extruder 0", "e1", self.set_tool0_temperature, 345, self)
+        ui_context = TempUIContext(self.e1set, self.e1neg, self.e1pos)
+        self.extruder1_olcontrol = TempOLControl(context, ui_context, "tool0")
         self.extruder2 = Periph("Extruder 1", "e2", self.set_tool1_temperature, 345, self)
         self.heatedbed = Periph("Bed", "bed", self.set_bed_temperature, 125, self)
 
@@ -354,7 +358,7 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
 
     def notactive_cool(self):
         self._log("UI: User touched Cooldown")
-        self.extruder1.setandsend(0)
+        # self.extruder1.setandsend(0)
         self.extruder2.setandsend(0)
         self.heatedbed.setandsend(0)
 
@@ -407,8 +411,8 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
             self.changeText(self.e1temp, str(int(tool0_actual_temp + 0.5)))
             self.changeText(self.e1set, str(int(tool0_target_temp + 0.5)))
 
-            if (self.extruder1.settemp != tool0_target_temp):
-                self.extruder1._set(tool0_target_temp)
+            # if (self.extruder1.settemp != tool0_target_temp):
+            #     self.extruder1._set(tool0_target_temp)
         else:
             self.changeText(self.e1temp, unknown_temp_str)
             self.changeText(self.e1set, unknown_temp_str)

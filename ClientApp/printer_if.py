@@ -10,7 +10,7 @@ from octoprint.util.comm import MachineCom
 position_regex = re.compile("x:([0-9]+\.[0-9]+) y:([0-9]+\.[0-9]+) z:([0-9]+\.[0-9]+)", re.IGNORECASE)
 runout_message_regex = re.compile("echo:(R[0-9]+) (.*)")
 
-from util.ctor import Ctor
+from util.ctor import Ctor, CtorDict
 
 class PrinterIF(PrinterCallback):
     def __init__(self, printer):
@@ -23,6 +23,7 @@ class PrinterIF(PrinterCallback):
         self.printer_state = "OFFLINE"
 
         self.state_change_ctor = Ctor()
+        self.temperature_ctor = CtorDict()
 
         # Set up logging
         self._logger = logging.getLogger(__name__)
@@ -226,7 +227,7 @@ class PrinterIF(PrinterCallback):
 
     show_add_log = False
     show_add_message = False
-    show_add_temperature = False
+    show_add_temperature = True
     show_receive_registered_message = False
     show_send_current_data = False
 
@@ -337,6 +338,9 @@ class PrinterIF(PrinterCallback):
 
     def state_change_connector(self):
         return self.state_change_ctor
+
+    def temperature_change_ctor(self):
+        return self.temperature_ctor
 
     ### Event stuff:
 
