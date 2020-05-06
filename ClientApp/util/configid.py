@@ -22,7 +22,7 @@ def get_touchscreen_commit_id():
     output = runcommand(cmd)
     output = output.split('\n')[0]
 
-    commit_id = output[1:-2]
+    commit_id = output[1:-1]
 
     cmd = "git status --short"
     output = runcommand(cmd)

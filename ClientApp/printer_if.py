@@ -7,8 +7,12 @@ from octoprint.printer.standard import PrinterCallback
 import octoprint.events
 from octoprint.util.comm import MachineCom
 
+from util.temputils import break_up_temperature_struct
+
 position_regex = re.compile("x:([0-9]+\.[0-9]+) y:([0-9]+\.[0-9]+) z:([0-9]+\.[0-9]+)", re.IGNORECASE)
 runout_message_regex = re.compile("echo:(R[0-9]+) (.*)")
+
+from util.ctor import Ctor, CtorTuple
 
 class PrinterIF(PrinterCallback):
     def __init__(self, printer):
@@ -17,6 +21,11 @@ class PrinterIF(PrinterCallback):
         # from it.
         self.printer = printer
         self.printer.register_callback(self)
+
+        self.printer_state = "OFFLINE"
+
+        self.state_change_ctor = Ctor()
+        self.temperature_change_ctor = CtorTuple()
 
         # Set up logging
         self._logger = logging.getLogger(__name__)
@@ -208,10 +217,10 @@ class PrinterIF(PrinterCallback):
     def set_printer_state_callback(self, callback):
         self.printer_state_callback = callback
         
-    def set_temperature_callback(self, callback):
-        # Save the provided object as a temperature callback. NOTE:
-        # must implement the update_temperature(self, data) function.
-        self.temperature_callback = callback
+    # def set_temperature_callback(self, callback):
+    #     # Save the provided object as a temperature callback. NOTE:
+    #     # must implement the update_temperature(self, data) function.
+    #     self.temperature_callback = callback
 
     def set_runout_callback(self, calback):
         self.runout_callback = callback
@@ -263,8 +272,10 @@ class PrinterIF(PrinterCallback):
             self.pp.pprint(data)
             
         # If a temperature callback has been registered, call it now.
-        if self.temperature_callback is not None:
-            self.temperature_callback.update_temperatures(data)
+        # if self.temperature_callback is not None:
+        #     self.temperature_callback.update_temperatures(data)
+        temps_tuple = break_up_temperature_struct(data)
+        self.temperature_change_ctor.notify(temps_tuple)
 
         # Because this is a convenient place to do it, send an M114 to
         # cause the printer to send us its position... BUT don't queue
@@ -329,26 +340,43 @@ class PrinterIF(PrinterCallback):
         print("*** INITIAL DATA:")
         self.pp.pprint(data)
 
+    def state_change_connector(self):
+        return self.state_change_ctor
+
+    def temperature_change_connector(self):
+        return self.temperature_change_ctor
+
     ### Event stuff:
 
-    _printer_state_finishing = "FINISHING"
-    _printer_state_operational = "OPERATIONAL"
-    _printer_state = None
+    _PRINTER_STATE_FINISHING = "FINISHING"
+    _PRINTER_STATE_OPERATIONAL = "OPERATIONAL"
+    _PRINTER_STATE = None
     
     def cb_printer_state_changed (self, event, payload):
         # pre = "####"
         # print("%s Received event: %s (Payload: %r)" % (pre, event, payload))
 
-        if payload['state_id'] == self._printer_state_finishing:
-            # print("******** FINISHING")
-            self._printer_state = self._printer_state_finishing
+        new_state = payload['state_id']
+        self._log("type of state is %s" % new_state.__class__.__name__)
+        self.state_change_ctor.notify(self.printer_state, new_state)
+        self.printer_state = new_state
 
-        if payload['state_id'] == self._printer_state_finishing:
+        if self._state_changed_callback is not None:
+            self._state_changed_callback(payload)
+
+        if payload['state_id'] == self._PRINTER_STATE_FINISHING:
+            # print("******** FINISHING")
+            self._printer_state = self._PRINTER_STATE_FINISHING
+
+        if payload['state_id'] == self._PRINTER_STATE_FINISHING:
             # print("******** OPERATIONAL")
-            if self._printer_state == self._printer_state_finishing:
+            if self._printer_state == self._PRINTER_STATE_FINISHING:
                 if self.print_finished_callback is not None:
                     # print("Transition from finishing to operational, do print-finished stuff.")
                     self.print_finished_callback()
+
+    def set_state_changed_callback(self, callback):
+        self._state_changed_callback = callback
         
     def set_file_list_update_callback(self, callback):
         self.file_list_update_callback = callback
