@@ -92,20 +92,25 @@ class UserUpdateWindow(BaseWindow, Ui_UserUpdate):
             # Append the tag to the list on the table widget. 
             self.current_tags = []
             for t in tags:
-                #Skip over all tags that contain archive
-                if("archive" in t.name): continue
-
-                if("release" in t.name and (not self.permission == "developer")): continue
-
-                if("beta" in t.name and not(self.permission == "developer" or self.permission =="beta-tester")): continue
-
-                self.current_tags.append(t)
-                tag_date = time.strftime('%I:%M%p %m/%d/%y', time.localtime(t.commit.committed_date))
-
-
                 #Grab the current Version and the given version and see if they are beta versions. 
                 given_v = t.name
                 given_isCustomerRelease = self.isCustomerRelease(given_v)
+
+                #Skip over all tags that contain archive
+                if("archive" in t.name): continue
+
+                if( ("release" in t.name or
+                     "devel" in t.name or 
+                     "hotfix" in t.name) 
+                 and (not self.permission == "developer")): continue
+
+                if("beta" in t.name and not(self.permission == "developer" or self.permission =="beta-tester")): continue
+
+                #Filter out any remaining tags that are not in the given X.X.X format. 
+                if(self.permission == "customer" and not given_isCustomerRelease): continue 
+
+                self.current_tags.append(t)
+                tag_date = time.strftime('%I:%M%p %m/%d/%y', time.localtime(t.commit.committed_date))
 
                 #Check for an update if and only if the current version and given version both follow the X.X.X sematic versioning. 
                 if(curr_isCustomerRelease and given_isCustomerRelease):
