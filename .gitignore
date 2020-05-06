@@ -40,7 +40,7 @@ Thumbs.db
 
 # Qt generated files #
 ######################
-ClientApp/qt/*.py
+#ClientApp/qt/*.py
 
 # Emacs #
 #########
