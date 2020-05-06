@@ -7,10 +7,12 @@ from octoprint.printer.standard import PrinterCallback
 import octoprint.events
 from octoprint.util.comm import MachineCom
 
+from util.temputils import break_up_temperature_struct
+
 position_regex = re.compile("x:([0-9]+\.[0-9]+) y:([0-9]+\.[0-9]+) z:([0-9]+\.[0-9]+)", re.IGNORECASE)
 runout_message_regex = re.compile("echo:(R[0-9]+) (.*)")
 
-from util.ctor import Ctor, CtorDict
+from util.ctor import Ctor, CtorTuple
 
 class PrinterIF(PrinterCallback):
     def __init__(self, printer):
@@ -23,7 +25,7 @@ class PrinterIF(PrinterCallback):
         self.printer_state = "OFFLINE"
 
         self.state_change_ctor = Ctor()
-        self.temperature_ctor = CtorDict()
+        self.temperature_change_ctor = CtorTuple()
 
         # Set up logging
         self._logger = logging.getLogger(__name__)
@@ -215,10 +217,10 @@ class PrinterIF(PrinterCallback):
     def set_printer_state_callback(self, callback):
         self.printer_state_callback = callback
         
-    def set_temperature_callback(self, callback):
-        # Save the provided object as a temperature callback. NOTE:
-        # must implement the update_temperature(self, data) function.
-        self.temperature_callback = callback
+    # def set_temperature_callback(self, callback):
+    #     # Save the provided object as a temperature callback. NOTE:
+    #     # must implement the update_temperature(self, data) function.
+    #     self.temperature_callback = callback
 
     def set_runout_callback(self, calback):
         self.runout_callback = callback
@@ -227,7 +229,7 @@ class PrinterIF(PrinterCallback):
 
     show_add_log = False
     show_add_message = False
-    show_add_temperature = True
+    show_add_temperature = False
     show_receive_registered_message = False
     show_send_current_data = False
 
@@ -270,8 +272,10 @@ class PrinterIF(PrinterCallback):
             self.pp.pprint(data)
             
         # If a temperature callback has been registered, call it now.
-        if self.temperature_callback is not None:
-            self.temperature_callback.update_temperatures(data)
+        # if self.temperature_callback is not None:
+        #     self.temperature_callback.update_temperatures(data)
+        temps_tuple = break_up_temperature_struct(data)
+        self.temperature_change_ctor.notify(temps_tuple)
 
         # Because this is a convenient place to do it, send an M114 to
         # cause the printer to send us its position... BUT don't queue
@@ -339,8 +343,8 @@ class PrinterIF(PrinterCallback):
     def state_change_connector(self):
         return self.state_change_ctor
 
-    def temperature_change_ctor(self):
-        return self.temperature_ctor
+    def temperature_change_connector(self):
+        return self.temperature_change_ctor
 
     ### Event stuff:
 

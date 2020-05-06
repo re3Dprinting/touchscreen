@@ -20,6 +20,7 @@ from .periph import *
 from .printer_if import PrinterIF
 from .basepage import BasePage
 from .tempolcontrol import TempOLControl, TempUIContext
+from .util.temputils import break_up_temperature_struct
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
@@ -71,7 +72,8 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
         # self.event_handler.updatetemperatures.connect(self.updatetemperatures)
         self.progress_signal.connect(self.update_progress_slot)
 
-        self.printer_if.set_temperature_callback(self)
+        # self.printer_if.set_temperature_callback(self)
+        self.printer_if.temperature_change_connector().register(self.update_temperatures)
         self.printer_if.set_printer_state_callback(self)
         self.printer_if.set_position_callback(self)
         self.printer_if.set_progress_callback(self)
@@ -371,9 +373,10 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
     def update_temperatures(self, data):
 
         # Get the tuple of tuples by breaking up the data struct
-        temps_tuple = self._break_up_temperature_struct(data)
+#        temps_tuple = break_up_temperature_struct(data)
+        temps_tuple = data
 
-        # self.pp.pprint(temps_tuple)
+#        self.pp.pprint(temps_tuple)
 
         # Separate temps into the three tuples
         (bed_tuple, tool0_tuple, tool1_tuple) = temps_tuple
@@ -402,20 +405,20 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
         ### Extruder 0
 
         # break up the tuple containing the target and actual temperatures
-        (tool0_target_temp, tool0_actual_temp) = tool0_tuple
+        # (tool0_target_temp, tool0_actual_temp) = tool0_tuple
 
-        if tool0_actual_temp is not None:
-            # print("tool0 target %d, tool0 actual %d." % (tool0_target_temp, tool0_actual_temp))
+        # if tool0_actual_temp is not None:
+        #     # print("tool0 target %d, tool0 actual %d." % (tool0_target_temp, tool0_actual_temp))
 
-            # Display the temperatures on the UI.
-            self.changeText(self.e1temp, str(int(tool0_actual_temp + 0.5)))
-            self.changeText(self.e1set, str(int(tool0_target_temp + 0.5)))
+        #     # Display the temperatures on the UI.
+        #     self.changeText(self.e1temp, str(int(tool0_actual_temp + 0.5)))
+        #     self.changeText(self.e1set, str(int(tool0_target_temp + 0.5)))
 
-            # if (self.extruder1.settemp != tool0_target_temp):
-            #     self.extruder1._set(tool0_target_temp)
-        else:
-            self.changeText(self.e1temp, unknown_temp_str)
-            self.changeText(self.e1set, unknown_temp_str)
+        #     # if (self.extruder1.settemp != tool0_target_temp):
+        #     #     self.extruder1._set(tool0_target_temp)
+        # else:
+        #     self.changeText(self.e1temp, unknown_temp_str)
+        #     self.changeText(self.e1set, unknown_temp_str)
 
         ### Extruder 1
 
@@ -449,58 +452,6 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
         self._log("Setting tool1 temp to %d." % value)
         self.printer_if.set_temperature("tool1", value)
         
-    def _break_up_temperature_struct(self, data):
-
-        ### Heated bed
-        try:
-            # Get the dictionary of bed temperatures and from it
-            # extract the target and actual temperatures.
-
-            # We have to do this inside an exception handler because
-            # sometimes the data dictionary doesn't have bed
-            # temperatures inside it (have seen this at startup
-            # sometimes).
-            bed_temp_dict = data["bed"]
-            bed_target_temp = bed_temp_dict["target"]
-            bed_actual_temp = bed_temp_dict["actual"]
-
-            # Gather the bed temperatuse into a tuple
-            bed_tuple = (bed_target_temp, bed_actual_temp)
-            
-        except:
-            # Don't do anything (but also don't crash)
-            bed_tuple = (None, None)
-
-        ### Extruder 0
-
-        try:
-            # Get the dictionary of extruder-0 temperatures and from it
-            # extract the target and actual temperatures.
-            tool0_temp_dict = data["tool0"]
-            tool0_target_temp = tool0_temp_dict["target"]
-            tool0_actual_temp = tool0_temp_dict["actual"]
-
-            # Gather the tool0 temperatuse into a tuple
-            tool0_tuple = (tool0_target_temp, tool0_actual_temp)
-        except:
-            tool0_tuple = (None, None)
-
-        ### Extruder 1
-
-        try:
-            # Get the dictionary of extruder-1 temperatures and from it
-            # extract the target and actual temperatures.
-            tool1_temp_dict = data["tool1"]
-            tool1_target_temp = tool1_temp_dict["target"]
-            tool1_actual_temp = tool1_temp_dict["actual"]
-
-            # Gather the tool1 temperatuse into a tuple
-            tool1_tuple = (tool1_target_temp, tool1_actual_temp)
-        except:
-            tool1_tuple = (None, None)
-
-        # Return the broken-apart temperatures as a 3-tuple of 2-tuples
-        return (bed_tuple, tool0_tuple, tool1_tuple)
         
     def changeText(self, label, text):
         # tmp = QtWidgets.QApplication.translate(
