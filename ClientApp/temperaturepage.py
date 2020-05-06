@@ -24,12 +24,6 @@ from .util.temputils import break_up_temperature_struct
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-mats = [('PLA', 'm1'),
-        ('PC', 'm2'),
-        ('PETG', 'm3')]
-
-periphs = ['e1', 'e2', 'bed', 'all']
-
 
 class TemperaturePage(BasePage, Ui_TemperaturePage):
 
@@ -73,7 +67,8 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
         self.progress_signal.connect(self.update_progress_slot)
 
         # self.printer_if.set_temperature_callback(self)
-        self.printer_if.temperature_change_connector().register(self.update_temperatures)
+        # self.printer_if.temperature_change_connector().register(self.update_temperatures)
+
         self.printer_if.set_printer_state_callback(self)
         self.printer_if.set_position_callback(self)
         self.printer_if.set_progress_callback(self)
@@ -81,26 +76,40 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
         self.inittextformat(self.e1temp)
         self.inittextformat(self.e2temp)
         self.inittextformat(self.bedtemp)
-        self.inittextformat(self.e1set)
-        self.inittextformat(self.e2set)
-        self.inittextformat(self.bedset)
-        self.changeText(self.e1set, '0')
-        self.changeText(self.e2set, '0')
-        self.changeText(self.bedset, '0')
+        self.inittextformat(self.w_label_extruder0_setpoint)
+        self.inittextformat(self.w_label_extruder1_setpoint)
+        self.inittextformat(self.w_label_bed_setpoint)
+        self.changeText(self.w_label_extruder0_setpoint, '0')
+        self.changeText(self.w_label_extruder1_setpoint, '0')
+        self.changeText(self.w_label_bed_setpoint, '0')
 
         self.setbuttonstyle(self.e1img)
         self.setbuttonstyle(self.e2img)
         self.setbuttonstyle(self.bedimg)
 
-#        self.extruder1 = Periph("Extruder 0", "e1", self.set_tool0_temperature, 345, self)
-        ui_context = TempUIContext(self.e1set, self.e1neg, self.e1pos)
-        self.extruder1_olcontrol = TempOLControl(context, ui_context, "tool0")
-        self.extruder2 = Periph("Extruder 1", "e2", self.set_tool1_temperature, 345, self)
-        self.heatedbed = Periph("Bed", "bed", self.set_bed_temperature, 125, self)
+        extruder0_ui_context = TempUIContext(self.w_label_extruder0_setpoint, \
+                                             self.w_pushbutton_extruder0_decrement, \
+                                             self.w_pushbutton_extruder0_increment)
+        self.extruder0_olcontrol = TempOLControl(context, extruder0_ui_context, "tool0")
 
-        self.m1 = Material("PLA", 180, 180, 60, self)
-        self.m2 = Material("PC", 215, 215, 115, self)
-        self.m3 = Material("PETG", 200, 200, 60, self)
+        
+        extruder1_ui_context = TempUIContext(self.w_label_extruder1_setpoint, \
+                                             self.w_pushbutton_extruder1_decrement, \
+                                             self.w_pushbutton_extruder1_increment)
+        self.extruder1_olcontrol = TempOLControl(context, extruder1_ui_context, "tool1")
+
+        bed_ui_context = TempUIContext(self.w_label_bed_setpoint, \
+                                       self.w_pushbutton_bed_decrement, \
+                                       self.w_pushbutton_bed_increment)
+        self.bed_olcontrol = TempOLControl(context, bed_ui_context, "bed")
+
+        #self.extruder2 = Periph("Extruder 1", "e2", self.set_tool1_temperature, 345, self)
+        #self.heatedbed = Periph("Bed", "bed", self.set_bed_temperature, 125, self)
+        
+        self.m0 = Material("PLA", self.extruder0_olcontrol, self.extruder1_olcontrol, self.bed_olcontrol, 180, 180, 60)
+        self.m1 = Material("PC", self.extruder0_olcontrol, self.extruder1_olcontrol, self.bed_olcontrol, 215, 215, 115)
+        self.m2 = Material("PETG", self.extruder0_olcontrol, self.extruder1_olcontrol, self.bed_olcontrol, 200, 200, 60)
+        self.cooldown = Material("cooldown", self.extruder0_olcontrol, self.extruder1_olcontrol, self.bed_olcontrol, 0, 0, 0)
 
 #		Dynamic Icons
         self.fanon = False
@@ -125,7 +134,7 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
 #		Initilization for Not-Printing Widget.
 
         self.initpreheatbuttons()
-        self.NotActivePrintWid.CoolDown.clicked.connect(self.notactive_cool)
+        # self.NotActivePrintWid.w_pushbutton_cooldown.clicked.connect(self.notactive_cool)
         self.NotActivePrintWid.Fan.clicked.connect(self.notactive_fan)
 
 
@@ -320,9 +329,22 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
     # 		getattr(self, p+ "neg").clicked.connect(getattr(self.event_handler, "decrement_"+p))
 
     def initpreheatbuttons(self):
-        for name, m in mats:
-            for p in periphs:
-                getattr(self.NotActivePrintWid, m + p).clicked.connect(getattr(getattr(self, m), p + 'set'))
+        self.NotActivePrintWid.w_pushbutton_m0_extruder0.clicked.connect(self.m0.e0set)
+        self.NotActivePrintWid.w_pushbutton_m0_extruder1.clicked.connect(self.m0.e1set)
+        self.NotActivePrintWid.w_pushbutton_m0_bed.clicked.connect(self.m0.bedset)
+        self.NotActivePrintWid.w_pushbutton_m0_all.clicked.connect(self.m0.allset)
+
+        self.NotActivePrintWid.w_pushbutton_m1_extruder0.clicked.connect(self.m1.e0set)
+        self.NotActivePrintWid.w_pushbutton_m1_extruder1.clicked.connect(self.m1.e1set)
+        self.NotActivePrintWid.w_pushbutton_m1_bed.clicked.connect(self.m1.bedset)
+        self.NotActivePrintWid.w_pushbutton_m1_all.clicked.connect(self.m1.allset)
+
+        self.NotActivePrintWid.w_pushbutton_m2_extruder0.clicked.connect(self.m2.e0set)
+        self.NotActivePrintWid.w_pushbutton_m2_extruder1.clicked.connect(self.m2.e1set)
+        self.NotActivePrintWid.w_pushbutton_m2_bed.clicked.connect(self.m2.bedset)
+        self.NotActivePrintWid.w_pushbutton_m2_all.clicked.connect(self.m2.allset)
+
+        self.NotActivePrintWid.w_pushbutton_cooldown.clicked.connect(self.cooldown.allset)
 
     def notactive_fan(self):
         self._log("UI: User touched (not active) Fan")
@@ -358,11 +380,12 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
         self.parent.show()
         self.close()
 
-    def notactive_cool(self):
-        self._log("UI: User touched Cooldown")
+    # def notactive_cool(self):
+    #     self._log("UI: User touched Cooldown")
+        
         # self.extruder1.setandsend(0)
-        self.extruder2.setandsend(0)
-        self.heatedbed.setandsend(0)
+        # self.extruder2.setandsend(0)
+        # self.heatedbed.setandsend(0)
 
     def update_position(self, x, y, z):
         self.updateposition(x, y, z)
@@ -388,19 +411,19 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
         # break up the tuple containing the target and actual temperatures
         (bed_target_temp, bed_actual_temp) = bed_tuple
 
-        if bed_actual_temp is not None:
-            # print("bed target %d, bed actual %d." % (bed_target_temp, bed_actual_temp))
+        # if bed_actual_temp is not None:
+        #     # print("bed target %d, bed actual %d." % (bed_target_temp, bed_actual_temp))
 
-            # Display the temperatures on the UI
-            self.changeText(self.bedtemp, str(int(bed_actual_temp + 0.5)))
-            self.changeText(self.bedset, str(int(bed_target_temp + 0.5)))
+        #     # Display the temperatures on the UI
+        #     self.changeText(self.bedtemp, str(int(bed_actual_temp + 0.5)))
+        #     self.changeText(self.w_label_bed_setpoint, str(int(bed_target_temp + 0.5)))
 
-            # And change the set-temperature in the bed periph
-            if (self.heatedbed.settemp != bed_target_temp):
-                self.heatedbed._set(bed_target_temp)
-        else:
-            self.changeText(self.bedtemp, unknown_temp_str)
-            self.changeText(self.bedset, unknown_temp_str)
+        #     # And change the set-temperature in the bed periph
+        #     if (self.heatedbed.settemp != bed_target_temp):
+        #         self.heatedbed._set(bed_target_temp)
+        # else:
+        #     self.changeText(self.bedtemp, unknown_temp_str)
+        #     self.changeText(self.w_label_bed_setpoint, unknown_temp_str)
 
         ### Extruder 0
 
@@ -412,32 +435,32 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
 
         #     # Display the temperatures on the UI.
         #     self.changeText(self.e1temp, str(int(tool0_actual_temp + 0.5)))
-        #     self.changeText(self.e1set, str(int(tool0_target_temp + 0.5)))
+        #     self.changeText(self.w_label_extruder0_setpoint, str(int(tool0_target_temp + 0.5)))
 
         #     # if (self.extruder1.settemp != tool0_target_temp):
         #     #     self.extruder1._set(tool0_target_temp)
         # else:
         #     self.changeText(self.e1temp, unknown_temp_str)
-        #     self.changeText(self.e1set, unknown_temp_str)
+        #     self.changeText(self.w_label_extruder0_setpoint, unknown_temp_str)
 
         ### Extruder 1
 
         # break up the tuple containing the target and actual temperatures
-        (tool1_target_temp, tool1_actual_temp) = tool1_tuple
+        # (tool1_target_temp, tool1_actual_temp) = tool1_tuple
 
-        if (tool1_actual_temp is not None) and (tool1_target_temp is not None):
-            # print("tool1 target %d, tool1 actual %d." % (tool1_target_temp, tool1_actual_temp))
+        # if (tool1_actual_temp is not None) and (tool1_target_temp is not None):
+        #     # print("tool1 target %d, tool1 actual %d." % (tool1_target_temp, tool1_actual_temp))
         
-            # Display the temperatures on the UI.
-            self.changeText(self.e2temp, str(int(tool1_actual_temp + 0.5)))
-            self.changeText(self.e2set, str(int(tool1_target_temp + 0.5)))
+        #     # Display the temperatures on the UI.
+        #     self.changeText(self.e2temp, str(int(tool1_actual_temp + 0.5)))
+        #     self.changeText(self.w_label_extruder1_setpoint, str(int(tool1_target_temp + 0.5)))
 
-            if (self.extruder2.settemp != tool1_target_temp):
-                self.extruder2._set(tool1_target_temp)
+        #     if (self.extruder2.settemp != tool1_target_temp):
+        #         self.extruder2._set(tool1_target_temp)
 
-        else:
-            self.changeText(self.e2temp, unknown_temp_str)
-            self.changeText(self.e2set, unknown_temp_str)
+        # else:
+        #     self.changeText(self.e2temp, unknown_temp_str)
+        #     self.changeText(self.w_label_extruder1_setpoint, unknown_temp_str)
 
 
     def set_bed_temperature(self, value):

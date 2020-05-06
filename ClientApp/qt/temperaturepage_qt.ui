@@ -230,7 +230,7 @@
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_6">
         <item>
-         <widget class="QPushButton" name="e1neg">
+         <widget class="QPushButton" name="w_pushbutton_extruder0_decrement">
           <property name="maximumSize">
            <size>
             <width>75</width>
@@ -253,7 +253,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QLabel" name="e1set">
+         <widget class="QLabel" name="w_label_extruder0_setpoint">
           <property name="font">
            <font>
             <pointsize>18</pointsize>
@@ -270,7 +270,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="e1pos">
+         <widget class="QPushButton" name="w_pushbutton_extruder0_increment">
           <property name="maximumSize">
            <size>
             <width>75</width>
@@ -297,7 +297,7 @@
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_5">
         <item>
-         <widget class="QPushButton" name="e2neg">
+         <widget class="QPushButton" name="w_pushbutton_extruder1_decrement">
           <property name="maximumSize">
            <size>
             <width>75</width>
@@ -320,7 +320,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QLabel" name="e2set">
+         <widget class="QLabel" name="w_label_extruder1_setpoint">
           <property name="font">
            <font>
             <pointsize>18</pointsize>
@@ -337,7 +337,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="e2pos">
+         <widget class="QPushButton" name="w_pushbutton_extruder1_increment">
           <property name="maximumSize">
            <size>
             <width>75</width>
@@ -364,7 +364,7 @@
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_4">
         <item>
-         <widget class="QPushButton" name="bedneg">
+         <widget class="QPushButton" name="w_pushbutton_bed_decrement">
           <property name="maximumSize">
            <size>
             <width>75</width>
@@ -387,7 +387,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QLabel" name="bedset">
+         <widget class="QLabel" name="w_label_bed_setpoint">
           <property name="font">
            <font>
             <pointsize>18</pointsize>
@@ -404,7 +404,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="bedpos">
+         <widget class="QPushButton" name="w_pushbutton_bed_increment">
           <property name="maximumSize">
            <size>
             <width>75</width>

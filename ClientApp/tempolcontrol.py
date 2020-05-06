@@ -204,6 +204,12 @@ class TempOLControl:
         # Update the display with the temporary value
         self._update_display()
 
+    def set_setpoint(self, value):
+        self.set_point = value
+        self.state = State.changed
+        self._update_display()
+        self._send_setpoint()
+
     def _send_setpoint(self):
         # Send the new set-point to the printer
         self._log("Sending setpoint <%s> to <%d>." % (self.index_str, self.set_point))
