@@ -73,13 +73,13 @@ class SerialPage(BasePage, Ui_SerialPage):
             self.enable_page()
 
         # If we have successfulling connected, pop up a dialog.
-        if (from_state == "CONNECTING") and (to_state == "OPERATIONAL"):
-            self.w_runout_handler.w_runout_title.setText("")
-            self.w_runout_handler.w_runout_message_label.setText("Printer connected.")
-            self.w_runout_handler.enable_ok()
-            self.w_runout_handler.send_m108_on_ok = False
-            self.w_runout_handler.hide_on_ok = True
-            self.w_runout_handler.show()
+        # if (from_state == "CONNECTING") and (to_state == "OPERATIONAL"):
+        #     self.w_runout_handler.w_runout_title.setText("")
+        #     self.w_runout_handler.w_runout_message_label.setText("Printer connected.")
+        #     self.w_runout_handler.enable_ok()
+        #     self.w_runout_handler.send_m108_on_ok = False
+        #     self.w_runout_handler.hide_on_ok = True
+        #     self.w_runout_handler.show()
             
 
     def _log(self, message):
