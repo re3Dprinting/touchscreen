@@ -104,7 +104,10 @@ class TempOLControl:
         sub_tuple = tuple[self.index]
         (setpoint, actual) = sub_tuple
 
-        self.last_received_setpoint = setpoint
+        if setpoint is None:
+            self._log("Received temperature with invalid temperatures.")
+            return
+
         # print("state = %s" % str(self.state))
         # print("set = %d, actual = %d" % (setpoint, actual))
         # print("local set = %d" % (self.set_point))

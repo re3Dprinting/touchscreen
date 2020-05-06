@@ -67,7 +67,7 @@
       <item>
        <layout class="QVBoxLayout" name="verticalLayout_4">
         <item>
-         <widget class="QLabel" name="e1label">
+         <widget class="QLabel" name="e0label">
           <property name="font">
            <font>
             <pointsize>18</pointsize>
@@ -75,6 +75,59 @@
           </property>
           <property name="text">
            <string>Extruder 0</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="e0temp">
+          <property name="font">
+           <font>
+            <pointsize>22</pointsize>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="text">
+           <string>-----</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="e0img">
+          <property name="text">
+           <string/>
+          </property>
+          <property name="icon">
+           <iconset>
+            <normaloff>img/nozzleidle.png</normaloff>img/nozzleidle.png</iconset>
+          </property>
+          <property name="iconSize">
+           <size>
+            <width>85</width>
+            <height>85</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout_3">
+        <item>
+         <widget class="QLabel" name="e1label">
+          <property name="font">
+           <font>
+            <pointsize>18</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>Extruder 1</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
@@ -109,61 +162,8 @@
           </property>
           <property name="iconSize">
            <size>
-            <width>90</width>
-            <height>90</height>
-           </size>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item>
-       <layout class="QVBoxLayout" name="verticalLayout_3">
-        <item>
-         <widget class="QLabel" name="e2label">
-          <property name="font">
-           <font>
-            <pointsize>18</pointsize>
-           </font>
-          </property>
-          <property name="text">
-           <string>Extruder 1</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLabel" name="e2temp">
-          <property name="font">
-           <font>
-            <pointsize>22</pointsize>
-            <weight>75</weight>
-            <bold>true</bold>
-           </font>
-          </property>
-          <property name="text">
-           <string>-----</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="e2img">
-          <property name="text">
-           <string/>
-          </property>
-          <property name="icon">
-           <iconset>
-            <normaloff>img/nozzleidle.png</normaloff>img/nozzleidle.png</iconset>
-          </property>
-          <property name="iconSize">
-           <size>
-            <width>80</width>
-            <height>80</height>
+            <width>85</width>
+            <height>85</height>
            </size>
           </property>
          </widget>
@@ -215,8 +215,8 @@
           </property>
           <property name="iconSize">
            <size>
-            <width>80</width>
-            <height>80</height>
+            <width>85</width>
+            <height>85</height>
            </size>
           </property>
          </widget>

@@ -67,14 +67,14 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
         self.progress_signal.connect(self.update_progress_slot)
 
         # self.printer_if.set_temperature_callback(self)
-        # self.printer_if.temperature_change_connector().register(self.update_temperatures)
+        self.printer_if.temperature_change_connector().register(self.update_temperatures)
 
         self.printer_if.set_printer_state_callback(self)
         self.printer_if.set_position_callback(self)
         self.printer_if.set_progress_callback(self)
         
+        self.inittextformat(self.e0temp)
         self.inittextformat(self.e1temp)
-        self.inittextformat(self.e2temp)
         self.inittextformat(self.bedtemp)
         self.inittextformat(self.w_label_extruder0_setpoint)
         self.inittextformat(self.w_label_extruder1_setpoint)
@@ -83,8 +83,8 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
         self.changeText(self.w_label_extruder1_setpoint, '0')
         self.changeText(self.w_label_bed_setpoint, '0')
 
+        self.setbuttonstyle(self.e0img)
         self.setbuttonstyle(self.e1img)
-        self.setbuttonstyle(self.e2img)
         self.setbuttonstyle(self.bedimg)
 
         extruder0_ui_context = TempUIContext(self.w_label_extruder0_setpoint, \
@@ -135,7 +135,7 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
 
         self.initpreheatbuttons()
         # self.NotActivePrintWid.w_pushbutton_cooldown.clicked.connect(self.notactive_cool)
-        self.NotActivePrintWid.Fan.clicked.connect(self.notactive_fan)
+        self.NotActivePrintWid.w_pushbutton_fan.clicked.connect(self.notactive_fan)
 
 
 #		Initilization for Printing Widget.
@@ -360,15 +360,15 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
             self.printer_if.fans_off()
             self.ActivePrintWid.Fan.setIcon(self.fanofficon)
             self.ActivePrintWid.Fan.setIconSize(QtCore.QSize(55, 55))
-            self.NotActivePrintWid.Fan.setIcon(self.fanofficon)
-            self.NotActivePrintWid.Fan.setIconSize(QtCore.QSize(55, 55))
+            self.NotActivePrintWid.w_pushbutton_fan.setIcon(self.fanofficon)
+            self.NotActivePrintWid.w_pushbutton_fan.setIconSize(QtCore.QSize(55, 55))
         elif not self.fanon:
             self.fanon = True
             self.printer_if.fans_on()
             self.ActivePrintWid.Fan.setIcon(self.fanonicon)
             self.ActivePrintWid.Fan.setIconSize(QtCore.QSize(55, 55))
-            self.NotActivePrintWid.Fan.setIcon(self.fanonicon)
-            self.NotActivePrintWid.Fan.setIconSize(QtCore.QSize(55, 55))
+            self.NotActivePrintWid.w_pushbutton_fan.setIcon(self.fanonicon)
+            self.NotActivePrintWid.w_pushbutton_fan.setIconSize(QtCore.QSize(55, 55))
 
     def active_close(self):
         self._log("UI: User touched (active) Back")
@@ -393,13 +393,7 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
     def update_printer_state(self, data):
         print("PRINTER STATE CHANGE", data)
 
-    def update_temperatures(self, data):
-
-        # Get the tuple of tuples by breaking up the data struct
-#        temps_tuple = break_up_temperature_struct(data)
-        temps_tuple = data
-
-#        self.pp.pprint(temps_tuple)
+    def update_temperatures(self, temps_tuple):
 
         # Separate temps into the three tuples
         (bed_tuple, tool0_tuple, tool1_tuple) = temps_tuple
@@ -411,57 +405,30 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
         # break up the tuple containing the target and actual temperatures
         (bed_target_temp, bed_actual_temp) = bed_tuple
 
-        # if bed_actual_temp is not None:
-        #     # print("bed target %d, bed actual %d." % (bed_target_temp, bed_actual_temp))
-
-        #     # Display the temperatures on the UI
-        #     self.changeText(self.bedtemp, str(int(bed_actual_temp + 0.5)))
-        #     self.changeText(self.w_label_bed_setpoint, str(int(bed_target_temp + 0.5)))
-
-        #     # And change the set-temperature in the bed periph
-        #     if (self.heatedbed.settemp != bed_target_temp):
-        #         self.heatedbed._set(bed_target_temp)
-        # else:
-        #     self.changeText(self.bedtemp, unknown_temp_str)
-        #     self.changeText(self.w_label_bed_setpoint, unknown_temp_str)
+        if bed_actual_temp is not None:
+            self.changeText(self.bedtemp, str(int(bed_actual_temp + 0.5)))
+        else:
+            self.changeText(self.bedtemp, unknown_temp_str)
 
         ### Extruder 0
 
         # break up the tuple containing the target and actual temperatures
-        # (tool0_target_temp, tool0_actual_temp) = tool0_tuple
+        (tool0_target_temp, tool0_actual_temp) = tool0_tuple
 
-        # if tool0_actual_temp is not None:
-        #     # print("tool0 target %d, tool0 actual %d." % (tool0_target_temp, tool0_actual_temp))
-
-        #     # Display the temperatures on the UI.
-        #     self.changeText(self.e1temp, str(int(tool0_actual_temp + 0.5)))
-        #     self.changeText(self.w_label_extruder0_setpoint, str(int(tool0_target_temp + 0.5)))
-
-        #     # if (self.extruder1.settemp != tool0_target_temp):
-        #     #     self.extruder1._set(tool0_target_temp)
-        # else:
-        #     self.changeText(self.e1temp, unknown_temp_str)
-        #     self.changeText(self.w_label_extruder0_setpoint, unknown_temp_str)
+        if tool0_actual_temp is not None:
+            self.changeText(self.e0temp, str(int(tool0_actual_temp + 0.5)))
+        else:
+            self.changeText(self.e0temp, unknown_temp_str)
 
         ### Extruder 1
 
         # break up the tuple containing the target and actual temperatures
-        # (tool1_target_temp, tool1_actual_temp) = tool1_tuple
+        (tool1_target_temp, tool1_actual_temp) = tool1_tuple
 
-        # if (tool1_actual_temp is not None) and (tool1_target_temp is not None):
-        #     # print("tool1 target %d, tool1 actual %d." % (tool1_target_temp, tool1_actual_temp))
-        
-        #     # Display the temperatures on the UI.
-        #     self.changeText(self.e2temp, str(int(tool1_actual_temp + 0.5)))
-        #     self.changeText(self.w_label_extruder1_setpoint, str(int(tool1_target_temp + 0.5)))
-
-        #     if (self.extruder2.settemp != tool1_target_temp):
-        #         self.extruder2._set(tool1_target_temp)
-
-        # else:
-        #     self.changeText(self.e2temp, unknown_temp_str)
-        #     self.changeText(self.w_label_extruder1_setpoint, unknown_temp_str)
-
+        if tool1_actual_temp is not None:
+            self.changeText(self.e1temp, str(int(tool1_actual_temp + 0.5)))
+        else:
+            self.changeText(self.e1temp, unknown_temp_str)
 
     def set_bed_temperature(self, value):
         self._log("Setting bed temp to %d." % value)

@@ -508,7 +508,7 @@
        </spacer>
       </item>
       <item>
-       <widget class="QPushButton" name="Fan">
+       <widget class="QPushButton" name="w_pushbutton_fan">
         <property name="maximumSize">
          <size>
           <width>75</width>
