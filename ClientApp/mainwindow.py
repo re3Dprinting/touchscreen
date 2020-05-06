@@ -21,14 +21,14 @@ from .userupdatepage import UserUpdatePage
 from .duexsetuppage import DuExSetupPage
 
 class MainWindow(Ui_MainWindow, QtWidgets.QMainWindow):
-    def __init__(self, printer_if, persona):
+    def __init__(self, printer_if, persona, properties):
         super(MainWindow, self).__init__()
 
         # Set up logging
         self._logger = logging.getLogger(__name__)
         self._log("MainWindow starting up")
 
-        self.context = Context(printer_if, persona, self)
+        self.context = Context(printer_if, persona, self, properties)
 
         # Initialize the UI
         self.setupUi(self)

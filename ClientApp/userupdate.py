@@ -1,63 +1,54 @@
 #!/usr/bin/python3.4
 
 from builtins import str
-import os
-import psutil
-from pathlib import Path
-import time
-import sys
+from qt.userupdatewindow import Ui_UserUpdate
+from notification import Notification
+from basewindow import BaseWindow
 
 from PyQt5.QtCore import Qt
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 from git import Repo
 from git import Git
+import os
+import psutil
+from pathlib import Path
+import time
+import sys
 
-from qt.userupdatepage_qt import Ui_UserUpdatePage
-from notification import Notification
-from basepage import BasePage
-from basewindow import BaseWindow
 
-
-class UserUpdatePage(BasePage, Ui_UserUpdatePage, BaseWindow):
-    def __init__(self, context):
-        super(UserUpdatePage, self).__init__()
-        self.base_init()
-
+class UserUpdateWindow(BaseWindow, Ui_UserUpdate):
+    def __init__(self, personality, parent=None):
+        super(UserUpdateWindow, self).__init__(parent)
         self.setupUi(self)
+        self.parent = parent
 
-        self.personality = context.personality
-        self.ui_controller = context.ui_controller
-        self.properties = context.properties
-
-        self.setbuttonstyle(self.Back)
-
+        self.personality = personality
         self.app = QtWidgets.QApplication.instance()
         self.new_version_avalible = False
-        # self.debug = (self.properties["debug"] == "true")
-        self.debug = True
+        self.permission = self.properties["permission"]
 
         tmp_path = Path(__file__).parent.absolute()
         # print(tmp_path)
         self.current_path = Path(os.path.realpath(tmp_path)).parent
-        # print(self.current_path.__str__())
 
         #Get the current path (local repository) and make sure that the github link is the current repository.
-        self.git = Git(self.current_path.__str__())
-        self.repo = Repo(self.current_path.__str__())
-        self.current_tags = None
+        try:
+            self.git = Git(self.current_path.__str__())
+            self.repo = Repo(self.current_path.__str__())
+            self.current_tags = None
 
-        found_remote = False
-        #Check if re3d remote repository is in current remote tree
-        for r in self.repo.remotes:
-            if r.name == "re3d":
-                self.remote_repo = r
-                found_remote = True
-        #If re3d repo does not exist, add it as a remote.
-        if not found_remote:
-            self.remote_repo = self.repo.create_remote("re3d", "https://github.com/re3Dprinting/touchscreen")
-            # self.remote_repo = self.repo.create_remote("re3d", "https://github.com/plloppii/DashboardApp.git")
-
+            found_remote = False
+            #Check if re3d remote repository is in current remote tree
+            for r in self.repo.remotes:
+                if r.name == "re3d":
+                    self.remote_repo = r
+                    found_remote = True
+            #If re3d repo does not exist, add it as a remote.
+            if not found_remote:
+                self.remote_repo = self.repo.create_remote("re3d", "https://github.com/re3Dprinting/touchscreen")
+        except Exception as e:
+            print("userupdate: __init__() exception: ", e)
         # Make the selection Behavior as selecting the entire row
         self.SoftwareList.setSelectionBehavior(QtWidgets.QTableView.SelectRows)
         self.SoftwareList.setSelectionMode(QtWidgets.QTableView.SingleSelection)
@@ -78,8 +69,6 @@ class UserUpdatePage(BasePage, Ui_UserUpdatePage, BaseWindow):
         self.CheckUpdate.clicked.connect(self.checkupdate)
         self.Update.clicked.connect(self.update)
 
-        self.checkupdate()
-
     def checkupdate(self):
         #Fetch all of the tags from the remote repository.
         try:
@@ -90,63 +79,71 @@ class UserUpdatePage(BasePage, Ui_UserUpdatePage, BaseWindow):
                     self.repo.delete_tag(tag)
 
             self.remote_repo.fetch("--tags")
-            tags = self.repo.tags
+            tags = sorted(self.repo.tags, key=lambda t: t.commit.committed_date)
             tags.reverse()
 
             self.SoftwareList.setRowCount(0)
 
             #Grab the current version and check if it is a beta version. 
             current_v = self.app.applicationVersion()
-            current_is_beta = self.check_isbeta(current_v)
+            curr_isCustomerRelease = self.isCustomerRelease(current_v)
 
             # Check each tag and if it is a "release" tag. 
             # Append the tag to the list on the table widget. 
             self.current_tags = []
             for t in tags:
-                if("release" == t.name.split("/")[0]): #and not self.app.applicationVersion() in t.name #<--- Dont show current version
-                    self.current_tags.append(t)
-                    tag_date = time.strftime('%I:%M%p %m/%d/%y', time.localtime(t.commit.committed_date))
+                #Grab the current Version and the given version and see if they are beta versions. 
+                given_v = t.name
+                given_isCustomerRelease = self.isCustomerRelease(given_v)
 
-                    #Strip out the release/ part of the tag. 
-                    ver = t.name.lstrip("release/")
+                #Skip over all tags that contain archive
+                if("archive" in t.name): continue
 
-                    #Grabh the current Version and the given version and see if they are beta versions. 
-                    given_v = t.name.lstrip("release/")
-                    given_is_beta = self.check_isbeta(given_v)
+                if( ("release" in t.name or
+                     "devel" in t.name or 
+                     "hotfix" in t.name) 
+                 and (not self.permission == "developer")): continue
 
-                    #Check for an update if and only if the current version and given version both follow the X.X.X sematic versioning. 
-                    if(not current_is_beta and not given_is_beta):
-                        #Check if there is a newer software version avalible. 
-                        self.checkagainstcurrent(current_v, given_v)
-                    
-                    #Show tag only if the given tag is following X.X.X OR if debug mode is turned on. 
-                    if(self.debug or not given_is_beta):
-                        rowpos = self.SoftwareList.rowCount()
-                        self.SoftwareList.insertRow(rowpos)
-                        version = QtWidgets.QTableWidgetItem(t.name.lstrip("release/"))
+                if("beta" in t.name and not(self.permission == "developer" or self.permission =="beta-tester")): continue
 
-                        version.setFlags(Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
-                        date = QtWidgets.QTableWidgetItem(tag_date)
-                        date.setFlags(Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
-                        self.SoftwareList.setItem(rowpos,0,version)
-                        self.SoftwareList.setItem(rowpos,1,date)
+                #Filter out any remaining tags that are not in the given X.X.X format. 
+                if(self.permission == "customer" and not given_isCustomerRelease): continue 
+
+                self.current_tags.append(t)
+                tag_date = time.strftime('%I:%M%p %m/%d/%y', time.localtime(t.commit.committed_date))
+
+                #Check for an update if and only if the current version and given version both follow the X.X.X sematic versioning. 
+                if(curr_isCustomerRelease and given_isCustomerRelease):
+                    #Check if there is a newer software version avalible. 
+                    self.checkagainstcurrent(current_v, given_v)
+                
+                #TODO Only show releases if it follows X.X.X
+                rowpos = self.SoftwareList.rowCount()
+                self.SoftwareList.insertRow(rowpos)
+                version = QtWidgets.QTableWidgetItem(t.name)
+
+                version.setFlags(Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
+                date = QtWidgets.QTableWidgetItem(tag_date)
+                date.setFlags(Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
+                self.SoftwareList.setItem(rowpos,0,version)
+                self.SoftwareList.setItem(rowpos,1,date)
+
             # If no versions are found, push a debug message to the window. 
             # If there is a newer version avalible, create a notification object and return it to be caught by the window. 
             if(self.SoftwareList.rowCount() == 0): self.print_debug("No software versions found. The server might be down, please try again later.")
             elif(self.new_version_avalible):
                 return Notification("A new software version is available!\nTo update, go to Settings > Software Update")
         except Exception as e:
-            print(e)
+            print("userupdate: checkupdate() exception: ", e)
 
-    #Input is string of the version.
-    def check_isbeta(self, version):
+    #Is Customer Release only if version is in format of X.X.X
+    def isCustomerRelease(self, version):
         version = version.split(".")
-        is_beta = False
-        if(len(version) < 3): return True
+        if(len(version) < 3): return False
         for v in version:
             if(not v.isdigit()):
-                is_beta = True
-        return is_beta
+                return False
+        return True
 
     # Check if there is a newer software version avalible. 
     def checkagainstcurrent(self, current_version, given_version):
@@ -164,7 +161,7 @@ class UserUpdatePage(BasePage, Ui_UserUpdatePage, BaseWindow):
         if(selected != None):
             self.DebugOutput.clear()
             self.print_debug("re:3Display "+ selected.text() + " changelog:\n")
-            version = "release/"+ selected.text()
+            version = selected.text()
             for tag in self.current_tags:
                 if(version == tag.name):
                     if tag.tag is None:
@@ -182,7 +179,7 @@ class UserUpdatePage(BasePage, Ui_UserUpdatePage, BaseWindow):
         if selected_version != None: #and selected_version.text() != self.app.applicationVersion(): #<--- Dont allow update to current version
             self.print_debug("Updating....")
 
-            self.git.checkout("release/" + selected_version.text())
+            self.git.checkout(selected_version.text())
             if(self.personality.fullscreen == False): self.restart_program(sys.argv[0])
             else: self.restart_program(sys.argv[0])
         else:
