@@ -104,13 +104,19 @@ class TempOLControl:
         sub_tuple = tuple[self.index]
         (setpoint, actual) = sub_tuple
 
+        # self._log("setpoint = <%s>, actual = <%s> (state = <%s>)" % (str(setpoint), str(actual), self.state))
+
         if setpoint is None:
-            self._log("Received temperature with invalid temperatures.")
+            self._log("Received temperature with invalid setpoint.")
             return
 
-        # print("state = %s" % str(self.state))
-        # print("set = %d, actual = %d" % (setpoint, actual))
-        # print("local set = %d" % (self.set_point))
+        # If we're in UNKNOWN state, then transition to SYNC state,
+        # and the logic below will then track the temperature as if we
+        # were already in SYNC state. This can happen if the user
+        # starts a print before manually setting a temperature. The
+        # new setpoint will come from the Gcode file being printed.
+        if self.state == State.unknown:
+            self.state = State.synced
 
         # If we're in CHANGED state, which means that the user has
         # changed the set-point, but we haven't received a temperature
@@ -223,7 +229,7 @@ class TempOLControl:
         if self.state == State.unknown:
             self.w_label.setText("-----")
         elif self.state == State.synced or self.state == State.changed:
-            self.w_label.setText(str(self.set_point))
+            self.w_label.setText(str(int(self.set_point)))
 
 class TempUIContext:
     """The widgets necessary for open-loop control.
