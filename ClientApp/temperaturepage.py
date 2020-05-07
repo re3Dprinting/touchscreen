@@ -48,8 +48,6 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
         self.printer_if = context.printer_if
         self.ui_controller = context.ui_controller
 
-        self.event_handler = event_handler()
-
         self.ActivePrintWid = ActivePrintWidget(self)
         self.NotActivePrintWid = NotActivePrintWidget(self)
         self.w_runout_handler = RunoutHandlerDialog(self, self.printer_if)
@@ -167,6 +165,9 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
         self.setbuttonstyle(self.ActivePrintWid.FileLabel)
         self.setbuttonstyle(self.ActivePrintWid.FeedrateLabel)
         self.setbuttonstyle(self.ActivePrintWid.BabysteppingLabel)
+
+        self.event_handler = event_handler(self, self.bed_olcontrol)
+        self.event_handler.start()
 
     def update_parameters(self):
         self.event_handler.resetparameters()
