@@ -35,7 +35,7 @@
    <item row="0" column="0">
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <widget class="QPushButton" name="FileLabel">
+      <widget class="QPushButton" name="w_label_file">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -54,7 +54,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QLabel" name="FileName">
+      <widget class="QLabel" name="w_label_filename">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
          <horstretch>0</horstretch>
@@ -80,7 +80,7 @@
       <number>6</number>
      </property>
      <item>
-      <widget class="QSlider" name="FeedrateSlider">
+      <widget class="QSlider" name="w_slider_feedrate">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
          <horstretch>0</horstretch>
@@ -150,7 +150,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="BabysteppingLabel">
+        <widget class="QPushButton" name="w_pushbutton_babystep">
          <property name="maximumSize">
           <size>
            <width>200</width>
@@ -158,11 +158,95 @@
           </size>
          </property>
          <property name="text">
-          <string>Babystepping</string>
+          <string>Babystepping </string>
          </property>
         </widget>
        </item>
       </layout>
+     </item>
+    </layout>
+   </item>
+   <item row="0" column="1">
+    <layout class="QHBoxLayout" name="horizontalLayout_5">
+     <item>
+      <widget class="QPushButton" name="w_pushbutton_feedrate">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>120</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Feedrate:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="w_label_feedrate">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>30</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>200</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:14pt;&quot;&gt;-----&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="1" column="0">
+    <layout class="QVBoxLayout" name="verticalLayout_2">
+     <item>
+      <widget class="QProgressBar" name="w_progressbar_file_progress">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>280</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="value">
+        <number>0</number>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="w_label_position">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;-----&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>
@@ -182,7 +266,7 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="FlowrateNeg">
+      <widget class="QPushButton" name="w_pushbutton_flowrate_dec">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
          <horstretch>0</horstretch>
@@ -211,7 +295,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QLabel" name="FlowrateVal">
+      <widget class="QLabel" name="w_label_flowrate">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
          <horstretch>0</horstretch>
@@ -224,7 +308,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="FlowratePos">
+      <widget class="QPushButton" name="w_pushbutton_flowrate_inc">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
          <horstretch>0</horstretch>
@@ -253,7 +337,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="BabysteppingNeg">
+      <widget class="QPushButton" name="w_pushbutton_babystep_dec">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
          <horstretch>0</horstretch>
@@ -282,7 +366,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QLabel" name="BabysteppingVal">
+      <widget class="QLabel" name="w_label_babystep_val">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
          <horstretch>0</horstretch>
@@ -295,7 +379,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="BabysteppingPos">
+      <widget class="QPushButton" name="w_pushbutton_babystep_inc">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
          <horstretch>0</horstretch>
@@ -338,54 +422,6 @@
      </item>
     </layout>
    </item>
-   <item row="0" column="1">
-    <layout class="QHBoxLayout" name="horizontalLayout_5">
-     <item>
-      <widget class="QPushButton" name="FeedrateLabel">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="minimumSize">
-        <size>
-         <width>120</width>
-         <height>0</height>
-        </size>
-       </property>
-       <property name="text">
-        <string>Feedrate:</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="FeedrateVal">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="minimumSize">
-        <size>
-         <width>0</width>
-         <height>30</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>200</width>
-         <height>16777215</height>
-        </size>
-       </property>
-       <property name="text">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:14pt;&quot;&gt;-----&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </item>
    <item row="3" column="0">
     <layout class="QHBoxLayout" name="horizontalLayout_2">
      <item>
@@ -402,7 +438,7 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="PausePrint">
+      <widget class="QPushButton" name="w_pushbutton_pauseprint">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -412,8 +448,11 @@
        <property name="maximumSize">
         <size>
          <width>65</width>
-         <height>80</height>
+         <height>65</height>
         </size>
+       </property>
+       <property name="styleSheet">
+        <string notr="true"/>
        </property>
        <property name="text">
         <string/>
@@ -444,7 +483,7 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="ResumePrint">
+      <widget class="QPushButton" name="w_pushbutton_resumeprint">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -454,7 +493,7 @@
        <property name="maximumSize">
         <size>
          <width>65</width>
-         <height>80</height>
+         <height>65</height>
         </size>
        </property>
        <property name="text">
@@ -486,7 +525,7 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="Fan">
+      <widget class="QPushButton" name="w_pushbutton_fan">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -496,7 +535,7 @@
        <property name="maximumSize">
         <size>
          <width>65</width>
-         <height>80</height>
+         <height>65</height>
         </size>
        </property>
        <property name="text">
@@ -526,42 +565,6 @@
         </size>
        </property>
       </spacer>
-     </item>
-    </layout>
-   </item>
-   <item row="1" column="0">
-    <layout class="QVBoxLayout" name="verticalLayout_2">
-     <item>
-      <widget class="QProgressBar" name="FileProgress">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="minimumSize">
-        <size>
-         <width>280</width>
-         <height>0</height>
-        </size>
-       </property>
-       <property name="value">
-        <number>0</number>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="PositionLabel">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;-----&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-       </property>
-      </widget>
      </item>
     </layout>
    </item>

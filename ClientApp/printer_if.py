@@ -54,8 +54,8 @@ class PrinterIF(PrinterCallback):
 
         # Set default values
         self.file_name = ""
-        self.feed_rate = 100
-        self.flow_rate = 100
+        # self.feed_rate = 100
+        # self.flow_rate = 100
 
         # We don't know where the print head is or has been.
         self.last_known_position = None
@@ -104,13 +104,22 @@ class PrinterIF(PrinterCallback):
 
     def set_feed_rate(self, rate):
         # Record the specified feed rate and send it to the printer.
-        self.feed_rate = rate
+        # self.feed_rate = rate
         self.printer.feed_rate(rate)
 
-    def set_flow_rate(self, rate):
-        # Record the specified flow rate and send it to the printer.
-        self.flow_rate = rate
-        self.printer.flow_rate(rate)
+    def set_flow_rate(self, rate, extruder = ""):
+        self._log("set_flow_rate %d <%s>" % (rate, extruder))
+        if extruder != "":
+            extruder = ' ' + extruder
+
+        # We don't use the printer object's flow_rate function because
+        # it cannot distinguish between tools.
+        # self.printer.flow_rate(rate)
+
+        # Build and send the message
+        flowrate_command = "M221 S" + str(rate) + extruder
+        self._log("FLOW RATE command <%s>" % flowrate_command)
+        self.commands(flowrate_command)
 
     def set_babystep(self, value):
         babystep_command = "M290 P0 Z" + str(value)

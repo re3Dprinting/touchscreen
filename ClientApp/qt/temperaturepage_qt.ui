@@ -23,9 +23,9 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>250</y>
+     <y>240</y>
      <width>781</width>
-     <height>171</height>
+     <height>181</height>
     </rect>
    </property>
    <layout class="QGridLayout" name="gridLayout">
@@ -52,7 +52,7 @@
      <x>10</x>
      <y>10</y>
      <width>781</width>
-     <height>231</height>
+     <height>221</height>
     </rect>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout">
@@ -109,8 +109,8 @@
           </property>
           <property name="iconSize">
            <size>
-            <width>85</width>
-            <height>85</height>
+            <width>75</width>
+            <height>75</height>
            </size>
           </property>
          </widget>
@@ -162,8 +162,8 @@
           </property>
           <property name="iconSize">
            <size>
-            <width>85</width>
-            <height>85</height>
+            <width>75</width>
+            <height>75</height>
            </size>
           </property>
          </widget>
@@ -215,8 +215,8 @@
           </property>
           <property name="iconSize">
            <size>
-            <width>85</width>
-            <height>85</height>
+            <width>75</width>
+            <height>75</height>
            </size>
           </property>
          </widget>
