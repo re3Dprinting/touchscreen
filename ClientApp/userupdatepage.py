@@ -169,7 +169,7 @@ class UserUpdatePage(BasePage, Ui_UserUpdatePage, BaseWindow):
         selected = self.SoftwareList.item(item, 0)
         if(selected != None):
             self.DebugOutput.clear()
-            self.print_debug("re:3Display "+ selected.text() + " changelog:\n")
+            self.print_debug(selected.text() + " changelog:\n")
             version = selected.text()
             for tag in self.current_tags:
                 if(version == tag.name):

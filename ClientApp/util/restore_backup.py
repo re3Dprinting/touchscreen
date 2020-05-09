@@ -1,5 +1,5 @@
 from pathlib import Path
-from shutil import copyfile
+import shutil
 from git import Repo, Git
 import os
 import json
@@ -11,8 +11,12 @@ import json
 def restore_backup(personality):
     #Grab the current directory were the git repository is initialized.
     backup_path = personality.gitrepopath + "_backup"
-    
-    if(Path(backup_path).is_file()):
-        print(backup_path, " found")
-    else:
-        print(backup_path, " not found")
+    broken_path = personality.gitrepopath+"_broken"
+
+    if(Path(backup_path).is_dir()):
+        #Move the current path to a label broken path
+        shutil.move(personality.gitrepopath, broken_path)
+        #Copy the backup over to current path
+        shutil.copytree(backup_path, personality.gitrepopath)
+        #remove the broken path.
+        shutil.rmtree(broken_path)
