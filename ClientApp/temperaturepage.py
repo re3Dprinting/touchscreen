@@ -173,6 +173,9 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
 
         self.print_handler = PrintHandler(self.context, self)
 
+        self.control_page = self.ui_controller.get_page(k_control_page)
+
+
     # def _foo(self, obj):
     #     obj.setStyleSheet("QPushButton { 
 
@@ -243,6 +246,7 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
         position_string = "X: %d Y: %d Z:%1.2f" % (x, y, z)
 
         self.changeText(self.ActivePrintWid.w_label_position, position_string)
+        self.control_page.PositionLabel.setText(position_string)
 
     def update_progress(self, completion, print_time_left):
         self.progress_signal.emit(str(completion))

@@ -108,7 +108,8 @@ class TempOLControl:
 
         if setpoint is None:
             # This can happen when we print on printers with only one
-            # extruder. It's benign, so ignore it without logging.
+            # extruder. It's a benign error, so ignore it without
+            # logging.
             return
 
         # If we're in UNKNOWN state, then transition to SYNC state,
@@ -224,7 +225,7 @@ class TempOLControl:
         # Send the new set-point to the printer
         self._log("Sending setpoint <%s> to <%d>." % (self.index_str, self.set_point))
         self.printer_if.set_temperature(self.index_str, self.set_point)
-        self.sync_timer.start(10000)
+        self.sync_timer.start(60000)
 
     def _update_display(self):
         if self.state == State.unknown:

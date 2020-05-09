@@ -9,7 +9,7 @@ from octoprint.util.comm import MachineCom
 
 from util.temputils import break_up_temperature_struct
 
-position_regex = re.compile("x:([0-9]+\.[0-9]+) y:([0-9]+\.[0-9]+) z:([0-9]+\.[0-9]+)", re.IGNORECASE)
+position_regex = re.compile("x:(-?[0-9]+\.[0-9]+) y:(-?[0-9]+\.[0-9]+) z:(-?[0-9]+\.[0-9]+)", re.IGNORECASE)
 runout_message_regex = re.compile("echo:(R[0-9]+) (.*)")
 
 from util.ctor import Ctor, CtorTuple
@@ -61,7 +61,7 @@ class PrinterIF(PrinterCallback):
         self.last_known_position = None
 
         # The maximum number of M114 commands to send to the printer
-        self.M114_QUEUE_LIMIT = 2
+        self.M114_QUEUE_LIMIT = 4
 
         # The number of M114 commands we have sent to the printer
         # without a response.
@@ -293,12 +293,13 @@ class PrinterIF(PrinterCallback):
         # print("B Sent count =", self.m114_sent_count)
 
         if (self.m114_sent_count < self.M114_QUEUE_LIMIT):
-            # self.printer.commands("M114")
+            self.printer.commands("M114")
             self.m114_sent_count += 1
         else:
             state_string = self.printer.get_state_string()
             if state_string == "Operational":
                 self.printer.fake_ack()
+
       except Exception as e:
           print("SOMETHING IS WRONG")
           traceback.print_exc()
@@ -448,6 +449,8 @@ class PrinterIF(PrinterCallback):
             # Save the last known position. We'll use this in resuming
             # a print.
             self.last_known_position = (float(x), float(y), float(z))
+
+            # print("got a position match %f %f %f" % self.last_known_position)
 
             # And, if there's a callback, call it now.
             if self.position_callback is not None:
