@@ -12,7 +12,7 @@ from util.temputils import break_up_temperature_struct
 position_regex = re.compile("x:(-?[0-9]+\.[0-9]+) y:(-?[0-9]+\.[0-9]+) z:(-?[0-9]+\.[0-9]+)", re.IGNORECASE)
 runout_message_regex = re.compile("echo:(R[0-9]+) (.*)")
 
-from util.ctor import Ctor, CtorTuple
+from util.ctor import Ctor, CtorTuple, CtorStr
 
 class PrinterIF(PrinterCallback):
     def __init__(self, printer):
@@ -25,6 +25,7 @@ class PrinterIF(PrinterCallback):
         self.printer_state = "OFFLINE"
 
         self.state_change_ctor = Ctor()
+        self.position_ctor = CtorTuple()
         self.temperature_change_ctor = CtorTuple()
 
         # Set up logging
@@ -37,8 +38,6 @@ class PrinterIF(PrinterCallback):
 
         # Null out all our callbacks.
         self.temperature_callback = None
-        self.printer_state_callback = None
-        self.position_callback = None
         self.printer_state_change_callback = None
         self.printer_progress_callback = None
         self.runout_callback = None
@@ -223,9 +222,6 @@ class PrinterIF(PrinterCallback):
     def set_temperature(self, name, temp):
         self.printer.set_temperature(name, temp)
         
-    def set_printer_state_callback(self, callback):
-        self.printer_state_callback = callback
-        
     # def set_temperature_callback(self, callback):
     #     # Save the provided object as a temperature callback. NOTE:
     #     # must implement the update_temperature(self, data) function.
@@ -353,6 +349,9 @@ class PrinterIF(PrinterCallback):
     def state_change_connector(self):
         return self.state_change_ctor
 
+    def position_connector(self):
+        return self.position_ctor
+
     def temperature_change_connector(self):
         return self.temperature_change_ctor
 
@@ -395,8 +394,8 @@ class PrinterIF(PrinterCallback):
         # print("Saving print finished callback")
         self.print_finished_callback = callback
 
-    def set_position_callback(self, callback):
-        self.position_callback = callback
+    # def set_position_callback(self, callback):
+    #     self.position_callback = callback
 
     def set_progress_callback(self, callback):
         self.printer_progress_callback = callback
@@ -453,8 +452,8 @@ class PrinterIF(PrinterCallback):
             # print("got a position match %f %f %f" % self.last_known_position)
 
             # And, if there's a callback, call it now.
-            if self.position_callback is not None:
-                self.position_callback.update_position(x, y, z)
+            xyz_tuple = (x, y, z)
+            self.position_ctor.notify(xyz_tuple)
 
         # Track incoming messages that list the files on the SD card
         # in responds to an M20 command.

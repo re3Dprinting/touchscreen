@@ -67,9 +67,10 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
 
         # self.printer_if.set_temperature_callback(self)
         self.printer_if.temperature_change_connector().register(self.update_temperatures)
+        self.printer_if.position_connector().register(self.update_position)
 
-        self.printer_if.set_printer_state_callback(self)
-        self.printer_if.set_position_callback(self)
+        # self.printer_if.set_printer_state_callback(self)
+        # self.printer_if.set_position_callback(self)
         self.printer_if.set_progress_callback(self)
         
         self.inittextformat(self.e0temp)
@@ -174,10 +175,6 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
         self.print_handler = PrintHandler(self.context, self)
 
         self.control_page = self.ui_controller.get_page(k_control_page)
-
-
-    # def _foo(self, obj):
-    #     obj.setStyleSheet("QPushButton { 
 
     def update_parameter_display(self):
         self._log("update_paramater_display")
@@ -398,7 +395,8 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
         # self.extruder2.setandsend(0)
         # self.heatedbed.setandsend(0)
 
-    def update_position(self, x, y, z):
+    def update_position(self, xyz_tuple):
+        (x, y, z) = xyz_tuple
         self.updateposition(x, y, z)
 
     def update_printer_state(self, data):

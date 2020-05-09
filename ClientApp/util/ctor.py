@@ -15,6 +15,18 @@ class Ctor(QObject):
     def notify(self, from_state, to_state):
         self.signal.emit(from_state, to_state)
     
+class CtorStr(QObject):
+    signal = pyqtSignal(str)
+
+    def __init__(self):
+        super(CtorStr, self).__init__()
+
+    def register(self, slot):
+        self.signal.connect(slot)
+
+    def notify(self, value):
+        self.signal.emit(value)
+
 class CtorDict(QObject):
     signal = pyqtSignal(dict)
 
