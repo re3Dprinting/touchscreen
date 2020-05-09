@@ -37,15 +37,10 @@ class UserUpdatePage(BasePage, Ui_UserUpdatePage, BaseWindow):
         # self.debug = (self.properties["debug"] == "true")
         self.debug = True
 
-        tmp_path = Path(__file__).parent.absolute()
-        # print(tmp_path)
-        self.current_path = Path(os.path.realpath(tmp_path)).parent
-        # print(self.current_path.__str__())
-
         #Get the current path (local repository) and make sure that the github link is the current repository.
         try:
-            self.git = Git(self.current_path.__str__())
-            self.repo = Repo(self.current_path.__str__())
+            self.git = Git(self.personality.gitrepopath)
+            self.repo = Repo(self.personality.gitrepopath)
             self.current_tags = None
 
             found_remote = False
