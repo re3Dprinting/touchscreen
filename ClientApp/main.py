@@ -192,7 +192,6 @@ class MainHandler():
 
         # Show the top-level UI display...
         mainwindow.show()
-        mainwindow.asd()
 
         # ...and kick off the UI event loop. This function does not
         # return.

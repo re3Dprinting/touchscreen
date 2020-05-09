@@ -3,6 +3,7 @@
 from builtins import str
 import os
 import psutil
+import shutil
 from pathlib import Path
 import time
 import sys
@@ -180,12 +181,14 @@ class UserUpdatePage(BasePage, Ui_UserUpdatePage, BaseWindow):
             self.DebugOutput.ensureCursorVisible()
 
     #   Update function called by clicking the Update/Rollback button
-    #   Uses psutil to kill the current process, then reexecutes the original python command. 
+    #   Move the current touchscreen git project to another folder in root directory for backup
+    #   Uses psutil to kill the current process, then calls sys.exit(0)
     def update(self):
         software = self.SoftwareList.currentRow()
         selected_version = self.SoftwareList.item(software, 0)
         if selected_version != None: #and selected_version.text() != self.app.applicationVersion(): #<--- Dont allow update to current version
             self.print_debug("Updating....")
+            self.backup_software()
 
             self.git.checkout(selected_version.text())
             if(self.personality.fullscreen == False): self.restart_program(sys.argv[0])
@@ -193,6 +196,20 @@ class UserUpdatePage(BasePage, Ui_UserUpdatePage, BaseWindow):
         else:
             self.print_debug("Select a Version on list")
     
+    def backup_software(self):
+        #First check if the gitrepopath is valid
+        ts_path = self.personality.gitrepopath
+        backup_path = ts_path + "_backup"
+        if(Path(ts_path).is_dir()):
+            if(Path(backup_path).is_dir()):
+                shutil.rmtree(backup_path)
+            try:
+                shutil.copytree(ts_path, backup_path)
+            except Exception as e:
+                print(e)
+
+
+
     def print_debug(self, text):
         self.DebugOutput.append(text)
     
