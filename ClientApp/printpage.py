@@ -251,13 +251,14 @@ class PrintPage(BasePage, Ui_PrintPage):
     def temperature_active(self):
         temperature_page = self.ui_controller.get_page(k_temperature_page)
         temperature_page.activeprint()
-        temperature_page.update_parameters()
+        self._log("temperature_active: calling reset_parameters.")
+        temperature_page.reset_parameters()
         temperature_page.set_progress(0)
 
     def temperature_inactive(self):
         temperature_page = self.ui_controller.get_page(k_temperature_page)
         temperature_page.notactiveprint()
-        temperature_page.update_parameters()
+        temperature_page.reset_parameters()
         temperature_page.set_progress(0)
 
     def sd_start_print(self):
@@ -268,6 +269,9 @@ class PrintPage(BasePage, Ui_PrintPage):
 
         # print("Printing <%s>" %(selected_file))
         if selected_file != None:
+            self.temperature_active()
+            self.disable_control()
+
             self.printer_if.select_sd_file(selected_file)
             self.printer_if.start_print()
 
@@ -282,8 +286,6 @@ class PrintPage(BasePage, Ui_PrintPage):
             # self.temp_pop.update_parameters()
             # self.temp_pop.ActivePrintWid.FileProgress.setValue(0)
             #self.parent.Control.setEnabled(False)
-            self.temperature_active()
-            self.disable_control()
 
     def local_start_print(self):
         self._log("UI: User touched (Local) Start Print")
@@ -296,6 +298,9 @@ class PrintPage(BasePage, Ui_PrintPage):
         self._log("File name <%s>, local path <%s>." % (selected_file_name, selected_file_loc_path))
 
         if selected_file_name != None:
+
+            self.disable_control()
+            self.temperature_active()
 
             self.printer_if.select_local_file(selected_file_loc_path)
             self.printer_if.start_print()
@@ -312,8 +317,6 @@ class PrintPage(BasePage, Ui_PrintPage):
             # control_page = self.ui_controller.get_page(k_control_page)
             # control_page.setEnabled(False)
             #self.parent.Control.setEnabled(False)
-            self.disable_control()
-            self.temperature_active()
 
     def usb_start_print(self):
         self._log("UI: User touched (USB) Start Print")
@@ -325,6 +328,9 @@ class PrintPage(BasePage, Ui_PrintPage):
         self._log("File name <%s>, relative path <%s>, absolute path <%s>." % (selected_file_name, selected_file_rel, selected_file_abs))
 
         if selected_file_name != None:
+
+            self.disable_control()
+            self.temperature_active()
 
             wrapped_file = DiskFileWrapper(selected_file_name, selected_file_abs, False)
             self.local_storage_manager.add_file(selected_file_name, wrapped_file, allow_overwrite=True)
@@ -342,8 +348,6 @@ class PrintPage(BasePage, Ui_PrintPage):
             # self.temp_pop.update_parameters()
             # self.temp_pop.ActivePrintWid.FileProgress.setValue(0)
             # self.parent.Control.setEnabled(False)
-            self.disable_control()
-            self.temperature_active()
 
     def get_selected_widget_file(self, list_widget, subdir):
     

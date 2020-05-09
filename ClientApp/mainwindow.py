@@ -42,7 +42,7 @@ class MainWindow(Ui_MainWindow, QtWidgets.QMainWindow):
 
         # Create the various other pages
         self.add_page(self.home_page, k_home_page)
-        self.add_page(PrintPage(context), k_print_page)
+        printpage = self.add_page(PrintPage(context), k_print_page)
         self.add_page(ControlPage(context), k_control_page)
         self.add_page(TemperaturePage(context), k_temperature_page)
         self.add_page(SettingsPage(context), k_settings_page)
@@ -54,6 +54,8 @@ class MainWindow(Ui_MainWindow, QtWidgets.QMainWindow):
 
         # Start the UI on the Home page
         self.stack.setCurrentWidget(self.home_page)
+
+        printpage.tabWidget.setCurrentIndex(2)
 
         # Create the data structure that will contain the stack of
         # pages to display.

@@ -1,20 +1,19 @@
 from builtins import str
-import time
-import threading
-from PyQt5 import QtCore
-
+import logging
 
 # The Event Handler operates the temperature preheats, setting the temperatures,
 #
 
-class PrintHandler(QtCore.QThread):
-    reconnect_serial = QtCore.pyqtSignal([str], [str])
-
+class PrintHandler():
     def __init__(self, context, tempwindow):
         super(PrintHandler).__init__()
 
         self.printer_if = context.printer_if
         self.tempwindow = tempwindow
+
+        # Set up logging
+        self._logger = logging.getLogger(__name__)
+        self._log("TemperaturePage __init__")
 
         # Feed rate variables
         self.feedrate = 100
@@ -32,14 +31,28 @@ class PrintHandler(QtCore.QThread):
         self.sendtempcount = 0
         self.rescanserial_count = 0
 
+    def _log(self, message):
+        self._logger.debug(message)
+
     def reset_parameters(self):
-        self.fr_index = 0
+        self._log("reset_parameters")
+        self.fr_index = 2
         self.feedrate = 100
         self.flowrate = [100, 100, 100]
         self.babystep = float(0)
+        self.babystepx10 = 0
+
+    def send_all(self):
+        self.sendbabystep()
+        self.sendfeedrate()
+        self.sendflowrate()
 
     def sendbabystep(self):
-        self.tempwindow.serial.send_serial("M290 Z " + str(self.babystep))
+        self.printer_if.set_babystep(self.babystep)
+        # self.tempwindow.serial.send_serial("M290 Z " + str(self.babystep))
+
+    def sendfeedrate(self):
+        self.printer_if.set_feed_rate(self.feedrate)
 
     def sendflowrate(self):
         new_rate = self.flowrate[self.fr_index]

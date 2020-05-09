@@ -107,7 +107,8 @@ class TempOLControl:
         # self._log("setpoint = <%s>, actual = <%s> (state = <%s>)" % (str(setpoint), str(actual), self.state))
 
         if setpoint is None:
-            self._log("Received temperature with invalid setpoint.")
+            # This can happen when we print on printers with only one
+            # extruder. It's benign, so ignore it without logging.
             return
 
         # If we're in UNKNOWN state, then transition to SYNC state,

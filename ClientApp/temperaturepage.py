@@ -56,7 +56,7 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
         self.gridLayout.addWidget(self.NotActivePrintWid, 2, 0, 1, 1)
         self.gridLayout.addWidget(self.ActivePrintWid, 2, 0, 1, 1)
 
-        self.activeprint()
+        self.notactiveprint()
         self.pushbutton_back.clicked.connect(self.back)
 
         # self.serial.data.updateprogress.connect(self.updateprogress)
@@ -150,8 +150,8 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
         self.ActivePrintWid.w_pushbutton_flowrate_dec.clicked.connect(self.flowrate_dec)
         self.ActivePrintWid.w_pushbutton_babystep_dec.clicked.connect(self.babystepneg)
         self.ActivePrintWid.w_pushbutton_babystep_inc.clicked.connect(self.babysteppos)
-        self.ActivePrintWid.w_slider_feedrate.valueChanged.connect(self.feedrateslider)
-        self.ActivePrintWid.w_slider_feedrate.sliderReleased.connect(self.sendfeedrate)
+        self.ActivePrintWid.w_slider_feedrate.valueChanged.connect(self.feedrateslider_changed)
+        self.ActivePrintWid.w_slider_feedrate.sliderReleased.connect(self.feedrateslider_released)
 
         # self.ActivePrintWid.FlowrateLabel.
         self.inittextformat(self.ActivePrintWid.w_label_filename)
@@ -177,17 +177,20 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
     #     obj.setStyleSheet("QPushButton { 
 
     def update_parameter_display(self):
-        self.changeText(self.ActivePrintWid.w_label_filename, self.printer_if.file_name)
-        self.changeText(self.ActivePrintWid.w_label_feetrate, str(self.printer_if.feed_rate))
+        self._log("update_paramater_display")
+        self.changeText(self.ActivePrintWid.w_label_filename, str(self.print_handler.flowrate[self.print_handler.fr_index]))
+        self.changeText(self.ActivePrintWid.w_label_feedrate, str(self.print_handler.feedrate))
         self.changeText(self.ActivePrintWid.w_label_babystep_val, str(self.print_handler.babystep))
+        self.ActivePrintWid.w_slider_feedrate.setValue(self.print_handler.feedrate)
         self.updateflowlabel()
 
     def reset_parameters(self):
+        self._log("***************************************************************************************************reset_paramaters")
         self.print_handler.reset_parameters()
-        self.update_parameter_display
+        self.print_handler.send_all()
+        self.update_parameter_display()
 
-
-    def sendfeedrate(self):
+    def feedrateslider_released(self):
         self._log("UI: User released Feed Rate slider")
 
         feed_rate = self.ActivePrintWid.w_slider_feedrate.value()
@@ -202,13 +205,10 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
         if feed_rate != indicated_feed_rate:
             self.ActivePrintWid.w_slider_feedrate.setValue(feed_rate)
 
-        self.printer_if.set_feed_rate(self.ActivePrintWid.w_slider_feedrate.value())
+        self.print_handler.feedrate = feed_rate
+        self.print_handler.sendfeedrate()
 
-        # self.serial.send_serial(
-        #     "M220 S" + str(self.ActivePrintWid.w_slider_feedrate.value()))
-        pass
-
-    def feedrateslider(self):
+    def feedrateslider_changed(self):
         self._log("UI: User moved Feed Rate slider")
         val = self.ActivePrintWid.w_slider_feedrate.value()
         self.changeText(self.ActivePrintWid.w_label_feedrate, str(val))
