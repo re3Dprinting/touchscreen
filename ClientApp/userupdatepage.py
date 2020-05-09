@@ -7,12 +7,15 @@ from pathlib import Path
 import time
 import sys
 
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5 import QtCore, QtGui, QtWidgets
+
+from .fsutils.subfilesystem import SubFileSystem
 
 from git import Repo
 from git import Git
 
+import zipfile, tarfile
 from qt.userupdatepage_qt import Ui_UserUpdatePage
 from notification import Notification
 from basepage import BasePage
@@ -20,6 +23,9 @@ from basewindow import BaseWindow
 
 
 class UserUpdatePage(BasePage, Ui_UserUpdatePage, BaseWindow):
+    #Signal sent to notify a USB device was plugged in.
+    update_signal = pyqtSignal(str)
+
     def __init__(self, context):
         super(UserUpdatePage, self).__init__()
         self.base_init()
@@ -36,6 +42,9 @@ class UserUpdatePage(BasePage, Ui_UserUpdatePage, BaseWindow):
         self.new_version_avalible = False
         # self.debug = (self.properties["debug"] == "true")
         self.debug = True
+
+        #Subdirectory object to check for USB software updates.
+        self.subdir = SubFileSystem(self.personality.watchpoint)
 
         tmp_path = Path(__file__).parent.absolute()
         # print(tmp_path)
@@ -217,4 +226,37 @@ class UserUpdatePage(BasePage, Ui_UserUpdatePage, BaseWindow):
         # #Restart the program with the original arguments and python executable. 
         # python = sys.executable
         # os.execl(python, python, argument)
+    
+    def set_usb_mount_signals(self, tuple):
+        (create_signal, delete_signal) = tuple
+        create_signal.connect(self.update_usb_create)
+        delete_signal.connect(self.update_usb_delete)
+    def update_usb_create(self, mountpoint):
+        print("UPDATE_USB_CREATE: path <%s>, actual path <%s>" % (mountpoint.path, mountpoint.actual_path))
+        self.subdir = SubFileSystem(mountpoint.path)
+        self.check_usb_software()
 
+    def update_usb_delete(self, path):
+        pass
+        # self.usb_file_manager.clear_files()
+
+
+    def set_usb_content_signal(self, signal):
+        signal.connect(self.check_usb_software)
+    def check_usb_software(self):
+        usb_updates = self.subdir.list_ts_software_updates()
+        # for update in usb_updates:
+        #     update.dump()
+
+        
+        #     print(file.displayname, " ", file.type)
+        #     if file.type == 'd':
+        #         print(file.displayname)
+        
+        #Validate that the directory, zip, or tar.gz is a valid touchscreen software 
+        #Compare the checksum with the checksum within the touchscreen software directory
+
+        #Update Software list with local files listed first.
+
+        #If clicked update, copy the software onto the local directory, d
+    

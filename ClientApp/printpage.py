@@ -151,6 +151,7 @@ class PrintPage(BasePage, Ui_PrintPage):
         signal.connect(self.update_local_content)
 
     def update_local_content(self, path):
+        print("Update local content called")
         self.local_file_manager.update_files()
 
     def update_local(self, path):

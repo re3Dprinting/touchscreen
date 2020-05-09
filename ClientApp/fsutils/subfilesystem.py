@@ -1,6 +1,7 @@
 from builtins import object
 import os
 import os.path
+import tarfile, zipfile
 from .file import File
 
 class SubFileSystem(object):
@@ -68,7 +69,7 @@ class SubFileSystem(object):
 
         # Loop through the files, collecting some information in each
         for entry in it:
-
+            
             # Start with the name
             name = entry.name
             displayname = name
@@ -86,6 +87,8 @@ class SubFileSystem(object):
                 continue
 
             if entry.is_dir():
+                #Do not show touchscreen software updates within the printing menu. 
+                if os.path.isfile(entry.path+"/md5verify"): continue
                 type = 'd'
             elif entry.is_file():
                 type = 'f'
@@ -124,3 +127,50 @@ class SubFileSystem(object):
         self.files = sorted(self.files)
         return self.files
 
+    #Similar to the list function above, try to fetch the toucchscreen software updates
+    #Files can be either zipped or 
+    def list_ts_software_updates(self):
+        updates = []
+        try:
+            it = os.scandir(self.abspath)
+        except:
+            return updates
+        for entry in it:
+            name = entry.name
+            displayname = name
+            
+            if name.startswith("."):
+                continue
+            elif entry.is_dir():
+                if not os.path.isfile(entry.path+"/md5verify"): continue
+                type = "d"
+            elif(zipfile.is_zipfile(entry.path)):
+                curr_zip = zipfile.ZipFile(entry.path)
+                md5path = displayname.split(".")[0] + "/md5verify"
+                if(md5path not in curr_zip.namelist()): continue
+                type = "z"
+            elif(tarfile.is_tarfile(entry.path)):
+                curr_tar = tarfile.open(entry.path, "r")
+                md5path = displayname.split(".")[0] + "/md5verify"
+                if(md5path in curr_tar.getnames()):
+                    curr_tar.extractall(path=self.rootdir+"/tmp")
+                else: continue
+                type = 't'
+            else:
+                continue
+
+            statinfo = entry.stat()
+            size = statinfo.st_size
+            if self.cwd == "":
+                rel_path = name
+            else:
+                rel_path = self.cwd + "/" + name
+            abs_path = self.abspath + "/" + name
+            the_update = File(name, displayname, rel_path, abs_path, size, type)
+            updates.append(the_update)
+        updates = sorted(updates)
+        return updates
+
+
+# diskutil umount `diskutil list | grep "SAMSUNGBOOT" | sed -n -e 's/^.* //p'`           
+# diskutil mount `diskutil list | grep "SAMSUNGBOOT" | sed -n -e 's/^.* //p'`

@@ -154,6 +154,7 @@ def main():
     # Set up the watchdog thread that watches the filesystem for
     # mounts of USB drives.
     print_page = mainwindow.get_page(k_print_page)
+    userupdate_page = mainwindow.get_page(k_userupdate_page)
     wd_thread = WatchdogThread(print_page, persona.watchpoint,
                                current_path, persona.localpath)
 
@@ -161,9 +162,11 @@ def main():
     # threads that watch the filesystem and the UI.
     usb_signal_tup = wd_thread.get_usb_signals()
     print_page.set_usb_mount_signals(usb_signal_tup)
-    
+    userupdate_page.set_usb_mount_signals(usb_signal_tup)
+
     usb_content_signal = wd_thread.get_usb_content_signal()
     print_page.set_usb_content_signal(usb_content_signal)
+    userupdate_page.set_usb_content_signal(usb_content_signal)
 
     local_content_signal = wd_thread.get_local_content_signal()
     print_page.set_local_content_signal(local_content_signal)
