@@ -81,13 +81,14 @@ class UserUpdatePage(BasePage, Ui_UserUpdatePage, BaseWindow):
     def checkupdate(self):
         #Fetch all of the tags from the remote repository.
         try:
-
             #Delete tags if they contain "release/"
             for tag in self.repo.tags:
-                if("release/" in tag.name):
+                if("release/" in tag.name or 
+                    "devel/" in tag.name or 
+                    "hotfix/" in tag.name):
                     self.repo.delete_tag(tag)
 
-            self.remote_repo.fetch("--tags")
+            self.remote_repo.fetch("-f")
             tags = sorted(self.repo.tags, key=lambda t: t.commit.committed_date)
             tags.reverse()
 
