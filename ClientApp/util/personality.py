@@ -1,5 +1,6 @@
 class Personality:
-    def __init__(self, fullscreen, watchpoint, localpath, logpath, touchscreenpath):
+    def __init__(self, user, fullscreen, watchpoint, localpath, logpath, touchscreenpath):
+        self.user = user
         self.fullscreen = fullscreen
         self.watchpoint = watchpoint
         self.localpath = localpath

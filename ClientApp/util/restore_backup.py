@@ -9,6 +9,8 @@ import json
 #   -If the backup exists (which is created on a update)
 #   -Copy the back-up file over to the original (including the .git files)
 def restore_backup(personality):
+    if(personality.user != "pi"): return
+
     #Grab the current directory were the git repository is initialized.
     backup_path = personality.gitrepopath + "_backup"
     broken_path = personality.gitrepopath+"_broken"

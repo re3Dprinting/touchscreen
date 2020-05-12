@@ -69,17 +69,17 @@ class MainHandler():
         # macOS.
         if os_is_linux():
             # Linux
-            self.persona = Personality(True, "/usb", "/home/pi/gcode-cache", "/home/pi/log-cache", touchscreen_path)
+            self.persona = Personality(True, "pi", "/usb", "/home/pi/gcode-cache", "/home/pi/log-cache", touchscreen_path)
             properties = get_properties(self.persona)
         elif os_is_macos():
             # macOS
             if getpass.getuser() == "jct":
                 octopath = "/Users/jct/Dropbox/re3D/touchscreen/OctoPrint"
-                self.persona = Personality(False, "/Volumes", octopath + "/localgcode", octopath + "/log-cache", touchscreen_path)
+                self.persona = Personality(False, "jt", "/Volumes", octopath + "/localgcode", octopath + "/log-cache", touchscreen_path)
                 properties = get_properties(self.persona, "developer")
             if getpass.getuser() == "npan":
                 octopath = "/Users/npan/re3D/OctoPrint"
-                self.persona = Personality(False, "/Volumes", octopath + "/localgcode", octopath + "/log-cache", touchscreen_path) 
+                self.persona = Personality(False, "Noah", "/Volumes", octopath + "/localgcode", octopath + "/log-cache", touchscreen_path) 
                 properties = get_properties(self.persona, "developer")
         else:
             print("Unable to determine operating system, aborting...")
