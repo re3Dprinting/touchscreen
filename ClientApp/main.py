@@ -30,6 +30,7 @@ from printer_if import PrinterIF
 from util.ip import get_ip
 from util.load_properties import get_properties
 from util.restore_backup import restore_backup
+from util.checksum import validate_checksum
 
 def setup_local_logger(name):
     global logger
@@ -85,6 +86,8 @@ class MainHandler():
             print("Unable to determine operating system, aborting...")
             sys.exit(1)
         
+        #After creating the personality object, validate the filesystem with the md5check script.
+        validate_checksum(self.persona.gitrepopath + "/md5verify", self.persona.gitrepopath+ "/md5check.sh")
 
         # We want to build a string to be displayed on the touchscreen
         # main screen that has helpful information for diagnestic
