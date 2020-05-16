@@ -3,6 +3,7 @@
 from builtins import str
 import os
 import psutil
+import shutil
 from pathlib import Path
 import time
 import sys
@@ -45,16 +46,11 @@ class UserUpdatePage(BasePage, Ui_UserUpdatePage, BaseWindow):
 
         #Subdirectory object to check for USB software updates.
         self.subdir = SubFileSystem(self.personality.watchpoint)
-
-        tmp_path = Path(__file__).parent.absolute()
-        # print(tmp_path)
-        self.current_path = Path(os.path.realpath(tmp_path)).parent
-        # print(self.current_path.__str__())
-
+        
         #Get the current path (local repository) and make sure that the github link is the current repository.
         try:
-            self.git = Git(self.current_path.__str__())
-            self.repo = Repo(self.current_path.__str__())
+            self.git = Git(self.personality.gitrepopath)
+            self.repo = Repo(self.personality.gitrepopath)
             self.current_tags = None
 
             found_remote = False
@@ -94,13 +90,14 @@ class UserUpdatePage(BasePage, Ui_UserUpdatePage, BaseWindow):
     def checkupdate(self):
         #Fetch all of the tags from the remote repository.
         try:
-
             #Delete tags if they contain "release/"
             for tag in self.repo.tags:
-                if("release/" in tag.name):
+                if("release/" in tag.name or 
+                    "devel/" in tag.name or 
+                    "hotfix/" in tag.name):
                     self.repo.delete_tag(tag)
 
-            self.remote_repo.fetch("--tags")
+            self.remote_repo.fetch("-tf")
             tags = sorted(self.repo.tags, key=lambda t: t.commit.committed_date)
             tags.reverse()
 
@@ -182,7 +179,7 @@ class UserUpdatePage(BasePage, Ui_UserUpdatePage, BaseWindow):
         selected = self.SoftwareList.item(item, 0)
         if(selected != None):
             self.DebugOutput.clear()
-            self.print_debug("re:3Display "+ selected.text() + " changelog:\n")
+            self.print_debug(selected.text() + " changelog:\n")
             version = selected.text()
             for tag in self.current_tags:
                 if(version == tag.name):
@@ -194,12 +191,14 @@ class UserUpdatePage(BasePage, Ui_UserUpdatePage, BaseWindow):
             self.DebugOutput.ensureCursorVisible()
 
     #   Update function called by clicking the Update/Rollback button
-    #   Uses psutil to kill the current process, then reexecutes the original python command. 
+    #   Move the current touchscreen git project to another folder in root directory for backup
+    #   Uses psutil to kill the current process, then calls sys.exit(0)
     def update(self):
         software = self.SoftwareList.currentRow()
         selected_version = self.SoftwareList.item(software, 0)
         if selected_version != None: #and selected_version.text() != self.app.applicationVersion(): #<--- Dont allow update to current version
             self.print_debug("Updating....")
+            self.backup_software()
 
             self.git.checkout(selected_version.text())
             if(self.personality.fullscreen == False): self.restart_program(sys.argv[0])
@@ -207,6 +206,20 @@ class UserUpdatePage(BasePage, Ui_UserUpdatePage, BaseWindow):
         else:
             self.print_debug("Select a Version on list")
     
+    def backup_software(self):
+        #First check if the gitrepopath is valid
+        ts_path = self.personality.gitrepopath
+        backup_path = ts_path + "_backup"
+        if(Path(ts_path).is_dir()):
+            if(Path(backup_path).is_dir()):
+                shutil.rmtree(backup_path)
+            try:
+                shutil.copytree(ts_path, backup_path)
+            except Exception as e:
+                print(e)
+
+
+
     def print_debug(self, text):
         self.DebugOutput.append(text)
     

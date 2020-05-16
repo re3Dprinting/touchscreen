@@ -8,20 +8,17 @@ import json
 #   -config.properties acts as a static file that all windows can access
 #   -the permission is set if the specified. 
 #   -if the config.properties file is not found, create it in the correct directory.
-def get_properties(permission = "Default"):
+def get_properties(personality, permission = "Default"):
     properties = {"name": "", 
                 "motherboard" : "", 
                 "wifissd" : "",
                 "wifipassword" : "",
                 "permission" : ""
                 }
-    #Grab the current directory were the git repository is initialized.
-    tmp_path = Path(__file__).parent.absolute()
-    current_path = Path(os.path.realpath(tmp_path)).parent
 
-    #Move up one directory to grab the config.properties file
-    config_path = current_path.parent.parent.__str__() + "/config.properties"
-    example_config_path = current_path.__str__() + "/setup-files/config.properties"
+    #Grab the config.properties file
+    config_path = personality.rootpath + "/config.properties"
+    example_config_path = personality.touchscreenpath + "/setup-files/config.properties"
 
     #If the file does not exist, move the file over to the correct directory. 
     if( not Path(config_path).is_file() and Path(example_config_path).is_file() ):
@@ -42,7 +39,7 @@ def get_properties(permission = "Default"):
     #Will have to be adjusted if the user is updating software locally!!!!
 
     try:
-        repo = Repo(current_path.parent.__str__())
+        repo = Repo(personality.gitrepopath)
         current_version = next((tag for tag in repo.tags if tag.commit == repo.head.commit), None)
         properties["version"] = current_version.name
     #If no tag found, check for current branch

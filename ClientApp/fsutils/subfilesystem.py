@@ -151,8 +151,10 @@ class SubFileSystem(object):
                 type = "z"
             elif(tarfile.is_tarfile(entry.path)):
                 curr_tar = tarfile.open(entry.path, "r")
-                md5path = displayname.split(".")[0] + "/md5verify"
-                if(md5path in curr_tar.getnames()):
+                md5verify_path = displayname.split(".")[0] + "/md5verify"
+                md5check_path = displayname.split(".")[0] + "/md5check"
+                if(md5verify_path in curr_tar.getnames() and
+                    md5check_path in curr_tar.getnames()):
                     curr_tar.extractall(path=self.rootdir+"/tmp")
                 else: continue
                 type = 't'
