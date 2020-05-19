@@ -178,7 +178,12 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
 
     def update_parameter_display(self):
         self._log("update_paramater_display")
-        self.changeText(self.ActivePrintWid.w_label_filename, str(self.print_handler.flowrate[self.print_handler.fr_index]))
+
+        print_page = self.ui_controller.get_page(k_print_page)
+        if print_page is not None:
+            file_being_printed = print_page.file_being_printed
+            self.changeText(self.ActivePrintWid.w_label_filename, str(file_being_printed))
+
         self.changeText(self.ActivePrintWid.w_label_feedrate, str(self.print_handler.feedrate))
         self.changeText(self.ActivePrintWid.w_label_babystep_val, str(self.print_handler.babystep))
         self.ActivePrintWid.w_slider_feedrate.setValue(self.print_handler.feedrate)
