@@ -1,7 +1,6 @@
 from builtins import str
 
 from qt.serverwindow import *
-from .basewindow import BaseWindow
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import Qt
 import os
@@ -32,7 +31,7 @@ class serverping(QtCore.QThread):
         self.wait()
 
 
-class ServerWindow(BaseWindow, Ui_ServerWindow):
+class ServerWindow(Ui_ServerWindow):
     def __init__(self, parent=None):
         super(ServerWindow, self).__init__(parent)
         # self.client = client

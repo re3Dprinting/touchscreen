@@ -4,7 +4,7 @@ from functools import total_ordering
 
 @total_ordering
 class File:
-    def __init__(self, name, displayname, rel_path, abs_path, size, type):
+    def __init__(self, name, displayname, rel_path, abs_path, size, type, extract_path=None, timestamp=None):
         self.name = name
         self.displayname = displayname
         self.relative_path = rel_path
@@ -20,6 +20,8 @@ class File:
         self.comparename = self.name.lower()
         self.size = size
         self.type = type
+        self.extract_path = extract_path
+        self.timestamp = timestamp
 
     def dump(self):
         print("Name: <%s>" % self.name)
@@ -27,6 +29,8 @@ class File:
         print("Relative path: <%s>" % self.relative_path)
         print("Absolute path: <%s>" % self.absolute_path)
         print("Size: <%d> Type: <%s>" % (self.size, self.type))
+        if(self.extract_path): print("Extracted path: <%s>" % self.extract_path)
+        if(self.timestamp): print("Last modified: <%s>" % self.timestamp)
 
     def __eq__(self, other):
         return (self.comparename, self.size) == \

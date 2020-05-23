@@ -17,7 +17,6 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 # from .serialsetup import SerialWindow
 # from .temperature import TemperatureWindow
 # from .userupdate import UserUpdateWindow
-# from .basewindow import BaseWindow
 # from .notification import Notification
 # #from . import event_hand
 

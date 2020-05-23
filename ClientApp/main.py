@@ -30,7 +30,7 @@ from printer_if import PrinterIF
 from util.ip import get_ip
 from util.load_properties import get_properties
 from util.restore_backup import restore_backup
-from util.checksum import validate_checksum
+from fsutils.checksum import validate_checksum
 
 def setup_local_logger(name):
     global logger
@@ -70,17 +70,17 @@ class MainHandler():
         # macOS.
         if os_is_linux():
             # Linux
-            self.persona = Personality(True, "pi", "/usb", "/home/pi/gcode-cache", "/home/pi/log-cache", touchscreen_path)
+            self.persona = Personality("pi", "/usb", "/home/pi/gcode-cache", "/home/pi/log-cache", touchscreen_path)
             properties = get_properties(self.persona)
         elif os_is_macos():
             # macOS
             if getpass.getuser() == "jct":
                 octopath = "/Users/jct/Dropbox/re3D/touchscreen/OctoPrint"
-                self.persona = Personality(False, "jt", "/Volumes", octopath + "/localgcode", octopath + "/log-cache", touchscreen_path)
+                self.persona = Personality("jt", "/Volumes", octopath + "/localgcode", octopath + "/log-cache", touchscreen_path)
                 properties = get_properties(self.persona, "developer")
             if getpass.getuser() == "npan":
                 octopath = "/Users/npan/re3D/OctoPrint"
-                self.persona = Personality(False, "Noah", "/Volumes", octopath + "/localgcode", octopath + "/log-cache", touchscreen_path) 
+                self.persona = Personality("Noah", "/Volumes", octopath + "/localgcode", octopath + "/log-cache", touchscreen_path) 
                 properties = get_properties(self.persona, "developer")
         else:
             print("Unable to determine operating system, aborting...")
@@ -136,8 +136,6 @@ class MainHandler():
         # Create the top-level UI screen.
         mainwindow = MainWindow(printer_if, self.persona, properties)
 
-        # mainwindow = Home(printer_if, self.persona)
-        #mainwindow.SoftwareVersion.setText(id_string)
 
         # Check to see whether any USB filesystems are currently mounted.
         current_path = ""
@@ -167,10 +165,14 @@ class MainHandler():
                 current_mountpoint = MountPoint(current_path)
                 print_page = mainwindow.get_page(k_print_page)
                 print_page.update_usb_create(current_mountpoint)
+                userupdate_page = mainwindow.get_page(k_userupdate_page)
+                userupdate_page.update_usb_create(current_mountpoint)
+                userupdate_page.usb_mounted = True
 
         # Set up the watchdog thread that watches the filesystem for
         # mounts of USB drives.
         print_page = mainwindow.get_page(k_print_page)
+        userupdate_page = mainwindow.get_page(k_userupdate_page)
         wd_thread = WatchdogThread(print_page, self.persona.watchpoint,
                                 current_path, self.persona.localpath)
 
@@ -178,9 +180,12 @@ class MainHandler():
         # threads that watch the filesystem and the UI.
         usb_signal_tup = wd_thread.get_usb_signals()
         print_page.set_usb_mount_signals(usb_signal_tup)
-        
+        userupdate_page.set_usb_mount_signals(usb_signal_tup)
+
+        #When is this signal ever called? Is it necessary??
         usb_content_signal = wd_thread.get_usb_content_signal()
         print_page.set_usb_content_signal(usb_content_signal)
+        userupdate_page.set_usb_content_signal(usb_content_signal)
 
         local_content_signal = wd_thread.get_local_content_signal()
         print_page.set_local_content_signal(local_content_signal)

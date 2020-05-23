@@ -48,7 +48,7 @@ class SettingsPage(BasePage, Ui_SettingsPage):
         # self.SoftwareVersion.setText(versiontext)
 
         self.Serial.clicked.connect(self.serialpop)
-        # self.Server.clicked.connect(self.serverpop)
+        self.Server.clicked.connect(self.serverpop)
         self.UserUpdate.clicked.connect(self.userupdatepop)
         self.w_pushbutton_debug.clicked.connect(self.handle_debug)
         self.w_pushbutton_info.clicked.connect(self.handle_info)
@@ -72,10 +72,6 @@ class SettingsPage(BasePage, Ui_SettingsPage):
 
     def serverpop(self):
         self._log("UI: User touched Server")
-        if self.fullscreen:
-            self.server_pop.showFullScreen()
-        else:
-            self.server_pop.show()
 
     def handle_debug(self):
         self._log("UI: User touched Debug")
