@@ -139,7 +139,7 @@ class MainHandler():
         # Check to see whether any USB filesystems are currently mounted.
         current_path = ""
         # possible_usb_mounts = MountFinder.thumbdrive_candidates()
-        possible_usb_mounts = glob.glob("/usb/*")
+        possible_usb_mounts = glob.glob(self.persona.watchpoint + "/*")
 
         logger.debug("persona watchpoint = <%s>", self.persona.watchpoint)
         

@@ -29,10 +29,6 @@ class SettingsPage(BasePage, Ui_SettingsPage):
         self.personality = context.personality
         self.ui_controller = context.ui_controller
 
-        # self.debug_window = DebugWindow(self.printer_if, self.personality, self)
-        # self.info_window = InfoWindow(self.printer_if, self)
-        # self.duex_window = DuExSetupWindow(self.printer_if, self)
-
         self.setbuttonstyle(self.Serial)
         self.setbuttonstyle(self.Server)
         self.setbuttonstyle(self.UserUpdate)
@@ -43,9 +39,6 @@ class SettingsPage(BasePage, Ui_SettingsPage):
         self.setbuttonstyle(self.w_pushbutton_duex)
         self.setbuttonstyle(self.w_pushbutton_info)
         self.setbuttonstyle(self.w_pushbutton_term)
-
-        # versiontext = "v"+QtWidgets.QApplication.instance().applicationVersion()
-        # self.SoftwareVersion.setText(versiontext)
 
         self.Serial.clicked.connect(self.serialpop)
         # self.Server.clicked.connect(self.serverpop)

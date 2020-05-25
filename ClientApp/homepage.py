@@ -12,7 +12,6 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 # from .printwindow import PrintWindow
 # from . import settings
 # from .event_hand import event_handler
-# from .settings import SettingsWindow
 # from .server import ServerWindow
 # from .serialsetup import SerialWindow
 # from .temperature import TemperatureWindow
@@ -54,30 +53,6 @@ class HomePage(BasePage, Ui_Home):
         self.pushbutton_settings.clicked.connect(self.handle_settings_touch)
         self.pushbutton_back.clicked.connect(self.handle_back_touch)
 
-#       Event handler object that handles temperature materials, flowrate, etc.
-#        self.event_handler = event_handler(self.printer_if)
-
-        # self.set_pop = SettingsWindow(personality, self.printer_if, self)
-        # self.server_pop = ServerWindow(self.set_pop)
-
-
-        # self.userupdate_pop = UserUpdateWindow(self.personality, self.set_pop)
-        # self.notification = self.userupdate_pop.checkupdate()
-
-        # self.serial_pop = SerialWindow(
-        #     self.printer_if, self.event_handler, self.set_pop)
-
-        # self.set_pop.serial_pop = self.serial_pop
-        # self.set_pop.server_pop = self.server_pop
-        # self.set_pop.userupdate_pop = self.userupdate_pop
-
-        # self.temp_pop = TemperatureWindow(self.printer_if, self.event_handler, self)
-        # self.con_pop = ControlWindow(self.printer_if, self)
-        # self.print_pop = PrintWindow(self.printer_if, self.temp_pop, self.personality, self)
-
-        # self.event_handler.tempwindow = self.temp_pop
-        # self.event_handler.serialwindow = self.serial_pop
-        # self.event_handler.start()
 
     def handle_print_touch(self):
         self._log("UI: User touched Print")
