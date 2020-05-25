@@ -117,6 +117,7 @@ class PrintPage(BasePage, Ui_PrintPage):
 
         self.setbuttonstyle(self.pushbutton_back)
         self.pushbutton_loc_print.clicked.connect(self.local_start_print)
+        self.file_being_printed = "-----"
 
     def enable_control(self):
         home_page = self.ui_controller.get_page(k_home_page)
@@ -234,6 +235,7 @@ class PrintPage(BasePage, Ui_PrintPage):
 
     def notprinting(self):
         # self.temp_pop.notactiveprint()
+        self.file_being_printed = "-----"
         temperature_page = self.ui_controller.get_page(k_temperature_page)
         temperature_page.notactiveprint()
         self.pushbutton_active_print.setEnabled(False)
@@ -269,6 +271,9 @@ class PrintPage(BasePage, Ui_PrintPage):
 
         # print("Printing <%s>" %(selected_file))
         if selected_file != None:
+            self.file_being_printed = selected_file
+            print("SD start print")
+
             self.temperature_active()
             self.disable_control()
 
@@ -298,6 +303,8 @@ class PrintPage(BasePage, Ui_PrintPage):
         self._log("File name <%s>, local path <%s>." % (selected_file_name, selected_file_loc_path))
 
         if selected_file_name != None:
+            print("Local start print")
+            self.file_being_printed = selected_file_name
 
             self.disable_control()
             self.temperature_active()
@@ -328,6 +335,8 @@ class PrintPage(BasePage, Ui_PrintPage):
         self._log("File name <%s>, relative path <%s>, absolute path <%s>." % (selected_file_name, selected_file_rel, selected_file_abs))
 
         if selected_file_name != None:
+            print("USB start print")
+            self.file_being_printed = selected_file_name
 
             self.disable_control()
             self.temperature_active()
