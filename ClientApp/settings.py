@@ -10,10 +10,9 @@ from .userupdate import UserUpdateWindow
 from .serialsetup import SerialWindow
 from .notification import Notification
 from .server import ServerWindow
-from .basewindow import BaseWindow
 
 
-class SettingsWindow(BaseWindow, Ui_SettingsWindow):
+class SettingsWindow(BasePage, Ui_SettingsWindow):
     def __init__(self, personality, printer_if, event_handler, parent=None):
 
         super(SettingsWindow, self).__init__(parent)

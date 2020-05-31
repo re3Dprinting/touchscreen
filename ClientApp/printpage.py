@@ -1,5 +1,4 @@
 from __future__ import division
-from basewindow import BaseWindow
 from builtins import str
 from constants import *
 
@@ -55,16 +54,10 @@ class PrintPage(BasePage, Ui_PrintPage):
         # print("Setting print finished callback")
         self.printer_if.set_print_finished_callback(self.print_finished_callback)
 
-        # self.temp_pop = temp_pop
 
         self.item_stack = []
 
         self.pushbutton_back.clicked.connect(self.back)
-
-        # if parent.fullscreen:
-        #     self.fullscreen = True
-        # else:
-        #     self.fullscreen = False
 
         self.pushbutton_scan_sd.clicked.connect(self.scansd)
         self.pushbutton_sd_print.clicked.connect(self.sd_start_print)
@@ -152,6 +145,7 @@ class PrintPage(BasePage, Ui_PrintPage):
         signal.connect(self.update_local_content)
 
     def update_local_content(self, path):
+        print("Update local content called")
         self.local_file_manager.update_files()
 
     def update_local(self, path):
@@ -382,14 +376,6 @@ class PrintPage(BasePage, Ui_PrintPage):
     def activeprintpop(self):
         self._log("UI: User touched Active Print")
         self.ui_controller.push(k_temperature_page)
-        # if self.fullscreen:
-        #     self._log("UI: showing temp fullscreen")
-        #     # self.temp_pop.showFullScreen()
-        #     # self.close()
-        # else:
-        #     self._log("UI: showing temp")
-        #     # self.temp_pop.show()
-        #     # self.close()
 
     def update_loc_button_states_none(self):
         self.pushbutton_loc_up.setEnabled(False)

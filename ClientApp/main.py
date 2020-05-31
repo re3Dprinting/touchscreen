@@ -30,6 +30,7 @@ from printer_if import PrinterIF
 from util.ip import get_ip
 from util.load_properties import get_properties
 from util.restore_backup import restore_backup
+from fsutils.checksum import validate_checksum
 
 def setup_local_logger(name):
     global logger
@@ -46,6 +47,10 @@ def _log(message):
 # This function takes care of all the high-level application
 # initialization and setup. It is called belowe.
 class MainHandler():
+    """
+    Entry point of touchscreen software.
+    Set up initial exception hooks, user-setup, and file paths
+    """
     def __init__(self):
         # Hook up our exception handler
         sys._excepthook = sys.excepthook
@@ -69,39 +74,45 @@ class MainHandler():
         # macOS.
         if os_is_linux():
             # Linux
-            self.persona = Personality(True, "pi", "/usb", "/home/pi/gcode-cache", "/home/pi/log-cache", touchscreen_path)
+            self.persona = Personality("pi", "/usb", "/home/pi/gcode-cache", "/home/pi/log-cache", touchscreen_path)
             properties = get_properties(self.persona)
         elif os_is_macos():
             # macOS
             if getpass.getuser() == "jct":
                 octopath = "/Users/jct/Dropbox/re3D/touchscreen/OctoPrint"
-                self.persona = Personality(False, "jt", "/Volumes", octopath + "/localgcode", octopath + "/log-cache", touchscreen_path)
+                self.persona = Personality("jt", "/Volumes", octopath + "/localgcode", octopath + "/log-cache", touchscreen_path)
                 properties = get_properties(self.persona, "developer")
             if getpass.getuser() == "npan":
                 octopath = "/Users/npan/re3D/OctoPrint"
-                self.persona = Personality(False, "Noah", "/Volumes", octopath + "/localgcode", octopath + "/log-cache", touchscreen_path) 
+                self.persona = Personality("Noah", "/Volumes", octopath + "/localgcode", octopath + "/log-cache", touchscreen_path) 
                 properties = get_properties(self.persona, "developer")
         else:
             print("Unable to determine operating system, aborting...")
             sys.exit(1)
         
+        #After creating the personality object, validate the filesystem with the md5check script.
+        validate_checksum(self.persona.gitrepopath + "/md5verify", self.persona.gitrepopath+ "/md5check.sh")
 
         # We want to build a string to be displayed on the touchscreen
         # main screen that has helpful information for diagnestic
         # purposes. The string will consist of the application version,
         # our IP address, and some Git information.
+        """
+        Build a string to be displayed on the status bar of the touchscreen.
+        Currently showing:
+        IP Address - Printer Status - GitVersion/ GitCommitHash
+        """
 
         # Get the application version
         version_string = properties["version"]
 
-        # Get the IP address.
+        # Get the IP address. 
         ip_addr = get_ip()
         ip_string = "IP: " + ip_addr
 
         # Get the Git information. This will be the ID of the HEAD commit
         # plus indicators of whether any file has been changed, or if
         # GIT-unknown files are present.
-        # Breaks in Python3.6
         config_id = get_touchscreen_commit_id()
         config_string = "%s/%s" % (version_string, config_id)
 
@@ -133,8 +144,6 @@ class MainHandler():
         # Create the top-level UI screen.
         mainwindow = MainWindow(printer_if, self.persona, properties)
 
-        # mainwindow = Home(printer_if, self.persona)
-        #mainwindow.SoftwareVersion.setText(id_string)
 
         # Check to see whether any USB filesystems are currently mounted.
         current_path = ""
@@ -164,10 +173,14 @@ class MainHandler():
                 current_mountpoint = MountPoint(current_path)
                 print_page = mainwindow.get_page(k_print_page)
                 print_page.update_usb_create(current_mountpoint)
+                userupdate_page = mainwindow.get_page(k_userupdate_page)
+                userupdate_page.update_usb_create(current_mountpoint)
+                userupdate_page.usb_mounted = True
 
         # Set up the watchdog thread that watches the filesystem for
         # mounts of USB drives.
         print_page = mainwindow.get_page(k_print_page)
+        userupdate_page = mainwindow.get_page(k_userupdate_page)
         wd_thread = WatchdogThread(print_page, self.persona.watchpoint,
                                 current_path, self.persona.localpath)
 
@@ -175,9 +188,12 @@ class MainHandler():
         # threads that watch the filesystem and the UI.
         usb_signal_tup = wd_thread.get_usb_signals()
         print_page.set_usb_mount_signals(usb_signal_tup)
-        
+        userupdate_page.set_usb_mount_signals(usb_signal_tup)
+
+        #When is this signal ever called? Is it necessary??
         usb_content_signal = wd_thread.get_usb_content_signal()
         print_page.set_usb_content_signal(usb_content_signal)
+        userupdate_page.set_usb_content_signal(usb_content_signal)
 
         local_content_signal = wd_thread.get_local_content_signal()
         print_page.set_local_content_signal(local_content_signal)
@@ -197,11 +213,16 @@ class MainHandler():
         # return.
         app.exec_()
 
-    # Define an exception hook to log exceptions that would normally be
-    # caught and handled by PyQt5. We do our own handling to ensure that
-    # the stack trace goes into the log.
 
     def exception_hook(self, exctype, value, traceback):
+        """Exeception hook for the application that would normally be caught by PyQt5
+        All unhandled exceptions are logged and a back-up is restored if it exists. 
+
+        Arguments:
+            exctype {Exception Class} -- Type of Exception being thrown
+            value {Exception Instance} -- Instance of the Exception
+            traceback {Traceback Object} -- origin of the error
+        """
         global logger
         logger.exception("**** Logging an uncaught exception", exc_info=(exctype, value, traceback))
         sys._excepthook(exctype, value, traceback)
@@ -209,7 +230,6 @@ class MainHandler():
         #Restore backup version if backup exists. Backup is created, when a update is clicked. 
         restore_backup(self.persona)
         sys.exit(1)
-
 
 
 from datetime import datetime
