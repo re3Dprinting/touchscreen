@@ -47,6 +47,10 @@ def _log(message):
 # This function takes care of all the high-level application
 # initialization and setup. It is called belowe.
 class MainHandler():
+    """
+    Entry point of touchscreen software.
+    Set up initial exception hooks, user-setup, and file paths
+    """
     def __init__(self):
         # Hook up our exception handler
         sys._excepthook = sys.excepthook
@@ -93,18 +97,22 @@ class MainHandler():
         # main screen that has helpful information for diagnestic
         # purposes. The string will consist of the application version,
         # our IP address, and some Git information.
+        """
+        Build a string to be displayed on the status bar of the touchscreen.
+        Currently showing:
+        IP Address - Printer Status - GitVersion/ GitCommitHash
+        """
 
         # Get the application version
         version_string = properties["version"]
 
-        # Get the IP address.
+        # Get the IP address. 
         ip_addr = get_ip()
         ip_string = "IP: " + ip_addr
 
         # Get the Git information. This will be the ID of the HEAD commit
         # plus indicators of whether any file has been changed, or if
         # GIT-unknown files are present.
-        # Breaks in Python3.6
         config_id = get_touchscreen_commit_id()
         config_string = "%s/%s" % (version_string, config_id)
 
@@ -205,11 +213,16 @@ class MainHandler():
         # return.
         app.exec_()
 
-    # Define an exception hook to log exceptions that would normally be
-    # caught and handled by PyQt5. We do our own handling to ensure that
-    # the stack trace goes into the log.
 
     def exception_hook(self, exctype, value, traceback):
+        """Exeception hook for the application that would normally be caught by PyQt5
+        All unhandled exceptions are logged and a back-up is restored if it exists. 
+
+        Arguments:
+            exctype {Exception Class} -- Type of Exception being thrown
+            value {Exception Instance} -- Instance of the Exception
+            traceback {Traceback Object} -- origin of the error
+        """
         global logger
         logger.exception("**** Logging an uncaught exception", exc_info=(exctype, value, traceback))
         sys._excepthook(exctype, value, traceback)
@@ -217,7 +230,6 @@ class MainHandler():
         #Restore backup version if backup exists. Backup is created, when a update is clicked. 
         restore_backup(self.persona)
         sys.exit(1)
-
 
 
 from datetime import datetime

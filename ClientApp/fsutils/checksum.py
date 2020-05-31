@@ -7,6 +7,17 @@ from pathlib import Path
 #verifyfile contains the already generated md5sum in a text file. 
 #verifyscript is the path to the md5generate script.
 def validate_checksum(verifyfile, verifyscript):
+    """
+    Use the verifyscript(md5check.sh) to generate a md5sum hash.
+    Compare the generated md5sum hash to the pregenerated md5sum(md5verify)
+
+    Arguments:
+        verifyfile {String} -- Path to the md5verify file
+        verifyscript {String} -- Path to the md5check.sh file
+
+    Returns:
+        Boolean -- True if the checksum was validated, False if checksum did not match
+    """
     #Calculate the checksum with the script path
     if(Path(verifyscript).is_file()):
         cmd = "bash " + verifyscript
