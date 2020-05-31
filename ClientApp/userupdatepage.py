@@ -7,24 +7,33 @@ import shutil
 from pathlib import Path
 import time
 import sys
+import logging
 
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-from git import Repo
-from git import Git
+from .fsutils.subfilesystem import SubFileSystem
 
+import git
+
+import zipfile, tarfile
+from threading import Thread
 from qt.userupdatepage_qt import Ui_UserUpdatePage
 from notification import Notification
 from basepage import BasePage
-from basewindow import BaseWindow
+from util.load_properties import get_software_details
 
 
-class UserUpdatePage(BasePage, Ui_UserUpdatePage, BaseWindow):
+class UserUpdatePage(BasePage, Ui_UserUpdatePage):
+    #Signal sent to notify ui is ready to be updated.
+    ui_update_signal = pyqtSignal(str)
+    unzip_progress = pyqtSignal(str,bool)
+
     def __init__(self, context):
         super(UserUpdatePage, self).__init__()
-        self.base_init()
 
+        self._logger = logging.getLogger(__name__)
+        self._log("UserUpdate __init__")
         self.setupUi(self)
 
         self.personality = context.personality
@@ -38,12 +47,14 @@ class UserUpdatePage(BasePage, Ui_UserUpdatePage, BaseWindow):
         # self.debug = (self.properties["debug"] == "true")
         self.debug = True
 
-        #Get the current path (local repository) and make sure that the github link is the current repository.
-        try:
-            self.git = Git(self.personality.gitrepopath)
-            self.repo = Repo(self.personality.gitrepopath)
-            self.current_tags = None
+        #Subdirectory object to check for USB software updates.
+        self.subdir = SubFileSystem(self.personality.watchpoint)
+        self.usb_mounted = False
 
+        #Get the current path (local repository) and make sure that the github link is the current repository.       
+        try:
+            self.repo = git.Repo(self.personality.gitrepopath)
+            self.git = git.Git(self.personality.gitrepopath)
             found_remote = False
             #Check if re3d remote repository is in current remote tree
             for r in self.repo.remotes:
@@ -55,18 +66,30 @@ class UserUpdatePage(BasePage, Ui_UserUpdatePage, BaseWindow):
                 self.remote_repo = self.repo.create_remote("re3d", "https://github.com/re3Dprinting/touchscreen")
         except Exception as e:
             print("userupdate: __init__() exception: ", e)
+
+        self.update_Thread = None
+        #Initialize the array for Git Software Updates and USB Software Updates
+        self.git_updates = []
+        self.usb_updates = []
+
+        #Signal to notify that UI updates are ready from a thread
+        self.ui_update_signal.connect(self.ui_update_list)
+        #Signal passed to subfilesystem to update unzipping progress in UI
+        self.unzip_progress.connect(self.display_stored_text)
+        self.store_text= ""
             
         # Make the selection Behavior as selecting the entire row
         self.SoftwareList.setSelectionBehavior(QtWidgets.QTableView.SelectRows)
         self.SoftwareList.setSelectionMode(QtWidgets.QTableView.SingleSelection)
         # Update the side dialog box when a software version is selected. 
-        self.SoftwareList.itemSelectionChanged.connect(self.show_tag_message)
+        self.SoftwareList.itemSelectionChanged.connect(self.show_update_message)
         # Hide the vertical header which contains the Index of the row.
         self.SoftwareList.verticalHeader().hide()
         # Stretch out the horizontal header to take up the entire view
         header = self.SoftwareList.horizontalHeader()
         header.setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
         header.setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
+        self.DebugOutput.setLineWrapMode(QtWidgets.QTextBrowser.NoWrap)
 
         #  Append the version to the current version window. 
         temp = self.CurrentVersion.text()+ " " + self.app.applicationVersion()
@@ -76,76 +99,118 @@ class UserUpdatePage(BasePage, Ui_UserUpdatePage, BaseWindow):
         self.CheckUpdate.clicked.connect(self.checkupdate)
         self.Update.clicked.connect(self.update)
 
-        self.checkupdate()
 
     def checkupdate(self):
-        #Fetch all of the tags from the remote repository.
+        self.CheckUpdate.setEnabled(False)
+        self.DebugOutput.clear()
+        self.store_text = ""
+        self.SoftwareList.setRowCount(0)
+        self.git_updates = []
+        self.usb_updates = []
+        self.display_stored_text("Fetching Server Updates...")
+
+        self.update_Thread = Thread(target = self.checkupdate_handler)
+        self.update_Thread.setDaemon(True)
+        self.update_Thread.start()
+
+    def checkupdate_handler(self):
+        """
+        Handler that is ran on a seperate thread, that checks the Git software updates first if Wifi is enabled
+        Pushes the updates up to the UI if ready, then checks for USB updates. 
+        Then pushes updates to the UI a second time. 
+        """
         try:
-            #Delete tags if they contain "release/"
-            for tag in self.repo.tags:
-                if("release/" in tag.name or 
-                    "devel/" in tag.name or 
-                    "hotfix/" in tag.name):
-                    self.repo.delete_tag(tag)
-
-            self.remote_repo.fetch("-tf")
-            tags = sorted(self.repo.tags, key=lambda t: t.commit.committed_date)
-            tags.reverse()
-
-            self.SoftwareList.setRowCount(0)
-
-            #Grab the current version and check if it is a beta version. 
-            current_v = self.app.applicationVersion()
-            curr_isCustomerRelease = self.isCustomerRelease(current_v)
-
-            # Check each tag and if it is a "release" tag. 
-            # Append the tag to the list on the table widget. 
-            self.current_tags = []
-            for t in tags:
-                #Grab the current Version and the given version and see if they are beta versions. 
-                given_v = t.name
-                given_isCustomerRelease = self.isCustomerRelease(given_v)
-
-                #Skip over all tags that contain archive
-                if("archive" in t.name): continue
-
-                if( ("release" in t.name or
-                     "devel" in t.name or 
-                     "hotfix" in t.name) 
-                 and (not self.properties["permission"] == "developer")): continue
-
-                if("beta" in t.name and not(self.properties["permission"] == "developer" or self.properties["permission"] =="beta-tester")): continue
-
-                #Filter out any remaining tags that are not in the given X.X.X format. 
-                if(self.properties["permission"] == "customer" and not given_isCustomerRelease): continue 
-
-                self.current_tags.append(t)
-                tag_date = time.strftime('%I:%M%p %m/%d/%y', time.localtime(t.commit.committed_date))
-
-                #Check for an update if and only if the current version and given version both follow the X.X.X sematic versioning. 
-                if(curr_isCustomerRelease and given_isCustomerRelease):
-                    #Check if there is a newer software version avalible. 
-                    self.checkagainstcurrent(current_v, given_v)
-                
-                #TODO Only show releases if it follows X.X.X
-                rowpos = self.SoftwareList.rowCount()
-                self.SoftwareList.insertRow(rowpos)
-                version = QtWidgets.QTableWidgetItem(t.name)
-
-                version.setFlags(Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
-                date = QtWidgets.QTableWidgetItem(tag_date)
-                date.setFlags(Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
-                self.SoftwareList.setItem(rowpos,0,version)
-                self.SoftwareList.setItem(rowpos,1,date)
-
-            # If no versions are found, push a debug message to the window. 
-            # If there is a newer version avalible, create a notification object and return it to be caught by the window. 
-            if(self.SoftwareList.rowCount() == 0): self.print_debug("No software versions found. The server might be down, please try again later.")
-            elif(self.new_version_avalible):
-                return Notification("A new software version is available!\nTo update, go to Settings > Software Update")
+            if(self.properties["wifienabled"]):
+                self.check_git_software()
+                self.ui_update_signal.emit("Server Updates found... \nFetching USB Updates...")
+            self.check_usb_software()
+            if(self.usb_updates): self.ui_update_signal.emit("USB Updates found.")
+            else: self.ui_update_signal.emit("No USB Updates Found.")
+            self.ui_update_signal.emit("setEnable")
         except Exception as e:
             print("userupdate: checkupdate() exception: ", e)
 
+    def ui_update_list(self, msg):
+        if(msg == "setEnable"):
+            self.CheckUpdate.setEnabled(True)
+            return
+            
+        self.display_stored_text(msg)
+        self.SoftwareList.setRowCount(0)
+        for u in self.usb_updates:
+            rowpos = self.SoftwareList.rowCount()
+            self.SoftwareList.insertRow(rowpos)
+            version = QtWidgets.QTableWidgetItem(u.displayname)
+
+            version.setFlags(Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
+            date = QtWidgets.QTableWidgetItem(u.timestamp)
+            date.setFlags(Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
+            self.SoftwareList.setItem(rowpos,0,version)
+            self.SoftwareList.setItem(rowpos,1,date)
+
+        for t in self.git_updates:
+            tag_date = time.strftime('%I:%M%p %m/%d/%y', time.localtime(t.commit.committed_date))
+            #TODO Only show releases if it follows X.X.X
+            rowpos = self.SoftwareList.rowCount()
+            self.SoftwareList.insertRow(rowpos)
+            version = QtWidgets.QTableWidgetItem(t.name)
+
+            version.setFlags(Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
+            date = QtWidgets.QTableWidgetItem(tag_date)
+            date.setFlags(Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
+            self.SoftwareList.setItem(rowpos,0,version)
+            self.SoftwareList.setItem(rowpos,1,date)
+
+        # If no versions are found, push a debug message to the window. 
+        # If there is a newer version avalible, create a notification object and return it to be caught by the window. 
+        if(self.SoftwareList.rowCount() == 0): self.display_text("No software versions found on server or on USB")
+        if(self.new_version_avalible):
+            return Notification("A new software version is available!\nTo update, go to Settings > Software Update")
+
+    def check_git_software(self):
+        #Delete tags if they contain "release/"
+        for tag in self.repo.tags:
+            if("release/" in tag.name or 
+                "devel/" in tag.name or 
+                "hotfix/" in tag.name):
+                self.repo.delete_tag(tag)
+
+        self.remote_repo.fetch("-tf")
+        tags = sorted(self.repo.tags, key=lambda t: t.commit.committed_date)
+        tags.reverse()
+
+        #Grab the current version and check if it is a beta version. 
+        current_v = self.app.applicationVersion()
+        curr_isCustomerRelease = self.isCustomerRelease(current_v)
+
+        # Check each tag and if it is a "release" tag. 
+        # Append the tag to the list on the table widget. 
+        self.git_updates = []
+        for t in tags:
+            #Grab the current Version and the given version and see if they are beta versions. 
+            given_v = t.name
+            given_isCustomerRelease = self.isCustomerRelease(given_v)
+
+            #Skip over all tags that contain archive
+            if("archive" in t.name): continue
+
+            if( ("release" in t.name or
+                    "devel" in t.name or 
+                    "hotfix" in t.name) 
+                and (not self.properties["permission"] == "developer")): continue
+
+            if("beta" in t.name and not(self.properties["permission"] == "developer" or self.properties["permission"] =="beta-tester")): continue
+
+            #Filter out any remaining tags that are not in the given X.X.X format. 
+            if(self.properties["permission"] == "customer" and not given_isCustomerRelease): continue 
+
+            self.git_updates.append(t)
+
+            #Check for an update if and only if the current version and given version both follow the X.X.X sematic versioning. 
+            if(curr_isCustomerRelease and given_isCustomerRelease):
+                #Check if there is a newer software version avalible. 
+                self.checkagainstcurrent(current_v, given_v)
+    
     #Is Customer Release only if version is in format of X.X.X
     def isCustomerRelease(self, version):
         version = version.split(".")
@@ -164,20 +229,37 @@ class UserUpdatePage(BasePage, Ui_UserUpdatePage, BaseWindow):
                 self.new_version_avalible = True
                 return
 
-    #Grab the tag message and display it. 
-    def show_tag_message(self):
+    def show_update_message(self):
+        """
+        Callback when a item in the updates list is selected.
+        Determines if it is a USB or Git update. Shows changelog from file(USB Update) or Git tag message
+        """
         item = self.SoftwareList.currentRow()
         selected = self.SoftwareList.item(item, 0)
         if(selected != None):
             self.DebugOutput.clear()
-            self.print_debug(selected.text() + " changelog:\n")
-            version = selected.text()
-            for tag in self.current_tags:
-                if(version == tag.name):
-                    if tag.tag is None:
-                        self.print_debug("(No description)")
+            selected_update = selected.text()
+
+            for update in self.usb_updates:
+                if(selected_update == update.displayname):
+                    self.display_text(selected_update+ "(USB-Update)\n")
+                    if(update.type == "d"): readme_path = update.absolute_path+"/README.md"
+                    elif(update.type == "t" or update.type == "z"): readme_path=update.extract_path+"/README.md"
+
+                    (version, description) = get_software_details(readme_path)
+                    if(version != "" and description != ""):
+                        self.display_text(version)
+                        self.display_text(description)
                     else:
-                        self.print_debug(tag.tag.message)
+                        self.display_text("(No description)")
+            for update in self.git_updates:
+                if(selected_update == update.name):
+                    self.display_text(selected.text() + " (Server-Update):\n")
+                    if(update.tag is not None):
+                        self.display_text(update.tag.message)
+                    else:
+                        self.display_text("(No description)")
+
             self.DebugOutput.moveCursor(QtGui.QTextCursor.Start)
             self.DebugOutput.ensureCursorVisible()
 
@@ -188,14 +270,26 @@ class UserUpdatePage(BasePage, Ui_UserUpdatePage, BaseWindow):
         software = self.SoftwareList.currentRow()
         selected_version = self.SoftwareList.item(software, 0)
         if selected_version != None: #and selected_version.text() != self.app.applicationVersion(): #<--- Dont allow update to current version
-            self.print_debug("Updating....")
+            self.display_text("Updating....")
             self.backup_software()
 
-            self.git.checkout(selected_version.text())
-            if(self.personality.fullscreen == False): self.restart_program(sys.argv[0])
-            else: self.restart_program(sys.argv[0])
+            USB_update = False
+            for update in self.usb_updates:
+                if(selected_version.text() == update.displayname):
+                    USB_update = True
+                    ts_path = self.personality.gitrepopath
+                    if(update.type == "d"):
+                        shutil.rmtree(ts_path)
+                        shutil.copytree(update.absolute_path, ts_path)
+                    elif(update.type == "t" or update.type == "z"):
+                        shutil.rmtree(ts_path)
+                        shutil.copytree(update.extract_path, ts_path)
+                    else:
+                        self.display_text("Update failed. File type not supported")
+            if(not USB_update): self.git.checkout(selected_version.text(), force=True)
+            self.restart_program(sys.argv[0])
         else:
-            self.print_debug("Select a Version on list")
+            self.display_text("Select a Version on list")
     
     def backup_software(self):
         #First check if the gitrepopath is valid
@@ -209,13 +303,35 @@ class UserUpdatePage(BasePage, Ui_UserUpdatePage, BaseWindow):
             except Exception as e:
                 print(e)
 
+    def display_stored_text(self, text, replaceLastLine = False):
+        if(replaceLastLine):
+            self.store_text = self.store_text.strip()
+            tmp = self.store_text.split("\n")
+            tmp.pop()
+            self.store_text = "\n".join(tmp)
+            self.store_text += "\n"+ text + "\n"
+            self.DebugOutput.clear()
+            self.DebugOutput.append(self.store_text)
+        else:
+            self.store_text += text+ "\n"
+            self.DebugOutput.clear()
+            self.DebugOutput.append(self.store_text)
 
-
-    def print_debug(self, text):
+    def display_text(self, text, replaceLastLine=False):
+        if(replaceLastLine):
+            tmp = self.DebugOutput.textCursor()
+            cursor = self.DebugOutput.textCursor()
+            cursor.movePosition(QtGui.QTextCursor.End)
+            cursor.select(QtGui.QTextCursor.LineUnderCursor)
+            cursor.removeSelectedText()
+            cursor.deletePreviousChar()
+            self.DebugOutput.setTextCursor(tmp)
         self.DebugOutput.append(text)
+
     
     # Restart the program by using psutil. Grab the PID of the python application and kill it. 
     def restart_program(self, argument):
+
         # A quick hack: just exit and let the script restart
         # us. (Re-execing is a better long-term solution.)
         sys.exit(0)
@@ -230,4 +346,32 @@ class UserUpdatePage(BasePage, Ui_UserUpdatePage, BaseWindow):
         # #Restart the program with the original arguments and python executable. 
         # python = sys.executable
         # os.execl(python, python, argument)
+    
+    def set_usb_mount_signals(self, tuple):
+        (create_signal, delete_signal) = tuple
+        create_signal.connect(self.update_usb_create)
+        delete_signal.connect(self.update_usb_delete)
+        
+    def update_usb_create(self, mountpoint):
+        # print("UPDATE_USB_CREATE: path <%s>, actual path <%s>" % (mountpoint.path, mountpoint.actual_path))
+        self.subdir = SubFileSystem(mountpoint.path)
+        self.usb_mounted = True
+        # print("USB create called");
 
+    def update_usb_delete(self, path):
+        self.usb_mounted = False
+        # print("USB delete called")
+        # self.usb_file_manager.clear_files()
+
+    def set_usb_content_signal(self, signal):
+        signal.connect(self.usb_content)
+    def usb_content(self):
+        pass
+        # print("USB CONTENT SIGNAL HERE")
+    
+    def check_usb_software(self):
+        if(self.usb_mounted):
+            self.usb_updates = self.subdir.list_ts_software_updates(self.unzip_progress)
+
+
+    

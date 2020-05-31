@@ -1,19 +1,30 @@
 from pathlib import Path
 from shutil import copyfile
-from git import Repo, Git
+import git
 import os
 import json
 
-#Load the properties from the json file, config.properties
-#   -config.properties acts as a static file that all windows can access
-#   -the permission is set if the specified. 
-#   -if the config.properties file is not found, create it in the correct directory.
 def get_properties(personality, permission = "Default"):
+    """
+    Load the properties from the json file, config.properties
+    The 'permission' key:value pair is set if a value other that Default is specified.
+    Load the example properties file if no config.properties file is found.
+
+    Arguments:
+        personality {Personality} -- Personality object for path references. 
+
+    Keyword Arguments:
+        permission {str} -- Set the permission level if a different permission level is set. (default: {"Default"})
+
+    Returns:
+        [dict] -- A map of the properties key value pairs. 
+    """
     properties = {"name": "", 
                 "motherboard" : "", 
                 "wifissd" : "",
                 "wifipassword" : "",
-                "permission" : ""
+                "permission" : "",
+                "wifienabled" : ""
                 }
 
     #Grab the config.properties file
@@ -24,7 +35,6 @@ def get_properties(personality, permission = "Default"):
     if( not Path(config_path).is_file() and Path(example_config_path).is_file() ):
         copyfile(example_config_path, config_path)
 
-    #Catch exception if config_path still does not exist. 
     with open(config_path, "r+") as config_in:
         loaded_properties = json.load(config_in)
         properties = {**properties, **loaded_properties}
@@ -39,14 +49,54 @@ def get_properties(personality, permission = "Default"):
     #Will have to be adjusted if the user is updating software locally!!!!
 
     try:
-        repo = Repo(personality.gitrepopath)
+        repo = git.Repo(personality.gitrepopath)
+    except git.InvalidGitRepositoryError as e:
+        repo = git.Repo.init(personality.gitrepopath)
+
+    try:
         current_version = next((tag for tag in repo.tags if tag.commit == repo.head.commit), None)
         properties["version"] = current_version.name
     #If no tag found, check for current branch
     except AttributeError as e:
-        properties["version"] = repo.active_branch.name
+        if repo.active_branch.name != "master":
+            properties["version"] = repo.active_branch.name
+        else:
+            (version, description) = get_software_details(personality.gitrepopath + "/README.md")
+            properties["version"] = version + "_Local"        
     #If no branch/repo found, default to local. 
     except Exception as e:
+        print(e)
         properties["version"] = "Local"
-        
+    
     return properties
+
+
+def get_software_details(readme_path):
+    """
+    Looks for the details of the latest release in the readme file.
+    Parses the data between the beginning "---" and ending "---"
+    Used for the descriptions of local USB updates.
+
+    Arguments:
+        readme_path {String} -- The path to the readme file that is going to be parsed in this function.
+    """
+
+    version = ""
+    description = ""
+    if(Path(readme_path).is_file()):
+        with open(readme_path) as readme:
+            copy = False
+            for line in readme:
+                if line.strip() == "---":
+                    copy = True
+                    continue
+                elif line.strip() == "---" and (version != "" or description != ""):
+                    break
+                elif copy:
+                    if line.strip() == "":
+                        continue
+                    elif line.strip()[0] == "v":
+                        version = line.strip()
+                    else:
+                        description += line.strip()+"\n"
+    return (version, description)
