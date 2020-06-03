@@ -18,7 +18,6 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 # from .userupdate import UserUpdateWindow
 # from .notification import Notification
 # #from . import event_hand
-
 from .qt.home_qt import Ui_Home
 from constants import *
 from basepage import BasePage

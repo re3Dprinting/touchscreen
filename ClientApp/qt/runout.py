@@ -53,3 +53,4 @@ class Ui_w_runout_dialog(object):
         w_runout_dialog.setWindowTitle(_translate("w_runout_dialog", "Dialog"))
         self.w_runout_title.setText(_translate("w_runout_dialog", "Filament Change"))
         self.w_runout_message_label.setText(_translate("w_runout_dialog", "Filament change instructions"))
+import img_rc

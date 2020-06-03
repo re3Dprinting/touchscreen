@@ -88,3 +88,4 @@ class Ui_UserUpdatePage(object):
         item.setText(_translate("UserUpdatePage", "Version"))
         item = self.SoftwareList.horizontalHeaderItem(1)
         item.setText(_translate("UserUpdatePage", "Release Time"))
+import img_rc

@@ -59,8 +59,8 @@
        <string/>
       </property>
       <property name="icon">
-       <iconset>
-        <normaloff>img/print.png</normaloff>img/print.png</iconset>
+       <iconset resource="img.qrc">
+        <normaloff>:/img/img/Printing.png</normaloff>:/img/img/Printing.png</iconset>
       </property>
       <property name="iconSize">
        <size>
@@ -94,8 +94,8 @@
        <string/>
       </property>
       <property name="icon">
-       <iconset>
-        <normaloff>img/control.png</normaloff>img/control.png</iconset>
+       <iconset resource="img.qrc">
+        <normaloff>:/img/img/Movement.png</normaloff>:/img/img/Movement.png</iconset>
       </property>
       <property name="iconSize">
        <size>
@@ -129,8 +129,8 @@
        <string/>
       </property>
       <property name="icon">
-       <iconset>
-        <normaloff>img/temperature.png</normaloff>img/temperature.png</iconset>
+       <iconset resource="img.qrc">
+        <normaloff>:/img/img/Temperature 2.png</normaloff>:/img/img/Temperature 2.png</iconset>
       </property>
       <property name="iconSize">
        <size>
@@ -164,8 +164,8 @@
        <string/>
       </property>
       <property name="icon">
-       <iconset>
-        <normaloff>img/settings.png</normaloff>img/settings.png</iconset>
+       <iconset resource="img.qrc">
+        <normaloff>:/img/img/Settings (2).png</normaloff>:/img/img/Settings (2).png</iconset>
       </property>
       <property name="iconSize">
        <size>
@@ -218,7 +218,7 @@
        <string/>
       </property>
       <property name="pixmap">
-       <pixmap>img/logo.png</pixmap>
+       <pixmap resource="img.qrc">:/img/img/logo.png</pixmap>
       </property>
       <property name="scaledContents">
        <bool>true</bool>
@@ -256,6 +256,8 @@
    </property>
   </widget>
  </widget>
- <resources/>
+ <resources>
+  <include location="img.qrc"/>
+ </resources>
  <connections/>
 </ui>

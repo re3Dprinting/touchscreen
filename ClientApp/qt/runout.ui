@@ -104,6 +104,8 @@
    </widget>
   </widget>
  </widget>
- <resources/>
+  <resources>
+  <include location="img.qrc"/>
+ </resources>
  <connections/>
 </ui>

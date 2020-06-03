@@ -264,3 +264,4 @@ class Ui_NotActivePrintWidget(object):
         self.w_pushbutton_m2_extruder1.setText(_translate("NotActivePrintWidget", "E1"))
         self.w_pushbutton_m2_bed.setText(_translate("NotActivePrintWidget", "Bed"))
         self.w_pushbutton_m2_all.setText(_translate("NotActivePrintWidget", "All"))
+import img_rc

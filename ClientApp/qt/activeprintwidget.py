@@ -266,3 +266,4 @@ class Ui_ActivePrintWidget(object):
         self.w_label_position.setText(_translate("ActivePrintWidget", "<html><head/><body><p align=\"center\"><span style=\" font-size:12pt;\">-----</span></p></body></html>"))
         self.w_label_flowrate.setText(_translate("ActivePrintWidget", "<html><head/><body><p align=\"center\"><span style=\" font-size:18pt;\">-----</span></p></body></html>"))
         self.w_label_babystep_val.setText(_translate("ActivePrintWidget", "<html><head/><body><p align=\"center\"><span style=\" font-size:18pt;\">-----</span></p></body></html>"))
+import img_rc

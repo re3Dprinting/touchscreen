@@ -192,6 +192,8 @@ ACK</string>
    </layout>
   </widget>
  </widget>
- <resources/>
+  <resources>
+  <include location="img.qrc"/>
+ </resources>
  <connections/>
 </ui>

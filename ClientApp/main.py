@@ -9,6 +9,9 @@ import logging
 import getpass
 from pathlib import Path
 
+#Add qt folder to the system path to enable img_rc.py to be found by generated python files from QT ui files.
+sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), "qt"))
+
 from PyQt5 import QtWidgets
 
 from octo import setup_octoprint

@@ -213,3 +213,4 @@ class Ui_PrintPage(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.Local), _translate("PrintPage", "Local"))
         self.pushbutton_stop_print.setText(_translate("PrintPage", "Stop Print"))
         self.pushbutton_active_print.setText(_translate("PrintPage", "Active Print"))
+import img_rc
