@@ -1,0 +1,18 @@
+QWidget {
+    background-color: rgb(125,125,125);
+} 
+
+QLabel {
+    font-family: Lato
+}        
+
+QPushButton { 
+    background: rgba(255,255,255,0); 
+    outline: none; border: none; 
+} 
+QPushButton:checked{
+    background: rgba(255,255,255,0); 
+    outline: none; border: none;} 
+    QPushButton:pressed { background: rgba(0,0,0,0.1); 
+    outline: none; border: none; 
+}

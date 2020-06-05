@@ -49,7 +49,7 @@ class HomePage(BasePage, Ui_Home):
         self.pushbutton_control.clicked.connect(self.handle_control_touch)
         self.pushbutton_temperature.clicked.connect(self.handle_temperature_touch)
         self.pushbutton_settings.clicked.connect(self.handle_settings_touch)
-        self.pushbutton_back.clicked.connect(self.handle_back_touch)
+        # self.pushbutton_back.clicked.connect(self.handle_back_touch)
 
 
     def handle_print_touch(self):

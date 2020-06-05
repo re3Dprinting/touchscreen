@@ -16,65 +16,65 @@
         <file>img/9.png</file>
         <file>img/10.png</file>
         <file>img/100.png</file>
-        <file>img/Active Print.png</file>
-        <file>img/Add Log Marker (2).png</file>
-        <file>img/Add Log Marker.png</file>
-        <file>img/Arrow Down.png</file>
-        <file>img/Bed Front XY.png</file>
-        <file>img/Bed Front.png</file>
-        <file>img/Bed X.png</file>
-        <file>img/Bed Y.png</file>
-        <file>img/Bed Z.png</file>
+        <file>img/Active_Print.png</file>
+        <file>img/Add_Log_Marker.png</file>
+        <file>img/Add_Log_Marker(2).png</file>
+        <file>img/Arrow_Down.png</file>
+        <file>img/Bed_Front_XY.png</file>
+        <file>img/Bed_Front.png</file>
+        <file>img/Bed_X.png</file>
+        <file>img/Bed_Y.png</file>
+        <file>img/Bed_Z.png</file>
         <file>img/Bed.png</file>
         <file>img/Capabilities.png</file>
-        <file>img/Check for Update.png</file>
+        <file>img/Check_for_Update.png</file>
         <file>img/Connect.png</file>
-        <file>img/Copy Log files.png</file>
+        <file>img/Copy_Log_files.png</file>
         <file>img/Disconnect.png</file>
-        <file>img/Down button.png</file>
+        <file>img/Down_button.png</file>
         <file>img/Down.png</file>
-        <file>img/Extruder 1.png</file>
-        <file>img/Extruder 2.png</file>
-        <file>img/Extruder with Bed.png</file>
+        <file>img/Extruder_1.png</file>
+        <file>img/Extruder_2.png</file>
+        <file>img/Extruder_with_Bed.png</file>
         <file>img/Extruder.png</file>
-        <file>img/Fans off.png</file>
+        <file>img/Fans_off.png</file>
         <file>img/Fans.png</file>
         <file>img/Gigabot.png</file>
-        <file>img/Heated Bed.png</file>
-        <file>img/Home XY.png</file>
-        <file>img/Home XYZ.png</file>
-        <file>img/Home Z.png</file>
+        <file>img/Heated_Bed.png</file>
+        <file>img/Home_XY.png</file>
+        <file>img/Home_XYZ.png</file>
+        <file>img/Home_Z.png</file>
         <file>img/Home.png</file>
         <file>img/img_rc.py</file>
         <file>img/Letft.png</file>
         <file>img/LOCAL.png</file>
-        <file>img/Loging Level.png</file>
+        <file>img/Loging_Level.png</file>
+        <file>img/logo.png</file>
         <file>img/Movement.png</file>
-        <file>img/Open folder.png</file>
+        <file>img/Open_folder.png</file>
         <file>img/pause.png</file>
         <file>img/play.png</file>
         <file>img/Printing.png</file>
-        <file>img/Revert to last saved.png</file>
+        <file>img/Revert_to_last_saved.png</file>
         <file>img/Right.png</file>
-        <file>img/Save Permanently.png</file>
+        <file>img/Save_Permanently.png</file>
         <file>img/Scan.png</file>
         <file>img/SD.png</file>
-        <file>img/Send Fake ACK.png</file>
-        <file>img/Settings (2).png</file>
+        <file>img/Send_Fake_ACK.png</file>
         <file>img/Settings.png</file>
-        <file>img/Small arrow.png</file>
-        <file>img/Start Print.png</file>
+        <file>img/Settings(2).png</file>
+        <file>img/Small_arrow.png</file>
+        <file>img/Start_Print.png</file>
         <file>img/Stats.png</file>
-        <file>img/T1 X.png</file>
-        <file>img/T1 Y.png</file>
-        <file>img/Temperature 2.png</file>
+        <file>img/T1_X.png</file>
+        <file>img/T1_Y.png</file>
         <file>img/Temperature.png</file>
-        <file>img/Up one folder.png</file>
+        <file>img/Temperature(2).png</file>
+        <file>img/Up_one_folder.png</file>
         <file>img/UP.png</file>
         <file>img/Update-rollback.png</file>
-        <file>img/USB (2).png</file>
+        <file>img/USB_(2).png</file>
         <file>img/USB.png</file>
         <file>img/X.png</file>
-        <file>img/logo.png</file>
     </qresource>
 </RCC>

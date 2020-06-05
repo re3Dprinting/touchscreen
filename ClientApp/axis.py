@@ -24,6 +24,7 @@ class Axis(object):
 
         self.inc = ""
         self.gcode = ""
+
 #	Not needed if using relative position
 #	Could be implemented to prevent crashing the bed
 #	But the soft limits should be on the firmware level.
@@ -77,7 +78,7 @@ class Axis(object):
                 self.moveneg(self.holdmove)
 
     def init_increment(self):
-        self.inc = getattr(self.parent, self.ax +
+        self.inc = getattr(self.parent, "".join([i for i in self.ax if not i.isdigit()]) +
                            "button").checkedButton().text()
         self._log("UI: Increment = %s" % self.inc)
         getattr(self.parent, self.ax +
