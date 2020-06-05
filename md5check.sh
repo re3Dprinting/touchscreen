@@ -5,10 +5,10 @@ cd "$(dirname "$0")"
 #Depending of the type of os, either md5sum or md5 command is used. 
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
     md5cmd="md5sum"
-    endcmd="-exec sh -c \"md5sum {} | cut -c 1-32 \" \; | sort"
+    endcmd="-exec sh -c \"md5sum '{}' | cut -c 1-32 \" \; | sort"
 elif [[ "$OSTYPE" == "darwin"* ]]; then
     md5cmd="md5 -q"
-    endcmd="-exec md5 -q {} + | sort"
+    endcmd="-exec md5 -q '{}' + | sort"
 fi
 
 #Construct a find command, ignoring all the .gitignore files. 
@@ -28,6 +28,9 @@ if [[ $1 == "-g" ]] || [[ $1 == "--generate" ]]; then
     eval $var
     echo Generated md5sum written into md5verify: $(cat md5verify) 
 #If no arguements are provided, just print out the calculated checksum to stdout
+elif [[ $1 == "-s" ]] || [[ $1 == "--show" ]]; then
+    var+="$endcmd | $md5cmd | awk '{ print \$1 }' "
+    echo $var
 else
     var+="$endcmd | $md5cmd | awk '{ print \$1 }' "
     eval $var

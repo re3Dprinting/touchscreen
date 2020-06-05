@@ -128,7 +128,9 @@ class UserUpdatePage(BasePage, Ui_UserUpdatePage):
             else: self.ui_update_signal.emit("No USB Updates Found.")
             self.ui_update_signal.emit("setEnable")
         except Exception as e:
-            print("userupdate: checkupdate() exception: ", e)
+            err = "An Error has occured: \n" + str(type(e)) +"\n"+str(e)
+            self.display_text(err)
+            print("userupdate: checkupdate() exception: ", type(e), e)
 
     def ui_update_list(self, msg):
         if(msg == "setEnable"):
@@ -168,14 +170,25 @@ class UserUpdatePage(BasePage, Ui_UserUpdatePage):
             return Notification("A new software version is available!\nTo update, go to Settings > Software Update")
 
     def check_git_software(self):
+
         #Delete tags if they contain "release/"
         for tag in self.repo.tags:
             if("release/" in tag.name or 
                 "devel/" in tag.name or 
                 "hotfix/" in tag.name):
-                self.repo.delete_tag(tag)
+                try:
+                    self.repo.delete_tag(tag)
+                except:
+                    pass
+            
+        try:
+            self.remote_repo.fetch("-tf")
+        except git.GitCommandError as e:
+            if("reference broken" in e.stderr):
+                shutil.rmtree(self.personality.gitrepopath+"/.git/refs/tags")
 
         self.remote_repo.fetch("-tf")
+                
         tags = sorted(self.repo.tags, key=lambda t: t.commit.committed_date)
         tags.reverse()
 
