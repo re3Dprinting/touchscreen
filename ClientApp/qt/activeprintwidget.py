@@ -2,13 +2,11 @@
 
 # Form implementation generated from reading ui file 'activeprintwidget.ui'
 #
-# Created by: PyQt5 UI code generator 5.14.2
+# Created by: PyQt5 UI code generator 5.9.2
 #
 # WARNING! All changes made in this file will be lost!
 
-
 from PyQt5 import QtCore, QtGui, QtWidgets
-
 
 class Ui_ActivePrintWidget(object):
     def setupUi(self, ActivePrintWidget):
@@ -118,6 +116,10 @@ class Ui_ActivePrintWidget(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.w_label_position.sizePolicy().hasHeightForWidth())
         self.w_label_position.setSizePolicy(sizePolicy)
+        font = QtGui.QFont()
+        font.setPointSize(20)
+        self.w_label_position.setFont(font)
+        self.w_label_position.setAlignment(QtCore.Qt.AlignCenter)
         self.w_label_position.setObjectName("w_label_position")
         self.verticalLayout_2.addWidget(self.w_label_position)
         self.gridLayout.addLayout(self.verticalLayout_2, 1, 0, 1, 1)
@@ -263,6 +265,7 @@ class Ui_ActivePrintWidget(object):
         self.w_pushbutton_babystep.setText(_translate("ActivePrintWidget", "Babystepping "))
         self.w_pushbutton_feedrate.setText(_translate("ActivePrintWidget", "Feedrate:"))
         self.w_label_feedrate.setText(_translate("ActivePrintWidget", "<html><head/><body><p><span style=\" font-size:14pt;\">-----</span></p></body></html>"))
-        self.w_label_position.setText(_translate("ActivePrintWidget", "<html><head/><body><p align=\"center\"><span style=\" font-size:12pt;\">-----</span></p></body></html>"))
+        self.w_label_position.setText(_translate("ActivePrintWidget", "X:0.00 Y:0.00 Z:0.00"))
         self.w_label_flowrate.setText(_translate("ActivePrintWidget", "<html><head/><body><p align=\"center\"><span style=\" font-size:18pt;\">-----</span></p></body></html>"))
         self.w_label_babystep_val.setText(_translate("ActivePrintWidget", "<html><head/><body><p align=\"center\"><span style=\" font-size:18pt;\">-----</span></p></body></html>"))
+

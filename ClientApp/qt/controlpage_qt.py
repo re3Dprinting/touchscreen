@@ -2,13 +2,11 @@
 
 # Form implementation generated from reading ui file 'controlpage_qt.ui'
 #
-# Created by: PyQt5 UI code generator 5.14.2
+# Created by: PyQt5 UI code generator 5.9.2
 #
 # WARNING! All changes made in this file will be lost!
 
-
 from PyQt5 import QtCore, QtGui, QtWidgets
-
 
 class Ui_ControlPage(object):
     def setupUi(self, ControlPage):
@@ -88,7 +86,7 @@ class Ui_ControlPage(object):
         self.EPos.setIconSize(QtCore.QSize(90, 90))
         self.EPos.setObjectName("EPos")
         self.label = QtWidgets.QLabel(ControlPage)
-        self.label.setGeometry(QtCore.QRect(200, 330, 31, 31))
+        self.label.setGeometry(QtCore.QRect(270, 270, 31, 31))
         self.label.setObjectName("label")
         self.label_2 = QtWidgets.QLabel(ControlPage)
         self.label_2.setGeometry(QtCore.QRect(360, 180, 41, 31))
@@ -97,7 +95,7 @@ class Ui_ControlPage(object):
         self.label_3.setGeometry(QtCore.QRect(40, 170, 31, 31))
         self.label_3.setObjectName("label_3")
         self.label_4 = QtWidgets.QLabel(ControlPage)
-        self.label_4.setGeometry(QtCore.QRect(190, 10, 41, 31))
+        self.label_4.setGeometry(QtCore.QRect(140, 60, 41, 31))
         self.label_4.setObjectName("label_4")
         self.label_5 = QtWidgets.QLabel(ControlPage)
         self.label_5.setGeometry(QtCore.QRect(490, 240, 51, 31))
@@ -439,6 +437,61 @@ class Ui_ControlPage(object):
         self.PositionLabel.setGeometry(QtCore.QRect(130, 400, 281, 31))
         self.PositionLabel.setAlignment(QtCore.Qt.AlignCenter)
         self.PositionLabel.setObjectName("PositionLabel")
+        self.w_lineedit_x_position = QtWidgets.QLineEdit(ControlPage)
+        self.w_lineedit_x_position.setEnabled(True)
+        self.w_lineedit_x_position.setGeometry(QtCore.QRect(190, 330, 61, 24))
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(1)
+        sizePolicy.setVerticalStretch(1)
+        sizePolicy.setHeightForWidth(self.w_lineedit_x_position.sizePolicy().hasHeightForWidth())
+        self.w_lineedit_x_position.setSizePolicy(sizePolicy)
+        font = QtGui.QFont()
+        font.setPointSize(16)
+        self.w_lineedit_x_position.setFont(font)
+        self.w_lineedit_x_position.setFocusPolicy(QtCore.Qt.NoFocus)
+        self.w_lineedit_x_position.setObjectName("w_lineedit_x_position")
+        self.w_lineedit_y_position = QtWidgets.QLineEdit(ControlPage)
+        self.w_lineedit_y_position.setGeometry(QtCore.QRect(190, 360, 61, 24))
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(1)
+        sizePolicy.setVerticalStretch(1)
+        sizePolicy.setHeightForWidth(self.w_lineedit_y_position.sizePolicy().hasHeightForWidth())
+        self.w_lineedit_y_position.setSizePolicy(sizePolicy)
+        font = QtGui.QFont()
+        font.setPointSize(16)
+        self.w_lineedit_y_position.setFont(font)
+        self.w_lineedit_y_position.setFocusPolicy(QtCore.Qt.NoFocus)
+        self.w_lineedit_y_position.setObjectName("w_lineedit_y_position")
+        self.w_lineedit_z_position = QtWidgets.QLineEdit(ControlPage)
+        self.w_lineedit_z_position.setGeometry(QtCore.QRect(190, 390, 61, 24))
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(1)
+        sizePolicy.setVerticalStretch(1)
+        sizePolicy.setHeightForWidth(self.w_lineedit_z_position.sizePolicy().hasHeightForWidth())
+        self.w_lineedit_z_position.setSizePolicy(sizePolicy)
+        font = QtGui.QFont()
+        font.setPointSize(16)
+        self.w_lineedit_z_position.setFont(font)
+        self.w_lineedit_z_position.setFocusPolicy(QtCore.Qt.NoFocus)
+        self.w_lineedit_z_position.setObjectName("w_lineedit_z_position")
+        self.w_label_position_x = QtWidgets.QLabel(ControlPage)
+        self.w_label_position_x.setGeometry(QtCore.QRect(170, 330, 21, 24))
+        font = QtGui.QFont()
+        font.setPointSize(16)
+        self.w_label_position_x.setFont(font)
+        self.w_label_position_x.setObjectName("w_label_position_x")
+        self.w_label_position_x_2 = QtWidgets.QLabel(ControlPage)
+        self.w_label_position_x_2.setGeometry(QtCore.QRect(170, 360, 21, 24))
+        font = QtGui.QFont()
+        font.setPointSize(16)
+        self.w_label_position_x_2.setFont(font)
+        self.w_label_position_x_2.setObjectName("w_label_position_x_2")
+        self.w_label_position_x_3 = QtWidgets.QLabel(ControlPage)
+        self.w_label_position_x_3.setGeometry(QtCore.QRect(170, 390, 21, 24))
+        font = QtGui.QFont()
+        font.setPointSize(16)
+        self.w_label_position_x_3.setFont(font)
+        self.w_label_position_x_3.setObjectName("w_label_position_x_3")
 
         self.retranslateUi(ControlPage)
         QtCore.QMetaObject.connectSlotsByName(ControlPage)
@@ -498,3 +551,10 @@ class Ui_ControlPage(object):
         self.label_10.setText(_translate("ControlPage", "Home XY"))
         self.label_11.setText(_translate("ControlPage", "Home Z"))
         self.PositionLabel.setText(_translate("ControlPage", "<html><head/><body><p align=\"right\"><span style=\" font-size:16pt;\">-----</span></p></body></html>"))
+        self.w_lineedit_x_position.setText(_translate("ControlPage", "600.00"))
+        self.w_lineedit_y_position.setText(_translate("ControlPage", "600.00"))
+        self.w_lineedit_z_position.setText(_translate("ControlPage", "600.00"))
+        self.w_label_position_x.setText(_translate("ControlPage", "X:"))
+        self.w_label_position_x_2.setText(_translate("ControlPage", "Y:"))
+        self.w_label_position_x_3.setText(_translate("ControlPage", "Z:"))
+
