@@ -250,7 +250,9 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
         position_string = "X: %d Y: %d Z:%1.2f" % (x, y, z)
 
         self.changeText(self.ActivePrintWid.w_label_position, position_string)
-        self.control_page.PositionLabel.setText(position_string)
+        self.control_page.updateposition(x, y, z)
+#        self.control_page.PositionLabel.setText(position_string)
+
 
     def update_progress(self, completion, print_time_left):
         self.progress_signal.emit(str(completion))

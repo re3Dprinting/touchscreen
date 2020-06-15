@@ -59,7 +59,6 @@ class ControlPage(BasePage, Ui_ControlPage):
         self.zaxis = Axis("z", "4500", self, 2)
         self.eaxis = Axis("e", "60", self)
 
-        self.inittextformat(self.PositionLabel)
         # self.serial.data.updateposition.connect(self.updateposition)
 
         self.HomeXY.clicked.connect(self.homexy)
@@ -71,15 +70,23 @@ class ControlPage(BasePage, Ui_ControlPage):
         self.DisableMotors.clicked.connect(self.disablemotors)
         self.Back.clicked.connect(self.user_back)
 
+        self.updateposition(600, 60, 0)
+
     def user_back(self):
         self._log("UI: User touched Back")
         self.close()
 
-    def updateposition(self):
-        # pos = self.serial.data.position
-        pos = 0
-        tmp = "X: "+str(pos["X"]) + " Y: "+str(pos["Y"]) + " Z: "+str(pos["Z"])
-        self.changeText(self.PositionLabel, tmp)
+    def updateposition(self, x, y, z):
+
+        position_format = "{0:8.2f} "
+
+        x_pos_str = position_format.format(x)
+        y_pos_str = position_format.format(y)
+        z_pos_str = position_format.format(z)
+
+        self.w_lineedit_x_position.setText(x_pos_str)
+        self.w_lineedit_y_position.setText(y_pos_str)
+        self.w_lineedit_z_position.setText(z_pos_str)
 
     def disablemotors(self):
         # self.serial.send_serial('M18')
@@ -134,10 +141,3 @@ class ControlPage(BasePage, Ui_ControlPage):
         tmp = QtWidgets.QApplication.translate(
             "TemperatureWindow", label.format[0]+text+label.format[1], None, -1)
         label.setText(tmp)
-
-    def inittextformat(self, label):
-        label.setText("0/0/0")
-#         label.format = label.text()
-# # This line was, prior to converting for python 3:
-# #		label.format = label.format.encode("utf-8").split("-----")
-#         label.format = label.format.split("-----")
