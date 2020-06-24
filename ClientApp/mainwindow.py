@@ -1,4 +1,5 @@
 import logging
+import re
 
 from PyQt5 import QtWidgets
 from PyQt5.QtCore import Qt, QObject
@@ -19,6 +20,7 @@ from .infopage import InfoPage
 from .serialpage import SerialPage
 from .userupdatepage import UserUpdatePage
 from .duexsetuppage import DuExSetupPage
+from .runout_handler import RunoutHandlerDialog
 
 class MainWindow(Ui_MainWindow, QtWidgets.QMainWindow):
     def __init__(self, printer_if, persona, properties):
@@ -29,6 +31,7 @@ class MainWindow(Ui_MainWindow, QtWidgets.QMainWindow):
         self._log("MainWindow starting up")
 
         self.context = Context(printer_if, persona, self, properties)
+        self.printer_if = printer_if
 
         # Initialize the UI
         self.setupUi(self)
@@ -65,7 +68,45 @@ class MainWindow(Ui_MainWindow, QtWidgets.QMainWindow):
         self.setWindowState(Qt.WindowActive)
         self.activateWindow()
 
-        context.printer_if.set_state_changed_callback(self.state_changed_callback)
+        self.printer_if.set_state_changed_callback(self.state_changed_callback)
+
+        ctor = self.printer_if.state_change_connector()
+        ctor.register(self.state_change_connector_callback)
+
+        self.w_runout_handler = RunoutHandlerDialog(self, self.printer_if)
+
+
+    prog = re.compile("Heater_ID: ([^ ]+)")
+
+    def state_change_connector_callback(self, from_state, to_state):
+        if to_state.startswith("ERROR"):
+            state_string = self.printer_if.get_printer().get_state_string()
+            self._log("################################################################################################")
+            self._log("from state <%s> to state <%s>" % (from_state, to_state))
+            self._log("state string <%s>" % state_string)
+
+            message_string = ""
+            detail_string = "Message from printer:\n%s" % state_string
+
+            result = self.prog.search(state_string)
+
+            if result is not None:
+                id = result.group(1)
+                if id == "bed":
+                    message_string = "Printer bed failed to heat.\n"
+                else:
+                    message_string = "Extruder %s failed to heat.\n" % id
+
+            # This is the default message.
+            message_string += "Printer halted."
+
+            self.w_runout_handler.w_runout_title.setText("*** ERROR ***")
+            self.w_runout_handler.w_runout_message_label.setText(message_string)
+            self.w_runout_handler.w_runout_detail_label.setText(detail_string)
+            self.w_runout_handler.enable_ok()
+            self.w_runout_handler.send_m108_on_ok = False
+            self.w_runout_handler.hide_on_ok = True
+            self.w_runout_handler.show()
 
     def state_changed_callback(self, payload):
         state = "Printer: %s" % payload["state_string"]
