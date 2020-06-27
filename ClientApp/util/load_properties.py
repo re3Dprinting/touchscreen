@@ -4,7 +4,8 @@ import git
 import os
 import json
 
-def get_properties(personality, permission = "Default"):
+
+def get_properties(personality, permission="Default"):
     """
     Load the properties from the json file, config.properties
     The 'permission' key:value pair is set if a value other that Default is specified.
@@ -19,55 +20,56 @@ def get_properties(personality, permission = "Default"):
     Returns:
         [dict] -- A map of the properties key value pairs. 
     """
-    properties = {"name": "", 
-                "motherboard" : "", 
-                "wifissd" : "",
-                "wifipassword" : "",
-                "permission" : "",
-                "wifienabled" : ""
-                }
+    properties = {"name": "",
+                  "motherboard": "",
+                  "wifissd": "",
+                  "wifipassword": "",
+                  "permission": "",
+                  "wifienabled": ""
+                  }
 
-    #Grab the config.properties file
+    # Grab the config.properties file
     config_path = personality.rootpath + "/config.properties"
-    example_config_path = personality.touchscreenpath + "/setup-files/config.properties"
+    example_config_path = personality.touchscreenpath + \
+        "/setup-files/config.properties"
 
-    #If the file does not exist, move the file over to the correct directory. 
-    if( not Path(config_path).is_file() and Path(example_config_path).is_file() ):
+    # If the file does not exist, move the file over to the correct directory.
+    if(not Path(config_path).is_file() and Path(example_config_path).is_file()):
         copyfile(example_config_path, config_path)
 
     with open(config_path, "r+") as config_in:
         loaded_properties = json.load(config_in)
         properties = {**properties, **loaded_properties}
-        #Set the permission if specified. Otherwise, keep as default.
-        if not permission == "Default" and "permission" in properties: 
+        # Set the permission if specified. Otherwise, keep as default.
+        if not permission == "Default" and "permission" in properties:
             properties["permission"] = permission
             config_in.seek(0)
             json.dump(properties, config_in, indent=4)
             config_in.truncate()
 
-    #Grab the version from the current git repository. 
-    #Will have to be adjusted if the user is updating software locally!!!!
+    # Grab the version from the current git repository.
+    # Will have to be adjusted if the user is updating software locally!!!!
 
     try:
         repo = git.Repo(personality.gitrepopath)
     except git.InvalidGitRepositoryError as e:
         repo = git.Repo.init(personality.gitrepopath)
 
-    try:
-        current_version = next((tag for tag in repo.tags if tag.commit == repo.head.commit), None)
-        properties["version"] = current_version.name
-    #If no tag found, check for current branch
-    except AttributeError as e:
-        if repo.active_branch.name != "master":
-            properties["version"] = repo.active_branch.name
-        else:
-            (version, description) = get_software_details(personality.gitrepopath + "/README.md")
-            properties["version"] = version + "_Local"        
-    #If no branch/repo found, default to local. 
-    except Exception as e:
-        print(e)
-        properties["version"] = "Local"
-    
+    # try:
+    current_version = next(
+        (tag for tag in repo.tags if tag.commit == repo.head.commit), None)
+    if current_version == None:
+        try:
+            current_version = repo.active_branch.name
+        except TypeError:
+            current_version = "HEAD_detacted"
+        except Exception e:
+            current_version = "Local"
+    else:
+        current_version = current_version.name
+
+    properties["version"] = current_version
+
     return properties
 
 
