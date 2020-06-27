@@ -2,6 +2,8 @@
 
 #################################################################
 
+from time import sleep
+from datetime import datetime
 import sys
 import os
 import glob
@@ -32,9 +34,11 @@ from util.load_properties import get_properties
 from util.restore_backup import restore_backup
 from fsutils.checksum import validate_checksum
 
+
 def setup_local_logger(name):
     global logger
     logger = logging.getLogger(name)
+
 
 def _log(message):
     global logger
@@ -51,6 +55,7 @@ class MainHandler():
     Entry point of touchscreen software.
     Set up initial exception hooks, user-setup, and file paths
     """
+
     def __init__(self):
         # Hook up our exception handler
         sys._excepthook = sys.excepthook
@@ -60,13 +65,15 @@ class MainHandler():
         setup_root_logger()
         setup_local_logger(__name__)
 
-        #Locate to the absolute path of the current path. Locate the root re3d dir where Octoprint, config.properties, and touchscreen folders lie.
+        # Locate to the absolute path of the current path. Locate the root re3d dir where Octoprint, config.properties, and touchscreen folders lie.
         #     .
-        # ├── OctoPrint 
+        # ├── OctoPrint
         # ├── config.properties
-        # └── touchscreen 
-        tmp_path = Path(__file__).parent.absolute() #Path of the symbolic link
-        touchscreen_path = Path(os.path.realpath(tmp_path)) #Grab absolute path from symbolic link, Location of the main.py file (ClientApp directory)
+        # └── touchscreen
+        # Path of the symbolic link
+        tmp_path = Path(__file__).parent.absolute()
+        # Grab absolute path from symbolic link, Location of the main.py file (ClientApp directory)
+        touchscreen_path = Path(os.path.realpath(tmp_path))
 
         # The 'personality' mechanism is a way of specifying things that
         # will change from one OS to another. We create the personality
@@ -74,24 +81,28 @@ class MainHandler():
         # macOS.
         if os_is_linux():
             # Linux
-            self.persona = Personality("pi", "/usb", "/home/pi/gcode-cache", "/home/pi/log-cache", touchscreen_path)
-            properties = get_properties(self.persona)
+            self.persona = Personality(
+                "pi", "/usb", "/home/pi/gcode-cache", "/home/pi/log-cache", touchscreen_path)
+            self.properties = get_properties(self.persona)
         elif os_is_macos():
             # macOS
             if getpass.getuser() == "jct":
                 octopath = "/Users/jct/Dropbox/re3D/touchscreen/OctoPrint"
-                self.persona = Personality("jt", "/Volumes", octopath + "/localgcode", octopath + "/log-cache", touchscreen_path)
-                properties = get_properties(self.persona, "developer")
+                self.persona = Personality(
+                    "jt", "/Volumes", octopath + "/localgcode", octopath + "/log-cache", touchscreen_path)
+                self.properties = get_properties(self.persona, "developer")
             if getpass.getuser() == "npan":
                 octopath = "/Users/npan/re3D/OctoPrint"
-                self.persona = Personality("Noah", "/Volumes", octopath + "/localgcode", octopath + "/log-cache", touchscreen_path) 
-                properties = get_properties(self.persona, "developer")
+                self.persona = Personality(
+                    "Noah", "/Volumes", octopath + "/localgcode", octopath + "/log-cache", touchscreen_path)
+                self.properties = get_properties(self.persona, "developer")
         else:
             print("Unable to determine operating system, aborting...")
             sys.exit(1)
-        
-        #After creating the personality object, validate the filesystem with the md5check script.
-        validate_checksum(self.persona.gitrepopath + "/md5verify", self.persona.gitrepopath+ "/md5check.sh")
+
+        # After creating the personality object, validate the filesystem with the md5check script.
+        validate_checksum(self.persona.gitrepopath + "/md5verify",
+                          self.persona.gitrepopath + "/md5check.sh")
 
         # We want to build a string to be displayed on the touchscreen
         # main screen that has helpful information for diagnestic
@@ -104,9 +115,9 @@ class MainHandler():
         """
 
         # Get the application version
-        version_string = properties["version"]
+        version_string = self.properties["version"]
 
-        # Get the IP address. 
+        # Get the IP address.
         ip_addr = get_ip()
         ip_string = "IP: " + ip_addr
 
@@ -117,15 +128,17 @@ class MainHandler():
         config_string = "%s/%s" % (version_string, config_id)
 
         # Print a banner to stdout.
-        print("******************************************************************************")
-        print("re:3D touchscreen starting %s %s " % (ip_string, version_string))
-        print("******************************************************************************")
+        print(
+            "******************************************************************************")
+        print("re:3D touchscreen starting %s %s " %
+              (ip_string, version_string))
+        print(
+            "******************************************************************************")
 
         # And log the same banner.
         _log("******************************************************************************")
         _log("re:3D touchscreen starting %s %s " % (ip_string, version_string))
         _log("******************************************************************************")
-
 
         # Set up all the OctoPrint stuff. We need two bits of information
         # from that: the printer and the storage manager.
@@ -138,20 +151,19 @@ class MainHandler():
         # Create the PyQt application
         app = QtWidgets.QApplication(sys.argv)
 
-        app.setApplicationName(properties["name"])
+        app.setApplicationName(self.properties["name"])
         app.setApplicationVersion(version_string)
 
         # Create the top-level UI screen.
-        mainwindow = MainWindow(printer_if, self.persona, properties)
-
+        mainwindow = MainWindow(printer_if, self.persona, self.properties)
 
         # Check to see whether any USB filesystems are currently mounted.
         current_path = ""
-        # possible_usb_mounts = MountFinder.thumbdrive_candidates()
-        possible_usb_mounts = glob.glob(self.persona.watchpoint + "/*")
+        possible_usb_mounts = MountFinder.thumbdrive_candidates()
+        # possible_usb_mounts = glob.glob(self.persona.watchpoint + "/*")
 
         logger.debug("persona watchpoint = <%s>", self.persona.watchpoint)
-        
+
         # If the mount finder located any possible USB mountpoints...
         if len(possible_usb_mounts) > 0:
 
@@ -167,7 +179,7 @@ class MainHandler():
 
             if current_path != "":
                 logger.debug("Initial USB path = <%s>" % current_path)
-                
+
                 # There seems to be a thumb drive plugged in. Tell the UI
                 # print window to use it as the inital file list.
                 current_mountpoint = MountPoint(current_path)
@@ -182,7 +194,7 @@ class MainHandler():
         print_page = mainwindow.get_page(k_print_page)
         userupdate_page = mainwindow.get_page(k_userupdate_page)
         wd_thread = WatchdogThread(print_page, self.persona.watchpoint,
-                                current_path, self.persona.localpath)
+                                   current_path, self.persona.localpath)
 
         # Set up the signals that let us safely communicate between
         # threads that watch the filesystem and the UI.
@@ -190,7 +202,7 @@ class MainHandler():
         print_page.set_usb_mount_signals(usb_signal_tup)
         userupdate_page.set_usb_mount_signals(usb_signal_tup)
 
-        #When is this signal ever called? Is it necessary??
+        # When is this signal ever called? Is it necessary??
         usb_content_signal = wd_thread.get_usb_content_signal()
         print_page.set_usb_content_signal(usb_content_signal)
         userupdate_page.set_usb_content_signal(usb_content_signal)
@@ -213,7 +225,6 @@ class MainHandler():
         # return.
         app.exec_()
 
-
     def exception_hook(self, exctype, value, traceback):
         """Exeception hook for the application that would normally be caught by PyQt5
         All unhandled exceptions are logged and a back-up is restored if it exists. 
@@ -224,19 +235,17 @@ class MainHandler():
             traceback {Traceback Object} -- origin of the error
         """
         global logger
-        logger.exception("**** Logging an uncaught exception", exc_info=(exctype, value, traceback))
+        logger.exception("**** Logging an uncaught exception",
+                         exc_info=(exctype, value, traceback))
         sys._excepthook(exctype, value, traceback)
 
-        #Restore backup version if backup exists. Backup is created, when a update is clicked. 
-        restore_backup(self.persona)
+        # Restore backup version if backup exists. Backup is created, when a update is clicked.
+        restore_backup(self.persona, self.properties)
         sys.exit(1)
-
-
-from datetime import datetime
-from time import sleep
 
 # def dummyall():
 #     logger = setup_root_logger()
+
 
 #     while True:
 #         # Build up a string to represent the tarball filename, starting with the date.
@@ -244,7 +253,6 @@ from time import sleep
 #         nowstr = now.strftime("%Y-%m-%d-%H-%M-%S.%f")
 #         # for i in range(1, 1000000):
 #         logger.info("*****************************%s*********************************" % nowstr)
-
 # Everything's now defined. All we have to do is call it.
 if __name__ == "__main__":
     # dummyall()
