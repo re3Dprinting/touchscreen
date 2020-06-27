@@ -161,6 +161,8 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
         self.inittextformat(self.ActivePrintWid.w_label_babystep_val)
         self.inittextformat(self.ActivePrintWid.w_label_position)
 
+        self.ActivePrintWid.w_label_position.setText("X:0.00 Y:0.00 Z:0.00")
+
 #        self.setbuttonstyle(self.pushbutton_back)
         self.setbuttonstyle(self.ActivePrintWid.w_label_file)
         self.setbuttonstyle(self.ActivePrintWid.w_pushbutton_feedrate)
@@ -248,7 +250,9 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
         position_string = "X: %d Y: %d Z:%1.2f" % (x, y, z)
 
         self.changeText(self.ActivePrintWid.w_label_position, position_string)
-        self.control_page.PositionLabel.setText(position_string)
+        self.control_page.updateposition(x, y, z)
+#        self.control_page.PositionLabel.setText(position_string)
+
 
     def update_progress(self, completion, print_time_left):
         self.progress_signal.emit(str(completion))
