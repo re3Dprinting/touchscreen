@@ -44,7 +44,7 @@ class HomePage(BasePage, Ui_Home):
         self.setTransparentButton(self.pushbutton_control)
         self.setTransparentButton(self.pushbutton_temperature)
         self.setTransparentButton(self.pushbutton_settings)
-        self.setTransparentButton(self.re3DIcon)
+        self.setTransparentIcon(self.re3DIcon)
 #        self.setTransparentButton(self.pushbutton_back)
 
         self.pushbutton_print.clicked.connect(self.handle_print_touch)

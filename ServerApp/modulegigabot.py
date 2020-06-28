@@ -40,13 +40,10 @@ class ModuleGigabot(QtWidgets.QWidget, Ui_GigabotModule):
 
         self.unheated = QtGui.QIcon()
         self.bedheated1 = QtGui.QIcon()
-        self.bedheated2 = QtGui.QIcon()
         self.unheated.addPixmap(QtGui.QPixmap(
             "img/bed_unheated.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.bedheated1.addPixmap(QtGui.QPixmap(
             "img/bed_heated1.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.bedheated2.addPixmap(QtGui.QPixmap(
-            "img/bed_heated2.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
 
 #   More info screen pops up then updates the title
     def moreinfo(self):

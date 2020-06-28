@@ -4,7 +4,20 @@ QWidget {
 
 QLabel {
     font-family: Lato
-}        
+}
+
+QLabel[cssClass~="temperature"]{
+    font-family: Lato;
+    font-size: 24px;
+}
+QLabel[cssClass~="preheat"]{
+    font-family: Lato;
+    font-size: 25px;
+}
+QLabel[cssClass~="movement"]{
+    font-family: Lato;
+    font-size: 40px;
+}
 
 
 QPushButton[cssClass~="transparent_button"]{ 

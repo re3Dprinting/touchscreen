@@ -69,8 +69,9 @@ class Periph(object):
         self.direction = "dec"
 
     def buttonreleased(self):
-        if self.held_count > 0 :
-            self._log("UI: <%s> button released after %d repeats" % (self.fullname, self.held_count))
+        if self.held_count > 0:
+            self._log("UI: <%s> button released after %d repeats" %
+                      (self.fullname, self.held_count))
             self.held_count = 0
         self.timer.stop()
         if (self.button_held_time == 0 and self.direction == "inc"):
@@ -95,27 +96,17 @@ class Periph(object):
         if self.settemp < self.maxtemp:
             self.settemp += 1
         self.setandsend(self.settemp)
-        # self.parent.changeText(
-        #     getattr(self.parent, self.name + "set"), str(self.settemp))
 
     def decrement(self):
         # print("In decrement, current settemp = %d." % (self.settemp))
         if self.settemp > 0:
             self.settemp -= 1
         self.setandsend(self.settemp)
-        # self.parent.changeText(
-        #     getattr(self.parent, self.name + "set"), str(self.settemp))
 
     def setandsend(self, num):
         # print("In set-and-send")
         self._set(num)
         self.sendtemp()
-
-    # def set(self, num):
-    #     print("In set")
-    #     self.settemp = num
-    #     self.parent.changeText(
-    #         getattr(self.parent, self.name + "set"), str(self.settemp))
 
     def _set(self, num):
         # print("In _set, current settemp = %d, new settemp = %d" % (self.settemp, num))
@@ -131,7 +122,7 @@ class Periph(object):
 
         # self.parent.printer_if.commands(self.command + str(self.settemp))
         # self.parent.printer_if.commands("M105")
-        
+
         # # self.parent.serial.send_serial(self.command + str(self.settemp))
         # # self.parent.serial.send_serial("M105")
 

@@ -40,11 +40,6 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
         self._logger = logging.getLogger(__name__)
         self._log("TemperaturePage __init__")
 
-        # if parent.fullscreen: self.fullscreen = True
-        # else: self.fullscreen = False
-        # if self.fullscreen:
-        # 	self.setWindowState(self.windowState() | Qt.WindowFullScreen)
-
         self.context = context
         self.printer_if = context.printer_if
         self.ui_controller = context.ui_controller
@@ -57,12 +52,7 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
         self.gridLayout.addWidget(self.ActivePrintWid, 2, 0, 1, 1)
 
         self.notactiveprint()
-        self.pushbutton_back.clicked.connect(self.back)
 
-        # self.serial.data.updateprogress.connect(self.updateprogress)
-        # self.serial.data.updateposition.connect(self.updateposition)
-
-        # self.TimeHandler.updatetemperatures.connect(self.updatetemperatures)
         self.progress_signal.connect(self.update_progress_slot)
 
         # self.printer_if.set_temperature_callback(self)
@@ -73,19 +63,22 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
         # self.printer_if.set_position_callback(self)
         self.printer_if.set_progress_callback(self)
 
-        self.inittextformat(self.e0temp)
-        self.inittextformat(self.e1temp)
-        self.inittextformat(self.bedtemp)
-        self.inittextformat(self.w_label_extruder0_setpoint)
-        self.inittextformat(self.w_label_extruder1_setpoint)
-        self.inittextformat(self.w_label_bed_setpoint)
-        self.changeText(self.w_label_extruder0_setpoint, '0')
-        self.changeText(self.w_label_extruder1_setpoint, '0')
-        self.changeText(self.w_label_bed_setpoint, '0')
+        self.setStyleProperty(self.e0temp, "temperature")
+        self.setStyleProperty(self.e1temp, "temperature")
+        self.setStyleProperty(self.bedtemp, "temperature")
+        self.setStyleProperty(self.w_label_extruder0_setpoint, "temperature")
+        self.setStyleProperty(self.w_label_extruder1_setpoint, "temperature")
+        self.setStyleProperty(self.w_label_bed_setpoint, "temperature")
 
-        self.setTransparentButton(self.e0img)
-        self.setTransparentButton(self.e1img)
-        self.setTransparentButton(self.bedimg)
+        self.w_label_extruder0_setpoint.setText('0')
+        self.w_label_extruder1_setpoint.setText('0')
+        self.w_label_bed_setpoint.setText('0')
+
+        self.setAllTransparentIcon([self.e0img, self.e1img, self.bedimg])
+
+        self.setAllTransparentButton([self.w_pushbutton_extruder0_decrement, self.w_pushbutton_extruder0_increment,
+                                      self.w_pushbutton_extruder1_decrement, self.w_pushbutton_extruder1_increment,
+                                      self.w_pushbutton_bed_decrement, self.w_pushbutton_bed_increment])
 
         extruder0_ui_context = TempUIContext(self.w_label_extruder0_setpoint,
                                              self.w_pushbutton_extruder0_decrement,
@@ -120,32 +113,33 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
         self.fanon = False
         self.fanofficon = QtGui.QIcon()
         self.fanofficon.addPixmap(QtGui.QPixmap(
-            "img/fanoff.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+            ":/img/img/Fans_off.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.fanonicon = QtGui.QIcon()
         self.fanonicon.addPixmap(QtGui.QPixmap(
-            "img/fanon.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+            ":/img/img/Fans.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
 
         self.unheated = QtGui.QIcon()
         self.bedheated1 = QtGui.QIcon()
-        self.bedheated2 = QtGui.QIcon()
         self.unheated.addPixmap(QtGui.QPixmap(
-            "img/bed_unheated.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+            ":/img/img/Bed.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.bedheated1.addPixmap(QtGui.QPixmap(
-            "img/bed_heated1.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.bedheated2.addPixmap(QtGui.QPixmap(
-            "img/bed_heated2.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-
+            ":/img/img/Heated_Bed.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
 
 #		Initilization for Not-Printing Widget.
-
+        self.NotActivePrintWid.Back.clicked.connect(self.back)
         self.initpreheatbuttons()
         # self.NotActivePrintWid.w_pushbutton_cooldown.clicked.connect(self.notactive_cool)
         self.NotActivePrintWid.w_pushbutton_fan.clicked.connect(
             self.notactive_fan)
+        self.setStyleProperty(self.NotActivePrintWid.PreheatPLA, "preheat")
+        self.setStyleProperty(self.NotActivePrintWid.PreheatPC, "preheat")
+        self.setStyleProperty(self.NotActivePrintWid.PreheatPETG, "preheat")
+        self.setTransparentButton(self.NotActivePrintWid.Back)
+        self.setTransparentButton(self.NotActivePrintWid.w_pushbutton_fan)
+        self.setTransparentButton(self.NotActivePrintWid.w_pushbutton_cooldown)
 
 
 #		Initilization for Printing Widget.
-
         self.ActivePrintWid.w_pushbutton_fan.clicked.connect(self.active_fan)
         self.ActivePrintWid.w_pushbutton_pauseprint.setEnabled(False)
 
@@ -170,11 +164,16 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
             self.feedrateslider_released)
 
         # self.ActivePrintWid.FlowrateLabel.
-        self.inittextformat(self.ActivePrintWid.w_label_filename)
-        self.inittextformat(self.ActivePrintWid.w_label_flowrate)
-        self.inittextformat(self.ActivePrintWid.w_label_feedrate)
-        self.inittextformat(self.ActivePrintWid.w_label_babystep_val)
-        self.inittextformat(self.ActivePrintWid.w_label_position)
+        self.setStyleProperty(
+            self.ActivePrintWid.w_label_filename, "temperature")
+        self.setStyleProperty(
+            self.ActivePrintWid.w_label_flowrate, "temperature")
+        self.setStyleProperty(
+            self.ActivePrintWid.w_label_feedrate, "temperature")
+        self.setStyleProperty(
+            self.ActivePrintWid.w_label_babystep_val, "temperature")
+        self.setStyleProperty(
+            self.ActivePrintWid.w_label_position, "temperature")
 
 #        self.setTransparentButton(self.pushbutton_back)
         self.setTransparentButton(self.ActivePrintWid.w_label_file)
@@ -197,13 +196,13 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
         print_page = self.ui_controller.get_page(k_print_page)
         if print_page is not None:
             file_being_printed = print_page.file_being_printed
-            self.changeText(self.ActivePrintWid.w_label_filename,
-                            str(file_being_printed))
+            self.ActivePrintWid.w_label_filename.setText(
+                str(file_being_printed))
 
-        self.changeText(self.ActivePrintWid.w_label_feedrate,
-                        str(self.print_handler.feedrate))
-        self.changeText(self.ActivePrintWid.w_label_babystep_val,
-                        str(self.print_handler.babystep))
+        self.ActivePrintWid.w_label_feedrate.setText(
+            str(self.print_handler.feedrate))
+        self.ActivePrintWid.w_label_babystep_val.setText(
+            str(self.print_handler.babystep))
         self.ActivePrintWid.w_slider_feedrate.setValue(
             self.print_handler.feedrate)
         self.updateflowlabel()
@@ -235,15 +234,15 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
     def feedrateslider_changed(self):
         self._log("UI: User moved Feed Rate slider")
         val = self.ActivePrintWid.w_slider_feedrate.value()
-        self.changeText(self.ActivePrintWid.w_label_feedrate, str(val))
+        self.ActivePrintWid.w_label_feedrate.setText(str(val))
 
     def babystepneg(self):
         self._log("UI: User touched Baby Step Decrement")
         self.print_handler.babystepx10 -= self.print_handler.babystepinc
         self.print_handler.babystep = float(
             self.print_handler.babystepx10) / float(100)
-        self.changeText(self.ActivePrintWid.w_label_babystep_val,
-                        str(self.print_handler.babystep))
+        self.ActivePrintWid.w_label_babystep_val.setText(
+            str(self.print_handler.babystep))
         # self.print_handler.sendbabystep()
         self.printer_if.set_babystep(self.print_handler.babystep)
 
@@ -252,8 +251,8 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
         self.print_handler.babystepx10 += self.print_handler.babystepinc
         self.print_handler.babystep = float(
             self.print_handler.babystepx10) / float(100)
-        self.changeText(self.ActivePrintWid.w_label_babystep_val,
-                        str(self.print_handler.babystep))
+        self.ActivePrintWid.w_label_babystep_val.setText(
+            str(self.print_handler.babystep))
         # self.print_handler.sendbabystep()
         self.printer_if.set_babystep(self.print_handler.babystep)
 
@@ -270,7 +269,7 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
 
         position_string = "X: %d Y: %d Z:%1.2f" % (x, y, z)
 
-        self.changeText(self.ActivePrintWid.w_label_position, position_string)
+        self.ActivePrintWid.w_label_position.setText(position_string)
         self.control_page.PositionLabel.setText(position_string)
 
     def update_progress(self, completion, print_time_left):
@@ -287,8 +286,8 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
         flow_button_text = "Flowrate: " + \
             self.print_handler.fr_text[self.print_handler.fr_index]
         self.ActivePrintWid.FlowrateLabel.setText(flow_button_text)
-        self.changeText(self.ActivePrintWid.w_label_flowrate, str(
-            self.print_handler.flowrate[self.print_handler.fr_index]))
+        self.ActivePrintWid.w_label_flowrate.setText(
+            str(self.print_handler.flowrate[self.print_handler.fr_index]))
 
     def handle_flowratelabel_touch(self):
 
@@ -354,19 +353,11 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
         self.NotActivePrintWid.show()
         self.ActivePrintWid.hide()
 
-    # def stopprint(self):
-    # 	self.serial.reset()
-    # 	self.parent.print_pop.cancelled()
-    # 	self.serial.data.resetsettemps()
-
-    # def initposnegbuttons(self):
-    # 	for p in periphs:
-    # 		if p == "all": continue
-    # 		setattr(self,p+ "timer", QTimer())
-    # 		getattr(self, p+ "pos").clicked.connect(getattr(self.print_handler, "increment_"+p))
-    # 		getattr(self, p+ "neg").clicked.connect(getattr(self.print_handler, "decrement_"+p))
-
     def initpreheatbuttons(self):
+        self.setAllTransparentButton([self.NotActivePrintWid.w_pushbutton_m0_extruder0, self.NotActivePrintWid.w_pushbutton_m0_extruder1, self.NotActivePrintWid.w_pushbutton_m0_bed, self.NotActivePrintWid.w_pushbutton_m0_all,
+                                      self.NotActivePrintWid.w_pushbutton_m1_extruder0, self.NotActivePrintWid.w_pushbutton_m1_extruder1, self.NotActivePrintWid.w_pushbutton_m1_bed, self.NotActivePrintWid.w_pushbutton_m1_all,
+                                      self.NotActivePrintWid.w_pushbutton_m2_extruder0, self.NotActivePrintWid.w_pushbutton_m2_extruder1, self.NotActivePrintWid.w_pushbutton_m2_bed, self.NotActivePrintWid.w_pushbutton_m2_all])
+
         self.NotActivePrintWid.w_pushbutton_m0_extruder0.clicked.connect(
             self.m0.e0set)
         self.NotActivePrintWid.w_pushbutton_m0_extruder1.clicked.connect(
@@ -435,13 +426,6 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
         self.parent.show()
         self.close()
 
-    # def notactive_cool(self):
-    #     self._log("UI: User touched Cooldown")
-
-        # self.extruder1.setandsend(0)
-        # self.extruder2.setandsend(0)
-        # self.heatedbed.setandsend(0)
-
     def update_position(self, xyz_tuple):
         (x, y, z) = xyz_tuple
         self.updateposition(x, y, z)
@@ -462,9 +446,9 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
         (bed_target_temp, bed_actual_temp) = bed_tuple
 
         if bed_actual_temp is not None:
-            self.changeText(self.bedtemp, str(int(bed_actual_temp + 0.5)))
+            self.bedtemp.setText(str(int(bed_actual_temp + 0.5)))
         else:
-            self.changeText(self.bedtemp, unknown_temp_str)
+            self.bedtemp.setText(unknown_temp_str)
 
         # Extruder 0
 
@@ -472,9 +456,9 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
         (tool0_target_temp, tool0_actual_temp) = tool0_tuple
 
         if tool0_actual_temp is not None:
-            self.changeText(self.e0temp, str(int(tool0_actual_temp + 0.5)))
+            self.e0temp.setText(str(int(tool0_actual_temp + 0.5)))
         else:
-            self.changeText(self.e0temp, unknown_temp_str)
+            self.e0temp.setText(unknown_temp_str)
 
         # Extruder 1
 
@@ -482,9 +466,9 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
         (tool1_target_temp, tool1_actual_temp) = tool1_tuple
 
         if tool1_actual_temp is not None:
-            self.changeText(self.e1temp, str(int(tool1_actual_temp + 0.5)))
+            self.e1temp.setText(str(int(tool1_actual_temp + 0.5)))
         else:
-            self.changeText(self.e1temp, unknown_temp_str)
+            self.e1temp.setText(unknown_temp_str)
 
     def set_bed_temperature(self, value):
         self._log("Setting bed temp to %d." % value)
@@ -497,21 +481,6 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
     def set_tool1_temperature(self, value):
         self._log("Setting tool1 temp to %d." % value)
         self.printer_if.set_temperature("tool1", value)
-
-    def changeText(self, label, text):
-        # tmp = QtWidgets.QApplication.translate(
-        #     "TemperaturePage", label.format[0]+text+label.format[1], None, -1)
-        label.setText(text)
-
-    def inittextformat(self, label):
-        label.format = label.text()
-# This line was, prior to converting for python 3:
-#		label.format = label.format.encode("utf-8").split("-----")
-        label.format = label.format.split("-----")
-
-    def setTransparentButton(self, obj):
-        obj.setStyleSheet(
-            "QPushButton{background: rgba(255,255,255,0); outline: none; border: none;}")
 
     def set_progress(self, value):
         pass

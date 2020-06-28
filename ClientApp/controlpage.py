@@ -34,15 +34,16 @@ class ControlPage(BasePage, Ui_ControlPage):
         self.einc = None
         self.currentextruder = None
 
-        self.setTransparentButton(self.Back)
-        self.setTransparentButton(self.DisableMotors)
-        self.setTransparentButton(self.HomeAll)
-        self.setTransparentButton(self.HomeXY)
-        self.setTransparentButton(self.HomeZ)
-        self.setTransparentIcon(self.movex)
-        self.setTransparentIcon(self.movey)
-        self.setTransparentIcon(self.movez)
-        self.setTransparentIcon(self.movee)
+        self.setAllTransparentButton([self.Back,
+                                      self.XPos, self.XNeg,
+                                      self.YPos, self.YNeg,
+                                      self.ZPos, self.ZNeg,
+                                      self.E0Pos, self.E0Neg, self.E1Icon, self.E1Pos, self.E1Neg,
+                                      self.DisableMotors, self.HomeAll, self.HomeXY, self.HomeZ, ])
+
+        self.setAllTransparentIcon([self.XYIcon, self.ZIcon, self.E0Icon,
+                                    self.movex, self.movey, self.movez, self.movee])
+
         self.xbutton = self.AddButtontoGroup("x")
         self.ybutton = self.AddButtontoGroup("y")
         self.zbutton = self.AddButtontoGroup("z")
@@ -54,7 +55,7 @@ class ControlPage(BasePage, Ui_ControlPage):
         self.eaxis = Axis("e0", "60", self)
         self.e1axis = Axis("e1", "60", self)
 
-        self.inittextformat(self.PositionLabel)
+        self.setStyleProperty(self.PositionLabel, "movement")
         # self.serial.data.updateposition.connect(self.updateposition)
 
         self.HomeXY.clicked.connect(self.homexy)
@@ -74,7 +75,7 @@ class ControlPage(BasePage, Ui_ControlPage):
         # pos = self.serial.data.position
         pos = 0
         tmp = "X: "+str(pos["X"]) + " Y: "+str(pos["Y"]) + " Z: "+str(pos["Z"])
-        self.changeText(self.PositionLabel, tmp)
+        self.PositionLabel.setText(tmp)
 
     def disablemotors(self):
         # self.serial.send_serial('M18')
@@ -101,20 +102,8 @@ class ControlPage(BasePage, Ui_ControlPage):
         group = QtWidgets.QButtonGroup(self)
         for i in increments_str:
             att = axis + "m" + i
-            self.SetButtonSettings(getattr(self, att))
+            getattr(self, att).setCheckable(True)
+            self.setStyleProperty(getattr(self, att), "axis_button")
             group.addButton(getattr(self, att))
         getattr(self, axis + "m"+"10").setChecked(True)
         return group
-
-    def SetButtonSettings(self, obj):
-        obj.setCheckable(True)
-        obj.setProperty("cssClass", "axis_button")
-
-    def changeText(self, label, text):
-        tmp = QtWidgets.QApplication.translate(
-            "TemperatureWindow", label.format[0]+text+label.format[1], None, -1)
-        label.setText(tmp)
-
-    def inittextformat(self, label):
-        label.format = label.text()
-        label.format = label.format.split("-----")
