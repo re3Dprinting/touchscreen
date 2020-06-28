@@ -4,11 +4,13 @@ from qt.module_gigabot import *
 from moreinfowindow import *
 
 #   Gigabotmodule class derived from the generated ui class, Ui_GigabotModule
-class ModuleGigabot(QtWidgets.QWidget , Ui_GigabotModule):
+
+
+class ModuleGigabot(QtWidgets.QWidget, Ui_GigabotModule):
     def __init__(self, gigabot):
-        super(ModuleGigabot,self).__init__()
+        super(ModuleGigabot, self).__init__()
         self.setupUi(self)
-        self.resize(430,280)
+        self.resize(430, 280)
         self.gigabot = gigabot
         self.activeflash = True
         self.bedflash = 0
@@ -21,9 +23,9 @@ class ModuleGigabot(QtWidgets.QWidget , Ui_GigabotModule):
         self.update_all()
 
 #       Set the pixmap of the labels
-        self.setbuttonstyle(self.Nozzle1Img)
-        self.setbuttonstyle(self.Nozzle2Img)
-        self.setbuttonstyle(self.BedImg)
+        self.setTransparentButton(self.Nozzle1Img)
+        self.setTransparentButton(self.Nozzle2Img)
+        self.setTransparentButton(self.BedImg)
         self.changeicon(self.Nozzle1Img, "img/nozzle1.png")
         self.changeicon(self.Nozzle2Img, "img/nozzle1.png")
         self.changeicon(self.BedImg, "img/bed_unheated.png")
@@ -39,16 +41,18 @@ class ModuleGigabot(QtWidgets.QWidget , Ui_GigabotModule):
         self.unheated = QtGui.QIcon()
         self.bedheated1 = QtGui.QIcon()
         self.bedheated2 = QtGui.QIcon()
-        self.unheated.addPixmap(QtGui.QPixmap("img/bed_unheated.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.bedheated1.addPixmap(QtGui.QPixmap("img/bed_heated1.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.bedheated2.addPixmap(QtGui.QPixmap("img/bed_heated2.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.unheated.addPixmap(QtGui.QPixmap(
+            "img/bed_unheated.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.bedheated1.addPixmap(QtGui.QPixmap(
+            "img/bed_heated1.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.bedheated2.addPixmap(QtGui.QPixmap(
+            "img/bed_heated2.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
 
 #   More info screen pops up then updates the title
     def moreinfo(self):
         self.pop = MoreInfoWindow(self.gigabot, self)
         self.pop.show()
         self.pop.update_ver_num.connect(self.update_title)
-
 
     def init_labels(self):
         self.GigabotVersion.inittextformat(self)
@@ -75,12 +79,12 @@ class ModuleGigabot(QtWidgets.QWidget , Ui_GigabotModule):
     def update_labels(self):
         self.GigabotVersion.changeText(self.gigabot.version)
         self.GigabotNum.changeText(self.gigabot.idnum)
-        self.ModelType.changeText(self.gigabot.model) 
+        self.ModelType.changeText(self.gigabot.model)
         self.StatusLabel.changeText("Status:")
         self.FileLabel.changeText("File:")
 
 #   Update_all is called periodically to update the module with
-#   new gigabot object data. 
+#   new gigabot object data.
     def update_all(self):
         self.ModelType.changeText(str(self.gigabot.model))
         self.StatusText.changeText(str(self.gigabot.getstatus()))
@@ -100,13 +104,13 @@ class ModuleGigabot(QtWidgets.QWidget , Ui_GigabotModule):
             self.changeicon(self.BedImg, "img/bed_unheated.png")
             self.FileText.changeText("~~~~~")
         elif self.gigabot.status == "AC":
-            if self.activeflash: 
+            if self.activeflash:
                 self.StatusImg.changepix("img/active.png")
                 # self.Nozzle1Img.changepix("img/nozzle1.png")
                 # self.Nozzle2Img.changepix("img/nozzle1.png")
                 self.changeicon(self.Nozzle1Img, "img/nozzle1.png")
                 self.changeicon(self.Nozzle2Img, "img/nozzle1.png")
-            else: 
+            else:
                 self.StatusImg.changepix("img/off.png")
                 # self.Nozzle1Img.changepix("img/nozzle2.png")
                 # self.Nozzle2Img.changepix("img/nozzle2.png")
@@ -136,17 +140,17 @@ class ModuleGigabot(QtWidgets.QWidget , Ui_GigabotModule):
             self.SetNozzle2Text.changeText("~~")
             self.SetBedText.changeText("~~")
 
+    def setTransparentButton(self, obj):
+        obj.setStyleSheet(
+            "QPushButton{background: rgba(255,255,255,0); outline: none; border: none;}")
 
-    def setbuttonstyle(self,obj):
-        obj.setStyleSheet("QPushButton{background: rgba(255,255,255,0); outline: none; border: none;}")
     def changeicon(self, obj, icon):
         newicon = QtGui.QIcon()
         #newicon.setIconSize(QtCore.QSize(55, 55))
-        newicon.addPixmap(QtGui.QPixmap(icon), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        newicon.addPixmap(QtGui.QPixmap(
+            icon), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         obj.setIcon(newicon)
-
-
-    #Upon resize, update the labels and all of the text. 
+    # Upon resize, update the labels and all of the text.
     # def resizeEvent(self, event):
     #     self.update_labels()
     #     self.update_all()

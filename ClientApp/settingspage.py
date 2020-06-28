@@ -12,6 +12,7 @@ from .basepage import BasePage
 
 from .qt.settingspage_qt import Ui_SettingsPage
 
+
 class SettingsPage(BasePage, Ui_SettingsPage):
     def __init__(self, context):
 
@@ -29,16 +30,16 @@ class SettingsPage(BasePage, Ui_SettingsPage):
         self.personality = context.personality
         self.ui_controller = context.ui_controller
 
-        self.setbuttonstyle(self.Serial)
-        self.setbuttonstyle(self.Server)
-        self.setbuttonstyle(self.UserUpdate)
-        self.setbuttonstyle(self.Wifi)
-        self.setbuttonstyle(self.Back)
+        self.setTransparentButton(self.Serial)
+        self.setTransparentButton(self.Server)
+        self.setTransparentButton(self.UserUpdate)
+        self.setTransparentButton(self.Wifi)
+        self.setTransparentButton(self.Back)
 
-        self.setbuttonstyle(self.w_pushbutton_debug)
-        self.setbuttonstyle(self.w_pushbutton_duex)
-        self.setbuttonstyle(self.w_pushbutton_info)
-        self.setbuttonstyle(self.w_pushbutton_term)
+        self.setTransparentButton(self.w_pushbutton_debug)
+        self.setTransparentButton(self.w_pushbutton_duex)
+        self.setTransparentButton(self.w_pushbutton_info)
+        self.setTransparentButton(self.w_pushbutton_term)
 
         self.Serial.clicked.connect(self.serialpop)
         self.Server.clicked.connect(self.serverpop)
@@ -79,7 +80,7 @@ class SettingsPage(BasePage, Ui_SettingsPage):
         # NOTE: when pushing this page, the just_pushed callback will
         # allow the DuEx widget to load the current settings.
         self.ui_controller.push(k_duexsetup_page)
-            
+
     def handle_term(self):
         self._log("UI: User touched Term")
         # is_not_defined()

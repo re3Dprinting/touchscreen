@@ -6,13 +6,30 @@ QLabel {
     font-family: Lato
 }        
 
-QPushButton { 
+
+QPushButton[cssClass~="transparent_button"]{ 
     background: rgba(255,255,255,0); 
-    outline: none; border: none; 
+    outline: none; 
+    border: none; 
 } 
-QPushButton:checked{
+QPushButton:checked[cssClass~="transparent_button"]{
     background: rgba(255,255,255,0); 
-    outline: none; border: none;} 
-    QPushButton:pressed { background: rgba(0,0,0,0.1); 
-    outline: none; border: none; 
+    outline: none; 
+    border: none;
+} 
+QPushButton:pressed[cssClass~="transparent_button"]{ 
+    background: rgba(0,0,0,0.1); 
+    outline: none; 
+    border: none; 
+}
+
+QPushButton[cssClass~="transparent_icon"]{ background: rgba(255,255,255,0); outline: none; border: none; } 
+QPushButton:checked[cssClass~="transparent_icon"]{ background: rgba(255,255,255,0); outline: none; border: none; } 
+QPushButton:pressed[cssClass~="transparent_icon"]{ background: rgba(255,255,255,0); outline: none; border: none; }
+
+QPushButton[cssClass~="axis_button"]{
+    border: none;
+}
+QPushButton:checked[cssClass~="axis_button"]{
+    background: #ffd400; border: 1px solid #ffffff; border-radius:10px;
 }

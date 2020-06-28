@@ -11,6 +11,7 @@ from .basepage import BasePage
 increments_str = ["01", "1", "10", "100"]
 increments_int = ['0.1', '1', '10', '100']
 
+
 class ControlPage(BasePage, Ui_ControlPage):
     def __init__(self, context):
         super(ControlPage, self).__init__()
@@ -33,31 +34,25 @@ class ControlPage(BasePage, Ui_ControlPage):
         self.einc = None
         self.currentextruder = None
 
-        self.setbuttonstyle(self.Back)
-        self.setbuttonstyle(self.DisableMotors)
-        self.setbuttonstyle(self.HomeAll)
-        self.setbuttonstyle(self.HomeXY)
-        self.setbuttonstyle(self.HomeZ)
+        self.setTransparentButton(self.Back)
+        self.setTransparentButton(self.DisableMotors)
+        self.setTransparentButton(self.HomeAll)
+        self.setTransparentButton(self.HomeXY)
+        self.setTransparentButton(self.HomeZ)
+        self.setTransparentIcon(self.movex)
+        self.setTransparentIcon(self.movey)
+        self.setTransparentIcon(self.movez)
+        self.setTransparentIcon(self.movee)
         self.xbutton = self.AddButtontoGroup("x")
         self.ybutton = self.AddButtontoGroup("y")
         self.zbutton = self.AddButtontoGroup("z")
         self.ebutton = self.AddButtontoGroup("e")
-        self.extruder = QtWidgets.QButtonGroup(self)
-
-#	Setup for the Extruder button group
-        self.SetButtonSettings(self.E1)
-        self.SetButtonSettings(self.E2)
-        self.extruder.addButton(self.E1)
-        self.extruder.addButton(self.E2)
-        self.E1.setChecked(False)
-        self.E1.setChecked(True)
-        self.currentextruder = self.extruder.checkedButton().text()
-        self.extruder.buttonClicked.connect(self.updatecurrentextruder)
 
         self.xaxis = Axis("x", "4500", self, 25)
         self.yaxis = Axis("y", "4500", self, 25)
         self.zaxis = Axis("z", "4500", self, 2)
-        self.eaxis = Axis("e", "60", self)
+        self.eaxis = Axis("e0", "60", self)
+        self.e1axis = Axis("e1", "60", self)
 
         self.inittextformat(self.PositionLabel)
         # self.serial.data.updateposition.connect(self.updateposition)
@@ -86,33 +81,21 @@ class ControlPage(BasePage, Ui_ControlPage):
         self._log("UI: User touched Motor enable/disable")
         self.printer_if.commands("M18", force=True)
         pass
-    
+
     def homexy(self):
         # self.serial.send_serial('G28 XY')
         self._log("UI: User touched Home XY")
         self.printer_if.homexy()
-    
+
     def homez(self):
         # self.serial.send_serial('G28 Z')
         self._log("UI: User touched Home Z")
         self.printer_if.homez()
-    
+
     def homeall(self):
         # self.serial.send_serial('G28')
         self._log("UI: User touched Home All")
         self.printer_if.homeall()
-    
-    def updatecurrentextruder(self):
-        extruder = self.extruder.checkedButton().text()
-        self._log("UI: User touched Extruder <%s>" % extruder)
-        self.currentextruder = extruder
-
-        if self.currentextruder == "E1":
-            # self.serial.send_serial("T0")
-            self.printer_if.commands("T0")
-        elif self.currentextruder == "E2":
-            # self.serial.send_serial("T1")
-            self.printer_if.commands("T1")
 
     def AddButtontoGroup(self, axis):
         group = QtWidgets.QButtonGroup(self)
@@ -120,15 +103,12 @@ class ControlPage(BasePage, Ui_ControlPage):
             att = axis + "m" + i
             self.SetButtonSettings(getattr(self, att))
             group.addButton(getattr(self, att))
-        # group.clearCheck()
-        getattr(self, axis + "m"+"10").setChecked(False)
         getattr(self, axis + "m"+"10").setChecked(True)
         return group
 
     def SetButtonSettings(self, obj):
         obj.setCheckable(True)
-        obj.setStyleSheet("QPushButton:checked {background: rgba(255,255,255,1); border: 2px solid #888} \
-			QPushButton{background: rgba(255,255,255,0); outline: none;}")
+        obj.setProperty("cssClass", "axis_button")
 
     def changeText(self, label, text):
         tmp = QtWidgets.QApplication.translate(
@@ -137,6 +117,4 @@ class ControlPage(BasePage, Ui_ControlPage):
 
     def inittextformat(self, label):
         label.format = label.text()
-# This line was, prior to converting for python 3:
-#		label.format = label.format.encode("utf-8").split("-----")
         label.format = label.format.split("-----")

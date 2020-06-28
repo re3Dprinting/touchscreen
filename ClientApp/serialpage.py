@@ -9,6 +9,7 @@ from .basepage import BasePage
 from .qt.serialpage_qt import Ui_SerialPage
 from .runout_handler import RunoutHandlerDialog
 
+
 class SerialPage(BasePage, Ui_SerialPage):
     def __init__(self, context):
         super(SerialPage, self).__init__()
@@ -31,8 +32,10 @@ class SerialPage(BasePage, Ui_SerialPage):
         # self.serial.data.checkserial_msg.connect(self.checkserial_msg)
 
         # Make the selection Behavior as selecting the entire row
-        self.w_table_ports.setSelectionBehavior(QtWidgets.QTableView.SelectRows)
-        self.w_table_ports.setSelectionMode(QtWidgets.QTableView.SingleSelection)
+        self.w_table_ports.setSelectionBehavior(
+            QtWidgets.QTableView.SelectRows)
+        self.w_table_ports.setSelectionMode(
+            QtWidgets.QTableView.SingleSelection)
 
         # Hide the vertical header which contains the Index of the row.
         self.w_table_ports.verticalHeader().hide()
@@ -45,7 +48,7 @@ class SerialPage(BasePage, Ui_SerialPage):
         self.scan_serial()
         # self.connect_serial()
 
-        self.setbuttonstyle(self.w_pushbutton_back)
+        self.setTransparentButton(self.w_pushbutton_back)
 
         self.w_pushbutton_back.clicked.connect(self.back)
 
@@ -60,11 +63,12 @@ class SerialPage(BasePage, Ui_SerialPage):
            state == "DETECT_SERIAL" or \
            state == "DETECT_BAUDRATE" or \
            state == "CONNECTING":
-                return True
+            return True
         return False
 
     def state_change_callback(self, from_state, to_state):
-        self._log("################################################################################################")
+        self._log(
+            "################################################################################################")
         self._log("STATE CHANGE from %s to %s." % (from_state, to_state))
 
         # If we have transition from connecting state to any other
@@ -80,7 +84,6 @@ class SerialPage(BasePage, Ui_SerialPage):
         #     self.w_runout_handler.send_m108_on_ok = False
         #     self.w_runout_handler.hide_on_ok = True
         #     self.w_runout_handler.show()
-            
 
     def _log(self, message):
         self._logger.debug(message)
@@ -138,11 +141,11 @@ class SerialPage(BasePage, Ui_SerialPage):
 
         # Loop through the serial port options
         for p in serial_port_list:
-        
+
             rowpos = self.w_table_ports.rowCount()
 
             self.w_table_ports.insertRow(rowpos)
-            # device 
+            # device
             device = QtWidgets.QTableWidgetItem(p)
             device.setFlags(Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
 

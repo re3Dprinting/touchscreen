@@ -28,7 +28,7 @@ class SettingsWindow(BasePage, Ui_SettingsWindow):
         self.printer_if = printer_if
         self.event_handler = event_handler
 
-        #Create instances of each sub-window of the settings menu. 
+        # Create instances of each sub-window of the settings menu.
         self.debug_window = DebugWindow(printer_if, personality, self)
         self.info_window = InfoWindow(printer_if, self)
         self.duex_window = DuExSetupWindow(printer_if, self)
@@ -37,21 +37,19 @@ class SettingsWindow(BasePage, Ui_SettingsWindow):
         self.serial_pop = SerialWindow(
             self.printer_if, self.event_handler, self)
         self.server_pop = ServerWindow(self)
-        
-        
-        #Setup the button style from the baseclass function, setbuttonstyle
-        self.setbuttonstyle(self.Serial)
-        self.setbuttonstyle(self.Server)
-        self.setbuttonstyle(self.UserUpdate)
-        self.setbuttonstyle(self.Wifi)
-        self.setbuttonstyle(self.w_pushbutton_debug)
-        self.setbuttonstyle(self.w_pushbutton_duex)
-        self.setbuttonstyle(self.w_pushbutton_info)
-        self.setbuttonstyle(self.w_pushbutton_term)
+
+        # Setup the button style from the baseclass function, setTransparentButton
+        self.setTransparentButton(self.Serial)
+        self.setTransparentButton(self.Server)
+        self.setTransparentButton(self.UserUpdate)
+        self.setTransparentButton(self.Wifi)
+        self.setTransparentButton(self.w_pushbutton_debug)
+        self.setTransparentButton(self.w_pushbutton_duex)
+        self.setTransparentButton(self.w_pushbutton_info)
+        self.setTransparentButton(self.w_pushbutton_term)
 
         versiontext = "v"+QtWidgets.QApplication.instance().applicationVersion()
         self.SoftwareVersion.setText(versiontext)
-
 
         self.Serial.clicked.connect(self.serialpop)
         self.Server.clicked.connect(self.serverpop)
@@ -98,4 +96,3 @@ class SettingsWindow(BasePage, Ui_SettingsWindow):
     def handle_term(self):
         self._log("UI: User touched Term")
         # is_not_defined()
-

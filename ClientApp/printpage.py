@@ -17,6 +17,7 @@ from .fsutils.mountpoint import MountPoint
 from .filelistmanager import FileListManager
 from basepage import BasePage
 
+
 class PrintPage(BasePage, Ui_PrintPage):
 
     # Create the Qt signals we're going to use for updating the list
@@ -50,10 +51,11 @@ class PrintPage(BasePage, Ui_PrintPage):
 
         self.setupUi(self)
 
-        self.printer_if.set_file_list_update_callback(self.sd_file_list_update_callback)
+        self.printer_if.set_file_list_update_callback(
+            self.sd_file_list_update_callback)
         # print("Setting print finished callback")
-        self.printer_if.set_print_finished_callback(self.print_finished_callback)
-
+        self.printer_if.set_print_finished_callback(
+            self.print_finished_callback)
 
         self.item_stack = []
 
@@ -108,7 +110,7 @@ class PrintPage(BasePage, Ui_PrintPage):
 
         self.local_file_manager.update_files()
 
-        self.setbuttonstyle(self.pushbutton_back)
+        self.setTransparentButton(self.pushbutton_back)
         self.pushbutton_loc_print.clicked.connect(self.local_start_print)
         self.file_being_printed = "-----"
 
@@ -122,7 +124,7 @@ class PrintPage(BasePage, Ui_PrintPage):
 
     def set_storage_manager(self, local_storage_manager):
         self.local_storage_manager = local_storage_manager
-        
+
     def set_usb_mount_signals(self, tuple):
         (create_signal, delete_signal) = tuple
         create_signal.connect(self.update_usb_create)
@@ -132,7 +134,8 @@ class PrintPage(BasePage, Ui_PrintPage):
         signal.connect(self.update_usb_content)
 
     def update_usb_create(self, mountpoint):
-        self._log("UPDATE_USB_CREATE: path <%s>, actual path <%s>" % (mountpoint.path, mountpoint.actual_path))
+        self._log("UPDATE_USB_CREATE: path <%s>, actual path <%s>" %
+                  (mountpoint.path, mountpoint.actual_path))
         self.usb_file_manager.update_create(mountpoint.path)
 
     def update_usb_delete(self, path):
@@ -154,9 +157,9 @@ class PrintPage(BasePage, Ui_PrintPage):
 
     def scansd(self):
         self._log("UI: User touched Scan")
-        self.printer_if.release_sd_card();
-        self.printer_if.init_sd_card();
-        self.printer_if.list_sd_card();
+        self.printer_if.release_sd_card()
+        self.printer_if.init_sd_card()
+        self.printer_if.list_sd_card()
 
     def sd_file_list_update_callback(self, sd_file_list):
         self.sdfile_signal.emit(sd_file_list)
@@ -165,7 +168,7 @@ class PrintPage(BasePage, Ui_PrintPage):
     def updatefiles(self, file_list):
         self.SDFileList.clearContents()
         self.SDFileList.setRowCount(0)
-        
+
         for (filename, filesize) in file_list:
             rowpos = self.SDFileList.rowCount()
 
@@ -240,8 +243,8 @@ class PrintPage(BasePage, Ui_PrintPage):
         self.pushbutton_scan_sd.setEnabled(True)
         # Why?:
         # self.SDFileList.setRowCount(0)
-        #self.parent.Control.setEnabled(True)
-        ## self.serial.data.changestatus("ON")
+        # self.parent.Control.setEnabled(True)
+        # self.serial.data.changestatus("ON")
         self.enable_control()
 
     def temperature_active(self):
@@ -284,7 +287,7 @@ class PrintPage(BasePage, Ui_PrintPage):
             # self.temp_pop.activeprint()
             # self.temp_pop.update_parameters()
             # self.temp_pop.ActivePrintWid.FileProgress.setValue(0)
-            #self.parent.Control.setEnabled(False)
+            # self.parent.Control.setEnabled(False)
 
     def local_start_print(self):
         self._log("UI: User touched (Local) Start Print")
@@ -294,7 +297,8 @@ class PrintPage(BasePage, Ui_PrintPage):
 
         selected_file_name = selected_file.name
         selected_file_loc_path = selected_file.relative_path
-        self._log("File name <%s>, local path <%s>." % (selected_file_name, selected_file_loc_path))
+        self._log("File name <%s>, local path <%s>." %
+                  (selected_file_name, selected_file_loc_path))
 
         if selected_file_name != None:
             print("Local start print")
@@ -317,7 +321,7 @@ class PrintPage(BasePage, Ui_PrintPage):
             # self.temp_pop.ActivePrintWid.FileProgress.setValue(0)
             # control_page = self.ui_controller.get_page(k_control_page)
             # control_page.setEnabled(False)
-            #self.parent.Control.setEnabled(False)
+            # self.parent.Control.setEnabled(False)
 
     def usb_start_print(self):
         self._log("UI: User touched (USB) Start Print")
@@ -326,7 +330,8 @@ class PrintPage(BasePage, Ui_PrintPage):
         selected_file_name = selected_file.name
         selected_file_rel = selected_file.relative_path
         selected_file_abs = selected_file.absolute_path
-        self._log("File name <%s>, relative path <%s>, absolute path <%s>." % (selected_file_name, selected_file_rel, selected_file_abs))
+        self._log("File name <%s>, relative path <%s>, absolute path <%s>." % (
+            selected_file_name, selected_file_rel, selected_file_abs))
 
         if selected_file_name != None:
             print("USB start print")
@@ -335,8 +340,10 @@ class PrintPage(BasePage, Ui_PrintPage):
             self.disable_control()
             self.temperature_active()
 
-            wrapped_file = DiskFileWrapper(selected_file_name, selected_file_abs, False)
-            self.local_storage_manager.add_file(selected_file_name, wrapped_file, allow_overwrite=True)
+            wrapped_file = DiskFileWrapper(
+                selected_file_name, selected_file_abs, False)
+            self.local_storage_manager.add_file(
+                selected_file_name, wrapped_file, allow_overwrite=True)
 
             self.printer_if.select_local_file(selected_file_name)
             self.printer_if.start_print()
@@ -353,7 +360,7 @@ class PrintPage(BasePage, Ui_PrintPage):
             # self.parent.Control.setEnabled(False)
 
     def get_selected_widget_file(self, list_widget, subdir):
-    
+
         foolist = list_widget.selectedItems()
 
         if len(foolist) < 1:
@@ -368,7 +375,6 @@ class PrintPage(BasePage, Ui_PrintPage):
         selected_item = list_widget.currentItem()
 
         return (selected_row, selected_file, selected_item)
-
 
     def get_selected_loc_file(self):
         return self.get_selected_widget_file(self.LocalFileList, self.loc_subdir)
