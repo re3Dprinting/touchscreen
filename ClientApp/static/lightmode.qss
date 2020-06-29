@@ -15,7 +15,8 @@ QWidget[cssClass~="bottom_bar"]{
 
 QLabel[cssClass~="temperature"]{
     font-family: Lato;
-    font-size: 24px;
+    font-size: 18px;
+    qproperty-alignment: AlignCenter;
 }
 QLabel[cssClass~="preheat"]{
     font-family: Lato;
@@ -26,8 +27,10 @@ QLabel[cssClass~="movement"]{
     font-size: 40px;
 }
 
-QStackedWidget[cssClass~="button_option"]{ background: rgba(255,255,255,0); outline: none; border: none; }
-
+QPushButton[cssClass~="temperature"]{
+    font-family: Lato;
+    font-size: 25px;
+}
 
 QPushButton[cssClass~="transparent_button"]{ 
     background: rgba(255,255,255,0); 

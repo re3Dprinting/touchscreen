@@ -51,7 +51,8 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
         self.gridLayout.addWidget(self.NotActivePrintWid, 2, 0, 1, 1)
         self.gridLayout.addWidget(self.ActivePrintWid, 2, 0, 1, 1)
 
-        self.notactiveprint()
+        # self.notactiveprint()
+        self.activeprint()
 
         self.progress_signal.connect(self.update_progress_slot)
 
@@ -131,16 +132,20 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
         # self.NotActivePrintWid.w_pushbutton_cooldown.clicked.connect(self.notactive_cool)
         self.NotActivePrintWid.w_pushbutton_fan.clicked.connect(
             self.notactive_fan)
+        self.NotActivePrintWid.w_pushbutton_fan.clicked.connect(
+            self.activeprint)
         self.setStyleProperty(self.NotActivePrintWid.PreheatPLA, "preheat")
         self.setStyleProperty(self.NotActivePrintWid.PreheatPC, "preheat")
         self.setStyleProperty(self.NotActivePrintWid.PreheatPETG, "preheat")
-        self.setTransparentButton(self.NotActivePrintWid.Back)
-        self.setTransparentButton(self.NotActivePrintWid.w_pushbutton_fan)
-        self.setTransparentButton(self.NotActivePrintWid.w_pushbutton_cooldown)
+        self.setAllTransparentButton(
+            [self.NotActivePrintWid.Back, self.NotActivePrintWid.w_pushbutton_fan, self.NotActivePrintWid.w_pushbutton_cooldown])
 
 
 #		Initilization for Printing Widget.
+        self.ActivePrintWid.Back.clicked.connect(self.back)
         self.ActivePrintWid.w_pushbutton_fan.clicked.connect(self.active_fan)
+        self.ActivePrintWid.w_pushbutton_fan.clicked.connect(
+            self.notactiveprint)
         self.ActivePrintWid.w_pushbutton_pauseprint.setEnabled(False)
 
         # self.ActivePrintWid.StopPrint.clicked.connect(self.stopprint)
@@ -148,7 +153,7 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
             self.pauseprint)
         self.ActivePrintWid.w_pushbutton_resumeprint.clicked.connect(
             self.resumeprint)
-        self.ActivePrintWid.FlowrateLabel.clicked.connect(
+        self.ActivePrintWid.w_pushbutton_flowrate.clicked.connect(
             self.handle_flowratelabel_touch)
         self.ActivePrintWid.w_pushbutton_flowrate_inc.clicked.connect(
             self.flowrate_inc)
@@ -164,24 +169,16 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
             self.feedrateslider_released)
 
         # self.ActivePrintWid.FlowrateLabel.
-        self.setStyleProperty(
-            self.ActivePrintWid.w_label_filename, "temperature")
-        self.setStyleProperty(
-            self.ActivePrintWid.w_label_flowrate, "temperature")
-        self.setStyleProperty(
-            self.ActivePrintWid.w_label_feedrate, "temperature")
-        self.setStyleProperty(
-            self.ActivePrintWid.w_label_babystep_val, "temperature")
-        self.setStyleProperty(
-            self.ActivePrintWid.w_label_position, "temperature")
+        self.setAllStyleProperty([self.ActivePrintWid.w_label_filename, self.ActivePrintWid.w_label_flowrate, self.ActivePrintWid.w_label_feedrate,
+                                  self.ActivePrintWid.w_label_babystep_val, self.ActivePrintWid.w_label_position], "temperature")
 
-#        self.setTransparentButton(self.pushbutton_back)
-        self.setTransparentButton(self.ActivePrintWid.w_label_file)
-        self.setTransparentButton(self.ActivePrintWid.w_pushbutton_feedrate)
-        self.setTransparentButton(self.ActivePrintWid.w_pushbutton_babystep)
-        self.setTransparentButton(self.ActivePrintWid.w_pushbutton_pauseprint)
-        self.setTransparentButton(self.ActivePrintWid.w_pushbutton_resumeprint)
-        self.setTransparentButton(self.ActivePrintWid.w_pushbutton_fan)
+        self.setAllStyleProperty([self.ActivePrintWid.w_label_file, self.ActivePrintWid.w_pushbutton_feedrate,
+                                  self.ActivePrintWid.w_pushbutton_flowrate, self.ActivePrintWid.w_pushbutton_babystep], "temperature transparent_button")
+
+        self.setAllTransparentButton([self.ActivePrintWid.Back, self.ActivePrintWid.w_pushbutton_pauseprint,
+                                      self.ActivePrintWid.w_pushbutton_resumeprint, self.ActivePrintWid.w_pushbutton_fan,
+                                      self.ActivePrintWid.w_pushbutton_flowrate_inc, self.ActivePrintWid.w_pushbutton_flowrate_dec,
+                                      self.ActivePrintWid.w_pushbutton_babystep_inc, self.ActivePrintWid.w_pushbutton_babystep_dec])
 
         self.time_handler = TimeHandler(self, self.bed_olcontrol)
         self.time_handler.start()
@@ -285,7 +282,7 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
     def updateflowlabel(self):
         flow_button_text = "Flowrate: " + \
             self.print_handler.fr_text[self.print_handler.fr_index]
-        self.ActivePrintWid.FlowrateLabel.setText(flow_button_text)
+        self.ActivePrintWid.w_pushbutton_flowrate.setText(flow_button_text)
         self.ActivePrintWid.w_label_flowrate.setText(
             str(self.print_handler.flowrate[self.print_handler.fr_index]))
 
@@ -325,11 +322,19 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
         self.print_handler.sendflowrate()
         self.updateflowlabel()
 
+    def notactiveprint(self):
+        # self.NotActivePrintWid.show()
+        # self.ActivePrintWid.hide()
+        self.NotActivePrintWid.setVisible(True)
+        self.ActivePrintWid.setVisible(False)
+
     def activeprint(self):
-        self.NotActivePrintWid.hide()
+        # self.NotActivePrintWid.hide()
         self.ActivePrintWid.w_pushbutton_resumeprint.setEnabled(False)
         self.ActivePrintWid.w_pushbutton_pauseprint.setEnabled(True)
-        self.ActivePrintWid.show()
+        # self.ActivePrintWid.show()
+        self.NotActivePrintWid.setVisible(False)
+        self.ActivePrintWid.setVisible(True)
 
     def pauseprint(self):
         self._log("UI: User touched Pause")
@@ -348,10 +353,6 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
         # self.parent.Control.setEnabled(False)
         home = self.ui_controller.get_page(k_home_page)
         home.pushbutton_control.setEnabled(False)
-
-    def notactiveprint(self):
-        self.NotActivePrintWid.show()
-        self.ActivePrintWid.hide()
 
     def initpreheatbuttons(self):
         self.setAllTransparentButton([self.NotActivePrintWid.w_pushbutton_m0_extruder0, self.NotActivePrintWid.w_pushbutton_m0_extruder1, self.NotActivePrintWid.w_pushbutton_m0_bed, self.NotActivePrintWid.w_pushbutton_m0_all,
