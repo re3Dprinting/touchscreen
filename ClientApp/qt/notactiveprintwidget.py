@@ -337,5 +337,5 @@ class Ui_NotActivePrintWidget(object):
         NotActivePrintWidget.setWindowTitle(_translate("NotActivePrintWidget", "TemperatureWindow"))
         self.PreheatPLA.setText(_translate("NotActivePrintWidget", "Pre-Heat PLA"))
         self.PreheatPC.setText(_translate("NotActivePrintWidget", "Pre-Heat PC"))
-        self.PreheatPETG.setText(_translate("NotActivePrintWidget", "Pre-Heat PETG:"))
+        self.PreheatPETG.setText(_translate("NotActivePrintWidget", "Pre-Heat PETG"))
 import img_rc

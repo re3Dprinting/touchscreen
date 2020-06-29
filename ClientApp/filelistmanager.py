@@ -5,6 +5,7 @@ from PyQt5.QtCore import Qt
 
 from .fsutils.subfilesystem import SubFileSystem
 
+
 class FileListManager:
 
     def __init__(self, name, file_list_wid, watchpoint,
@@ -16,7 +17,9 @@ class FileListManager:
         self._log("FileListManager __init__")
 
         self.name = name
-        
+
+        self.enabled = False
+
         self.pushbutton_up_wid = pushbutton_up_wid
         self.pushbutton_open_wid = pushbutton_open_wid
         self.pushbutton_print_wid = pushbutton_print_wid
@@ -24,11 +27,13 @@ class FileListManager:
         self.file_list_wid = file_list_wid
         self.watchpoint = watchpoint
         self.pathlabel_wid = pathlabel_wid
-        
+
         self.item_stack = []
 
-        self.file_list_wid.setSelectionBehavior(QtWidgets.QTableView.SelectRows)
-        self.file_list_wid.setSelectionMode(QtWidgets.QTableView.SingleSelection)
+        self.file_list_wid.setSelectionBehavior(
+            QtWidgets.QTableView.SelectRows)
+        self.file_list_wid.setSelectionMode(
+            QtWidgets.QTableView.SingleSelection)
         self.file_list_wid.verticalHeader().hide()
 
         header = self.file_list_wid.horizontalHeader()
@@ -48,6 +53,12 @@ class FileListManager:
 
     def _log(self, message):
         self._logger.debug(message)
+
+    def enable(self):
+        self.enabled = True
+
+    def disable(self):
+        self.enabled = False
 
     def update_files(self):
         self.file_list_wid.clearContents()
@@ -83,7 +94,7 @@ class FileListManager:
         return self.get_selected_widget_file(self.file_list_wid, self.subdir)
 
     def get_selected_widget_file(self, list_widget, subdir):
-    
+
         foolist = list_widget.selectedItems()
 
         if len(foolist) < 1:
@@ -103,7 +114,7 @@ class FileListManager:
 
         # return (selected_row, selected_file, selected_item, selected_file_path)
         return (selected_row, selected_file)
-    
+
     def update_button_states_none(self):
         self.pushbutton_up_wid.setEnabled(False)
         self.pushbutton_open_wid.setEnabled(False)
@@ -141,6 +152,8 @@ class FileListManager:
         self.open_subdir()
 
     def open_subdir(self):
+        if not self.enabled:
+            return
         self._log("UI: User touched Open")
         (selected_row, selected_file) = self.get_selected_file()
 
@@ -159,6 +172,8 @@ class FileListManager:
         self.pathlabel_wid.setText(self.subdir.abspath)
 
     def up_dir(self):
+        if not self.enabled:
+            return
         self._log("UI: User touched Up")
         self.subdir.up()
         self.update_files()

@@ -20,6 +20,7 @@ from .serialpage import SerialPage
 from .userupdatepage import UserUpdatePage
 from .duexsetuppage import DuExSetupPage
 
+
 class MainWindow(Ui_MainWindow, QtWidgets.QMainWindow):
     def __init__(self, printer_if, persona, properties):
         super(MainWindow, self).__init__()
@@ -55,8 +56,6 @@ class MainWindow(Ui_MainWindow, QtWidgets.QMainWindow):
         # Start the UI on the Home page
         self.stack.setCurrentWidget(self.home_page)
 
-        printpage.tabWidget.setCurrentIndex(2)
-
         # Create the data structure that will contain the stack of
         # pages to display.
         self.page_stack = []
@@ -65,7 +64,8 @@ class MainWindow(Ui_MainWindow, QtWidgets.QMainWindow):
         self.setWindowState(Qt.WindowActive)
         self.activateWindow()
 
-        context.printer_if.set_state_changed_callback(self.state_changed_callback)
+        context.printer_if.set_state_changed_callback(
+            self.state_changed_callback)
 
     def state_changed_callback(self, payload):
         state = "Printer: %s" % payload["state_string"]
@@ -120,14 +120,15 @@ class MainWindow(Ui_MainWindow, QtWidgets.QMainWindow):
             just_pushed_op = getattr(widget, "just_pushed", None)
 
             if callable(just_pushed_op):
-                self._log("<%s> just_pushed callback exists, calling..." % page_name)
+                self._log(
+                    "<%s> just_pushed callback exists, calling..." % page_name)
                 widget.just_pushed()
 
         except KeyError:
             # If the name of the requested widget to push doesn't
             # exist, log an error.
             self._log("MainWindow: page \"%s\" not found." % page_name)
-        
+
     def pop(self):
         try:
             # Pop the previously pushed widget...
