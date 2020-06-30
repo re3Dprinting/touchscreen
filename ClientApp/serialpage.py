@@ -75,7 +75,8 @@ class SerialPage(BasePage, Ui_SerialPage):
             self.enable_page()
 
         # Has a disconnect occurred?
-        if from_state == "OPERATIONAL" and to_state != "OPERATIONAL" and to_state != "ERROR":
+#        if from_state == "OPERATIONAL" and to_state != "OPERATIONAL" and to_state != "ERROR":
+        if from_state != "OFFLINE" and to_state == "OFFLINE":
 
             self._log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
             self._log("Disconnect detected!")
