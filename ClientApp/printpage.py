@@ -66,6 +66,11 @@ class PrintPage(BasePage, Ui_PrintPage):
         self.pushbutton_active_print.setEnabled(False)
         self.pushbutton_stop_print.setEnabled(False)
 
+        # SD File Select Behavior
+        self.SDFileList.setVerticalScrollMode(
+            QtWidgets.QAbstractItemView.ScrollPerPixel)
+        self.SDFileList.setHorizontalScrollMode(
+            QtWidgets.QAbstractItemView.ScrollPerPixel)
         self.SDFileList.setSelectionBehavior(QtWidgets.QTableView.SelectRows)
         self.SDFileList.setSelectionMode(QtWidgets.QTableView.SingleSelection)
         self.SDFileList.verticalHeader().hide()

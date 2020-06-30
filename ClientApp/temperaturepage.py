@@ -51,8 +51,8 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
         self.gridLayout.addWidget(self.NotActivePrintWid, 2, 0, 1, 1)
         self.gridLayout.addWidget(self.ActivePrintWid, 2, 0, 1, 1)
 
-        # self.notactiveprint()
-        self.activeprint()
+        self.notactiveprint()
+        # self.activeprint()
 
         self.progress_signal.connect(self.update_progress_slot)
 
@@ -130,8 +130,6 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
         # self.NotActivePrintWid.w_pushbutton_cooldown.clicked.connect(self.notactive_cool)
         self.NotActivePrintWid.w_pushbutton_fan.clicked.connect(
             self.notactive_fan)
-        self.NotActivePrintWid.w_pushbutton_fan.clicked.connect(
-            self.activeprint)
         self.setAllStyleProperty([self.NotActivePrintWid.PreheatPLA, self.NotActivePrintWid.PreheatPC, self.NotActivePrintWid.PreheatPETG],
                                  "black-transparent-text font-m align-center")
         self.setAllTransparentButton(
@@ -142,8 +140,6 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
         self.setStyleProperty(self.ActivePrintWid.BottomBar, "bottom_bar")
         self.ActivePrintWid.Back.clicked.connect(self.back)
         self.ActivePrintWid.w_pushbutton_fan.clicked.connect(self.active_fan)
-        self.ActivePrintWid.w_pushbutton_fan.clicked.connect(
-            self.notactiveprint)
         self.ActivePrintWid.w_pushbutton_pauseprint.setEnabled(False)
 
         # self.ActivePrintWid.StopPrint.clicked.connect(self.stopprint)
