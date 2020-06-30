@@ -1,5 +1,5 @@
 QWidget {
-    background-color: rgb(125,125,125);
+    background-color: #ffffff;
 } 
 
 QLabel {
@@ -13,24 +13,31 @@ QWidget[cssClass~="bottom_bar"]{
     background-color: black
 }
 
-QLabel[cssClass~="temperature"]{
-    font-family: Lato;
-    font-size: 18px;
-    qproperty-alignment: AlignCenter;
+QLabel[cssClass~="white-transparent-text"]{
+    color: white;
+    background: rgba(255,255,255,0);
 }
+QLabel[cssClass~="black-transparent-text"]{
+    color: black;
+    background: rgba(255,255,255,0);
+}
+
+QLabel[cssClass~="font-s"]{ font-family: Lato; font-size: 14px;}
+QLabel[cssClass~="font-m"]{ font-family: Lato; font-size: 18px;}
+QLabel[cssClass~="font-l"]{ font-family: Lato; font-size: 25px;}
+QLabel[cssClass~="font-xl"]{ font-family: Lato; font-size: 40px;}
+
+QLabel[cssClass~="align-left"]{ qproperty-alignment: AlignLeft;}
+QLabel[cssClass~="align-center"]{ qproperty-alignment: AlignCenter;}
+QLabel[cssClass~="align-right"]{ qproperty-alignment: AlignRight;}
+
+
 QLabel[cssClass~="preheat"]{
     font-family: Lato;
     font-size: 25px;
 }
-QLabel[cssClass~="movement"]{
-    font-family: Lato;
-    font-size: 40px;
-}
 
-QPushButton[cssClass~="temperature"]{
-    font-family: Lato;
-    font-size: 25px;
-}
+QPushButton[cssClass~="btn-font-l"]{ font-family: Lato; font-size: 25px; }
 
 QPushButton[cssClass~="transparent_button"]{ 
     background: rgba(255,255,255,0); 

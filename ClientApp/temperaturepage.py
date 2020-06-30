@@ -64,12 +64,9 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
         # self.printer_if.set_position_callback(self)
         self.printer_if.set_progress_callback(self)
 
-        self.setStyleProperty(self.e0temp, "temperature")
-        self.setStyleProperty(self.e1temp, "temperature")
-        self.setStyleProperty(self.bedtemp, "temperature")
-        self.setStyleProperty(self.w_label_extruder0_setpoint, "temperature")
-        self.setStyleProperty(self.w_label_extruder1_setpoint, "temperature")
-        self.setStyleProperty(self.w_label_bed_setpoint, "temperature")
+        self.setAllStyleProperty([self.e0temp, self.e1temp, self.bedtemp,
+                                  self.w_label_extruder0_setpoint, self.w_label_extruder1_setpoint, self.w_label_bed_setpoint],
+                                 "black-transparent-text font-m")
 
         self.w_label_extruder0_setpoint.setText('0')
         self.w_label_extruder1_setpoint.setText('0')
@@ -127,6 +124,7 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
             ":/img/img/Heated_Bed.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
 
 #		Initilization for Not-Printing Widget.
+        self.setStyleProperty(self.NotActivePrintWid.BottomBar, "bottom_bar")
         self.NotActivePrintWid.Back.clicked.connect(self.back)
         self.initpreheatbuttons()
         # self.NotActivePrintWid.w_pushbutton_cooldown.clicked.connect(self.notactive_cool)
@@ -134,14 +132,14 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
             self.notactive_fan)
         self.NotActivePrintWid.w_pushbutton_fan.clicked.connect(
             self.activeprint)
-        self.setStyleProperty(self.NotActivePrintWid.PreheatPLA, "preheat")
-        self.setStyleProperty(self.NotActivePrintWid.PreheatPC, "preheat")
-        self.setStyleProperty(self.NotActivePrintWid.PreheatPETG, "preheat")
+        self.setAllStyleProperty([self.NotActivePrintWid.PreheatPLA, self.NotActivePrintWid.PreheatPC, self.NotActivePrintWid.PreheatPETG],
+                                 "black-transparent-text font-m align-center")
         self.setAllTransparentButton(
             [self.NotActivePrintWid.Back, self.NotActivePrintWid.w_pushbutton_fan, self.NotActivePrintWid.w_pushbutton_cooldown])
 
 
 #		Initilization for Printing Widget.
+        self.setStyleProperty(self.ActivePrintWid.BottomBar, "bottom_bar")
         self.ActivePrintWid.Back.clicked.connect(self.back)
         self.ActivePrintWid.w_pushbutton_fan.clicked.connect(self.active_fan)
         self.ActivePrintWid.w_pushbutton_fan.clicked.connect(
@@ -170,10 +168,11 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
 
         # self.ActivePrintWid.FlowrateLabel.
         self.setAllStyleProperty([self.ActivePrintWid.w_label_filename, self.ActivePrintWid.w_label_flowrate, self.ActivePrintWid.w_label_feedrate,
-                                  self.ActivePrintWid.w_label_babystep_val, self.ActivePrintWid.w_label_position], "temperature")
-
+                                  self.ActivePrintWid.w_label_babystep_val], "black-transparent-text font-m")
+        self.setStyleProperty(
+            self.ActivePrintWid.w_label_position, "white-transparent-text font-l")
         self.setAllStyleProperty([self.ActivePrintWid.w_label_file, self.ActivePrintWid.w_pushbutton_feedrate,
-                                  self.ActivePrintWid.w_pushbutton_flowrate, self.ActivePrintWid.w_pushbutton_babystep], "temperature transparent_button")
+                                  self.ActivePrintWid.w_pushbutton_flowrate, self.ActivePrintWid.w_pushbutton_babystep], "btn-font-l transparent_button")
 
         self.setAllTransparentButton([self.ActivePrintWid.Back, self.ActivePrintWid.w_pushbutton_pauseprint,
                                       self.ActivePrintWid.w_pushbutton_resumeprint, self.ActivePrintWid.w_pushbutton_fan,

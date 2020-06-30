@@ -55,7 +55,6 @@ class ControlPage(BasePage, Ui_ControlPage):
         self.eaxis = Axis("e0", "60", self)
         self.e1axis = Axis("e1", "60", self)
 
-        self.setStyleProperty(self.PositionLabel, "movement")
         # self.serial.data.updateposition.connect(self.updateposition)
 
         self.HomeXY.clicked.connect(self.homexy)
@@ -63,6 +62,9 @@ class ControlPage(BasePage, Ui_ControlPage):
         self.HomeAll.clicked.connect(self.homeall)
 
         self.Back.clicked.connect(self.back)
+        self.setStyleProperty(self.BottomBar, "bottom_bar")
+        self.setStyleProperty(self.PositionLabel,
+                              "white-transparent-text font-xl align-center")
 
         self.DisableMotors.clicked.connect(self.disablemotors)
         self.Back.clicked.connect(self.user_back)

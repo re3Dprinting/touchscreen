@@ -9,6 +9,7 @@ from .qt.mainwindow_qt import Ui_MainWindow
 from constants import *
 from context import Context
 
+from .basepage import BasePage
 from .homepage import HomePage
 from .printpage import PrintPage
 from .controlpage import ControlPage
@@ -21,7 +22,7 @@ from .userupdatepage import UserUpdatePage
 from .duexsetuppage import DuExSetupPage
 
 
-class MainWindow(Ui_MainWindow, QtWidgets.QMainWindow):
+class MainWindow(BasePage, Ui_MainWindow, QtWidgets.QMainWindow):
     def __init__(self, printer_if, persona, properties):
         super(MainWindow, self).__init__()
 
@@ -66,6 +67,9 @@ class MainWindow(Ui_MainWindow, QtWidgets.QMainWindow):
 
         context.printer_if.set_state_changed_callback(
             self.state_changed_callback)
+        self.setStyleProperty(self.status, "bottom_bar")
+        self.setAllStyleProperty(
+            [self.right_status, self.left_status, self.middle_status], "white-transparent-text")
 
     def state_changed_callback(self, payload):
         state = "Printer: %s" % payload["state_string"]
