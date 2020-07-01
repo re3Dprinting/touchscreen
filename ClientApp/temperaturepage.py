@@ -124,7 +124,7 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
             ":/img/img/Heated_Bed.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
 
 #		Initilization for Not-Printing Widget.
-        self.setStyleProperty(self.NotActivePrintWid.BottomBar, "bottom_bar")
+        self.setStyleProperty(self.NotActivePrintWid.BottomBar, "bottom-bar")
         self.NotActivePrintWid.Back.clicked.connect(self.back)
         self.initpreheatbuttons()
         # self.NotActivePrintWid.w_pushbutton_cooldown.clicked.connect(self.notactive_cool)
@@ -133,11 +133,11 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
         self.setAllStyleProperty([self.NotActivePrintWid.PreheatPLA, self.NotActivePrintWid.PreheatPC, self.NotActivePrintWid.PreheatPETG],
                                  "black-transparent-text font-m align-center")
         self.setAllTransparentButton(
-            [self.NotActivePrintWid.Back, self.NotActivePrintWid.w_pushbutton_fan, self.NotActivePrintWid.w_pushbutton_cooldown])
+            [self.NotActivePrintWid.Back, self.NotActivePrintWid.w_pushbutton_fan, self.NotActivePrintWid.w_pushbutton_cooldown], True)
 
 
 #		Initilization for Printing Widget.
-        self.setStyleProperty(self.ActivePrintWid.BottomBar, "bottom_bar")
+        self.setStyleProperty(self.ActivePrintWid.BottomBar, "bottom-bar")
         self.ActivePrintWid.Back.clicked.connect(self.back)
         self.ActivePrintWid.w_pushbutton_fan.clicked.connect(self.active_fan)
         self.ActivePrintWid.w_pushbutton_pauseprint.setEnabled(False)
@@ -168,13 +168,12 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
         self.setStyleProperty(
             self.ActivePrintWid.w_label_position, "white-transparent-text font-l")
         self.setAllStyleProperty([self.ActivePrintWid.w_label_file, self.ActivePrintWid.w_pushbutton_feedrate,
-                                  self.ActivePrintWid.w_pushbutton_flowrate, self.ActivePrintWid.w_pushbutton_babystep], "btn-font-l transparent_button")
+                                  self.ActivePrintWid.w_pushbutton_flowrate, self.ActivePrintWid.w_pushbutton_babystep], "btn-font-l transparent-btn")
 
-        self.setAllTransparentButton([self.ActivePrintWid.Back, self.ActivePrintWid.w_pushbutton_pauseprint,
-                                      self.ActivePrintWid.w_pushbutton_resumeprint, self.ActivePrintWid.w_pushbutton_fan,
-                                      self.ActivePrintWid.w_pushbutton_flowrate_inc, self.ActivePrintWid.w_pushbutton_flowrate_dec,
+        self.setAllTransparentButton([self.ActivePrintWid.w_pushbutton_flowrate_inc, self.ActivePrintWid.w_pushbutton_flowrate_dec,
                                       self.ActivePrintWid.w_pushbutton_babystep_inc, self.ActivePrintWid.w_pushbutton_babystep_dec])
-
+        self.setAllTransparentButton([self.ActivePrintWid.Back, self.ActivePrintWid.w_pushbutton_pauseprint,
+                                      self.ActivePrintWid.w_pushbutton_resumeprint, self.ActivePrintWid.w_pushbutton_fan], True)
         self.time_handler = TimeHandler(self, self.bed_olcontrol)
         self.time_handler.start()
 

@@ -197,7 +197,7 @@
         </property>
         <property name="icon">
          <iconset resource="img.qrc">
-          <normaloff>:/img/img/Temperature(2).png</normaloff>:/img/img/Temperature(2).png</iconset>
+          <normaloff>:/img/img/Temperature_2.png</normaloff>:/img/img/Temperature_2.png</iconset>
         </property>
         <property name="iconSize">
          <size>
@@ -232,7 +232,7 @@
         </property>
         <property name="icon">
          <iconset resource="img.qrc">
-          <normaloff>:/img/img/Settings(2).png</normaloff>:/img/img/Settings(2).png</iconset>
+          <normaloff>:/img/img/Settings_(2).png</normaloff>:/img/img/Settings_(2).png</iconset>
         </property>
         <property name="iconSize">
          <size>

@@ -34,12 +34,13 @@ class ControlPage(BasePage, Ui_ControlPage):
         self.einc = None
         self.currentextruder = None
 
-        self.setAllTransparentButton([self.Back,
-                                      self.XPos, self.XNeg,
-                                      self.YPos, self.YNeg,
-                                      self.ZPos, self.ZNeg,
-                                      self.E0Pos, self.E0Neg, self.E1Icon, self.E1Pos, self.E1Neg,
-                                      self.DisableMotors, self.HomeAll, self.HomeXY, self.HomeZ, ])
+        self.setAllTransparentButton([
+            self.XPos, self.XNeg,
+            self.YPos, self.YNeg,
+            self.ZPos, self.ZNeg,
+            self.E0Pos, self.E0Neg, self.E1Icon, self.E1Pos, self.E1Neg,
+            self.DisableMotors, self.HomeAll, self.HomeXY, self.HomeZ, ])
+        self.setAllTransparentButton([self.Back], True)
 
         self.setAllTransparentIcon([self.XYIcon, self.ZIcon, self.E0Icon,
                                     self.movex, self.movey, self.movez, self.movee])
@@ -62,7 +63,7 @@ class ControlPage(BasePage, Ui_ControlPage):
         self.HomeAll.clicked.connect(self.homeall)
 
         self.Back.clicked.connect(self.back)
-        self.setStyleProperty(self.BottomBar, "bottom_bar")
+        self.setStyleProperty(self.BottomBar, "bottom-bar")
         self.setStyleProperty(self.PositionLabel,
                               "white-transparent-text font-xl align-center")
 
@@ -105,7 +106,8 @@ class ControlPage(BasePage, Ui_ControlPage):
         for i in increments_str:
             att = axis + "m" + i
             getattr(self, att).setCheckable(True)
-            self.setStyleProperty(getattr(self, att), "axis_button")
+            self.setStyleProperty(getattr(self, att),
+                                  "yellow-btn transparent-btn")
             group.addButton(getattr(self, att))
         getattr(self, axis + "m"+"10").setChecked(True)
         return group

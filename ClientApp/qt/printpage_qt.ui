@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>PrintPage</class>
- <widget class="QDialog" name="PrintPage">
+ <widget class="QWidget" name="PrintPage">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -19,22 +19,7 @@
   <property name="windowTitle">
    <string>ControlWindow</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_7">
-   <property name="spacing">
-    <number>0</number>
-   </property>
-   <property name="leftMargin">
-    <number>0</number>
-   </property>
-   <property name="topMargin">
-    <number>0</number>
-   </property>
-   <property name="rightMargin">
-    <number>0</number>
-   </property>
-   <property name="bottomMargin">
-    <number>0</number>
-   </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <property name="spacing">
@@ -182,6 +167,41 @@
            </size>
           </property>
          </spacer>
+        </item>
+        <item>
+         <widget class="QPushButton" name="test">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>160</width>
+            <height>50</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="icon">
+           <iconset resource="img.qrc">
+            <normaloff>:/img/img/Up_one_folder.png</normaloff>:/img/img/Up_one_folder.png</iconset>
+          </property>
+          <property name="iconSize">
+           <size>
+            <width>160</width>
+            <height>40</height>
+           </size>
+          </property>
+         </widget>
         </item>
         <item>
          <widget class="QPushButton" name="pushbutton_folder_up">
@@ -470,7 +490,7 @@
         <property name="minimumSize">
          <size>
           <width>0</width>
-          <height>0</height>
+          <height>65</height>
          </size>
         </property>
         <property name="maximumSize">
@@ -505,7 +525,7 @@
         <property name="minimumSize">
          <size>
           <width>0</width>
-          <height>0</height>
+          <height>65</height>
          </size>
         </property>
         <property name="maximumSize">
@@ -540,7 +560,7 @@
         <property name="minimumSize">
          <size>
           <width>0</width>
-          <height>0</height>
+          <height>65</height>
          </size>
         </property>
         <property name="maximumSize">

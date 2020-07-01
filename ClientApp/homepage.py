@@ -40,11 +40,9 @@ class HomePage(BasePage, Ui_Home):
 
         # Save the personality spec
 
-        self.setTransparentButton(self.pushbutton_print)
-        self.setTransparentButton(self.pushbutton_control)
-        self.setTransparentButton(self.pushbutton_temperature)
-        self.setTransparentButton(self.pushbutton_settings)
         self.setTransparentIcon(self.re3DIcon)
+        self.setAllTransparentButton(
+            [self.pushbutton_print, self.pushbutton_control, self.pushbutton_temperature, self.pushbutton_settings])
 #        self.setTransparentButton(self.pushbutton_back)
 
         self.pushbutton_print.clicked.connect(self.handle_print_touch)

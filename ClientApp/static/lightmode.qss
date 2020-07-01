@@ -6,10 +6,10 @@ QLabel {
     font-family: Lato
 }
 
-QWidget[cssClass~="left_bar"]{
+QWidget[cssClass~="left-bar"]{
     background-color: #393b3f
 }
-QWidget[cssClass~="bottom_bar"]{
+QWidget[cssClass~="bottom-bar"]{
     background-color: black
 }
 
@@ -39,29 +39,33 @@ QLabel[cssClass~="preheat"]{
 
 QPushButton[cssClass~="btn-font-l"]{ font-family: Lato; font-size: 25px; }
 
-QPushButton[cssClass~="transparent_button"]{ 
+QPushButton[cssClass~="transparent-btn"]{ 
     background: rgba(255,255,255,0); 
     outline: none; 
     border: none; 
 } 
-QPushButton:checked[cssClass~="transparent_button"]{
+QPushButton:checked[cssClass~="transparent-btn"]{
     background: rgba(255,255,255,0); 
     outline: none; 
     border: none;
-} 
-QPushButton:pressed[cssClass~="transparent_button"]{ 
-    background: rgba(0,0,0,0.1); 
-    outline: none; 
-    border: none; 
+}
+QPushButton:!enabled[cssClass~="transparent-btn"]{
+    color: red; 
 }
 
-QPushButton[cssClass~="transparent_icon"]{ background: rgba(255,255,255,0); outline: none; border: none; } 
-QPushButton:checked[cssClass~="transparent_icon"]{ background: rgba(255,255,255,0); outline: none; border: none; } 
-QPushButton:pressed[cssClass~="transparent_icon"]{ background: rgba(255,255,255,0); outline: none; border: none; }
+QPushButton:pressed[cssClass~="btn-pressed-light"]{ border-style: solid; background-color: rgba(1,1,1,.15); }
+QPushButton:pressed[cssClass~="btn-pressed-dark"]{ border-style: solid; background-color: rgba(255,255,255,0.25); }
 
-QPushButton[cssClass~="axis_button"]{
-    border: none;
-}
-QPushButton:checked[cssClass~="axis_button"]{
-    background: #ffd400; border: 1px solid #ffffff; border-radius:10px;
+QPushButton:pressed[cssClass~="btn-pressed-s"]{ border-radius:5;}
+QPushButton:pressed[cssClass~="btn-pressed-m"]{ border-radius:25;}
+QPushButton:pressed[cssClass~="btn-pressed-l"]{ border-radius:37;}
+QPushButton:pressed[cssClass~="btn-pressed-xl"]{ border-radius:50;}
+
+QPushButton[cssClass~="transparent-icon"]{ background: rgba(255,255,255,0); outline: none; border: none; } 
+QPushButton:checked[cssClass~="transparent-icon"]{ background: rgba(255,255,255,0); outline: none; border: none; } 
+QPushButton:pressed[cssClass~="transparent-icon"]{ background: rgba(255,255,255,0); outline: none; border: none; }
+
+
+QPushButton:checked[cssClass~="yellow-btn"]{
+    background: #ffd400; border: 1px solid #000000; border-radius:10px;
 }

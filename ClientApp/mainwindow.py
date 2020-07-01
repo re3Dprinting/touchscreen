@@ -67,7 +67,7 @@ class MainWindow(BasePage, Ui_MainWindow, QtWidgets.QMainWindow):
 
         context.printer_if.set_state_changed_callback(
             self.state_changed_callback)
-        self.setStyleProperty(self.status, "bottom_bar")
+        self.setStyleProperty(self.status, "bottom-bar")
         self.setAllStyleProperty(
             [self.right_status, self.left_status, self.middle_status], "white-transparent-text")
 

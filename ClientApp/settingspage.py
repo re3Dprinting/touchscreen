@@ -1,6 +1,7 @@
 import logging
 
 from PyQt5.QtCore import Qt
+from PyQt5 import QtWidgets
 
 from constants import *
 
@@ -30,16 +31,8 @@ class SettingsPage(BasePage, Ui_SettingsPage):
         self.personality = context.personality
         self.ui_controller = context.ui_controller
 
-        self.setTransparentButton(self.Serial)
-        self.setTransparentButton(self.Server)
-        self.setTransparentButton(self.UserUpdate)
-        self.setTransparentButton(self.Wifi)
-        self.setTransparentButton(self.Back)
-
-        self.setTransparentButton(self.w_pushbutton_debug)
-        self.setTransparentButton(self.w_pushbutton_duex)
-        self.setTransparentButton(self.w_pushbutton_info)
-        self.setTransparentButton(self.w_pushbutton_term)
+        self.setAllTransparentButton([self.Serial, self.Server, self.UserUpdate, self.Wifi,
+                                      self.w_pushbutton_debug, self.w_pushbutton_duex, self.w_pushbutton_info, self.w_pushbutton_term])
 
         self.Serial.clicked.connect(self.serialpop)
         self.Server.clicked.connect(self.serverpop)
@@ -47,6 +40,17 @@ class SettingsPage(BasePage, Ui_SettingsPage):
         self.w_pushbutton_debug.clicked.connect(self.handle_debug)
         self.w_pushbutton_info.clicked.connect(self.handle_info)
         self.w_pushbutton_duex.clicked.connect(self.handle_duex)
+
+        self.SettingsScrollArea.setVerticalScrollBarPolicy(
+            Qt.ScrollBarAlwaysOff)
+        self.SettingsScrollArea.setHorizontalScrollBarPolicy(
+            Qt.ScrollBarAlwaysOff)
+        QtWidgets.QScroller.grabGesture(
+            self.SettingsScrollArea, QtWidgets.QScroller.LeftMouseButtonGesture)
+
+        self.setStyleProperty(self.BottomBar, "bottom-bar")
+        self.setAllTransparentButton([self.Back], True)
+
         # self.w_pushbutton_term.clicked.connect(self.handle_term)
 
         # self.Wifi.clicked.connect(self.wifipop)
