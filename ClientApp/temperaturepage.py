@@ -258,7 +258,7 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
         y = int(math.floor(float(y)))
         z = float(z)
 
-        position_string = "X: %d Y: %d Z:%1.2f" % (x, y, z)
+        position_string = "X: %1.2f Y: %1.2f Z: %1.2f" % (x, y, z)
 
         self.ActivePrintWid.w_label_position.setText(position_string)
         self.control_page.PositionLabel.setText(position_string)

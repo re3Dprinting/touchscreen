@@ -41,8 +41,6 @@ class UserUpdatePage(BasePage, Ui_UserUpdatePage):
         self.ui_controller = context.ui_controller
         self.properties = context.properties
 
-        self.setTransparentButton(self.Back)
-
         self.app = QtWidgets.QApplication.instance()
         self.new_version_avalible = False
         # self.debug = (self.properties["debug"] == "true")
@@ -98,6 +96,13 @@ class UserUpdatePage(BasePage, Ui_UserUpdatePage):
         #  Append the version to the current version window.
         temp = self.CurrentVersion.text() + " " + self.app.applicationVersion()
         self.CurrentVersion.setText(temp)
+
+        self.setStyleProperty(self.BottomBar, "bottom-bar")
+        self.setStyleProperty(self.LeftBar, "left-bar")
+        self.setAllTransparentButton(
+            [self.Back, self.Update, self.CheckUpdate], True)
+        self.setStyleProperty(self.CurrentVersion,
+                              "white-transparent-text font-m align-center")
 
         self.Back.clicked.connect(self.back)
         self.CheckUpdate.clicked.connect(self.checkupdate)

@@ -23,16 +23,10 @@ class Ui_Home(object):
         self.widget_3.setObjectName("widget_3")
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout(self.widget_3)
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
-        self.Title = QtWidgets.QLabel(self.widget_3)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Maximum)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.Title.sizePolicy().hasHeightForWidth())
-        self.Title.setSizePolicy(sizePolicy)
-        self.Title.setObjectName("Title")
-        self.horizontalLayout_2.addWidget(self.Title)
-        spacerItem = QtWidgets.QSpacerItem(20, 1, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.MinimumExpanding)
+        spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_2.addItem(spacerItem)
+        spacerItem1 = QtWidgets.QSpacerItem(20, 1, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.MinimumExpanding)
+        self.horizontalLayout_2.addItem(spacerItem1)
         self.re3DIcon = QtWidgets.QPushButton(self.widget_3)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Maximum)
         sizePolicy.setHorizontalStretch(0)
@@ -114,8 +108,8 @@ class Ui_Home(object):
         self.pushbutton_settings.setObjectName("pushbutton_settings")
         self.horizontalLayout_4.addWidget(self.pushbutton_settings)
         self.verticalLayout.addWidget(self.widget_2)
-        spacerItem1 = QtWidgets.QSpacerItem(20, 1, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.MinimumExpanding)
-        self.verticalLayout.addItem(spacerItem1)
+        spacerItem2 = QtWidgets.QSpacerItem(20, 1, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.MinimumExpanding)
+        self.verticalLayout.addItem(spacerItem2)
 
         self.retranslateUi(Home)
         QtCore.QMetaObject.connectSlotsByName(Home)
@@ -123,5 +117,4 @@ class Ui_Home(object):
     def retranslateUi(self, Home):
         _translate = QtCore.QCoreApplication.translate
         Home.setWindowTitle(_translate("Home", "TouchDisplay"))
-        self.Title.setText(_translate("Home", "<html><head/><body><p><span style=\" font-size:36pt;\">re:3Display</span></p></body></html>"))
 import img_rc

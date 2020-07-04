@@ -43,7 +43,10 @@ class InfoPage(BasePage, Ui_InfoPage):
         self.Back.clicked.connect(self.user_back)
         self.info_signal.connect(self.info_do_it)
 
-        self.setTransparentButton(self.Back)
+        self.setStyleProperty(self.BottomBar, "bottom-bar")
+        self.setStyleProperty(self.LeftBar, "left-bar")
+        self.setAllTransparentButton([self.Back, self.w_pushbutton_info,
+                                      self.w_pushbutton_capabilities, self.w_pushbutton_stats, self.w_pushbutton_settings], True)
 
     def user_back(self):
         self.back()

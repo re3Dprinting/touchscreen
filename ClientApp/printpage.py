@@ -118,13 +118,16 @@ class PrintPage(BasePage, Ui_PrintPage):
         self.setLocaltab()
         self.file_being_printed = "-----"
 
-        self.setAllTransparentButton([self.test], True)
         self.setAllTransparentButton([self.Back, self.pushbutton_active_print, self.pushbutton_start_print, self.pushbutton_stop_print,
                                       self.pushbutton_SDtab, self.pushbutton_USBtab, self.pushbutton_Localtab,
                                       self.pushbutton_scan_sd, self.pushbutton_folder_open, self.pushbutton_folder_up], True)
-        print(self.pushbutton_folder_up.style())
         self.setStyleProperty(self.BottomBar, "bottom-bar")
         self.setStyleProperty(self.LeftBar, "left-bar")
+
+        self.USBFileList.setVerticalScrollMode(
+            QtWidgets.QAbstractItemView.ScrollPerPixel)
+        QtWidgets.QScroller.grabGesture(
+            self.USBFileList, QtWidgets.QScroller.LeftMouseButtonGesture)
 
     def setSDtab(self):
         self.print_method = "SD"

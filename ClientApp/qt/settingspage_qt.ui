@@ -52,7 +52,7 @@
      <widget class="QWidget" name="scrollAreaWidgetContents">
       <property name="geometry">
        <rect>
-        <x>0</x>
+        <x>-67</x>
         <y>0</y>
         <width>1925</width>
         <height>347</height>
@@ -145,10 +145,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="Wifi">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
+        <widget class="QPushButton" name="w_pushbutton_duex">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
            <horstretch>0</horstretch>
@@ -171,8 +168,8 @@
           <string/>
          </property>
          <property name="icon">
-          <iconset>
-           <normaloff>img/wifi.png</normaloff>img/wifi.png</iconset>
+          <iconset resource="img.qrc">
+           <normaloff>:/img/img/Dual_Extruder_Setup.png</normaloff>:/img/img/Dual_Extruder_Setup.png</iconset>
          </property>
          <property name="iconSize">
           <size>
@@ -247,7 +244,10 @@
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="w_pushbutton_duex">
+        <widget class="QPushButton" name="Wifi">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="sizePolicy">
           <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
            <horstretch>0</horstretch>
@@ -271,7 +271,7 @@
          </property>
          <property name="icon">
           <iconset resource="img.qrc">
-           <normaloff>:/img/img/Dual_Extruder_Setup.png</normaloff>:/img/img/Dual_Extruder_Setup.png</iconset>
+           <normaloff>:/img/img/Wifi.png</normaloff>:/img/img/Wifi.png</iconset>
          </property>
          <property name="iconSize">
           <size>

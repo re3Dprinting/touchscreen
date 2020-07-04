@@ -43,16 +43,17 @@ class SettingsPage(BasePage, Ui_SettingsPage):
 
         self.SettingsScrollArea.setVerticalScrollBarPolicy(
             Qt.ScrollBarAlwaysOff)
-        self.SettingsScrollArea.setHorizontalScrollBarPolicy(
-            Qt.ScrollBarAlwaysOff)
+        # self.SettingsScrollArea.setHorizontalScrollBarPolicy(
+        #     Qt.ScrollBarAlwaysOff)
         QtWidgets.QScroller.grabGesture(
             self.SettingsScrollArea, QtWidgets.QScroller.LeftMouseButtonGesture)
 
         self.setStyleProperty(self.BottomBar, "bottom-bar")
         self.setAllTransparentButton([self.Back], True)
+        self.setAllTransparentButton([self.Serial, self.Server, self.UserUpdate, self.Wifi,
+                                      self.w_pushbutton_debug, self.w_pushbutton_duex, self.w_pushbutton_info, self.w_pushbutton_term])
 
         # self.w_pushbutton_term.clicked.connect(self.handle_term)
-
         # self.Wifi.clicked.connect(self.wifipop)
         # self.Back.clicked.connect(self.back)
         self.Back.clicked.connect(self.back)

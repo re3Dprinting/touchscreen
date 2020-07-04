@@ -14,6 +14,11 @@ class Ui_ControlPage(object):
     def setupUi(self, ControlPage):
         ControlPage.setObjectName("ControlPage")
         ControlPage.resize(800, 448)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(ControlPage.sizePolicy().hasHeightForWidth())
+        ControlPage.setSizePolicy(sizePolicy)
         ControlPage.setMaximumSize(QtCore.QSize(800, 448))
         self.verticalLayout_5 = QtWidgets.QVBoxLayout(ControlPage)
         self.verticalLayout_5.setContentsMargins(0, 0, 0, 0)

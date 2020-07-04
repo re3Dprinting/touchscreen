@@ -48,9 +48,12 @@ class SerialPage(BasePage, Ui_SerialPage):
         self.scan_serial()
         # self.connect_serial()
 
-        self.setTransparentButton(self.w_pushbutton_back)
+        self.setStyleProperty(self.BottomBar, "bottom-bar")
+        self.setStyleProperty(self.LeftBar, "left-bar")
+        self.setAllTransparentButton([self.Back, self.w_pushbutton_scan,
+                                      self.w_pushbutton_connect, self.w_pushbutton_disconnect], True)
 
-        self.w_pushbutton_back.clicked.connect(self.back)
+        self.Back.clicked.connect(self.back)
 
         self.w_pushbutton_scan.clicked.connect(self.scan_serial)
         self.w_pushbutton_connect.clicked.connect(self.user_connect_serial)
@@ -110,14 +113,14 @@ class SerialPage(BasePage, Ui_SerialPage):
         self.w_pushbutton_scan.setEnabled(False)
         self.w_pushbutton_connect.setEnabled(False)
         self.w_pushbutton_disconnect.setEnabled(False)
-        self.w_pushbutton_back.setEnabled(False)
+        self.Back.setEnabled(False)
         self.w_table_ports.setEnabled(False)
 
     def enable_page(self):
         self.w_pushbutton_scan.setEnabled(True)
         self.w_pushbutton_connect.setEnabled(True)
         self.w_pushbutton_disconnect.setEnabled(True)
-        self.w_pushbutton_back.setEnabled(True)
+        self.Back.setEnabled(True)
         self.w_table_ports.setEnabled(True)
 
     def connect_serial(self):

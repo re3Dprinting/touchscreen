@@ -57,7 +57,7 @@
           <property name="minimumSize">
            <size>
             <width>160</width>
-            <height>60</height>
+            <height>85</height>
            </size>
           </property>
           <property name="maximumSize">
@@ -75,8 +75,8 @@
           </property>
           <property name="iconSize">
            <size>
-            <width>120</width>
-            <height>60</height>
+            <width>140</width>
+            <height>65</height>
            </size>
           </property>
          </widget>
@@ -135,6 +135,9 @@
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
+          </property>
+          <property name="autoScroll">
+           <bool>true</bool>
           </property>
           <column>
            <property name="text">

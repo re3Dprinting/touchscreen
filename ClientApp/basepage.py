@@ -1,4 +1,4 @@
-from PyQt5 import QtWidgets
+from PyQt5 import QtWidgets, QtCore
 
 
 class BasePage(QtWidgets.QWidget):
@@ -22,18 +22,10 @@ class BasePage(QtWidgets.QWidget):
         for obj in listobj:
             size = min(obj.width(), obj.height())
             # print(obj.objectName(), size)
-            if size <= 50:
-                obj.setProperty(
-                    "cssClass", "btn-pressed-s " + color + " transparent-btn")
-            elif size > 50 and size <= 75:
-                obj.setProperty(
-                    "cssClass", "btn-pressed-m " + color + " transparent-btn")
-            elif size > 75 and size <= 100:
-                obj.setProperty(
-                    "cssClass", "btn-pressed-l " + color + " transparent-btn")
-            elif size > 100:
-                obj.setProperty(
-                    "cssClass", "btn-pressed-xl " + color + " transparent-btn")
+
+            obj.setProperty("cssClass", color + " transparent-btn")
+            obj.setStyleSheet(
+                "QPushButton:pressed{border-radius:"+str(int(size/2))+";}")
 
     def setAllTransparentIcon(self, listobj):
         self.setAllStyleProperty(listobj, "transparent-icon")

@@ -65,7 +65,7 @@ class ControlPage(BasePage, Ui_ControlPage):
         self.Back.clicked.connect(self.back)
         self.setStyleProperty(self.BottomBar, "bottom-bar")
         self.setStyleProperty(self.PositionLabel,
-                              "white-transparent-text font-xl align-center")
+                              "white-transparent-text font-l align-center")
 
         self.DisableMotors.clicked.connect(self.disablemotors)
         self.Back.clicked.connect(self.user_back)

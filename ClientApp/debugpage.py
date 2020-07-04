@@ -41,7 +41,10 @@ class DebugPage(BasePage, Ui_DebugPage):
         self.Back.clicked.connect(self.back)
 
         self.w_runout_handler = RunoutHandlerDialog(self, self.printer_if)
-        self.setTransparentButton(self.Back)
+        self.setStyleProperty(self.BottomBar, "bottom-bar")
+        self.setStyleProperty(self.LeftBar, "left-bar")
+        self.setAllTransparentButton([self.Back, self.w_pushbutton_add_marker,
+                                      self.w_pushbutton_copy_log, self.w_pushbutton_send_fake_ack], True)
 
     def signal_display(self, str):
         self.display_signal.emit(str)

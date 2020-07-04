@@ -1,10 +1,8 @@
+/* QWIDGET STYLING */
+
 QWidget {
     background-color: #ffffff;
 } 
-
-QLabel {
-    font-family: Lato
-}
 
 QWidget[cssClass~="left-bar"]{
     background-color: #393b3f
@@ -13,14 +11,10 @@ QWidget[cssClass~="bottom-bar"]{
     background-color: black
 }
 
-QLabel[cssClass~="white-transparent-text"]{
-    color: white;
-    background: rgba(255,255,255,0);
-}
-QLabel[cssClass~="black-transparent-text"]{
-    color: black;
-    background: rgba(255,255,255,0);
-}
+/* QLABEL STYLING */
+
+QLabel[cssClass~="white-transparent-text"]{ color: white; background: rgba(255,255,255,0); }
+QLabel[cssClass~="black-transparent-text"]{ color: black; background: rgba(255,255,255,0); }
 
 QLabel[cssClass~="font-s"]{ font-family: Lato; font-size: 14px;}
 QLabel[cssClass~="font-m"]{ font-family: Lato; font-size: 18px;}
@@ -32,13 +26,15 @@ QLabel[cssClass~="align-center"]{ qproperty-alignment: AlignCenter;}
 QLabel[cssClass~="align-right"]{ qproperty-alignment: AlignRight;}
 
 
-QLabel[cssClass~="preheat"]{
-    font-family: Lato;
-    font-size: 25px;
-}
+/* PUSHBUTTON STYLING */
 
+/* Pushbutton Font */
+QPushButton[cssClass~="btn-font-s"]{ font-family: Lato; font-size: 14px; }
+QPushButton[cssClass~="btn-font-m"]{ font-family: Lato; font-size: 18px; }
 QPushButton[cssClass~="btn-font-l"]{ font-family: Lato; font-size: 25px; }
+QPushButton[cssClass~="btn-font-xl"]{ font-family: Lato; font-size: 40px; }
 
+/* Transparent Pushbutton */
 QPushButton[cssClass~="transparent-btn"]{ 
     background: rgba(255,255,255,0); 
     outline: none; 
@@ -49,23 +45,69 @@ QPushButton:checked[cssClass~="transparent-btn"]{
     outline: none; 
     border: none;
 }
-QPushButton:!enabled[cssClass~="transparent-btn"]{
-    color: red; 
-}
 
+/* Pressed Pushbutton Styling (white box if dark background, black box if light background) */
 QPushButton:pressed[cssClass~="btn-pressed-light"]{ border-style: solid; background-color: rgba(1,1,1,.15); }
 QPushButton:pressed[cssClass~="btn-pressed-dark"]{ border-style: solid; background-color: rgba(255,255,255,0.25); }
 
-QPushButton:pressed[cssClass~="btn-pressed-s"]{ border-radius:5;}
-QPushButton:pressed[cssClass~="btn-pressed-m"]{ border-radius:25;}
-QPushButton:pressed[cssClass~="btn-pressed-l"]{ border-radius:37;}
-QPushButton:pressed[cssClass~="btn-pressed-xl"]{ border-radius:50;}
-
+/* Transparent Icons */
 QPushButton[cssClass~="transparent-icon"]{ background: rgba(255,255,255,0); outline: none; border: none; } 
 QPushButton:checked[cssClass~="transparent-icon"]{ background: rgba(255,255,255,0); outline: none; border: none; } 
 QPushButton:pressed[cssClass~="transparent-icon"]{ background: rgba(255,255,255,0); outline: none; border: none; }
 
+/* Checkable Pushbutton in Control Window */
+QPushButton:checked[cssClass~="yellow-btn"]{ background: #ffd400; border: 1px solid #000000; border-radius:10px; }
 
-QPushButton:checked[cssClass~="yellow-btn"]{
-    background: #ffd400; border: 1px solid #000000; border-radius:10px;
+/* QSCROLLBAR STYLING */
+
+QScrollBar:horizontal{
+    background: rgba(255,255,255,0); 
+    height: 8px;
+    margin: 0px 200px 0px 200px; 
+    border-radius: 4px;
 }
+QScrollBar::handle:horizontal {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+    stop: 0 rgb(255, 212, 0), stop: 0.5 rgb(255, 212, 0), stop:1 rgb(255, 212, 0));
+    min-height: 0px;
+    border-radius: 4px;
+}
+QScrollBar::add-line:horizontal {
+    background: rgba(255,255,255,0); 
+    min-height: 0px;
+}
+QScrollBar::sub-line:horizontal {
+    background: rgba(255,255,255,0); 
+    min-height: 0px;
+}
+QScrollBar::handle:vertical {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+    stop: 0 rgb(255, 212, 0), stop: 0.5 rgb(255, 212, 0), stop:1 rgb(255, 212, 0));
+    min-height: 0px;
+    border-radius: 4px;
+}
+
+/* QLINEEDIT  STYLING */
+QLineEdit[cssClass~="no-border"]{
+    border-radius: 10px;
+    padding: 2px 4px;
+    qproperty-alignment: AlignCenter;
+}
+QLineEdit:focus[cssClass~="no-border"]{
+    selection-color: white;   
+    border: 2px groove gray;
+    border-radius: 10px;
+    padding: 2px 4px;
+    margin: 0px 20px 0px 20px; 
+    qproperty-alignment: AlignCenter;
+}
+
+QLineEdit:edit-focus[cssClass~="no-border"]{
+    selection-color: white;   
+    border: 2px groove gray;
+    border-radius: 10px;
+    padding: 2px 4px;
+    margin: 0px 20px 0px 20px; 
+    qproperty-alignment: AlignCenter;
+}
+
