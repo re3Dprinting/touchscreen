@@ -40,7 +40,6 @@ class FileListManager:
         header.setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
 
         self.file_list_wid.itemSelectionChanged.connect(self.itemClicked)
-        self.file_list_wid.itemDoubleClicked.connect(self.itemDoubleClicked)
 
         self.pushbutton_open_wid.clicked.connect(self.open_subdir)
         self.pushbutton_up_wid.clicked.connect(self.up_dir)
@@ -66,7 +65,6 @@ class FileListManager:
         files = self.subdir.list()
 
         for file in files:
-
             rowpos = self.file_list_wid.rowCount()
 
             self.file_list_wid.insertRow(rowpos)
@@ -147,9 +145,6 @@ class FileListManager:
         self._log("UI: User touched item")
         row = self.file_list_wid.currentRow()
         self.update_button_states()
-
-    def itemDoubleClicked(self):
-        self.open_subdir()
 
     def open_subdir(self):
         if not self.enabled:

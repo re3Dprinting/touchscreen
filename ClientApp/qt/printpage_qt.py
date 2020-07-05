@@ -258,7 +258,7 @@ class Ui_PrintPage(object):
         self.verticalLayout_7.addWidget(self.BottomBar)
 
         self.retranslateUi(PrintPage)
-        self.stackedPrintingOptions.setCurrentIndex(0)
+        self.stackedPrintingOptions.setCurrentIndex(1)
         QtCore.QMetaObject.connectSlotsByName(PrintPage)
 
     def retranslateUi(self, PrintPage):

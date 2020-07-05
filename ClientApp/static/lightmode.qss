@@ -72,20 +72,16 @@ QScrollBar::handle:horizontal {
     min-height: 0px;
     border-radius: 4px;
 }
-QScrollBar::add-line:horizontal {
-    background: rgba(255,255,255,0); 
-    min-height: 0px;
-}
-QScrollBar::sub-line:horizontal {
-    background: rgba(255,255,255,0); 
-    min-height: 0px;
-}
+QScrollBar::add-line:horizontal { background: rgba(255,255,255,0); }
+QScrollBar::sub-line:horizontal { background: rgba(255,255,255,0); }
 QScrollBar::handle:vertical {
     background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
     stop: 0 rgb(255, 212, 0), stop: 0.5 rgb(255, 212, 0), stop:1 rgb(255, 212, 0));
     min-height: 0px;
     border-radius: 4px;
 }
+QScrollBar::add-line:vertical { background: rgba(255,255,255,0); }
+QScrollBar::sub-line:vertical { background: rgba(255,255,255,0); }
 
 /* QLINEEDIT  STYLING */
 QLineEdit[cssClass~="no-border"]{
@@ -94,20 +90,16 @@ QLineEdit[cssClass~="no-border"]{
     qproperty-alignment: AlignCenter;
 }
 QLineEdit:focus[cssClass~="no-border"]{
-    selection-color: white;   
-    border: 2px groove gray;
+    background: #ffd400;
+    border: 2px groove rgba(255,255,255,0);
     border-radius: 10px;
     padding: 2px 4px;
     margin: 0px 20px 0px 20px; 
     qproperty-alignment: AlignCenter;
 }
 
-QLineEdit:edit-focus[cssClass~="no-border"]{
-    selection-color: white;   
-    border: 2px groove gray;
-    border-radius: 10px;
-    padding: 2px 4px;
-    margin: 0px 20px 0px 20px; 
-    qproperty-alignment: AlignCenter;
-}
+/* QTABLEWIDGET STYLING */
+QHeaderView::section [cssClass~="table-mode-1"]{ color: black; background: rgba(255,255,255,0); font-family: Lato; font-size: 25px;}
+QTableWidget:item [cssClass~="table-mode-1"] { color: black; background: rgba(255,255,255,0); font-family: Lato; font-size: 30px; }
+QTableView:item:selected[cssClass~="table-mode-1"]{ font-family: Lato; selection-background-color: #ffd400; }
 

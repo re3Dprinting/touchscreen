@@ -103,6 +103,11 @@ class UserUpdatePage(BasePage, Ui_UserUpdatePage):
             [self.Back, self.Update, self.CheckUpdate], True)
         self.setStyleProperty(self.CurrentVersion,
                               "white-transparent-text font-m align-center")
+        self.setAllStyleProperty(
+            [self.SoftwareList], "table-mode-1")
+        self.SoftwareList.setVerticalScrollMode(
+            QtWidgets.QAbstractItemView.ScrollPerPixel)
+        self.SoftwareList.setAutoScroll(False)
 
         self.Back.clicked.connect(self.back)
         self.CheckUpdate.clicked.connect(self.checkupdate)

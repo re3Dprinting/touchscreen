@@ -80,12 +80,6 @@ class PrintPage(BasePage, Ui_PrintPage):
         header.setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
         self.SDFileList.verticalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Fixed)
         self.SDFileList.verticalHeader().setDefaultSectionSize(50)
-        self.SDFileList.verticalScrollBar().setStyleSheet(
-            "QScrollBar::vertical{ width: 40px; }")
-
-        # tabWidth = (old_div(self.tabWidget.width(), 3))-24
-        # self.tabWidget.setStyleSheet(self.tabWidget.styleSheet(
-        # ) + "QTabBar::tab { width: " + str(tabWidth) + "px; height: 35px; font-size: 12pt;}")
 
         # Set up the list of USB files
         self.usb_file_manager = FileListManager("USB",
@@ -99,7 +93,6 @@ class PrintPage(BasePage, Ui_PrintPage):
         self.pushbutton_start_print.clicked.connect(self.usb_start_print)
 
         # Set up the list of local files
-
         self.local_file_manager = FileListManager("Local",
                                                   self.LocalFileList,
                                                   self.personality.localpath,
@@ -123,11 +116,14 @@ class PrintPage(BasePage, Ui_PrintPage):
                                       self.pushbutton_scan_sd, self.pushbutton_folder_open, self.pushbutton_folder_up], True)
         self.setStyleProperty(self.BottomBar, "bottom-bar")
         self.setStyleProperty(self.LeftBar, "left-bar")
+        self.setAllStyleProperty(
+            [self.sd_pathlabel, self.usb_pathlabel, self.loc_pathlabel], "black-transparent-text font-s")
+        self.setAllStyleProperty(
+            [self.SDFileList, self.USBFileList, self.LocalFileList], "table-mode-1")
 
         self.USBFileList.setVerticalScrollMode(
             QtWidgets.QAbstractItemView.ScrollPerPixel)
-        QtWidgets.QScroller.grabGesture(
-            self.USBFileList, QtWidgets.QScroller.LeftMouseButtonGesture)
+        self.USBFileList.setAutoScroll(False)
 
     def setSDtab(self):
         self.print_method = "SD"
@@ -467,11 +463,3 @@ class PrintPage(BasePage, Ui_PrintPage):
         selected_item = self.USBFileList.currentItem()
         self.USBFileList.scrollToItem(selected_item)
         self.USBFileList.setCurrentItem(None)
-
-    def itemClicked(self):
-        print("item clicked")
-        row = self.USBFileList.currentRow()
-        self.update_usb_button_states()
-
-    def itemDoubleClicked(self):
-        self.open_usb_subdir()
