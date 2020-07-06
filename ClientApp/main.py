@@ -11,6 +11,8 @@ from pathlib import Path
 
 #Add qt folder to the system path to enable img_rc.py to be found by generated python files from QT ui files.
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), "qt"))
+import PyQt5
+print(PyQt5.__file__)
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 

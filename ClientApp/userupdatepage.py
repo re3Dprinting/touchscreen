@@ -12,7 +12,7 @@ import logging
 from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-from .fsutils.subfilesystem import SubFileSystem
+from fsutils.subfilesystem import SubFileSystem
 
 import git
 
@@ -108,6 +108,8 @@ class UserUpdatePage(BasePage, Ui_UserUpdatePage):
         self.SoftwareList.setVerticalScrollMode(
             QtWidgets.QAbstractItemView.ScrollPerPixel)
         self.SoftwareList.setAutoScroll(False)
+        QtWidgets.QScroller.grabGesture(
+            self.SoftwareList, QtWidgets.QScroller.LeftMouseButtonGesture)
 
         self.Back.clicked.connect(self.back)
         self.CheckUpdate.clicked.connect(self.checkupdate)
@@ -129,8 +131,8 @@ class UserUpdatePage(BasePage, Ui_UserUpdatePage):
     def checkupdate_handler(self):
         """
         Handler that is ran on a seperate thread, that checks the Git software updates first if Wifi is enabled
-        Pushes the updates up to the UI if ready, then checks for USB updates. 
-        Then pushes updates to the UI a second time. 
+        Pushes the updates up to the UI if ready, then checks for USB updates.
+        Then pushes updates to the UI a second time.
         """
         try:
             if(self.properties["wifienabled"]):
@@ -414,3 +416,7 @@ class UserUpdatePage(BasePage, Ui_UserUpdatePage):
         if(self.usb_mounted):
             self.usb_updates = self.subdir.list_ts_software_updates(
                 self.unzip_progress)
+
+    def gestureEvent(self, type):
+        print(type)
+        return True

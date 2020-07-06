@@ -86,4 +86,7 @@
         <file>img/Wifi.png</file>
         <file>img/X.png</file>
     </qresource>
+    <qresource prefix="/qml">
+        <file>CustomTable.qml</file>
+    </qresource>
 </RCC>
