@@ -88,3 +88,4 @@ class Ui_DebugPage(object):
 "Files"))
         self.w_pushbutton_send_fake_ack.setText(_translate("DebugPage", "Send Fake\n"
 "ACK"))
+import img_rc

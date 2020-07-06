@@ -169,3 +169,4 @@ class Ui_SettingsPage(object):
     def retranslateUi(self, SettingsPage):
         _translate = QtCore.QCoreApplication.translate
         SettingsPage.setWindowTitle(_translate("SettingsPage", "TouchDisplay"))
+import img_rc

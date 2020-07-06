@@ -76,3 +76,4 @@ class Ui_SerialPage(object):
         self.w_pushbutton_disconnect.setText(_translate("SerialPage", "Disconnect"))
         item = self.w_table_ports.horizontalHeaderItem(0)
         item.setText(_translate("SerialPage", "Device"))
+import img_rc

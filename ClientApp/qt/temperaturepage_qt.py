@@ -221,3 +221,4 @@ class Ui_TemperaturePage(object):
         self.w_label_extruder0_setpoint.setText(_translate("TemperaturePage", "-----"))
         self.w_label_extruder1_setpoint.setText(_translate("TemperaturePage", "-----"))
         self.w_label_bed_setpoint.setText(_translate("TemperaturePage", "-----"))
+import img_rc

@@ -180,6 +180,8 @@ Rollback</string>
    </property>
   </widget>
  </widget>
- <resources/>
+  <resources>
+  <include location="img.qrc"/>
+ </resources>
  <connections/>
 </ui>

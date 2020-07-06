@@ -558,6 +558,8 @@
    <header>jtlineedit.h</header>
   </customwidget>
  </customwidgets>
- <resources/>
+  <resources>
+  <include location="img.qrc"/>
+ </resources>
  <connections/>
 </ui>

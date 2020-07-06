@@ -2,11 +2,13 @@
 
 # Form implementation generated from reading ui file 'activeprintwidget.ui'
 #
-# Created by: PyQt5 UI code generator 5.9.2
+# Created by: PyQt5 UI code generator 5.14.2
 #
 # WARNING! All changes made in this file will be lost!
 
+
 from PyQt5 import QtCore, QtGui, QtWidgets
+
 
 class Ui_ActivePrintWidget(object):
     def setupUi(self, ActivePrintWidget):
@@ -268,4 +270,4 @@ class Ui_ActivePrintWidget(object):
         self.w_label_position.setText(_translate("ActivePrintWidget", "X:0.00 Y:0.00 Z:0.00"))
         self.w_label_flowrate.setText(_translate("ActivePrintWidget", "<html><head/><body><p align=\"center\"><span style=\" font-size:18pt;\">-----</span></p></body></html>"))
         self.w_label_babystep_val.setText(_translate("ActivePrintWidget", "<html><head/><body><p align=\"center\"><span style=\" font-size:18pt;\">-----</span></p></body></html>"))
-
+import img_rc

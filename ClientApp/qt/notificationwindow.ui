@@ -75,6 +75,8 @@
    </item>
   </layout>
  </widget>
- <resources/>
+  <resources>
+  <include location="img.qrc"/>
+ </resources>
  <connections/>
 </ui>

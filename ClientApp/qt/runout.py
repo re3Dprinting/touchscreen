@@ -2,11 +2,13 @@
 
 # Form implementation generated from reading ui file 'runout.ui'
 #
-# Created by: PyQt5 UI code generator 5.9.2
+# Created by: PyQt5 UI code generator 5.14.2
 #
 # WARNING! All changes made in this file will be lost!
 
+
 from PyQt5 import QtCore, QtGui, QtWidgets
+
 
 class Ui_w_runout_dialog(object):
     def setupUi(self, w_runout_dialog):
@@ -61,4 +63,4 @@ class Ui_w_runout_dialog(object):
         self.w_runout_title.setText(_translate("w_runout_dialog", "Filament Change"))
         self.w_runout_message_label.setText(_translate("w_runout_dialog", "Filament change instructions\n"
 "Line Two"))
-
+import img_rc

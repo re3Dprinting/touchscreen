@@ -73,3 +73,4 @@ class Ui_InfoPage(object):
         self.w_pushbutton_stats.setText(_translate("InfoPage", "Printer Stats"))
         self.w_pushbutton_settings.setText(_translate("InfoPage", "Printer\n"
 "Settings"))
+import img_rc

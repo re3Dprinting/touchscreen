@@ -265,3 +265,4 @@ class Ui_DuExSetupPage(object):
         self.w_pushbutton_permanent.setText(_translate("DuExSetupPage", "Save these settings permanently"))
         self.w_pushbutton_revert.setText(_translate("DuExSetupPage", "Revert to last saved settings"))
 from jtlineedit import JTLineEdit
+import img_rc
