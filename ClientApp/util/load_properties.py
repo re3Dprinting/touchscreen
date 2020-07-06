@@ -63,7 +63,7 @@ def get_properties(personality, permission="Default"):
             current_version = repo.active_branch.name
         except TypeError:
             current_version = "HEAD_detacted"
-        except Exception e:
+        except Exception:
             current_version = "Local"
     else:
         current_version = current_version.name
