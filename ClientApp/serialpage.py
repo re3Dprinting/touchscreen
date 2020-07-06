@@ -9,6 +9,7 @@ from .basepage import BasePage
 from .qt.serialpage_qt import Ui_SerialPage
 from .runout_handler import RunoutHandlerDialog
 
+
 class SerialPage(BasePage, Ui_SerialPage):
     def __init__(self, context):
         super(SerialPage, self).__init__()
@@ -31,8 +32,10 @@ class SerialPage(BasePage, Ui_SerialPage):
         # self.serial.data.checkserial_msg.connect(self.checkserial_msg)
 
         # Make the selection Behavior as selecting the entire row
-        self.w_table_ports.setSelectionBehavior(QtWidgets.QTableView.SelectRows)
-        self.w_table_ports.setSelectionMode(QtWidgets.QTableView.SingleSelection)
+        self.w_table_ports.setSelectionBehavior(
+            QtWidgets.QTableView.SelectRows)
+        self.w_table_ports.setSelectionMode(
+            QtWidgets.QTableView.SingleSelection)
 
         # Hide the vertical header which contains the Index of the row.
         self.w_table_ports.verticalHeader().hide()
@@ -45,9 +48,12 @@ class SerialPage(BasePage, Ui_SerialPage):
         self.scan_serial()
         # self.connect_serial()
 
-        self.setbuttonstyle(self.w_pushbutton_back)
+        self.setStyleProperty(self.BottomBar, "bottom-bar")
+        self.setStyleProperty(self.LeftBar, "left-bar")
+        self.setAllTransparentButton([self.Back, self.w_pushbutton_scan,
+                                      self.w_pushbutton_connect, self.w_pushbutton_disconnect], True)
 
-        self.w_pushbutton_back.clicked.connect(self.back)
+        self.Back.clicked.connect(self.back)
 
         self.w_pushbutton_scan.clicked.connect(self.scan_serial)
         self.w_pushbutton_connect.clicked.connect(self.user_connect_serial)
@@ -63,11 +69,12 @@ class SerialPage(BasePage, Ui_SerialPage):
            state == "DETECT_SERIAL" or \
            state == "DETECT_BAUDRATE" or \
            state == "CONNECTING":
-                return True
+            return True
         return False
 
     def state_change_callback(self, from_state, to_state):
-        self._log("**************** STATE CHANGE from %s to %s." % (from_state, to_state))
+        self._log("**************** STATE CHANGE from %s to %s." %
+                  (from_state, to_state))
 
         # If we have transition from connecting state to any other
         # state, re-enable the page.
@@ -78,7 +85,8 @@ class SerialPage(BasePage, Ui_SerialPage):
 #        if from_state == "OPERATIONAL" and to_state != "OPERATIONAL" and to_state != "ERROR":
         if from_state != "OFFLINE" and to_state == "OFFLINE":
 
-            self._log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+            self._log(
+                "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
             self._log("Disconnect detected!")
 
             # Disconnect occurred. Were we expecting it?
@@ -95,7 +103,8 @@ class SerialPage(BasePage, Ui_SerialPage):
                 # error dialog.
                 self._log("Disconnect unexpected, popping up error dialog.")
                 self.w_disconnect_popup.w_runout_title.setText("*** ERROR ***")
-                self.w_disconnect_popup.w_runout_message_label.setText("Printer disconnected.")
+                self.w_disconnect_popup.w_runout_message_label.setText(
+                    "Printer disconnected.")
                 self.w_disconnect_popup.enable_ok()
                 self.w_disconnect_popup.send_m108_on_ok = False
                 self.w_disconnect_popup.hide_on_ok = True
@@ -115,7 +124,6 @@ class SerialPage(BasePage, Ui_SerialPage):
         #     self.w_connect_popup.send_m108_on_ok = False
         #     self.w_connect_popup.hide_on_ok = True
         #     self.w_connect_popup.show()
-            
 
     def _log(self, message):
         self._logger.debug(message)
@@ -142,14 +150,14 @@ class SerialPage(BasePage, Ui_SerialPage):
         self.w_pushbutton_scan.setEnabled(False)
         self.w_pushbutton_connect.setEnabled(False)
         self.w_pushbutton_disconnect.setEnabled(False)
-        self.w_pushbutton_back.setEnabled(False)
+        self.Back.setEnabled(False)
         self.w_table_ports.setEnabled(False)
 
     def enable_page(self):
         self.w_pushbutton_scan.setEnabled(True)
         self.w_pushbutton_connect.setEnabled(True)
         self.w_pushbutton_disconnect.setEnabled(True)
-        self.w_pushbutton_back.setEnabled(True)
+        self.Back.setEnabled(True)
         self.w_table_ports.setEnabled(True)
 
     def connect_serial(self):
@@ -176,11 +184,11 @@ class SerialPage(BasePage, Ui_SerialPage):
 
         # Loop through the serial port options
         for p in serial_port_list:
-        
+
             rowpos = self.w_table_ports.rowCount()
 
             self.w_table_ports.insertRow(rowpos)
-            # device 
+            # device
             device = QtWidgets.QTableWidgetItem(p)
             device.setFlags(Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
 

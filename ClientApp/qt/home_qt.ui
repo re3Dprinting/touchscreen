@@ -33,17 +33,17 @@
     <widget class="QWidget" name="widget_3" native="true">
      <layout class="QHBoxLayout" name="horizontalLayout_2">
       <item>
-       <widget class="QLabel" name="Title">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
         </property>
-        <property name="text">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:36pt;&quot;&gt;re:3Display&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
         </property>
-       </widget>
+       </spacer>
       </item>
       <item>
        <spacer name="verticalSpacer_2">
@@ -197,7 +197,7 @@
         </property>
         <property name="icon">
          <iconset resource="img.qrc">
-          <normaloff>:/img/img/Temperature(2).png</normaloff>:/img/img/Temperature(2).png</iconset>
+          <normaloff>:/img/img/Temperature_2.png</normaloff>:/img/img/Temperature_2.png</iconset>
         </property>
         <property name="iconSize">
          <size>
@@ -232,7 +232,7 @@
         </property>
         <property name="icon">
          <iconset resource="img.qrc">
-          <normaloff>:/img/img/Settings(2).png</normaloff>:/img/img/Settings(2).png</iconset>
+          <normaloff>:/img/img/Settings_(2).png</normaloff>:/img/img/Settings_(2).png</iconset>
         </property>
         <property name="iconSize">
          <size>

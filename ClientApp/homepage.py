@@ -22,6 +22,7 @@ from .qt.home_qt import Ui_Home
 from constants import *
 from basepage import BasePage
 
+
 class HomePage(BasePage, Ui_Home):
     def __init__(self, context):
         super(HomePage, self).__init__()
@@ -29,7 +30,7 @@ class HomePage(BasePage, Ui_Home):
         self.printer_if = context.printer_if
         self.personality = context.personality
         self.ui_controller = context.ui_controller
-        
+
         # Initialize the UI
         self.setupUi(self)
 
@@ -38,19 +39,18 @@ class HomePage(BasePage, Ui_Home):
         self._log("HomePage starting up")
 
         # Save the personality spec
-        
-        self.setbuttonstyle(self.pushbutton_print)
-        self.setbuttonstyle(self.pushbutton_control)
-        self.setbuttonstyle(self.pushbutton_temperature)
-        self.setbuttonstyle(self.pushbutton_settings)
-#        self.setbuttonstyle(self.pushbutton_back)
+
+        self.setTransparentIcon(self.re3DIcon)
+        self.setAllTransparentButton(
+            [self.pushbutton_print, self.pushbutton_control, self.pushbutton_temperature, self.pushbutton_settings])
+#        self.setTransparentButton(self.pushbutton_back)
 
         self.pushbutton_print.clicked.connect(self.handle_print_touch)
         self.pushbutton_control.clicked.connect(self.handle_control_touch)
-        self.pushbutton_temperature.clicked.connect(self.handle_temperature_touch)
+        self.pushbutton_temperature.clicked.connect(
+            self.handle_temperature_touch)
         self.pushbutton_settings.clicked.connect(self.handle_settings_touch)
         # self.pushbutton_back.clicked.connect(self.handle_back_touch)
-
 
     def handle_print_touch(self):
         self._log("UI: User touched Print")
@@ -66,8 +66,7 @@ class HomePage(BasePage, Ui_Home):
 
     def handle_settings_touch(self):
         self._log("UI: User touched Settings")
-        self.ui_controller.push(k_settings_page)        
+        self.ui_controller.push(k_settings_page)
 
     def handle_back_touch(self):
         self._log("UI: User touched Back")
-        

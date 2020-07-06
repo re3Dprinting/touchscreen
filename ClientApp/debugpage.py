@@ -10,10 +10,11 @@ from .runout_handler import RunoutHandlerDialog
 from basepage import BasePage
 from touchscreen.qt.debugpage_qt import Ui_DebugPage
 
+
 class DebugPage(BasePage, Ui_DebugPage):
 
     display_signal = pyqtSignal(str)
-    
+
     def __init__(self, context):
         super(DebugPage, self).__init__()
 
@@ -26,7 +27,6 @@ class DebugPage(BasePage, Ui_DebugPage):
         self._logger = logging.getLogger(__name__)
         self._log("DebugPage __init__()")
 
-
         # Set up user interface
         self.setupUi(self)
 
@@ -34,13 +34,17 @@ class DebugPage(BasePage, Ui_DebugPage):
         self.w_pushbutton_add_marker.clicked.connect(self.handle_add_marker)
         self.w_pushbutton_copy_log.clicked.connect(self.handle_copy_log)
         self.w_pushbutton_send_fake_ack.clicked.connect(self.send_fake_ack)
-        self.w_combobox_debuglevel.currentIndexChanged.connect(self.debug_level_changed)
+        self.w_combobox_debuglevel.currentIndexChanged.connect(
+            self.debug_level_changed)
 
         self.display_signal.connect(self.slot_display)
         self.Back.clicked.connect(self.back)
 
         self.w_runout_handler = RunoutHandlerDialog(self, self.printer_if)
-        self.setbuttonstyle(self.Back)
+        self.setStyleProperty(self.BottomBar, "bottom-bar")
+        self.setStyleProperty(self.LeftBar, "left-bar")
+        self.setAllTransparentButton([self.Back, self.w_pushbutton_add_marker,
+                                      self.w_pushbutton_copy_log, self.w_pushbutton_send_fake_ack], True)
 
     def signal_display(self, str):
         self.display_signal.emit(str)
@@ -66,7 +70,8 @@ class DebugPage(BasePage, Ui_DebugPage):
             root_logger.setLevel(logging.INFO)
 
         self.w_runout_handler.w_runout_title.setText("")
-        self.w_runout_handler.w_runout_message_label.setText("New logging level = " + new_level_str)
+        self.w_runout_handler.w_runout_message_label.setText(
+            "New logging level = " + new_level_str)
         self.w_runout_handler.enable_ok()
         self.w_runout_handler.send_m108_on_ok = False
         self.w_runout_handler.hide_on_ok = True
@@ -77,9 +82,11 @@ class DebugPage(BasePage, Ui_DebugPage):
 
         message = self.w_lineedit_message.text()
 
-        self._log("******************************************************************************")
+        self._log(
+            "******************************************************************************")
         self._log("* User log message <%s>" % message)
-        self._log("******************************************************************************")
+        self._log(
+            "******************************************************************************")
 
         self.display("Log marker added.")
 

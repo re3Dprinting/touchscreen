@@ -6,6 +6,7 @@ from PyQt5.QtCore import QObject, pyqtSignal
 from .basepage import BasePage
 from qt.infopage_qt import Ui_InfoPage
 
+
 class InfoPage(BasePage, Ui_InfoPage):
 
     info_signal = pyqtSignal(str)
@@ -32,16 +33,20 @@ class InfoPage(BasePage, Ui_InfoPage):
 
         #
         self.echo_output = False
-        
+
         # Set up callback functions
         self.w_pushbutton_info.clicked.connect(self.handle_info_touch)
-        self.w_pushbutton_capabilities.clicked.connect(self.handle_capabilities_touch)
+        self.w_pushbutton_capabilities.clicked.connect(
+            self.handle_capabilities_touch)
         self.w_pushbutton_stats.clicked.connect(self.handle_stats_touch)
         self.w_pushbutton_settings.clicked.connect(self.handle_settings_touch)
         self.Back.clicked.connect(self.user_back)
         self.info_signal.connect(self.info_do_it)
 
-        self.setbuttonstyle(self.Back)
+        self.setStyleProperty(self.BottomBar, "bottom-bar")
+        self.setStyleProperty(self.LeftBar, "left-bar")
+        self.setAllTransparentButton([self.Back, self.w_pushbutton_info,
+                                      self.w_pushbutton_capabilities, self.w_pushbutton_stats, self.w_pushbutton_settings], True)
 
     def user_back(self):
         self.back()
@@ -115,4 +120,3 @@ class InfoPage(BasePage, Ui_InfoPage):
         self.w_message_text.moveCursor(QtGui.QTextCursor.End)
         self.w_message_text.append(message)
         self.w_message_text.moveCursor(QtGui.QTextCursor.Start)
-

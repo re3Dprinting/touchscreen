@@ -17,6 +17,7 @@ from .fsutils.mountpoint import MountPoint
 from .filelistmanager import FileListManager
 from basepage import BasePage
 
+
 class PrintPage(BasePage, Ui_PrintPage):
 
     # Create the Qt signals we're going to use for updating the list
@@ -41,34 +42,35 @@ class PrintPage(BasePage, Ui_PrintPage):
         self._log("PrintPage __init__")
 
         # Connect slots to the signals
-        # self.create_signal.connect(self.update_usb_create)
-        # self.delete_signal.connect(self.update_usb_delete)
         self.update_signal.connect(self.update_local)
         self.sdfile_signal.connect(self.updatefiles)
 
         # Set up the rest of the UI
-
         self.setupUi(self)
 
-        self.printer_if.set_file_list_update_callback(self.sd_file_list_update_callback)
+        self.printer_if.set_file_list_update_callback(
+            self.sd_file_list_update_callback)
         # print("Setting print finished callback")
-        self.printer_if.set_print_finished_callback(self.print_finished_callback)
-
+        self.printer_if.set_print_finished_callback(
+            self.print_finished_callback)
 
         self.item_stack = []
 
-        self.pushbutton_back.clicked.connect(self.back)
-
         self.pushbutton_scan_sd.clicked.connect(self.scansd)
-        self.pushbutton_sd_print.clicked.connect(self.sd_start_print)
+        self.pushbutton_start_print.clicked.connect(self.sd_start_print)
+        self.pushbutton_start_print.clicked.connect(self.local_start_print)
+
         self.pushbutton_active_print.clicked.connect(self.activeprintpop)
         self.pushbutton_stop_print.clicked.connect(self.stopprint)
+
         self.pushbutton_active_print.setEnabled(False)
         self.pushbutton_stop_print.setEnabled(False)
-        self.pushbutton_sd_print.setEnabled(False)
-        # self.serial.data.notprinting.connect(self.notprinting)
-        # self.serial.data.printfinished.connect(self.finished)
 
+        # SD File Select Behavior
+        self.SDFileList.setVerticalScrollMode(
+            QtWidgets.QAbstractItemView.ScrollPerPixel)
+        self.SDFileList.setHorizontalScrollMode(
+            QtWidgets.QAbstractItemView.ScrollPerPixel)
         self.SDFileList.setSelectionBehavior(QtWidgets.QTableView.SelectRows)
         self.SDFileList.setSelectionMode(QtWidgets.QTableView.SingleSelection)
         self.SDFileList.verticalHeader().hide()
@@ -78,39 +80,76 @@ class PrintPage(BasePage, Ui_PrintPage):
         header.setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
         self.SDFileList.verticalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Fixed)
         self.SDFileList.verticalHeader().setDefaultSectionSize(50)
-        self.SDFileList.verticalScrollBar().setStyleSheet(
-            "QScrollBar::vertical{ width: 40px; }")
-
-        tabWidth = (old_div(self.tabWidget.width(), 3))-24
-        self.tabWidget.setStyleSheet(self.tabWidget.styleSheet(
-        ) + "QTabBar::tab { width: " + str(tabWidth) + "px; height: 35px; font-size: 12pt;}")
 
         # Set up the list of USB files
         self.usb_file_manager = FileListManager("USB",
                                                 self.USBFileList,
                                                 self.personality.watchpoint,
                                                 self.usb_pathlabel,
-                                                self.pushbutton_usb_up,
-                                                self.pushbutton_usb_open,
-                                                self.pushbutton_usb_print)
+                                                self.pushbutton_folder_up,
+                                                self.pushbutton_folder_open,
+                                                self.pushbutton_start_print)
 
-        self.pushbutton_usb_print.clicked.connect(self.usb_start_print)
+        self.pushbutton_start_print.clicked.connect(self.usb_start_print)
 
         # Set up the list of local files
-
         self.local_file_manager = FileListManager("Local",
                                                   self.LocalFileList,
                                                   self.personality.localpath,
                                                   self.loc_pathlabel,
-                                                  self.pushbutton_loc_up,
-                                                  self.pushbutton_loc_open,
-                                                  self.pushbutton_loc_print)
+                                                  self.pushbutton_folder_up,
+                                                  self.pushbutton_folder_open,
+                                                  self.pushbutton_start_print)
 
         self.local_file_manager.update_files()
 
-        self.setbuttonstyle(self.pushbutton_back)
-        self.pushbutton_loc_print.clicked.connect(self.local_start_print)
+        self.Back.clicked.connect(self.back)
+        self.pushbutton_SDtab.clicked.connect(self.setSDtab)
+        self.pushbutton_USBtab.clicked.connect(self.setUSBtab)
+        self.pushbutton_Localtab.clicked.connect(self.setLocaltab)
+        self.print_method = ""
+        self.setLocaltab()
         self.file_being_printed = "-----"
+
+        self.setAllTransparentButton([self.Back, self.pushbutton_active_print, self.pushbutton_start_print, self.pushbutton_stop_print,
+                                      self.pushbutton_SDtab, self.pushbutton_USBtab, self.pushbutton_Localtab,
+                                      self.pushbutton_scan_sd, self.pushbutton_folder_open, self.pushbutton_folder_up], True)
+        self.setStyleProperty(self.BottomBar, "bottom-bar")
+        self.setStyleProperty(self.LeftBar, "left-bar")
+        self.setAllStyleProperty(
+            [self.sd_pathlabel, self.usb_pathlabel, self.loc_pathlabel], "black-transparent-text font-s")
+        self.setAllStyleProperty(
+            [self.SDFileList, self.USBFileList, self.LocalFileList], "table-mode-1")
+
+        self.USBFileList.setVerticalScrollMode(
+            QtWidgets.QAbstractItemView.ScrollPerPixel)
+        self.USBFileList.setAutoScroll(False)
+
+    def setSDtab(self):
+        self.print_method = "SD"
+        self.usb_file_manager.disable()
+        self.local_file_manager.disable()
+        self.stackedPrintingOptions.setCurrentIndex(0)
+        self.toggleButtons(True)
+
+    def setUSBtab(self):
+        self.print_method = "USB"
+        self.usb_file_manager.enable()
+        self.local_file_manager.disable()
+        self.stackedPrintingOptions.setCurrentIndex(1)
+        self.toggleButtons(False)
+
+    def setLocaltab(self):
+        self.print_method = "Local"
+        self.usb_file_manager.disable()
+        self.local_file_manager.enable()
+        self.stackedPrintingOptions.setCurrentIndex(2)
+        self.toggleButtons(False)
+
+    def toggleButtons(self, isSDprinting):
+        self.pushbutton_scan_sd.setVisible(isSDprinting)
+        self.pushbutton_folder_up.setVisible(not isSDprinting)
+        self.pushbutton_folder_open.setVisible(not isSDprinting)
 
     def enable_control(self):
         home_page = self.ui_controller.get_page(k_home_page)
@@ -122,7 +161,7 @@ class PrintPage(BasePage, Ui_PrintPage):
 
     def set_storage_manager(self, local_storage_manager):
         self.local_storage_manager = local_storage_manager
-        
+
     def set_usb_mount_signals(self, tuple):
         (create_signal, delete_signal) = tuple
         create_signal.connect(self.update_usb_create)
@@ -132,7 +171,8 @@ class PrintPage(BasePage, Ui_PrintPage):
         signal.connect(self.update_usb_content)
 
     def update_usb_create(self, mountpoint):
-        self._log("UPDATE_USB_CREATE: path <%s>, actual path <%s>" % (mountpoint.path, mountpoint.actual_path))
+        self._log("UPDATE_USB_CREATE: path <%s>, actual path <%s>" %
+                  (mountpoint.path, mountpoint.actual_path))
         self.usb_file_manager.update_create(mountpoint.path)
 
     def update_usb_delete(self, path):
@@ -154,9 +194,9 @@ class PrintPage(BasePage, Ui_PrintPage):
 
     def scansd(self):
         self._log("UI: User touched Scan")
-        self.printer_if.release_sd_card();
-        self.printer_if.init_sd_card();
-        self.printer_if.list_sd_card();
+        self.printer_if.release_sd_card()
+        self.printer_if.init_sd_card()
+        self.printer_if.list_sd_card()
 
     def sd_file_list_update_callback(self, sd_file_list):
         self.sdfile_signal.emit(sd_file_list)
@@ -165,7 +205,7 @@ class PrintPage(BasePage, Ui_PrintPage):
     def updatefiles(self, file_list):
         self.SDFileList.clearContents()
         self.SDFileList.setRowCount(0)
-        
+
         for (filename, filesize) in file_list:
             rowpos = self.SDFileList.rowCount()
 
@@ -179,7 +219,8 @@ class PrintPage(BasePage, Ui_PrintPage):
             self.SDFileList.setItem(rowpos, 0, file_wid)
             self.SDFileList.setItem(rowpos, 1, size_wid)
 
-        self.pushbutton_sd_print.setEnabled(True)
+        if self.print_method == "SD":
+            self.pushbutton_start_print.setEnabled(True)
 
     def clearlocalfiles(self):
         self.LocalFileList.clearContents()
@@ -215,9 +256,6 @@ class PrintPage(BasePage, Ui_PrintPage):
 
     def finished(self):
         self.notprinting()
-        # self.serial.data.changestatus("ON")
-        # Question for Noah: Why scan the SD here?
-        # self.scansd()
 
     def stopprint(self):
         self._log("UI: User touched Stop Print")
@@ -234,14 +272,8 @@ class PrintPage(BasePage, Ui_PrintPage):
         temperature_page.notactiveprint()
         self.pushbutton_active_print.setEnabled(False)
         self.pushbutton_stop_print.setEnabled(False)
-        self.pushbutton_sd_print.setEnabled(True)
-        self.pushbutton_usb_print.setEnabled(True)
-        self.pushbutton_loc_print.setEnabled(True)
+        self.pushbutton_start_print.setEnabled(True)
         self.pushbutton_scan_sd.setEnabled(True)
-        # Why?:
-        # self.SDFileList.setRowCount(0)
-        #self.parent.Control.setEnabled(True)
-        ## self.serial.data.changestatus("ON")
         self.enable_control()
 
     def temperature_active(self):
@@ -258,6 +290,8 @@ class PrintPage(BasePage, Ui_PrintPage):
         temperature_page.set_progress(0)
 
     def sd_start_print(self):
+        if not self.print_method == "SD":
+            return
         self._log("UI: User touched (SD) Start Print")
         selected = self.SDFileList.currentRow()
         selected_file_item = self.SDFileList.item(selected, 0)
@@ -274,19 +308,14 @@ class PrintPage(BasePage, Ui_PrintPage):
             self.printer_if.select_sd_file(selected_file)
             self.printer_if.start_print()
 
-            self.pushbutton_sd_print.setEnabled(False)
-            self.pushbutton_usb_print.setEnabled(False)
-            self.pushbutton_loc_print.setEnabled(False)
+            self.pushbutton_start_print.setEnabled(False)
             self.pushbutton_active_print.setEnabled(True)
             self.pushbutton_stop_print.setEnabled(True)
             self.pushbutton_scan_sd.setEnabled(False)
 
-            # self.temp_pop.activeprint()
-            # self.temp_pop.update_parameters()
-            # self.temp_pop.ActivePrintWid.FileProgress.setValue(0)
-            #self.parent.Control.setEnabled(False)
-
     def local_start_print(self):
+        if not self.print_method == "Local":
+            return
         self._log("UI: User touched (Local) Start Print")
         (selected_row, selected_file) = self.local_file_manager.get_selected_file()
         # print(selected_row, selected_file)
@@ -294,7 +323,8 @@ class PrintPage(BasePage, Ui_PrintPage):
 
         selected_file_name = selected_file.name
         selected_file_loc_path = selected_file.relative_path
-        self._log("File name <%s>, local path <%s>." % (selected_file_name, selected_file_loc_path))
+        self._log("File name <%s>, local path <%s>." %
+                  (selected_file_name, selected_file_loc_path))
 
         if selected_file_name != None:
             print("Local start print")
@@ -306,27 +336,21 @@ class PrintPage(BasePage, Ui_PrintPage):
             self.printer_if.select_local_file(selected_file_loc_path)
             self.printer_if.start_print()
 
-            self.pushbutton_sd_print.setEnabled(False)
-            self.pushbutton_usb_print.setEnabled(False)
-            self.pushbutton_loc_print.setEnabled(False)
+            self.pushbutton_start_print.setEnabled(False)
             self.pushbutton_active_print.setEnabled(True)
             self.pushbutton_stop_print.setEnabled(True)
 
-            # self.temp_pop.activeprint()
-            # self.temp_pop.update_parameters()
-            # self.temp_pop.ActivePrintWid.FileProgress.setValue(0)
-            # control_page = self.ui_controller.get_page(k_control_page)
-            # control_page.setEnabled(False)
-            #self.parent.Control.setEnabled(False)
-
     def usb_start_print(self):
+        if not self.print_method == "USB":
+            return
         self._log("UI: User touched (USB) Start Print")
         (selected_row, selected_file) = self.usb_file_manager.get_selected_file()
 
         selected_file_name = selected_file.name
         selected_file_rel = selected_file.relative_path
         selected_file_abs = selected_file.absolute_path
-        self._log("File name <%s>, relative path <%s>, absolute path <%s>." % (selected_file_name, selected_file_rel, selected_file_abs))
+        self._log("File name <%s>, relative path <%s>, absolute path <%s>." % (
+            selected_file_name, selected_file_rel, selected_file_abs))
 
         if selected_file_name != None:
             print("USB start print")
@@ -335,15 +359,15 @@ class PrintPage(BasePage, Ui_PrintPage):
             self.disable_control()
             self.temperature_active()
 
-            wrapped_file = DiskFileWrapper(selected_file_name, selected_file_abs, False)
-            self.local_storage_manager.add_file(selected_file_name, wrapped_file, allow_overwrite=True)
+            wrapped_file = DiskFileWrapper(
+                selected_file_name, selected_file_abs, False)
+            self.local_storage_manager.add_file(
+                selected_file_name, wrapped_file, allow_overwrite=True)
 
             self.printer_if.select_local_file(selected_file_name)
             self.printer_if.start_print()
 
-            self.pushbutton_sd_print.setEnabled(False)
-            self.pushbutton_usb_print.setEnabled(False)
-            self.pushbutton_loc_print.setEnabled(False)
+            self.pushbutton_start_print.setEnabled(False)
             self.pushbutton_active_print.setEnabled(True)
             self.pushbutton_stop_print.setEnabled(True)
 
@@ -353,7 +377,7 @@ class PrintPage(BasePage, Ui_PrintPage):
             # self.parent.Control.setEnabled(False)
 
     def get_selected_widget_file(self, list_widget, subdir):
-    
+
         foolist = list_widget.selectedItems()
 
         if len(foolist) < 1:
@@ -369,7 +393,6 @@ class PrintPage(BasePage, Ui_PrintPage):
 
         return (selected_row, selected_file, selected_item)
 
-
     def get_selected_loc_file(self):
         return self.get_selected_widget_file(self.LocalFileList, self.loc_subdir)
 
@@ -378,30 +401,30 @@ class PrintPage(BasePage, Ui_PrintPage):
         self.ui_controller.push(k_temperature_page)
 
     def update_loc_button_states_none(self):
-        self.pushbutton_loc_up.setEnabled(False)
-        self.pushbutton_loc_open.setEnabled(False)
-        self.pushbutton_loc_print.setEnabled(False)
+        self.pushbutton_folder_up.setEnabled(False)
+        self.pushbutton_folder_open.setEnabled(False)
+        self.pushbutton_start_print.setEnabled(False)
 
     def update_loc_button_states(self):
         selected_row, selected_file, selected_item = self.get_selected_loc_file()
 
         if self.loc_subdir.depth() > 0:
-            self.pushbutton_loc_up.setEnabled(True)
+            self.pushbutton_folder_up.setEnabled(True)
         else:
-            self.pushbutton_loc_up.setEnabled(False)
+            self.pushbutton_folder_up.setEnabled(False)
 
         if selected_row == -1:
-            self.pushbutton_loc_open.setEnabled(False)
-            self.pushbutton_loc_print.setEnabled(False)
+            self.pushbutton_folder_open.setEnabled(False)
+            self.pushbutton_start_print.setEnabled(False)
             return
 
         if selected_file.type == 'd':
-            self.pushbutton_loc_open.setEnabled(True)
-            self.pushbutton_loc_print.setEnabled(False)
+            self.pushbutton_folder_open.setEnabled(True)
+            self.pushbutton_start_print.setEnabled(False)
 
         elif selected_file.type == 'f':
-            self.pushbutton_loc_open.setEnabled(False)
-            self.pushbutton_loc_print.setEnabled(True)
+            self.pushbutton_folder_open.setEnabled(False)
+            self.pushbutton_start_print.setEnabled(True)
 
     def open_loc_subdir(self):
         selected_row, selected_file, selected_item = self.get_selected_loc_file()
@@ -440,11 +463,3 @@ class PrintPage(BasePage, Ui_PrintPage):
         selected_item = self.USBFileList.currentItem()
         self.USBFileList.scrollToItem(selected_item)
         self.USBFileList.setCurrentItem(None)
-
-    def itemClicked(self):
-        print("item clicked")
-        row = self.USBFileList.currentRow()
-        self.update_usb_button_states()
-
-    def itemDoubleClicked(self):
-        self.open_usb_subdir()

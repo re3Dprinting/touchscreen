@@ -27,10 +27,9 @@ class TimeHandler(QtCore.QThread):
             self.bedflash += 1
             if self.bedflash == 1:
                 # self.tempwindow.bedimg.setIcon(self.tempwindow.bedheated1)
-                self.temppage.bedimg.setIcon(self.temppage.bedheated1)
+                self.temppage.bedimg.setIcon(self.temppage.unheated)
             elif self.bedflash == 2:
-                # self.tempwindow.bedimg.setIcon(self.tempwindow.bedheated2)
-                self.temppage.bedimg.setIcon(self.temppage.bedheated2)
+                self.temppage.bedimg.setIcon(self.temppage.bedheated1)
                 self.bedflash = 0
         else:
             self.temppage.bedimg.setIcon(self.temppage.unheated)
