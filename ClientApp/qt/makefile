@@ -1,5 +1,7 @@
 %.py: %.ui
 	pyuic5 $< -o $@
+%_rc.py: %.qrc
+	pyrcc5 $< -o $@
 
 OBJS = \
      activeprintwidget.py \
@@ -17,7 +19,8 @@ OBJS = \
      serialpage_qt.py \
      userupdatepage_qt.py \
      duexsetuppage_qt.py \
-     mainwindow_qt.py
+     mainwindow_qt.py \
+     img_rc.py
 
 all: $(OBJS)
 

@@ -24,6 +24,7 @@ class Axis(object):
 
         self.inc = ""
         self.gcode = ""
+
 #	Not needed if using relative position
 #	Could be implemented to prevent crashing the bed
 #	But the soft limits should be on the firmware level.
@@ -38,12 +39,16 @@ class Axis(object):
     def init_movement(self):
 
         #getattr(self.parent, self.Ax + "Pos").clicked.connect(self.movepos)
-        getattr(self.parent, self.Ax + "Pos").pressed.connect(self.posbuttonpressed)
-        getattr(self.parent, self.Ax + "Pos").released.connect(self.buttonreleased)
+        getattr(self.parent, self.Ax +
+                "Pos").pressed.connect(self.posbuttonpressed)
+        getattr(self.parent, self.Ax +
+                "Pos").released.connect(self.buttonreleased)
 
         #getattr(self.parent, self.Ax + "Neg").clicked.connect(self.moveneg)
-        getattr(self.parent, self.Ax + "Neg").pressed.connect(self.negbuttonpressed)
-        getattr(self.parent, self.Ax + "Neg").released.connect(self.buttonreleased)
+        getattr(self.parent, self.Ax +
+                "Neg").pressed.connect(self.negbuttonpressed)
+        getattr(self.parent, self.Ax +
+                "Neg").released.connect(self.buttonreleased)
 
     def posbuttonpressed(self):
         self._log("UI: User touched <%s> +" % self.Ax)
@@ -59,7 +64,8 @@ class Axis(object):
 
     def buttonreleased(self):
         if self.held_count > 0:
-            self._log("UI: User released button after %d counts." % self.held_count)
+            self._log("UI: User released button after %d counts." %
+                      self.held_count)
         self.timer.stop()
         if (self.button_held_time == 0 or self.holdmove == None) and self.direction == "Pos":
             self.movepos()
@@ -77,14 +83,17 @@ class Axis(object):
                 self.moveneg(self.holdmove)
 
     def init_increment(self):
-        self.inc = getattr(self.parent, self.ax +
-                           "button").checkedButton().text()
+        curr_ax = "".join([i for i in self.ax if not i.isdigit()])
+        # self.inc = getattr(self.parent, curr_ax +
+        #                    "button").checkedButton().text()
+        self.inc = '10'
         self._log("UI: Increment = %s" % self.inc)
-        getattr(self.parent, self.ax +
+        getattr(self.parent, curr_ax +
                 "button").buttonClicked.connect(self.updateincrement)
 
     def updateincrement(self):
-        self.inc = getattr(self.parent, self.ax +
+        curr_ax = "".join([i for i in self.ax if not i.isdigit()])
+        self.inc = getattr(self.parent, curr_ax +
                            "button").checkedButton().text()
         self._log("UI: User set <%s> increment to <%s>" % (self.ax, self.inc))
 
@@ -98,7 +107,11 @@ class Axis(object):
         if inc == None:
             inc = self.inc
         # self.parent.serial.send_serial('G91')
-        self.parent.printer_if.relative_positioning();
+        self.parent.printer_if.relative_positioning()
+        if self.Ax == "E1":
+            self.parent.printer_if.commands("T1")
+        elif self.Ax == "E0":
+            self.parent.printer_if.commands("T0")
         movement_command = 'G1 ' + self.Ax + str(inc) + ' F' + self.feedrate
         # print("Sending <%s>" % (movement_command))
         self.parent.printer_if.commands(movement_command)
@@ -109,8 +122,13 @@ class Axis(object):
     def moveneg(self, inc=None):
         if inc == None:
             inc = self.inc
-        self.parent.printer_if.relative_positioning();
-        movement_command = 'G1 ' + self.Ax + "-" + str(inc) + ' F' + self.feedrate
+        self.parent.printer_if.relative_positioning()
+        if self.Ax == "E1":
+            self.parent.printer_if.commands("T1")
+        elif self.Ax == "E0":
+            self.parent.printer_if.commands("T0")
+        movement_command = 'G1 ' + self.Ax + \
+            "-" + str(inc) + ' F' + self.feedrate
         # print("Sending <%s>" % (movement_command))
         self.parent.printer_if.commands(movement_command)
 

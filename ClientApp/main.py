@@ -11,7 +11,10 @@ import logging
 import getpass
 from pathlib import Path
 
-from PyQt5 import QtWidgets
+#Add qt folder to the system path to enable img_rc.py to be found by generated python files from QT ui files.
+sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), "qt"))
+
+from PyQt5 import QtCore, QtGui, QtWidgets
 
 from octo import setup_octoprint
 from touchscreen.mainwindow import MainWindow
@@ -150,6 +153,11 @@ class MainHandler():
 
         # Create the PyQt application
         app = QtWidgets.QApplication(sys.argv)
+
+        #Apply the current style sheet. 
+        QtGui.QFontDatabase.addApplicationFont(touchscreen_path.__str__()+"/static/Lato-Regular.ttf")
+        stylesheet = open(touchscreen_path.__str__()+"/static/lightmode.qss").read()
+        app.setStyleSheet(stylesheet)
 
         app.setApplicationName(self.properties["name"])
         app.setApplicationVersion(version_string)

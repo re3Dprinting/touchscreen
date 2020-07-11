@@ -93,7 +93,6 @@ class TempOLControl:
         return False
             
     def _state_change_callback(self, from_state, to_state):
-        self._log("=========================== new state: %s ===========================" % to_state)
         if self._is_operational_state(to_state):
             self.is_operational = True
         else:

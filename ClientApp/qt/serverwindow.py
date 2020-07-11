@@ -92,3 +92,4 @@ class Ui_ServerWindow(object):
         self.ConnectServer.setText(_translate("ServerWindow", "Connect"))
         self.DisconnectServer.setText(_translate("ServerWindow", "Disconnect"))
         self.IPLabel.setText(_translate("ServerWindow", "Server IP Address: "))
+import img_rc

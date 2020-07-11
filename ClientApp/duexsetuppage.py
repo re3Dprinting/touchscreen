@@ -1,14 +1,15 @@
+from qt.duexsetuppage_qt import Ui_DuExSetupPage
 import logging
 import re
 import time
-
 from PyQt5.QtCore import QObject, pyqtSignal
+from basepage import BasePage
+from numeric_keypad import NumericKeypad
+from PyQt5 import QtWidgets
 
-from .basepage import BasePage
-from .numeric_keypad import NumericKeypad
-from qt.duexsetuppage_qt import Ui_DuExSetupPage
+duex_regex = re.compile(
+    "echo:Hotend offsets: ([-\\.0-9]+),([-\\.0-9]+) ([-\\.0-9]+),([-\\.0-9]+)", re.IGNORECASE)
 
-duex_regex = re.compile("echo:Hotend offsets: ([-\\.0-9]+),([-\\.0-9]+) ([-\\.0-9]+),([-\\.0-9]+)", re.IGNORECASE)
 
 class DuExSetupPage(BasePage, Ui_DuExSetupPage):
 
@@ -32,17 +33,11 @@ class DuExSetupPage(BasePage, Ui_DuExSetupPage):
         self.setupUi(self)
 
         # Set up callback functions
-        self.w_pushbutton_temporary.clicked.connect(self.handle_temporary_touch)
-        self.w_pushbutton_permanent.clicked.connect(self.handle_permanent_touch)
+        self.w_pushbutton_temporary.clicked.connect(
+            self.handle_temporary_touch)
+        self.w_pushbutton_permanent.clicked.connect(
+            self.handle_permanent_touch)
         self.w_pushbutton_revert.clicked.connect(self.handle_revert_touch)
-
-        self.w_lineedit_x1.focus_in.connect(self.handle_x1_focus_in)
-        self.w_lineedit_x1.focus_out.connect(self.handle_x1_focus_out)
-        self.w_lineedit_y1.focus_in.connect(self.handle_y1_focus_in)
-        self.w_lineedit_y1.focus_out.connect(self.handle_y1_focus_out)
-
-        self.Back.clicked.connect(self.back)
-        # self.info_signal.connect(self.info_do_it)
 
         self.filter_output = False
 
@@ -52,31 +47,52 @@ class DuExSetupPage(BasePage, Ui_DuExSetupPage):
 
         self.focused_lineedit = None
 
-        self.setbuttonstyle(self.Back)
+        self.w_lineedit_x1.focus_in.connect(self.handle_x1_focus_in)
+        self.w_lineedit_x1.focus_out.connect(self.handle_x1_focus_out)
+        self.w_lineedit_y1.focus_in.connect(self.handle_y1_focus_in)
+        self.w_lineedit_y1.focus_out.connect(self.handle_y1_focus_out)
+        self.handle_x1_focus_in()
+        self.handle_y1_focus_in()
+        self.handle_x1_focus_out()
+        self.handle_y1_focus_out()
+        self.Back.clicked.connect(self.back)
+
+        self.setStyleProperty(self.BottomBar, "bottom-bar")
+        self.setStyleProperty(self.LeftBar, "left-bar")
+        self.setAllStyleProperty(
+            [self.w_lineedit_x1, self.w_lineedit_y1], "no-border")
+        self.setAllTransparentButton([self.w_pushbutton_1, self.w_pushbutton_2, self.w_pushbutton_3,
+                                      self.w_pushbutton_4, self.w_pushbutton_5, self.w_pushbutton_6,
+                                      self.w_pushbutton_8, self.w_pushbutton_7, self.w_pushbutton_9,
+                                      self.w_pushbutton_negative, self.w_pushbutton_0, self.w_pushbutton_decimal,
+                                      self.w_pushbutton_delete, self.w_pushbutton_clear])
+        self.setAllTransparentIcon([self.t1xIcon, self.t1yIcon])
+        self.setAllTransparentButton([self.Back, self.w_pushbutton_permanent,
+                                      self.w_pushbutton_temporary, self.w_pushbutton_revert], True)
 
     def just_pushed(self):
         self._log("just_pushed callback called!")
-        self.get_settings();
+        self.get_settings()
         self.w_lineedit_x1.setFocus()
 
     def handle_x1_focus_in(self):
-        self.num_keys.setEnabled(True);
+        self.num_keys.setEnabled(True)
         self.focused_lineedit = self.w_lineedit_x1
         self.num_keys.load(self.focused_lineedit.text())
 
     def handle_x1_focus_out(self):
-        self.num_keys.setEnabled(False);
+        self.num_keys.setEnabled(False)
         self.focused_lineedit = self.w_lineedit_x1
         self.handle_focus_out()
         self.focused_lineedit = None
 
     def handle_y1_focus_in(self):
-        self.num_keys.setEnabled(True);
+        self.num_keys.setEnabled(True)
         self.focused_lineedit = self.w_lineedit_y1
         self.num_keys.load(self.focused_lineedit.text())
 
     def handle_y1_focus_out(self):
-        self.num_keys.setEnabled(False);
+        self.num_keys.setEnabled(False)
         self.focused_lineedit = self.w_lineedit_y1
         self.handle_focus_out()
         self.focused_lineedit = None
@@ -167,3 +183,20 @@ class DuExSetupPage(BasePage, Ui_DuExSetupPage):
 
                 self.w_lineedit_x1.setText(x1)
                 self.w_lineedit_y1.setText(y1)
+
+
+class DuexLineEdit(QtWidgets.QLineEdit):
+    focus_in = pyqtSignal()
+    focus_out = pyqtSignal()
+
+    def __init__(self, parent):
+        self.super = super(DuexLineEdit, self)
+        self.super.__init__(parent)
+
+    def focusInEvent(self, event):
+        self.super.focusInEvent(event)
+        self.focus_in.emit()
+
+    def focusOutEvent(self, event):
+        self.super.focusOutEvent(event)
+        self.focus_out.emit()

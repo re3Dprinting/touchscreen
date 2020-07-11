@@ -5,6 +5,7 @@ from PyQt5.QtCore import Qt
 
 from .fsutils.subfilesystem import SubFileSystem
 
+
 class FileListManager:
 
     def __init__(self, name, file_list_wid, watchpoint,
@@ -16,7 +17,9 @@ class FileListManager:
         self._log("FileListManager __init__")
 
         self.name = name
-        
+
+        self.enabled = False
+
         self.pushbutton_up_wid = pushbutton_up_wid
         self.pushbutton_open_wid = pushbutton_open_wid
         self.pushbutton_print_wid = pushbutton_print_wid
@@ -24,18 +27,19 @@ class FileListManager:
         self.file_list_wid = file_list_wid
         self.watchpoint = watchpoint
         self.pathlabel_wid = pathlabel_wid
-        
+
         self.item_stack = []
 
-        self.file_list_wid.setSelectionBehavior(QtWidgets.QTableView.SelectRows)
-        self.file_list_wid.setSelectionMode(QtWidgets.QTableView.SingleSelection)
+        self.file_list_wid.setSelectionBehavior(
+            QtWidgets.QTableView.SelectRows)
+        self.file_list_wid.setSelectionMode(
+            QtWidgets.QTableView.SingleSelection)
         self.file_list_wid.verticalHeader().hide()
 
         header = self.file_list_wid.horizontalHeader()
         header.setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
 
         self.file_list_wid.itemSelectionChanged.connect(self.itemClicked)
-        self.file_list_wid.itemDoubleClicked.connect(self.itemDoubleClicked)
 
         self.pushbutton_open_wid.clicked.connect(self.open_subdir)
         self.pushbutton_up_wid.clicked.connect(self.up_dir)
@@ -49,13 +53,18 @@ class FileListManager:
     def _log(self, message):
         self._logger.debug(message)
 
+    def enable(self):
+        self.enabled = True
+
+    def disable(self):
+        self.enabled = False
+
     def update_files(self):
         self.file_list_wid.clearContents()
         self.file_list_wid.setRowCount(0)
         files = self.subdir.list()
 
         for file in files:
-
             rowpos = self.file_list_wid.rowCount()
 
             self.file_list_wid.insertRow(rowpos)
@@ -83,7 +92,7 @@ class FileListManager:
         return self.get_selected_widget_file(self.file_list_wid, self.subdir)
 
     def get_selected_widget_file(self, list_widget, subdir):
-    
+
         foolist = list_widget.selectedItems()
 
         if len(foolist) < 1:
@@ -103,7 +112,7 @@ class FileListManager:
 
         # return (selected_row, selected_file, selected_item, selected_file_path)
         return (selected_row, selected_file)
-    
+
     def update_button_states_none(self):
         self.pushbutton_up_wid.setEnabled(False)
         self.pushbutton_open_wid.setEnabled(False)
@@ -137,10 +146,9 @@ class FileListManager:
         row = self.file_list_wid.currentRow()
         self.update_button_states()
 
-    def itemDoubleClicked(self):
-        self.open_subdir()
-
     def open_subdir(self):
+        if not self.enabled:
+            return
         self._log("UI: User touched Open")
         (selected_row, selected_file) = self.get_selected_file()
 
@@ -159,6 +167,8 @@ class FileListManager:
         self.pathlabel_wid.setText(self.subdir.abspath)
 
     def up_dir(self):
+        if not self.enabled:
+            return
         self._log("UI: User touched Up")
         self.subdir.up()
         self.update_files()
