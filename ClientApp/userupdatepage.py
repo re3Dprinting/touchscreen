@@ -212,14 +212,22 @@ class UserUpdatePage(BasePage, Ui_UserUpdatePage):
 
     def check_git_software(self):
         # Delete tags if they contain "release/"
-        for tag in self.repo.tags:
-            if("release/" in tag.name or
-                "devel/" in tag.name or
-                    "hotfix/" in tag.name):
+        if(self.personality.user == "pi"):
+            for tag in self.repo.tags:
                 try:
                     self.repo.delete_tag(tag)
                 except:
                     pass
+        else:
+            for tag in self.repo.tags:
+                if("release/" in tag.name or
+                    "devel/" in tag.name or
+                        "hotfix/" in tag.name):
+                    try:
+                        self.repo.delete_tag(tag)
+                    except:
+                        pass
+
         try:
             self.remote_repo.fetch("-tf")
         except git.GitCommandError as e:
