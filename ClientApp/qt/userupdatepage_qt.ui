@@ -119,76 +119,48 @@
       </widget>
      </item>
      <item>
-      <widget class="QWidget" name="widget_2" native="true">
-       <widget class="QTableWidget" name="SoftwareList">
-        <property name="geometry">
-         <rect>
-          <x>9</x>
-          <y>9</y>
-          <width>189</width>
-          <height>342</height>
-         </rect>
+      <widget class="QWidget" name="MainLayout" native="true">
+       <property name="font">
+        <font>
+         <family>.AppleSystemUIFont</family>
+        </font>
+       </property>
+       <layout class="QHBoxLayout" name="horizontalLayout_4">
+        <property name="spacing">
+         <number>0</number>
         </property>
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
+        <property name="leftMargin">
+         <number>0</number>
         </property>
-        <property name="autoScroll">
-         <bool>true</bool>
+        <property name="topMargin">
+         <number>0</number>
         </property>
-        <column>
-         <property name="text">
-          <string>Version</string>
-         </property>
-        </column>
-        <column>
-         <property name="text">
-          <string>Release Time</string>
-         </property>
-        </column>
-       </widget>
-       <widget class="QTextBrowser" name="DebugOutput">
-        <property name="geometry">
-         <rect>
-          <x>309</x>
-          <y>9</y>
-          <width>256</width>
-          <height>192</height>
-         </rect>
+        <property name="rightMargin">
+         <number>0</number>
         </property>
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
+        <property name="bottomMargin">
+         <number>0</number>
         </property>
-        <property name="maximumSize">
-         <size>
-          <width>400</width>
-          <height>16777215</height>
-         </size>
-        </property>
-       </widget>
-       <widget class="QQuickWidget" name="quickWidget">
-        <property name="geometry">
-         <rect>
-          <x>80</x>
-          <y>50</y>
-          <width>261</width>
-          <height>281</height>
-         </rect>
-        </property>
-        <property name="resizeMode">
-         <enum>QQuickWidget::SizeRootObjectToView</enum>
-        </property>
-        <property name="source">
-         <url>
-          <string>qrc:/qml/CustomTable.qml</string>
-         </url>
-        </property>
-       </widget>
+        <item>
+         <layout class="QHBoxLayout" name="SoftwareTableLayout"/>
+        </item>
+        <item>
+         <widget class="QTextBrowser" name="DebugOutput">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>250</width>
+            <height>16777215</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </widget>
      </item>
     </layout>
@@ -309,13 +281,6 @@
    </item>
   </layout>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>QQuickWidget</class>
-   <extends>QWidget</extends>
-   <header location="global">QtQuickWidgets/QQuickWidget</header>
-  </customwidget>
- </customwidgets>
  <resources>
   <include location="img.qrc"/>
  </resources>
