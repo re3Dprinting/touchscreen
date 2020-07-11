@@ -16,6 +16,11 @@
     <height>448</height>
    </size>
   </property>
+  <property name="font">
+   <font>
+    <family>.AppleSystemUIFont</family>
+   </font>
+  </property>
   <property name="windowTitle">
    <string>ControlWindow</string>
   </property>
@@ -114,8 +119,16 @@
       </widget>
      </item>
      <item>
-      <widget class="QWidget" name="widget_2" native="true">
-       <layout class="QHBoxLayout" name="horizontalLayout">
+      <widget class="QWidget" name="MainLayout" native="true">
+       <property name="font">
+        <font>
+         <family>.AppleSystemUIFont</family>
+        </font>
+       </property>
+       <layout class="QHBoxLayout" name="horizontalLayout_4">
+        <property name="spacing">
+         <number>0</number>
+        </property>
         <property name="leftMargin">
          <number>0</number>
         </property>
@@ -129,27 +142,7 @@
          <number>0</number>
         </property>
         <item>
-         <widget class="QTableWidget" name="SoftwareList">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="autoScroll">
-           <bool>true</bool>
-          </property>
-          <column>
-           <property name="text">
-            <string>Version</string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>Release Time</string>
-           </property>
-          </column>
-         </widget>
+         <layout class="QHBoxLayout" name="SoftwareTableLayout"/>
         </item>
         <item>
          <widget class="QTextBrowser" name="DebugOutput">
@@ -161,7 +154,7 @@
           </property>
           <property name="maximumSize">
            <size>
-            <width>400</width>
+            <width>250</width>
             <height>16777215</height>
            </size>
           </property>

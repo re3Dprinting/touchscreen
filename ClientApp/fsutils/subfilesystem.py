@@ -135,17 +135,19 @@ class SubFileSystem(object):
 
     
     #Similar to the list function above, try to fetch the toucchscreen software updates
-    #Files can be either zipped or 
+    #Files can be either zipped or tar
     def list_ts_software_updates(self, userupdate_signal):
         updates = []
         tmp_path = self.rootdir+"/.tmp"+ str(random.getrandbits(64))
 
+        #Create two iterators, one for deleting the previous tmp file, and one for checking for usb software. 
         try:
             it = os.scandir(self.abspath)
             it2 = os.scandir(self.abspath)
         except:
             return updates
         
+        #Delete the other tmp files in another thread. 
         for f in it2:
             if(f.name.startswith(".tmp")):
                 Thread(target = lambda : os.system("rm -rf "+self.rootdir+"/"+f.name)).start()
@@ -236,5 +238,6 @@ class SubFileSystem(object):
             abs_path = self.abspath + "/" + name
             the_update = File(name, displayname, rel_path, abs_path, size, type, extract_path, timestamp)
             updates.append(the_update)
+        
         updates = sorted(updates)
         return updates

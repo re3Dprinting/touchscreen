@@ -86,4 +86,8 @@
         <file>img/Wifi.png</file>
         <file>img/X.png</file>
     </qresource>
+    <qresource prefix="/qml">
+        <file>table.qml</file>
+        <file>tableborder.qml</file>
+    </qresource>
 </RCC>

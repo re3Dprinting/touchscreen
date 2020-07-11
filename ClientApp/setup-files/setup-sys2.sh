@@ -18,7 +18,7 @@ cp StartClientApp.sh /home/pi/StartClientApp.sh
 chmod +x /home/pi/StartClientApp.sh
 
 # Install OS packages that we require.
-apt-get install git python3-virtualenv python3-pyqt5 fbi emacs lsof xinit xserver-xorg x11-xserver-utils x11-apps imagemagick usbmount --fix-missing -y
+apt-get install git python3-virtualenv python3-pyqt5 qml-module-qtquick2 qtquickcontrols5-* fbi emacs lsof xinit xserver-xorg x11-xserver-utils x11-apps imagemagick usbmount --fix-missing -y
 
 # Set up the scripts that configure the 'usbmount' package, which will
 # mount any recognized filesystem when a USB thumb drive is inserted.
