@@ -1,10 +1,9 @@
-
 from qt.notificationwindow import Ui_NotificationWindow
 from PyQt5 import QtCore, QtGui, QtWidgets
-
+from basepage import BasePage
 
 #Universal Notification class that can be used for any messages that need to be descritely shown to the user.
-class Notification(QtWidgets.QWidget, Ui_NotificationWindow):
+class Notification(BasePage, Ui_NotificationWindow):
 	def __init__(self, text, parent=None):
 		super(Notification, self).__init__()
 		self.setupUi(self)
@@ -13,8 +12,6 @@ class Notification(QtWidgets.QWidget, Ui_NotificationWindow):
 		self.Text.setText(text)
 		self.parent = parent
 		self.Close.clicked.connect(self.close)
-
-		
 
 	def show(self):
 		if(self.parent != None): 

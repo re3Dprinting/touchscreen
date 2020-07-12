@@ -1,6 +1,6 @@
 from __future__ import division
 from builtins import str
-from constants import *
+from constants import Pages
 
 import logging
 
@@ -14,7 +14,7 @@ from .qt.printpage_qt import *
 from .fsutils.subfilesystem import *
 from .fsutils.file import *
 from .fsutils.mountpoint import MountPoint
-from .filelistmanager import FileListManager
+from .fsutils.filelistmanager import FileListManager
 from basepage import BasePage
 
 
@@ -152,11 +152,11 @@ class PrintPage(BasePage, Ui_PrintPage):
         self.pushbutton_folder_open.setVisible(not isSDprinting)
 
     def enable_control(self):
-        home_page = self.ui_controller.get_page(k_home_page)
+        home_page = self.ui_controller.get_page(Pages.HOME_PAGE)
         home_page.pushbutton_control.setEnabled(True)
 
     def disable_control(self):
-        home_page = self.ui_controller.get_page(k_home_page)
+        home_page = self.ui_controller.get_page(Pages.HOME_PAGE)
         home_page.pushbutton_control.setEnabled(False)
 
     def set_storage_manager(self, local_storage_manager):
@@ -267,7 +267,7 @@ class PrintPage(BasePage, Ui_PrintPage):
     def notprinting(self):
         # self.temp_pop.notactiveprint()
         self.file_being_printed = "-----"
-        temperature_page = self.ui_controller.get_page(k_temperature_page)
+        temperature_page = self.ui_controller.get_page(Pages.TEMPERATURE_PAGE)
         temperature_page.notactiveprint()
         self.pushbutton_active_print.setEnabled(False)
         self.pushbutton_stop_print.setEnabled(False)
@@ -276,14 +276,14 @@ class PrintPage(BasePage, Ui_PrintPage):
         self.enable_control()
 
     def temperature_active(self):
-        temperature_page = self.ui_controller.get_page(k_temperature_page)
+        temperature_page = self.ui_controller.get_page(Pages.TEMPERATURE_PAGE)
         temperature_page.activeprint()
         self._log("temperature_active: calling reset_parameters.")
         temperature_page.reset_parameters()
         temperature_page.set_progress(0)
 
     def temperature_inactive(self):
-        temperature_page = self.ui_controller.get_page(k_temperature_page)
+        temperature_page = self.ui_controller.get_page(Pages.TEMPERATURE_PAGE)
         temperature_page.notactiveprint()
         temperature_page.reset_parameters()
         temperature_page.set_progress(0)
@@ -397,7 +397,7 @@ class PrintPage(BasePage, Ui_PrintPage):
 
     def activeprintpop(self):
         self._log("UI: User touched Active Print")
-        self.ui_controller.push(k_temperature_page)
+        self.ui_controller.push(Pages.TEMPERATURE_PAGE)
 
     def update_loc_button_states_none(self):
         self.pushbutton_folder_up.setEnabled(False)

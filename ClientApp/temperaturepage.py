@@ -8,11 +8,11 @@ import logging
 import PyQt5.QtCore
 from PyQt5.QtCore import Qt, pyqtSignal
 
-from constants import *
+from constants import Pages
 from .qt.temperaturepage_qt import Ui_TemperaturePage
 from .notactiveprint_wid import NotActivePrintWidget
 from .activeprint_wid import ActivePrintWidget
-from .runout_handler import RunoutHandlerDialog
+from .popup import PopUp
 from .timehandler import TimeHandler
 from .preheatmaterial import Material
 from .periph import Periph
@@ -46,7 +46,6 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
 
         self.ActivePrintWid = ActivePrintWidget(self)
         self.NotActivePrintWid = NotActivePrintWidget(self)
-        self.w_runout_handler = RunoutHandlerDialog(self, self.printer_if)
 
         self.gridLayout.addWidget(self.NotActivePrintWid, 2, 0, 1, 1)
         self.gridLayout.addWidget(self.ActivePrintWid, 2, 0, 1, 1)
@@ -180,12 +179,12 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
 
         self.print_handler = PrintHandler(self.context, self)
 
-        self.control_page = self.ui_controller.get_page(k_control_page)
+        self.control_page = self.ui_controller.get_page(Pages.CONTROL_PAGE)
 
     def update_parameter_display(self):
         self._log("update_paramater_display")
 
-        print_page = self.ui_controller.get_page(k_print_page)
+        print_page = self.ui_controller.get_page(Pages.PRINT_PAGE)
         if print_page is not None:
             file_being_printed = print_page.file_being_printed
             self.ActivePrintWid.w_label_filename.setText(
@@ -337,7 +336,7 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
         self.ActivePrintWid.w_pushbutton_resumeprint.setEnabled(True)
         self.ActivePrintWid.w_pushbutton_pauseprint.setEnabled(False)
         # self.parent.Control.setEnabled(True)
-        home = self.ui_controller.get_page(k_home_page)
+        home = self.ui_controller.get_page(Pages.HOME_PAGE)
         home.pushbutton_control.setEnabled(True)
 
     def resumeprint(self):
@@ -346,7 +345,7 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
         self.ActivePrintWid.w_pushbutton_resumeprint.setEnabled(False)
         self.ActivePrintWid.w_pushbutton_pauseprint.setEnabled(True)
         # self.parent.Control.setEnabled(False)
-        home = self.ui_controller.get_page(k_home_page)
+        home = self.ui_controller.get_page(Pages.HOME_PAGE)
         home.pushbutton_control.setEnabled(False)
 
     def initpreheatbuttons(self):

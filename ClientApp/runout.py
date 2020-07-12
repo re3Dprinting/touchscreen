@@ -1,26 +1,23 @@
 import logging
 from PyQt5.QtCore import Qt, pyqtSignal
-from .qt.runout import *
+from .popup import PopUp
 
-class RunoutHandlerDialog(QtWidgets.QDialog, Ui_w_runout_dialog):
+class RunOut(PopUp):
     runout_signal = pyqtSignal(str, str)
 
     def __init__(self, parent, printer_if):
-        super(RunoutHandlerDialog, self).__init__()
+        super(RunOut, self).__init__(parent)
         self._logger = logging.getLogger(__name__)
         self._log("Runout handler starting up")
 
-        self.parent = parent
-
-        self.setupUi(self)
-        self.w_buttonBox.setEnabled(False)
+        self.popup_button.setEnabled(False)
         self.printer_if = printer_if
-        self.printer_if.set_runout_callback(self)
+
         self.runout_signal.connect(self.runout_handler_slot)
         self.hide_on_ok = False
         self.send_m108_on_ok = False
 
-        self.w_buttonBox.clicked.connect(self.accept)
+        self.popup_button.clicked.connect(self.accept)
 
     def _log(self, message):
         self._logger.debug(message)
@@ -63,11 +60,11 @@ class RunoutHandlerDialog(QtWidgets.QDialog, Ui_w_runout_dialog):
     # dialog is just notifying the user what's happening). In those
     # phases, disable the OK button.
     def disable_ok(self):
-        self.w_buttonBox.setEnabled(False)
+        self.popup_button.setEnabled(False)
 
     # Enable the OK button so the user may click it.
     def enable_ok(self):
-        self.w_buttonBox.setEnabled(True)
+        self.popup_button.setEnabled(True)
 
     # This method is called by the PrinterIF when it recognizes a
     # filament-change message coming from Marlin on the printer. This
@@ -92,19 +89,16 @@ class RunoutHandlerDialog(QtWidgets.QDialog, Ui_w_runout_dialog):
         if code == "R301":
             self.disable_ok()
             self.send_m108_on_ok = False
-            # mess = "Filament change beginning; please wait..."
 
         # Insert filament and press button to continue."
         elif code == "R302":
             self.enable_ok()
             self.send_m108_on_ok = True
-            # mess = "Insert filament and touch OK to continue."
 
         # Press button to heat nozzle."
         elif code == "R303":
             self.enable_ok()
             self.send_m108_on_ok = True
-            # mess = "Nozzle cooldown in progress. Touch OK to heat nozzle."
 
         # Heating nozzle, please wait...
         elif code == "R304":
@@ -115,20 +109,17 @@ class RunoutHandlerDialog(QtWidgets.QDialog, Ui_w_runout_dialog):
         elif code == "R305":
             self.disable_ok()
             self.send_m108_on_ok = False
-            # mess = "Filament purge in progress. Please wait..."
 
         # Press button to continue.
         elif code == "R306":
             self.enable_ok()
             self.send_m108_on_ok = True
-            # mess = "Touch OK to continue..."
 
         # Wait for print to resume.
         elif code == "R307":
             self.hide_on_ok = True
-            # mess = "Print resuming. Touch OK."
 
         # Make sure the dialog box is showing.
-        self.w_runout_title = "Filament Change"
-        self.w_runout_message_label.setText(mess)
+        self.popup_title = "Filament Change"
+        self.popup_message.setText(mess)
         self.show()

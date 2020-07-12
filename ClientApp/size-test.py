@@ -4,7 +4,7 @@ import time
 import glob
 import logging
 
-from constants import k_logmaxbytes
+from constants import LogConstants
 
 from fsutils.size_utils import *
 
@@ -57,7 +57,7 @@ if __name__ == "__main__":
 
     print()
 
-    ensure_sufficient_space_for_file(gcode_dest_dir, gcode_log_dir, k_logmaxbytes, gcode_file)
+    ensure_sufficient_space_for_file(gcode_dest_dir, gcode_log_dir, LogConstants.LOGMAXBYTES, gcode_file)
 
 
     print()

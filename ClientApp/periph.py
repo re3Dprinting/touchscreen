@@ -7,7 +7,6 @@ import traceback
 
 import PyQt5
 
-
 class Periph(object):
     def __init__(self, fullname, name, callback, maxtemp, parent):
         # Set up logging

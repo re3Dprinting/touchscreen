@@ -105,7 +105,7 @@
            </property>
            <property name="icon">
             <iconset resource="img.qrc">
-             <normaloff>:/img/img/Extruder_2.png</normaloff>:/img/img/Extruder_2.png</iconset>
+             <normaloff>:/img/img/Extruder_1.png</normaloff>:/img/img/Extruder_1.png</iconset>
            </property>
            <property name="iconSize">
             <size>
@@ -191,7 +191,7 @@
            </property>
            <property name="icon">
             <iconset resource="img.qrc">
-             <normaloff>:/img/img/Extruder_with_Bed.png</normaloff>:/img/img/Extruder_with_Bed.png</iconset>
+             <normaloff>:/img/img/Extruder_with_Bed_2.png</normaloff>:/img/img/Extruder_with_Bed_2.png</iconset>
            </property>
            <property name="iconSize">
             <size>
@@ -234,7 +234,7 @@
            </property>
            <property name="icon">
             <iconset resource="img.qrc">
-             <normaloff>:/img/img/Extruder_1.png</normaloff>:/img/img/Extruder_1.png</iconset>
+             <normaloff>:/img/img/Extruder_0.png</normaloff>:/img/img/Extruder_0.png</iconset>
            </property>
            <property name="iconSize">
             <size>
@@ -326,7 +326,7 @@
            </property>
            <property name="icon">
             <iconset resource="img.qrc">
-             <normaloff>:/img/img/Extruder_1.png</normaloff>:/img/img/Extruder_1.png</iconset>
+             <normaloff>:/img/img/Extruder_0.png</normaloff>:/img/img/Extruder_0.png</iconset>
            </property>
            <property name="iconSize">
             <size>
@@ -369,7 +369,7 @@
            </property>
            <property name="icon">
             <iconset resource="img.qrc">
-             <normaloff>:/img/img/Extruder_2.png</normaloff>:/img/img/Extruder_2.png</iconset>
+             <normaloff>:/img/img/Extruder_1.png</normaloff>:/img/img/Extruder_1.png</iconset>
            </property>
            <property name="iconSize">
             <size>
@@ -455,7 +455,7 @@
            </property>
            <property name="icon">
             <iconset resource="img.qrc">
-             <normaloff>:/img/img/Extruder_with_Bed.png</normaloff>:/img/img/Extruder_with_Bed.png</iconset>
+             <normaloff>:/img/img/Extruder_with_Bed_2.png</normaloff>:/img/img/Extruder_with_Bed_2.png</iconset>
            </property>
            <property name="iconSize">
             <size>
@@ -550,7 +550,7 @@
            </property>
            <property name="icon">
             <iconset resource="img.qrc">
-             <normaloff>:/img/img/Extruder_2.png</normaloff>:/img/img/Extruder_2.png</iconset>
+             <normaloff>:/img/img/Extruder_1.png</normaloff>:/img/img/Extruder_1.png</iconset>
            </property>
            <property name="iconSize">
             <size>
@@ -593,7 +593,7 @@
            </property>
            <property name="icon">
             <iconset resource="img.qrc">
-             <normaloff>:/img/img/Extruder_1.png</normaloff>:/img/img/Extruder_1.png</iconset>
+             <normaloff>:/img/img/Extruder_0.png</normaloff>:/img/img/Extruder_0.png</iconset>
            </property>
            <property name="iconSize">
             <size>
@@ -679,7 +679,7 @@
            </property>
            <property name="icon">
             <iconset resource="img.qrc">
-             <normaloff>:/img/img/Extruder_with_Bed.png</normaloff>:/img/img/Extruder_with_Bed.png</iconset>
+             <normaloff>:/img/img/Extruder_with_Bed_2.png</normaloff>:/img/img/Extruder_with_Bed_2.png</iconset>
            </property>
            <property name="iconSize">
             <size>
@@ -792,7 +792,7 @@
         </property>
         <property name="icon">
          <iconset resource="img.qrc">
-          <normaloff>:/img/img/Temperature.png</normaloff>:/img/img/Temperature.png</iconset>
+          <normaloff>:/img/img/Temperature_3.png</normaloff>:/img/img/Temperature_3.png</iconset>
         </property>
         <property name="iconSize">
          <size>

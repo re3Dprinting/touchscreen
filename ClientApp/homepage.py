@@ -19,7 +19,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 # from .notification import Notification
 # #from . import event_hand
 from .qt.home_qt import Ui_Home
-from constants import *
+from constants import Pages
 from basepage import BasePage
 
 
@@ -54,19 +54,19 @@ class HomePage(BasePage, Ui_Home):
 
     def handle_print_touch(self):
         self._log("UI: User touched Print")
-        self.ui_controller.push(k_print_page)
+        self.ui_controller.push(Pages.PRINT_PAGE)
 
     def handle_control_touch(self):
         self._log("UI: User touched Control")
-        self.ui_controller.push(k_control_page)
+        self.ui_controller.push(Pages.CONTROL_PAGE)
 
     def handle_temperature_touch(self):
         self._log("UI: User touched Temperature")
-        self.ui_controller.push(k_temperature_page)
+        self.ui_controller.push(Pages.TEMPERATURE_PAGE)
 
     def handle_settings_touch(self):
         self._log("UI: User touched Settings")
-        self.ui_controller.push(k_settings_page)
+        self.ui_controller.push(Pages.SETTINGS_PAGE)
 
     def handle_back_touch(self):
         self._log("UI: User touched Back")

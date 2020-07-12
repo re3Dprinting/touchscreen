@@ -90,7 +90,6 @@ class UserUpdatePage(BasePage, Ui_UserUpdatePage):
 
         self.update_Thread = None
         # Initialize the array for Git Software Updates and USB Software Updates
-        self.usb_updates = []
         self.all_found_updates = []
 
         # Signal to notify that UI updates are ready from a thread
@@ -99,7 +98,7 @@ class UserUpdatePage(BasePage, Ui_UserUpdatePage):
         self.unzipProgressSignal.connect(self.display_stored_text)
         self.store_text = ""
 
-        self.DebugOutput.setLineWrapMode(QtWidgets.QTextBrowser.NoWrap)
+        # self.DebugOutput.setLineWrapMode(QtWidgets.QTextBrowser.NoWrap)
 
         #  Append the version to the current version window.
         temp = self.CurrentVersion.text() + " " + self.app.applicationVersion()
@@ -111,6 +110,7 @@ class UserUpdatePage(BasePage, Ui_UserUpdatePage):
             [self.Back, self.Update, self.CheckUpdate], True)
         self.setStyleProperty(self.CurrentVersion,
                               "white-transparent-text font-m align-center")
+        self.setAllStyleProperty([self.DebugOutput], "black-transparent-text font-s")
 
         self.SoftwareTable = QtQuickWidgets.QQuickWidget(self.MainLayout)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
@@ -160,8 +160,8 @@ class UserUpdatePage(BasePage, Ui_UserUpdatePage):
         self.DebugOutput.clear()
         self.store_text = ""
 
-        self.usb_updates = []
         self.all_found_updates = []
+        self.ui_update_list("")
         self.display_stored_text("Fetching Server Updates...")
 
         self.update_Thread = Thread(target=self.checkupdate_handler)
@@ -201,6 +201,8 @@ class UserUpdatePage(BasePage, Ui_UserUpdatePage):
         self.display_stored_text(msg)
 
         self.softwareTableModel.updateData(self.all_found_updates)
+        self.SoftwareTable.rootObject().findChild(QtCore.QObject, "tableView").setProperty("selectedRow", -1)
+        # print(x.property("selectedRow"))
         self.softwareTableModel.layoutChanged.emit()
 
         # If no versions are found, push a debug message to the window.

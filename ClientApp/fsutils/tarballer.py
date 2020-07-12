@@ -5,7 +5,7 @@ import os.path
 from PyQt5.QtCore import QRunnable, QThreadPool
                          
 from octoprint.util.commandline import CommandlineCaller
-from constants import k_logname
+from constants import LogConstants
 from fsutils.mountfinder import MountFinder
 
 import logging
@@ -45,7 +45,7 @@ class Tarballer(QRunnable):
     def get_log_file_names(self):
         # Use globbing to get a list of the logfiles that will go into
         # the tarball.
-        logfiles = glob.glob(k_logname + '*')
+        logfiles = glob.glob(LogConstants.LOGNAME + '*')
 
         # Glob returns an array; turn it into a space-separated string.
         logstring = ' '.join(logfiles)

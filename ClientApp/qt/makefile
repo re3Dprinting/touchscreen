@@ -7,7 +7,7 @@ OBJS = \
      activeprintwidget.py \
      notactiveprintwidget.py \
      notificationwindow.py \
-     runout.py \
+     popup.py \
      serverwindow.py \
      home_qt.py \
      printpage_qt.py \

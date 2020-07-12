@@ -69,6 +69,7 @@ class Ui_UserUpdatePage(object):
         sizePolicy.setHeightForWidth(self.DebugOutput.sizePolicy().hasHeightForWidth())
         self.DebugOutput.setSizePolicy(sizePolicy)
         self.DebugOutput.setMaximumSize(QtCore.QSize(250, 16777215))
+        self.DebugOutput.setLineWrapMode(QtWidgets.QTextEdit.WidgetWidth)
         self.DebugOutput.setObjectName("DebugOutput")
         self.horizontalLayout_4.addWidget(self.DebugOutput)
         self.horizontalLayout_3.addWidget(self.MainLayout)

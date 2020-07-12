@@ -158,6 +158,9 @@
             <height>16777215</height>
            </size>
           </property>
+          <property name="lineWrapMode">
+           <enum>QTextEdit::WidgetWidth</enum>
+          </property>
          </widget>
         </item>
        </layout>
@@ -265,7 +268,7 @@
          <string/>
         </property>
         <property name="icon">
-         <iconset resource="img.qrc">
+         <iconset>
           <normaloff>:/img/img/Update-rollback.png</normaloff>:/img/img/Update-rollback.png</iconset>
         </property>
         <property name="iconSize">

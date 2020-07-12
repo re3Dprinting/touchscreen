@@ -5,7 +5,7 @@ from PyQt5.QtCore import pyqtSignal
 
 from fsutils.tarballer import Tarballer
 from util.log import find_root_logger
-from .runout_handler import RunoutHandlerDialog
+from .popup import PopUp
 
 from basepage import BasePage
 from touchscreen.qt.debugpage_qt import Ui_DebugPage
@@ -40,7 +40,8 @@ class DebugPage(BasePage, Ui_DebugPage):
         self.display_signal.connect(self.slot_display)
         self.Back.clicked.connect(self.back)
 
-        self.w_runout_handler = RunoutHandlerDialog(self, self.printer_if)
+        self.setAllStyleProperty([self.logging_label], "white-transparent-text font-m align-center")
+
         self.setStyleProperty(self.BottomBar, "bottom-bar")
         self.setStyleProperty(self.LeftBar, "left-bar")
         self.setAllTransparentButton([self.Back, self.w_pushbutton_add_marker,
@@ -69,13 +70,7 @@ class DebugPage(BasePage, Ui_DebugPage):
             new_level_str = "INFO"
             root_logger.setLevel(logging.INFO)
 
-        self.w_runout_handler.w_runout_title.setText("")
-        self.w_runout_handler.w_runout_message_label.setText(
-            "New logging level = " + new_level_str)
-        self.w_runout_handler.enable_ok()
-        self.w_runout_handler.send_m108_on_ok = False
-        self.w_runout_handler.hide_on_ok = True
-        self.w_runout_handler.show()
+        self.popup_signal.emit("", "New Logging Level: "+new_level_str, "")
 
     def handle_add_marker(self):
         self._log("UI: User touched Add Marker")

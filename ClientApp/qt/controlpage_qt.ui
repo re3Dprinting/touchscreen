@@ -178,7 +178,7 @@
          </property>
          <property name="icon">
           <iconset resource="img.qrc">
-           <normaloff>:/img/img/pause.png</normaloff>:/img/img/pause.png</iconset>
+           <normaloff>:/img/img/Stepper_Motor_Off.png</normaloff>:/img/img/Stepper_Motor_Off.png</iconset>
          </property>
          <property name="iconSize">
           <size>
@@ -217,7 +217,7 @@
          </property>
          <property name="icon">
           <iconset resource="img.qrc">
-           <normaloff>:/img/img/Letft.png</normaloff>:/img/img/Letft.png</iconset>
+           <normaloff>:/img/img/Left.png</normaloff>:/img/img/Left.png</iconset>
          </property>
          <property name="iconSize">
           <size>
@@ -622,7 +622,7 @@
          </property>
          <property name="icon">
           <iconset resource="img.qrc">
-           <normaloff>:/img/img/Extruder_2.png</normaloff>:/img/img/Extruder_2.png</iconset>
+           <normaloff>:/img/img/Extruder_1.png</normaloff>:/img/img/Extruder_1.png</iconset>
          </property>
          <property name="iconSize">
           <size>

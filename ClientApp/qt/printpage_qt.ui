@@ -109,7 +109,7 @@
           </property>
           <property name="icon">
            <iconset resource="img.qrc">
-            <normaloff>:/img/img/USB_(2).png</normaloff>:/img/img/USB_(2).png</iconset>
+            <normaloff>:/img/img/USB.png</normaloff>:/img/img/USB.png</iconset>
           </property>
           <property name="iconSize">
            <size>
@@ -264,7 +264,7 @@
           <property name="minimumSize">
            <size>
             <width>160</width>
-            <height>60</height>
+            <height>50</height>
            </size>
           </property>
           <property name="maximumSize">
@@ -278,7 +278,7 @@
           </property>
           <property name="icon">
            <iconset resource="img.qrc">
-            <normaloff>:/img/img/Scan.png</normaloff>:/img/img/Scan.png</iconset>
+            <normaloff>:/img/img/Scan_2.png</normaloff>:/img/img/Scan_2.png</iconset>
           </property>
           <property name="iconSize">
            <size>
@@ -294,7 +294,7 @@
      <item>
       <widget class="QStackedWidget" name="stackedPrintingOptions">
        <property name="currentIndex">
-        <number>1</number>
+        <number>2</number>
        </property>
        <widget class="QWidget" name="SD">
         <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -484,7 +484,7 @@
         </property>
         <property name="icon">
          <iconset resource="img.qrc">
-          <normaloff>:/img/img/USB.png</normaloff>:/img/img/USB.png</iconset>
+          <normaloff>:/img/img/Stop_Print.png</normaloff>:/img/img/Stop_Print.png</iconset>
         </property>
         <property name="iconSize">
          <size>

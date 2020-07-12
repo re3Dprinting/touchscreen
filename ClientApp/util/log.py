@@ -1,5 +1,5 @@
 import logging
-from constants import *
+from constants import LogConstants
 from logging.handlers import RotatingFileHandler
 
 def dump_logger_hierarchy(note, log_to_debug):
@@ -30,7 +30,7 @@ def setup_root_logger():
     # dump_logger_hierarchy("Octo 1", root_logger)
 
     # Create a rotating log handler:
-    handler = RotatingFileHandler(k_logname, maxBytes=k_logmaxbytes, backupCount=k_logcount)
+    handler = RotatingFileHandler(LogConstants.LOGNAME.value, maxBytes=LogConstants.LOGMAXBYTES.value, backupCount=LogConstants.LOGCOUNT.value)
     handler.setLevel(logging.DEBUG)
 
     # Set the formatter to prefix the log message with the date, name,

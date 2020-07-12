@@ -7,7 +7,7 @@ from PyQt5.QtWidgets import QWidget, QLabel
 
 from .qt.mainwindow_qt import Ui_MainWindow
 
-from constants import *
+from constants import Pages
 from context import Context
 
 from .basepage import BasePage
@@ -21,7 +21,8 @@ from .infopage import InfoPage
 from .serialpage import SerialPage
 from .userupdatepage import UserUpdatePage
 from .duexsetuppage import DuExSetupPage
-from .runout_handler import RunoutHandlerDialog
+from .popup import PopUp
+from .runout import RunOut
 
 
 class MainWindow(BasePage, Ui_MainWindow, QtWidgets.QMainWindow):
@@ -46,16 +47,24 @@ class MainWindow(BasePage, Ui_MainWindow, QtWidgets.QMainWindow):
         context = self.context
 
         # Create the various other pages
-        self.add_page(self.home_page, k_home_page)
-        printpage = self.add_page(PrintPage(context), k_print_page)
-        self.add_page(ControlPage(context), k_control_page)
-        self.add_page(TemperaturePage(context), k_temperature_page)
-        self.add_page(SettingsPage(context), k_settings_page)
-        self.add_page(DebugPage(context), k_debug_page)
-        self.add_page(InfoPage(context), k_info_page)
-        self.add_page(SerialPage(context), k_serial_page)
-        self.add_page(UserUpdatePage(context), k_userupdate_page)
-        self.add_page(DuExSetupPage(context), k_duexsetup_page)
+        self.add_page(self.home_page, Pages.HOME_PAGE)
+        self.add_page(PrintPage(context), Pages.PRINT_PAGE)
+        self.add_page(ControlPage(context), Pages.CONTROL_PAGE)
+        self.add_page(TemperaturePage(context), Pages.TEMPERATURE_PAGE)
+        self.add_page(SettingsPage(context), Pages.SETTINGS_PAGE)
+        self.add_page(DebugPage(context), Pages.DEBUG_PAGE)
+        self.add_page(InfoPage(context), Pages.INFO_PAGE)
+        self.add_page(SerialPage(context), Pages.SERIAL_PAGE)
+        self.add_page(UserUpdatePage(context), Pages.USERUPDATE_PAGE)
+        self.add_page(DuExSetupPage(context), Pages.DUEXSETUP_PAGE)
+
+        #Create one popup instance that is shown when the signal is emited from a page. 
+        self.popup = PopUp(self)
+        #Connect the each popup_signal to a singular function. 
+        self.popup_signal.connect(self.show_popup)
+        for p in self.pages:
+            self.pages[p].popup_signal.connect(self.show_popup) 
+
 
         # Start the UI on the Home page
         self.stack.setCurrentWidget(self.home_page)
@@ -69,11 +78,11 @@ class MainWindow(BasePage, Ui_MainWindow, QtWidgets.QMainWindow):
         self.activateWindow()
 
         self.printer_if.set_state_changed_callback(self.state_changed_callback)
+        self.w_runout_handler = RunOut(self, self.printer_if)
+        self.printer_if.set_runout_callback(self.w_runout_handler)
 
         ctor = self.printer_if.state_change_connector()
         ctor.register(self.state_change_connector_callback)
-
-        self.w_runout_handler = RunoutHandlerDialog(self, self.printer_if)
 
         self.setStyleProperty(self.status, "bottom-bar")
         self.setAllStyleProperty(
@@ -104,14 +113,8 @@ class MainWindow(BasePage, Ui_MainWindow, QtWidgets.QMainWindow):
             # This is the default message.
             message_string += "Printer halted."
 
-            self.w_runout_handler.w_runout_title.setText("*** ERROR ***")
-            self.w_runout_handler.w_runout_message_label.setText(
-                message_string)
-            self.w_runout_handler.w_runout_detail_label.setText(detail_string)
-            self.w_runout_handler.enable_ok()
-            self.w_runout_handler.send_m108_on_ok = False
-            self.w_runout_handler.hide_on_ok = True
-            self.w_runout_handler.show()
+            self.popup_signal.emit("*** ERROR ***", message_string, detail_string)
+ 
 
     def state_changed_callback(self, payload):
         state = "Printer: %s" % payload["state_string"]
@@ -187,3 +190,9 @@ class MainWindow(BasePage, Ui_MainWindow, QtWidgets.QMainWindow):
             # An index error indicates we tried to pop when the stack
             # was empty.
             self._log("ERROR: popping from an empty stack!")
+
+    def show_popup(self, title, mess, dets):
+        self.popup.popup_title.setText(title)
+        self.popup.popup_message.setText(mess)
+        self.popup.popup_details.setText(dets)
+        self.popup.show()

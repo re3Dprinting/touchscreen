@@ -114,7 +114,7 @@ class ControlPage(BasePage, Ui_ControlPage):
             att = axis + "m" + i
             getattr(self, att).setCheckable(True)
             self.setStyleProperty(getattr(self, att),
-                                  "yellow-btn transparent-btn")
+                                  "yellow-selected-btn transparent-btn")
             group.addButton(getattr(self, att))
         getattr(self, axis + "m"+"10").setChecked(True)
         return group

@@ -7,7 +7,7 @@ from PyQt5.QtCore import Qt
 from printer_if import PrinterIF
 from .basepage import BasePage
 from .qt.serialpage_qt import Ui_SerialPage
-from .runout_handler import RunoutHandlerDialog
+from .popup import PopUp
 
 
 class SerialPage(BasePage, Ui_SerialPage):
@@ -59,8 +59,6 @@ class SerialPage(BasePage, Ui_SerialPage):
         self.w_pushbutton_connect.clicked.connect(self.user_connect_serial)
         self.w_pushbutton_disconnect.clicked.connect(self.disconnect_serial)
 
-        self.w_connect_popup = RunoutHandlerDialog(self, self.printer_if)
-        self.w_disconnect_popup = RunoutHandlerDialog(self, self.printer_if)
 
         self.disconnect_expected = False
 
@@ -98,17 +96,12 @@ class SerialPage(BasePage, Ui_SerialPage):
                 self.disconnect_expected = False
 
             else:
-
                 # We are not expecting the disconnect. Pop up the
                 # error dialog.
+
                 self._log("Disconnect unexpected, popping up error dialog.")
-                self.w_disconnect_popup.w_runout_title.setText("*** ERROR ***")
-                self.w_disconnect_popup.w_runout_message_label.setText(
-                    "Printer disconnected.")
-                self.w_disconnect_popup.enable_ok()
-                self.w_disconnect_popup.send_m108_on_ok = False
-                self.w_disconnect_popup.hide_on_ok = True
-                self.w_disconnect_popup.show()
+                self.popup_signal.emit("*** ERROR ***", "Printer disconnected", "")
+
 
         if to_state == "OPERATIONAL":
             self.disconnect_expected = False
@@ -116,14 +109,6 @@ class SerialPage(BasePage, Ui_SerialPage):
         if to_state == "ERROR":
             self.disconnect_expected = True
 
-        # If we have successfully connected, pop up a dialog.
-        # if (from_state == "CONNECTING") and (to_state == "OPERATIONAL"):
-        #     self.w_connect_popup.w_runout_title.setText("")
-        #     self.w_connect_popup.w_runout_message_label.setText("Printer connected.")
-        #     self.w_connect_popup.enable_ok()
-        #     self.w_connect_popup.send_m108_on_ok = False
-        #     self.w_connect_popup.hide_on_ok = True
-        #     self.w_connect_popup.show()
 
     def _log(self, message):
         self._logger.debug(message)

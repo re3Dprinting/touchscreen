@@ -222,14 +222,6 @@ class PrinterIF(PrinterCallback):
     def set_temperature(self, name, temp):
         self.printer.set_temperature(name, temp)
         
-    # def set_temperature_callback(self, callback):
-    #     # Save the provided object as a temperature callback. NOTE:
-    #     # must implement the update_temperature(self, data) function.
-    #     self.temperature_callback = callback
-
-    def set_runout_callback(self, calback):
-        self.runout_callback = callback
-
     ### PrinterCallback stuff:
 
     show_add_log = False

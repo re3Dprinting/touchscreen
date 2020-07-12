@@ -3,7 +3,7 @@ import logging
 from PyQt5.QtCore import Qt
 from PyQt5 import QtWidgets
 
-from constants import *
+from constants import Pages
 
 #from . import serialsetup
 #from . import server
@@ -58,28 +58,28 @@ class SettingsPage(BasePage, Ui_SettingsPage):
 
     def userupdatepop(self):
         self._log("UI: User touched Update")
-        self.ui_controller.push(k_userupdate_page)
+        self.ui_controller.push(Pages.USERUPDATE_PAGE)
 
     def serialpop(self):
         self._log("UI: User touched Serial")
-        self.ui_controller.push(k_serial_page)
+        self.ui_controller.push(Pages.SERIAL_PAGE)
 
     def serverpop(self):
         self._log("UI: User touched Server")
 
     def handle_debug(self):
         self._log("UI: User touched Debug")
-        self.ui_controller.push(k_debug_page)
+        self.ui_controller.push(Pages.DEBUG_PAGE)
 
     def handle_info(self):
         self._log("UI: User touched Info")
-        self.ui_controller.push(k_info_page)
+        self.ui_controller.push(Pages.INFO_PAGE)
 
     def handle_duex(self):
         self._log("UI: User touched Dual Extruder")
         # NOTE: when pushing this page, the just_pushed callback will
         # allow the DuEx widget to load the current settings.
-        self.ui_controller.push(k_duexsetup_page)
+        self.ui_controller.push(Pages.DUEXSETUP_PAGE)
 
     def handle_term(self):
         self._log("UI: User touched Term")

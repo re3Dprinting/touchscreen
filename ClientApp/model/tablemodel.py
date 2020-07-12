@@ -20,4 +20,5 @@ class TableModel(QtCore.QAbstractListModel):
     
     @QtCore.pyqtSlot(int, int, result=str)
     def get(self, row, col):
-        return self.datalist[row].getDataFromIndex(col)
+        if len(self.datalist) > 0 :
+            return self.datalist[row].getDataFromIndex(col)

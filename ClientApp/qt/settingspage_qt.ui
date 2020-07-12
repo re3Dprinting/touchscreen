@@ -52,7 +52,7 @@
      <widget class="QWidget" name="scrollAreaWidgetContents">
       <property name="geometry">
        <rect>
-        <x>-67</x>
+        <x>0</x>
         <y>0</y>
         <width>1925</width>
         <height>347</height>
@@ -99,7 +99,7 @@
          </property>
          <property name="icon">
           <iconset resource="img.qrc">
-           <normaloff>:/img/img/Serial_Connection.png</normaloff>:/img/img/Serial_Connection.png</iconset>
+           <normaloff>:/img/img/Connection.png</normaloff>:/img/img/Connection.png</iconset>
          </property>
          <property name="iconSize">
           <size>
@@ -169,7 +169,7 @@
          </property>
          <property name="icon">
           <iconset resource="img.qrc">
-           <normaloff>:/img/img/Dual_Extruder_Setup.png</normaloff>:/img/img/Dual_Extruder_Setup.png</iconset>
+           <normaloff>:/img/img/Dual_Extruder_Calibration.png</normaloff>:/img/img/Dual_Extruder_Calibration.png</iconset>
          </property>
          <property name="iconSize">
           <size>

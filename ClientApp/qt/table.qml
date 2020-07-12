@@ -1,18 +1,37 @@
 import QtQuick 2.11
 import QtQuick.Controls 1.2
+import QtQuick.Controls.Styles 1.4
 
 Rectangle{
-
-    property int selectedRow: 2
     TableView{
+        property int selectedRow: -1
         id: tableView
         horizontalScrollBarPolicy: Qt.ScrollBarAlwaysOff
-        verticalScrollBarPolicy: Qt.ScrollBarAlwaysOff
+        verticalScrollBarPolicy: Qt.ScrollBarAsNeeded
         backgroundVisible: false
-        objectName: "softwareTableView"
+        objectName: "tableView"
         anchors.fill: parent
         model: tableModel
         alternatingRowColors: false
+        style: TableViewStyle{
+            decrementControl: Rectangle{
+                color: "transparent"
+            }
+            incrementControl: Rectangle{
+                color: "transparent"
+            }
+            scrollBarBackground: Rectangle{
+                color: "transparent"
+                width: 6
+            }
+            handle: Rectangle {
+                implicitWidth: 6
+                color:  "#393b3f"
+                radius: 3
+            }
+            minimumHandleLength: 20
+        }
+
         headerDelegate:
         Rectangle{
             height: 30
@@ -33,10 +52,10 @@ Rectangle{
             anchors.left: parent.left
             anchors.right: parent.right
             height:40
-            color: styleData.row === selectedRow? "#ffd400" : "#ffffff"
+            color: styleData.row === tableView.selectedRow? "#ffd400" : "#ffffff"
         }
         onClicked: {
-            selectedRow = row
+            tableView.selectedRow = row
             model.rowClicked(row)
         }
 

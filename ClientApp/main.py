@@ -29,7 +29,7 @@ from util.configid import get_touchscreen_commit_id
 from util.log import setup_root_logger
 
 from touchscreen.fsutils.ostype import *
-from constants import *
+from constants import Pages
 
 #################################################################
 
@@ -193,16 +193,16 @@ class MainHandler():
                 # There seems to be a thumb drive plugged in. Tell the UI
                 # print window to use it as the inital file list.
                 current_mountpoint = MountPoint(current_path)
-                print_page = mainwindow.get_page(k_print_page)
+                print_page = mainwindow.get_page(Pages.PRINT_PAGE)
                 print_page.update_usb_create(current_mountpoint)
-                userupdate_page = mainwindow.get_page(k_userupdate_page)
+                userupdate_page = mainwindow.get_page(Pages.USERUPDATE_PAGE)
                 userupdate_page.update_usb_create(current_mountpoint)
                 userupdate_page.usb_mounted = True
 
         # Set up the watchdog thread that watches the filesystem for
         # mounts of USB drives.
-        print_page = mainwindow.get_page(k_print_page)
-        userupdate_page = mainwindow.get_page(k_userupdate_page)
+        print_page = mainwindow.get_page(Pages.PRINT_PAGE)
+        userupdate_page = mainwindow.get_page(Pages.USERUPDATE_PAGE)
         wd_thread = WatchdogThread(print_page, self.persona.watchpoint,
                                    current_path, self.persona.localpath)
 

@@ -3,7 +3,7 @@ import math
 import time
 import glob
 
-from constants import k_logname
+from constants import LogConstants
 
 def filesys_blocks_free(path):
     vol_stats = os.statvfs(path)
@@ -137,7 +137,7 @@ def time_str(ltime):
 
 def log_file_cumulative_size(log_dir):
     (filesys_block_size, filesys_blocks_avail) = filesys_blocks_free(log_dir)
-    logfiles = glob.glob(log_dir + "/" + k_logname + "*")
+    logfiles = glob.glob(log_dir + "/" + LogConstants.LOGNAME + "*")
 
     total_blocks = 0
 

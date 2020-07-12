@@ -4,6 +4,7 @@ QWidget {
     background-color: #ffffff;
 } 
 
+
 QWidget[cssClass~="left-bar"]{
     background-color: #393b3f
 }
@@ -25,6 +26,16 @@ QLabel[cssClass~="align-left"]{ qproperty-alignment: AlignLeft;}
 QLabel[cssClass~="align-center"]{ qproperty-alignment: AlignCenter;}
 QLabel[cssClass~="align-right"]{ qproperty-alignment: AlignRight;}
 
+QTextBrowser[cssClass~="white-transparent-text"]{ color: white; background: rgba(255,255,255,0); }
+QTextBrowser[cssClass~="black-transparent-text"]{ color: black; background: rgba(255,255,255,0); }
+
+QTextBrowser[cssClass~="font-s"]{ font-family: Lato; font-size: 14px;}
+QTextBrowser[cssClass~="font-m"]{ font-family: Lato; font-size: 18px;}
+QTextBrowser[cssClass~="font-l"]{ font-family: Lato; font-size: 25px;}
+QTextBrowser[cssClass~="font-xl"]{ font-family: Lato; font-size: 40px;}
+
+
+QTextBrowser
 
 /* PUSHBUTTON STYLING */
 
@@ -34,17 +45,16 @@ QPushButton[cssClass~="btn-font-m"]{ font-family: Lato; font-size: 18px; }
 QPushButton[cssClass~="btn-font-l"]{ font-family: Lato; font-size: 25px; }
 QPushButton[cssClass~="btn-font-xl"]{ font-family: Lato; font-size: 40px; }
 
+QPushButton[cssClass~="white-text"]{ color: white; }
+QPushButton[cssClass~="black-text"]{ color: black; }
+
 /* Transparent Pushbutton */
-QPushButton[cssClass~="transparent-btn"]{ 
-    background: rgba(255,255,255,0); 
-    outline: none; 
-    border: none; 
-} 
-QPushButton:checked[cssClass~="transparent-btn"]{
-    background: rgba(255,255,255,0); 
-    outline: none; 
-    border: none;
-}
+QPushButton[cssClass~="transparent-btn"]{ background: rgba(255,255,255,0); outline: none; border: none; } 
+QPushButton:checked[cssClass~="transparent-btn"]{ background: rgba(255,255,255,0); outline: none; border: none; }
+
+/* Yellow Pushbutton */
+QPushButton[cssClass~="yellow-btn"]{ background: #ffd400; border: 1px solid #000000; border-radius:10px; } 
+QPushButton:pressed[cssClass~="yellow-btn"]{ background: #ffd400; border: 1px solid #000000; border-radius:10px; }
 
 /* Pressed Pushbutton Styling (white box if dark background, black box if light background) */
 QPushButton:pressed[cssClass~="btn-pressed-light"]{ border-style: solid; background-color: rgba(1,1,1,.15); }
@@ -56,7 +66,7 @@ QPushButton:checked[cssClass~="transparent-icon"]{ background: rgba(255,255,255,
 QPushButton:pressed[cssClass~="transparent-icon"]{ background: rgba(255,255,255,0); outline: none; border: none; }
 
 /* Checkable Pushbutton in Control Window */
-QPushButton:checked[cssClass~="yellow-btn"]{ background: #ffd400; border: 1px solid #000000; border-radius:10px; }
+QPushButton:checked[cssClass~="yellow-selected-btn"]{ background: #ffd400; border: 1px solid #000000; border-radius:10px; }
 
 /* QSCROLLBAR STYLING */
 
@@ -103,3 +113,17 @@ QHeaderView::section [cssClass~="table-mode-1"]{ color: black; background: rgba(
 QTableWidget:item [cssClass~="table-mode-1"] { color: black; background: rgba(255,255,255,0); font-family: Lato; font-size: 30px; }
 QTableView:item:selected[cssClass~="table-mode-1"]{ font-family: Lato; selection-background-color: #ffd400; }
 
+
+/* QCOMBOBOX STYLING */
+QComboBox {
+    font-family: Lato; 
+    font-size: 18px;
+    border: 1px solid black;
+    border-radius: 2px;
+    border: 1px solid #000000; border-radius:10px; 
+    background: #ffd400;
+}
+QComboBox::drop-down{
+    subcontrol-origin: padding;
+    subcontrol-position: bottom right;
+}

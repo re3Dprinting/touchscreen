@@ -71,7 +71,7 @@
           </property>
           <property name="icon">
            <iconset resource="img.qrc">
-            <normaloff>:/img/img/Add_Log_Marker_(2).png</normaloff>:/img/img/Add_Log_Marker_(2).png</iconset>
+            <normaloff>:/img/img/Add_Log_Marker.png</normaloff>:/img/img/Add_Log_Marker.png</iconset>
           </property>
           <property name="iconSize">
            <size>
@@ -152,7 +152,19 @@
          </widget>
         </item>
         <item>
-         <widget class="QLabel" name="label">
+         <widget class="QLabel" name="logging_label">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>25</height>
+           </size>
+          </property>
           <property name="text">
            <string>Logging level:</string>
           </property>
@@ -160,6 +172,21 @@
         </item>
         <item>
          <widget class="QComboBox" name="w_combobox_debuglevel">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>55</height>
+           </size>
+          </property>
+          <property name="frame">
+           <bool>false</bool>
+          </property>
           <item>
            <property name="text">
             <string>DEBUG</string>
