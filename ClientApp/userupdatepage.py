@@ -202,7 +202,7 @@ class UserUpdatePage(BasePage, Ui_UserUpdatePage):
 
         self.softwareTableModel.updateData(self.all_found_updates)
         self.SoftwareTable.rootObject().findChild(QtCore.QObject, "tableView").setProperty("selectedRow", -1)
-        # print(x.property("selectedRow"))
+        self.selectedRow = -1
         self.softwareTableModel.layoutChanged.emit()
 
         # If no versions are found, push a debug message to the window.

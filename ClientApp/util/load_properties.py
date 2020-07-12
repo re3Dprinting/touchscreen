@@ -57,7 +57,7 @@ def get_properties(personality, permission="Default"):
 
     # try:
     current_version = next(
-        (tag for tag in repo.tags if tag.commit == repo.head.commit), None)
+        (tag for tag in repo.tags if (tag.commit == repo.head.commit and "archive" not in tag.name)), None)
     if current_version == None:
         try:
             current_version = repo.active_branch.name

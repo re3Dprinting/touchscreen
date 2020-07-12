@@ -268,8 +268,8 @@
          <string/>
         </property>
         <property name="icon">
-         <iconset>
-          <normaloff>:/img/img/Update-rollback.png</normaloff>:/img/img/Update-rollback.png</iconset>
+         <iconset resource="img.qrc">
+          <normaloff>:/img/img/Update_rollback.png</normaloff>:/img/img/Update_rollback.png</iconset>
         </property>
         <property name="iconSize">
          <size>

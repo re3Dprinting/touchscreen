@@ -110,7 +110,7 @@ class Ui_UserUpdatePage(object):
         self.Update.setMaximumSize(QtCore.QSize(16777215, 16777215))
         self.Update.setText("")
         icon2 = QtGui.QIcon()
-        icon2.addPixmap(QtGui.QPixmap(":/img/img/Update-rollback.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon2.addPixmap(QtGui.QPixmap(":/img/img/Update_rollback.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.Update.setIcon(icon2)
         self.Update.setIconSize(QtCore.QSize(120, 60))
         self.Update.setObjectName("Update")
