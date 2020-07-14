@@ -42,13 +42,10 @@ class ControlPage(BasePage, Ui_ControlPage):
             self.DisableMotors, self.HomeAll, self.HomeXY, self.HomeZ, ])
         self.setAllTransparentButton([self.Back], True)
 
-        self.setAllTransparentIcon([self.XYIcon, self.ZIcon, self.E0Icon,
-                                    self.movex, self.movey, self.movez, self.movee])
+        self.setAllTransparentIcon([self.XYIcon, self.ZIcon, self.E0Icon, self.E1Icon])
 
-        self.xbutton = self.AddButtontoGroup("x")
-        self.ybutton = self.AddButtontoGroup("y")
-        self.zbutton = self.AddButtontoGroup("z")
-        self.ebutton = self.AddButtontoGroup("e")
+
+        self.globalIncrementSelector = self.AddButtontoGroup("global")
 
         self.xaxis = Axis("x", "4500", self, 25)
         self.yaxis = Axis("y", "4500", self, 25)
@@ -70,7 +67,8 @@ class ControlPage(BasePage, Ui_ControlPage):
 
         self.DisableMotors.clicked.connect(self.disablemotors)
         self.Back.clicked.connect(self.user_back)
-
+    def hello(self):
+        print("hello")
     def user_back(self):
         self._log("UI: User touched Back")
         self.close()
@@ -114,7 +112,7 @@ class ControlPage(BasePage, Ui_ControlPage):
             att = axis + "m" + i
             getattr(self, att).setCheckable(True)
             self.setStyleProperty(getattr(self, att),
-                                  "yellow-selected-btn transparent-btn")
+                                  "btn-font-s yellow-selected-btn transparent-btn black-text")
             group.addButton(getattr(self, att))
         getattr(self, axis + "m"+"10").setChecked(True)
         return group

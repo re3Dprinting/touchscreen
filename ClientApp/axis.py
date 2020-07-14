@@ -83,20 +83,13 @@ class Axis(object):
                 self.moveneg(self.holdmove)
 
     def init_increment(self):
-        curr_ax = "".join([i for i in self.ax if not i.isdigit()])
-        # self.inc = getattr(self.parent, curr_ax +
-        #                    "button").checkedButton().text()
-        self.inc = '10'
         self._log("UI: Increment = %s" % self.inc)
-        getattr(self.parent, curr_ax +
-                "button").buttonClicked.connect(self.updateincrement)
+        self.parent.globalIncrementSelector.buttonClicked.connect(self.updateincrement)
 
     def updateincrement(self):
-        curr_ax = "".join([i for i in self.ax if not i.isdigit()])
-        self.inc = getattr(self.parent, curr_ax +
-                           "button").checkedButton().text()
         self._log("UI: User set <%s> increment to <%s>" % (self.ax, self.inc))
-
+        self.inc = self.parent.globalIncrementSelector.checkedButton().text()
+        
     def travel_limits(self):
         if self.maxx != None and self.position > self.maxx:
             self.position = self.maxx

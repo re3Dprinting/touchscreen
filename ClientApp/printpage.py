@@ -107,6 +107,8 @@ class PrintPage(BasePage, Ui_PrintPage):
         self.pushbutton_SDtab.clicked.connect(self.setSDtab)
         self.pushbutton_USBtab.clicked.connect(self.setUSBtab)
         self.pushbutton_Localtab.clicked.connect(self.setLocaltab)
+        self.ButtonTabs = {"LOCAL":self.pushbutton_Localtab, "USB":self.pushbutton_USBtab, "SD": self.pushbutton_SDtab}
+
         self.print_method = ""
         self.setLocaltab()
         self.file_being_printed = "-----"
@@ -126,6 +128,7 @@ class PrintPage(BasePage, Ui_PrintPage):
         self.USBFileList.setAutoScroll(False)
 
     def setSDtab(self):
+        self.changeTabTo("SD")
         self.print_method = "SD"
         self.usb_file_manager.disable()
         self.local_file_manager.disable()
@@ -133,6 +136,7 @@ class PrintPage(BasePage, Ui_PrintPage):
         self.toggleButtons(True)
 
     def setUSBtab(self):
+        self.changeTabTo("USB")
         self.print_method = "USB"
         self.usb_file_manager.enable()
         self.local_file_manager.disable()
@@ -140,11 +144,20 @@ class PrintPage(BasePage, Ui_PrintPage):
         self.toggleButtons(False)
 
     def setLocaltab(self):
+        self.changeTabTo("LOCAL")
         self.print_method = "Local"
         self.usb_file_manager.disable()
         self.local_file_manager.enable()
         self.stackedPrintingOptions.setCurrentIndex(2)
         self.toggleButtons(False)
+
+    def changeTabTo(self, selectedTab):
+        for tab in self.ButtonTabs:
+            if tab == selectedTab:
+                self.ButtonTabs[tab].setIcon(QtGui.QIcon(QtGui.QPixmap((":/img/img/"+tab+".png"))))
+            else:
+                self.ButtonTabs[tab].setIcon(QtGui.QIcon(QtGui.QPixmap(QtGui.QPixmap(":/img/img/"+tab+"_2.png"))))
+
 
     def toggleButtons(self, isSDprinting):
         self.pushbutton_scan_sd.setVisible(isSDprinting)

@@ -74,7 +74,7 @@
           </property>
           <property name="icon">
            <iconset resource="img.qrc">
-            <normaloff>:/img/img/SD.png</normaloff>:/img/img/SD.png</iconset>
+            <normaloff>:/img/img/SD_2.png</normaloff>:/img/img/SD_2.png</iconset>
           </property>
           <property name="iconSize">
            <size>
@@ -109,7 +109,7 @@
           </property>
           <property name="icon">
            <iconset resource="img.qrc">
-            <normaloff>:/img/img/USB.png</normaloff>:/img/img/USB.png</iconset>
+            <normaloff>:/img/img/USB_2.png</normaloff>:/img/img/USB_2.png</iconset>
           </property>
           <property name="iconSize">
            <size>
@@ -144,7 +144,7 @@
           </property>
           <property name="icon">
            <iconset resource="img.qrc">
-            <normaloff>:/img/img/LOCAL.png</normaloff>:/img/img/LOCAL.png</iconset>
+            <normaloff>:/img/img/LOCAL_2.png</normaloff>:/img/img/LOCAL_2.png</iconset>
           </property>
           <property name="iconSize">
            <size>
