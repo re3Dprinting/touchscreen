@@ -3,6 +3,7 @@ import QtQuick.Controls 1.2
 import QtQuick.Controls.Styles 1.4
 
 Rectangle{
+    id: main
     TableView{
         property int selectedRow: -1
         id: tableView
@@ -31,7 +32,6 @@ Rectangle{
             }
             minimumHandleLength: 20
         }
-
         headerDelegate:
         Rectangle{
             height: 30
@@ -40,11 +40,12 @@ Rectangle{
                 font.family: "Lato"
                 font.pixelSize: 23
                 text: styleData.value
-                anchors.left: parent.left
-                anchors.right: parent.right
+                anchors.fill: parent
                 horizontalAlignment: styleData.column === 0 ? Text.AlignRight : Text.AlignLeft
                 anchors.leftMargin: 10
                 anchors.rightMargin: 10
+//                anchors.left: parent.left
+//                anchors.right: parent.right
             }
         }
 
@@ -52,7 +53,7 @@ Rectangle{
             anchors.left: parent.left
             anchors.right: parent.right
             height:40
-            color: styleData.row === tableView.selectedRow? "#ffd400" : "#ffffff"
+            color: styleData.row === tableView.selectedRow? "#ffd400" : "transparent"
         }
         onClicked: {
             tableView.selectedRow = row
@@ -61,30 +62,35 @@ Rectangle{
 
 
         TableViewColumn{
-            title: "Version"
+            title: tableModel.getTitle(0)
+            movable: false
             delegate: columndel
+            width: main.width * tableModel.getColumnWeight(0)
+            resizable: false
         }
         TableViewColumn{
-            title: "Release Date"
+            title: tableModel.getTitle(1)
+            movable: false
             delegate: columndel
+            width: main.width * tableModel.getColumnWeight(1)
+            resizable: false
         }
-
     }
-
 
     Component{
         id: columndel
-
-        Text{
-            font.family: "Lato"
-            font.pixelSize: 14
-            anchors.fill: parent
-            anchors.leftMargin: 10
-            anchors.rightMargin: 10
-            horizontalAlignment: styleData.column === 0 ? Text.AlignRight : Text.AlignLeft
-            verticalAlignment: Text.AlignVCenter
-            text: tableView.model.get(styleData.row, styleData.column)
-
+        Rectangle{
+            color: "transparent"
+            Text{
+                font.family: "Lato"
+                font.pixelSize: 14
+                anchors.fill: parent
+                anchors.leftMargin: 10
+                anchors.rightMargin: 10
+                horizontalAlignment: styleData.column === 0 ? Text.AlignRight : Text.AlignLeft
+                verticalAlignment: Text.AlignVCenter
+                text: tableView.model.get(styleData.row, styleData.column)
+            }
         }
     }
 

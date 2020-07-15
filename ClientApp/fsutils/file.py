@@ -32,6 +32,15 @@ class File:
         if(self.extract_path): print("Extracted path: <%s>" % self.extract_path)
         if(self.timestamp): print("Last modified: <%s>" % self.timestamp)
 
+    def getDataFromIndex(self, index):
+        if(index == 0): return self.displayname
+        elif(index == 1): 
+            if self.type == "d":
+                return ""
+            else:
+                return str(self.size)
+        return None
+
     def __eq__(self, other):
         return (self.comparename, self.size) == \
                (other.comparename, other.size)

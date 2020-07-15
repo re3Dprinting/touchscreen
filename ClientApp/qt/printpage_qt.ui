@@ -296,93 +296,194 @@
        <property name="currentIndex">
         <number>2</number>
        </property>
-       <widget class="QWidget" name="SD">
+       <widget class="QWidget" name="SDMainLayout">
+        <property name="font">
+         <font>
+          <family>.AppleSystemUIFont</family>
+         </font>
+        </property>
         <layout class="QVBoxLayout" name="verticalLayout_2">
+         <property name="spacing">
+          <number>0</number>
+         </property>
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
          <item>
-          <widget class="QLabel" name="sd_pathlabel">
-           <property name="font">
-            <font>
-             <pointsize>14</pointsize>
-            </font>
+          <layout class="QHBoxLayout" name="Text">
+           <property name="spacing">
+            <number>0</number>
            </property>
-           <property name="text">
-            <string>Files on Viki SD Card</string>
+           <property name="leftMargin">
+            <number>10</number>
            </property>
-          </widget>
+           <property name="topMargin">
+            <number>10</number>
+           </property>
+           <property name="rightMargin">
+            <number>10</number>
+           </property>
+           <property name="bottomMargin">
+            <number>10</number>
+           </property>
+           <item>
+            <widget class="QLabel" name="sd_pathlabel">
+             <property name="font">
+              <font>
+               <family>.AppleSystemUIFont</family>
+               <pointsize>14</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>SD Card Files:     </string>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </item>
          <item>
-          <widget class="QTableWidget" name="SDFileList">
-           <column>
-            <property name="text">
-             <string>Name</string>
-            </property>
-           </column>
-           <column>
-            <property name="text">
-             <string>Size</string>
-            </property>
-           </column>
-          </widget>
-         </item>
-        </layout>
-       </widget>
-       <widget class="QWidget" name="USB">
-        <layout class="QVBoxLayout" name="verticalLayout_3">
-         <item>
-          <widget class="QLabel" name="usb_pathlabel">
-           <property name="font">
-            <font>
-             <pointsize>14</pointsize>
-            </font>
-           </property>
-           <property name="text">
-            <string>TextLabel</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QTableWidget" name="USBFileList">
-           <column>
-            <property name="text">
-             <string>Name</string>
-            </property>
-           </column>
-           <column>
-            <property name="text">
-             <string>Size</string>
-            </property>
-           </column>
-          </widget>
+          <layout class="QHBoxLayout" name="SDTableLayout"/>
          </item>
         </layout>
        </widget>
-       <widget class="QWidget" name="Local">
+       <widget class="QWidget" name="USBMainLayout">
+        <layout class="QVBoxLayout" name="verticalLayout">
+         <property name="spacing">
+          <number>0</number>
+         </property>
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item>
+          <layout class="QHBoxLayout" name="Text2">
+           <property name="spacing">
+            <number>0</number>
+           </property>
+           <property name="leftMargin">
+            <number>10</number>
+           </property>
+           <property name="topMargin">
+            <number>10</number>
+           </property>
+           <property name="rightMargin">
+            <number>10</number>
+           </property>
+           <property name="bottomMargin">
+            <number>10</number>
+           </property>
+           <item>
+            <widget class="QLabel" name="USB_Label">
+             <property name="text">
+              <string>USB Files:    </string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="usb_pathlabel">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>14</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>TextLabel</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="USBTableLayout"/>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="LocalMainLayout">
         <layout class="QVBoxLayout" name="verticalLayout_4">
+         <property name="spacing">
+          <number>0</number>
+         </property>
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
          <item>
-          <widget class="QLabel" name="loc_pathlabel">
-           <property name="font">
-            <font>
-             <pointsize>14</pointsize>
-            </font>
+          <layout class="QHBoxLayout" name="Text3">
+           <property name="spacing">
+            <number>0</number>
            </property>
-           <property name="text">
-            <string>TextLabel</string>
+           <property name="leftMargin">
+            <number>10</number>
            </property>
-          </widget>
+           <property name="topMargin">
+            <number>10</number>
+           </property>
+           <property name="rightMargin">
+            <number>10</number>
+           </property>
+           <property name="bottomMargin">
+            <number>10</number>
+           </property>
+           <item>
+            <widget class="QLabel" name="Local_Label">
+             <property name="text">
+              <string>Local Files:     </string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="loc_pathlabel">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>14</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>TextLabel</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </item>
          <item>
-          <widget class="QTableWidget" name="LocalFileList">
-           <column>
-            <property name="text">
-             <string>Name</string>
-            </property>
-           </column>
-           <column>
-            <property name="text">
-             <string>Size</string>
-            </property>
-           </column>
-          </widget>
+          <layout class="QHBoxLayout" name="LocalTableLayout"/>
          </item>
         </layout>
        </widget>

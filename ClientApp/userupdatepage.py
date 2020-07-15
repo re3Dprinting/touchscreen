@@ -20,7 +20,8 @@ from enum import Enum
 
 import zipfile
 import tarfile
-from threading import Thread
+import threading
+from threading import Thread, Timer
 from qt.userupdatepage_qt import Ui_UserUpdatePage
 from notification import Notification
 from basepage import BasePage
@@ -51,6 +52,7 @@ class UserUpdatePage(BasePage, Ui_UserUpdatePage):
     uiUpdateSignal = pyqtSignal(str)
     unzipProgressSignal = pyqtSignal(str, bool)
     rowClickedSignal = pyqtSignal(int)
+    exitSignal = pyqtSignal()
     def __init__(self, context):
         super(UserUpdatePage, self).__init__()
 
@@ -98,6 +100,8 @@ class UserUpdatePage(BasePage, Ui_UserUpdatePage):
         self.unzipProgressSignal.connect(self.display_stored_text)
         self.store_text = ""
 
+        self.exitSignal.connect(self.exit_now)
+
         # self.DebugOutput.setLineWrapMode(QtWidgets.QTextBrowser.NoWrap)
 
         #  Append the version to the current version window.
@@ -112,6 +116,8 @@ class UserUpdatePage(BasePage, Ui_UserUpdatePage):
                               "white-transparent-text font-m align-center")
         self.setAllStyleProperty([self.DebugOutput], "black-transparent-text font-s")
 
+
+        #Create User-Update QML Table
         self.SoftwareTable = QtQuickWidgets.QQuickWidget(self.MainLayout)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
@@ -119,15 +125,15 @@ class UserUpdatePage(BasePage, Ui_UserUpdatePage):
         sizePolicy.setHeightForWidth(self.SoftwareTable.sizePolicy().hasHeightForWidth())
         self.SoftwareTable.setSizePolicy(sizePolicy)
         self.SoftwareTable.setResizeMode(QtQuickWidgets.QQuickWidget.SizeRootObjectToView)
-        self.softwareTableModel = TableModel(self, self.rowClickedSignal)
+        self.softwareTableModel = TableModel(self, ["Version", "Released Date"], [1,1], rowClickedSignal = self.rowClickedSignal)
         self.rowClickedSignal.connect(self.show_update_message)
         self.SoftwareTable.rootContext().setContextProperty("tableModel", self.softwareTableModel)
         self.selectedRow = None
 
         self.SoftwareTable.setSource(QtCore.QUrl("qrc:/qml/table.qml"))
-        self.SoftwareTable.setObjectName("SoftwareTable")
+        # self.SoftwareTable.setObjectName("SoftwareTable")
         self.SoftwareTableLayout.addWidget(self.SoftwareTable)
-
+        self.SoftwareTable.setFocus()
 
         # # OLD IMPLEMENTATION OF QT WIDGET, QTABLEWIDGET. DID NOT WORK WITH KINETIC SCROLLING ON TOUCHSCREEN.
         # # Make the selection Behavior as selecting the entire row
@@ -154,7 +160,6 @@ class UserUpdatePage(BasePage, Ui_UserUpdatePage):
         self.CheckUpdate.clicked.connect(self.checkupdate)
         self.Update.clicked.connect(self.update)
 
-        
 
     def checkupdate(self):
         self.DebugOutput.clear()
@@ -200,7 +205,7 @@ class UserUpdatePage(BasePage, Ui_UserUpdatePage):
 
         self.display_stored_text(msg)
 
-        self.softwareTableModel.updateData(self.all_found_updates)
+        self.softwareTableModel.updateDataList(self.all_found_updates)
         self.SoftwareTable.rootObject().findChild(QtCore.QObject, "tableView").setProperty("selectedRow", -1)
         self.selectedRow = -1
         self.softwareTableModel.layoutChanged.emit()
@@ -336,7 +341,11 @@ class UserUpdatePage(BasePage, Ui_UserUpdatePage):
     def update(self):
         if self.selectedRow != None:
             self.display_text("Updating....")
-            self.backup_software()
+            self.popup_signal.emit("", "Updating Touchscreen Software", "DO NOT UNPLUG DEVICE")
+
+            backupThread = Thread(target=self.backup_software)
+            backupThread.setDaemon(True)
+            backupThread.start()
 
             update = self.all_found_updates[self.selectedRow]
             if(update.type == UpdateType.USB):
@@ -351,10 +360,15 @@ class UserUpdatePage(BasePage, Ui_UserUpdatePage):
                     self.display_text("Update failed. File type not supported")
             elif(update.type == UpdateType.GIT):
                 self.git.checkout(update.name, force=True)
-
-            sys.exit(0)
+            Thread(target = lambda : self.exit_in(3) ).start()
         else:
             self.display_text("Select a Version on list")
+    
+    def exit_in(self, seconds):
+        time.sleep(seconds)
+        self.exitSignal.emit()
+    def exit_now(self):
+        sys.exit(0)
         
 
     def backup_software(self):

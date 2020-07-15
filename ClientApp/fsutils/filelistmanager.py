@@ -8,7 +8,7 @@ from .subfilesystem import SubFileSystem
 
 class FileListManager:
 
-    def __init__(self, name, file_list_wid, watchpoint,
+    def __init__(self, name, table_model, qmltable, watchpoint,
                  pathlabel_wid, pushbutton_up_wid,
                  pushbutton_open_wid, pushbutton_print_wid):
 
@@ -24,22 +24,26 @@ class FileListManager:
         self.pushbutton_open_wid = pushbutton_open_wid
         self.pushbutton_print_wid = pushbutton_print_wid
 
-        self.file_list_wid = file_list_wid
+        self.table_model = table_model
+        self.qmltable = qmltable
         self.watchpoint = watchpoint
         self.pathlabel_wid = pathlabel_wid
 
         self.item_stack = []
 
-        self.file_list_wid.setSelectionBehavior(
-            QtWidgets.QTableView.SelectRows)
-        self.file_list_wid.setSelectionMode(
-            QtWidgets.QTableView.SingleSelection)
-        self.file_list_wid.verticalHeader().hide()
+        # self.file_list_wid.setSelectionBehavior(
+        #     QtWidgets.QTableView.SelectRows)
+        # self.file_list_wid.setSelectionMode(
+        #     QtWidgets.QTableView.SingleSelection)
+        # self.file_list_wid.verticalHeader().hide()
 
-        header = self.file_list_wid.horizontalHeader()
-        header.setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
+        # header = self.file_list_wid.horizontalHeader()
+        # header.setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
 
-        self.file_list_wid.itemSelectionChanged.connect(self.itemClicked)
+        # self.file_list_wid.itemSelectionChanged.connect(self.itemClicked)
+
+        self.table_model.rowClickedSignal.connect(self.rowClicked)
+        self.selectedRow = -1
 
         self.pushbutton_open_wid.clicked.connect(self.open_subdir)
         self.pushbutton_up_wid.clicked.connect(self.up_dir)
@@ -60,58 +64,58 @@ class FileListManager:
         self.enabled = False
 
     def update_files(self):
-        self.file_list_wid.clearContents()
-        self.file_list_wid.setRowCount(0)
         files = self.subdir.list()
+        self.table_model.updateDataList(files)
+        self.table_model.layoutChanged.emit()
 
-        for file in files:
-            rowpos = self.file_list_wid.rowCount()
+        # self.file_list_wid.clearContents()
+        # self.file_list_wid.setRowCount(0)
+        # for file in files:
+        #     rowpos = self.file_list_wid.rowCount()
 
-            self.file_list_wid.insertRow(rowpos)
+        #     self.file_list_wid.insertRow(rowpos)
 
-            file = QtWidgets.QTableWidgetItem(file.displayname)
-            file.setFlags(Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
+        #     file = QtWidgets.QTableWidgetItem(file.displayname)
+        #     file.setFlags(Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
 
-            if file.type == 'f':
-                size_str = str(file.size)
-            else:
-                size_str = ""
+        #     if file.type == 'f':
+        #         size_str = str(file.size)
+        #     else:
+        #         size_str = ""
 
-            size = QtWidgets.QTableWidgetItem(size_str)
-            size.setFlags(Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
+        #     size = QtWidgets.QTableWidgetItem(size_str)
+        #     size.setFlags(Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
 
-            self.file_list_wid.setItem(rowpos, 0, file)
-            self.file_list_wid.setItem(rowpos, 1, size)
+        #     self.file_list_wid.setItem(rowpos, 0, file)
+        #     self.file_list_wid.setItem(rowpos, 1, size)
 
     def clear_files(self):
         self.pathlabel_wid.setText("")
-        self.file_list_wid.clearContents()
-        self.file_list_wid.setRowCount(0)
+        self.table_model.updateDataList([])
+        self.table_model.layoutChanged.emit()
+        # self.file_list_wid.clearContents()
+        # self.file_list_wid.setRowCount(0)
 
-    def get_selected_file(self):
-        return self.get_selected_widget_file(self.file_list_wid, self.subdir)
+    # def get_selected_file(self):
+    #     return self.get_selected_widget_file(self.file_list_wid, self.subdir)
 
-    def get_selected_widget_file(self, list_widget, subdir):
+    # def get_selected_widget_file(self, list_widget, subdir):
 
-        foolist = list_widget.selectedItems()
+    #     # foolist = list_widget.selectedItems()
+        
+    #     # if len(foolist) < 1:
+    #     #     return (-1, None)
 
-        if len(foolist) < 1:
-            return (-1, None)
+    #     # selected_row = list_widget.currentRow()
 
-        selected_row = list_widget.currentRow()
+    #     # if selected_row == -1:
+    #     #     return (-1, None, None)
 
-        if selected_row == -1:
-            return (-1, None, None)
+    #     return( row, )
 
-        selected_file = subdir.files[selected_row]
+    #     selected_file = subdir.files[selected_row]
 
-        # selected_item = list_widget.currentItem()
-
-        # selected_file_name = selected_file.name
-        # selected_file_path = subdir.cwd + "/" + selected_file_name
-
-        # return (selected_row, selected_file, selected_item, selected_file_path)
-        return (selected_row, selected_file)
+    #     return (selected_row, selected_file)
 
     def update_button_states_none(self):
         self.pushbutton_up_wid.setEnabled(False)
@@ -119,50 +123,52 @@ class FileListManager:
         self.pushbutton_print_wid.setEnabled(False)
 
     def update_button_states(self):
-        select_tuple = self.get_selected_file()
 
-        selected_row, selected_file = select_tuple
-
+        #Enabled up directory if we are in subdirectory
         if self.subdir.depth() > 0:
             self.pushbutton_up_wid.setEnabled(True)
         else:
             self.pushbutton_up_wid.setEnabled(False)
-
-        if selected_row == -1:
+        #Nothing is Selected.
+        if self.selectedRow == -1:
             self.pushbutton_open_wid.setEnabled(False)
             self.pushbutton_print_wid.setEnabled(False)
             return
 
-        if selected_file.type == 'd':
+        if self.selectedFile.type == 'd':
             self.pushbutton_open_wid.setEnabled(True)
             self.pushbutton_print_wid.setEnabled(False)
 
-        elif selected_file.type == 'f':
+        elif self.selectedFile.type == 'f':
             self.pushbutton_open_wid.setEnabled(False)
             self.pushbutton_print_wid.setEnabled(True)
 
-    def itemClicked(self):
+    def rowClicked(self, row):
         self._log("UI: User touched item")
-        row = self.file_list_wid.currentRow()
+        self.selectedRow = row
+        self.selectedFile = self.table_model.getDataList()[self.selectedRow]
         self.update_button_states()
+
 
     def open_subdir(self):
         if not self.enabled:
             return
         self._log("UI: User touched Open")
-        (selected_row, selected_file) = self.get_selected_file()
+        # (selected_row, selected_file) = self.get_selected_file()
 
-        if selected_row is None:
+        if self.selectedRow == -1:
             return
 
-        if selected_file.type != 'd':
+        if self.selectedFile.type != 'd':
             return
 
-        self.item_stack.append(selected_row)
+        self.item_stack.append(self.selectedRow)
 
-        self.subdir.cd(selected_file.name)
+        self.subdir.cd(self.selectedFile.name)
         self.update_files()
-        self.showFileAndDeselect(0)
+
+        #Deselect the row
+        self.setSelectedRow(-1)
         self.update_button_states()
         self.pathlabel_wid.setText(self.subdir.abspath)
 
@@ -173,11 +179,24 @@ class FileListManager:
         self.subdir.up()
         self.update_files()
 
+        #Scroll to previous selected file
         selected_row = self.item_stack.pop()
-        self.showFile(selected_row)
-
+        # self.showFile(selected_row)
+        self.setSelectedRow(selected_row)
         self.update_button_states()
         self.pathlabel_wid.setText(self.subdir.abspath)
+
+    #Called when the printpage recieved a signal the a USB path is mounted. 
+    def update_create(self, path):
+        self.pathlabel_wid.setText(path)
+        self.subdir = SubFileSystem(path)
+        self.update_files()
+        self.update_button_states()
+
+    def setSelectedRow(self, row):
+        self.selectedRow = row
+        self.selectedFile = None if (row == -1) else self.table_model.getDataList()[self.selectedRow]
+        self.qmltable.rootObject().findChild(QtCore.QObject, "tableView").setProperty("selectedRow", row)
 
     def showFile(self, selected_row):
         self.file_list_wid.setCurrentCell(selected_row, 0)
@@ -189,9 +208,3 @@ class FileListManager:
         selected_item = self.file_list_wid.currentItem()
         self.file_list_wid.scrollToItem(selected_item)
         self.file_list_wid.setCurrentItem(None)
-
-    def update_create(self, path):
-        self.pathlabel_wid.setText(path)
-        self.subdir = SubFileSystem(path)
-        self.update_files()
-        self.update_button_states()
