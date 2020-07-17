@@ -4,12 +4,24 @@ QWidget {
     background-color: #ffffff;
 } 
 
+QWidget[cssClass~="pop-up"]{
+    background-color: white;
+    border: 1px solid #000000; 
+    border-radius:25px;
+}
+QDialog[cssClass~="transparent"]{ 
+    background-color: rgba(255,255,255,0); 
+}
+QWidget[cssClass~="transparent"]{ 
+    background-color: rgba(255,255,255,0); 
+}
+
 
 QWidget[cssClass~="left-bar"]{
-    background-color: #393b3f
+    background-color: #393b3f;
 }
 QWidget[cssClass~="bottom-bar"]{
-    background-color: black
+    background-color: black;
 }
 
 /* QLABEL STYLING */
@@ -53,8 +65,8 @@ QPushButton[cssClass~="transparent-btn"]{ background: rgba(255,255,255,0); outli
 QPushButton:checked[cssClass~="transparent-btn"]{ background: rgba(255,255,255,0); outline: none; border: none; }
 
 /* Yellow Pushbutton */
-QPushButton[cssClass~="yellow-btn"]{ background: #ffd400; border: 1px solid #000000; border-radius:10px; } 
-QPushButton:pressed[cssClass~="yellow-btn"]{ background: #ffd400; border: 1px solid #000000; border-radius:10px; }
+QPushButton[cssClass~="yellow-btn"]{ background: #ffd400; border: 1px solid #000000; border-radius:25px; } 
+QPushButton:pressed[cssClass~="yellow-btn"]{ background: #ffd400; border: 1px solid #000000; border-radius:25px; }
 
 /* Pressed Pushbutton Styling (white box if dark background, black box if light background) */
 QPushButton:pressed[cssClass~="btn-pressed-light"]{ border-style: solid; background-color: rgba(1,1,1,.15); }

@@ -133,7 +133,7 @@ class UserUpdatePage(BasePage, Ui_UserUpdatePage):
         self.SoftwareTable.setSource(QtCore.QUrl("qrc:/qml/table.qml"))
         # self.SoftwareTable.setObjectName("SoftwareTable")
         self.SoftwareTableLayout.addWidget(self.SoftwareTable)
-        self.SoftwareTable.setFocus()
+
 
         # # OLD IMPLEMENTATION OF QT WIDGET, QTABLEWIDGET. DID NOT WORK WITH KINETIC SCROLLING ON TOUCHSCREEN.
         # # Make the selection Behavior as selecting the entire row
@@ -341,7 +341,7 @@ class UserUpdatePage(BasePage, Ui_UserUpdatePage):
     def update(self):
         if self.selectedRow != None:
             self.display_text("Updating....")
-            self.popup_signal.emit("", "Updating Touchscreen Software", "DO NOT UNPLUG DEVICE")
+            self.popup_signal.emit("Updating Touchscreen Software", "DO NOT UNPLUG DEVICE", "", True)
 
             backupThread = Thread(target=self.backup_software)
             backupThread.setDaemon(True)
@@ -441,4 +441,6 @@ class UserUpdatePage(BasePage, Ui_UserUpdatePage):
             if len(usbUpdates) > 0:
                 return True
         return False
+    def showEvent(self, event):
+        self.SoftwareTable.setFocus()
             

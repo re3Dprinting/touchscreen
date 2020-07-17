@@ -70,7 +70,7 @@ class DebugPage(BasePage, Ui_DebugPage):
             new_level_str = "INFO"
             root_logger.setLevel(logging.INFO)
 
-        self.popup_signal.emit("", "New Logging Level: "+new_level_str, "")
+        self.popup_signal.emit("", "New Logging Level: "+new_level_str, "", False)
 
     def handle_add_marker(self):
         self._log("UI: User touched Add Marker")

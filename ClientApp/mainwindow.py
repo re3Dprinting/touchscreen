@@ -113,7 +113,7 @@ class MainWindow(BasePage, Ui_MainWindow, QtWidgets.QMainWindow):
             # This is the default message.
             message_string += "Printer halted."
 
-            self.popup_signal.emit("*** ERROR ***", message_string, detail_string)
+            self.popup_signal.emit("*** ERROR ***", message_string, detail_string, False)
  
 
     def state_changed_callback(self, payload):
@@ -191,8 +191,9 @@ class MainWindow(BasePage, Ui_MainWindow, QtWidgets.QMainWindow):
             # was empty.
             self._log("ERROR: popping from an empty stack!")
 
-    def show_popup(self, title, mess, dets):
+    def show_popup(self, title, mess, dets, hideButton = False):
         self.popup.popup_title.setText(title)
         self.popup.popup_message.setText(mess)
         self.popup.popup_details.setText(dets)
+        if(hideButton): self.popup.popup_button.setVisible(False)
         self.popup.show()

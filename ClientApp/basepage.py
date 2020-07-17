@@ -2,7 +2,7 @@ from PyQt5 import QtWidgets, QtCore
 
 
 class BasePage(QtWidgets.QWidget):
-    popup_signal = QtCore.pyqtSignal(str, str, str)
+    popup_signal = QtCore.pyqtSignal(str, str, str, bool)
     def __init__(self):
         super(BasePage, self).__init__()
 

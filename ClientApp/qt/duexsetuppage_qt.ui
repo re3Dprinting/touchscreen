@@ -118,7 +118,7 @@
           </property>
           <property name="icon">
            <iconset resource="img.qrc">
-            <normaloff>:/img/img/Add_Log_Marker.png</normaloff>:/img/img/Add_Log_Marker.png</iconset>
+            <normaloff>:/img/img/Save_Temporarily.png</normaloff>:/img/img/Save_Temporarily.png</iconset>
           </property>
           <property name="iconSize">
            <size>

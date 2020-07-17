@@ -100,7 +100,7 @@ class SerialPage(BasePage, Ui_SerialPage):
                 # error dialog.
 
                 self._log("Disconnect unexpected, popping up error dialog.")
-                self.popup_signal.emit("*** ERROR ***", "Printer disconnected", "")
+                self.popup_signal.emit("*** ERROR ***", "Printer disconnected", "", False)
 
 
         if to_state == "OPERATIONAL":

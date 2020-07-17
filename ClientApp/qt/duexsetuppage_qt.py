@@ -53,7 +53,7 @@ class Ui_DuExSetupPage(object):
         self.w_pushbutton_temporary.setMaximumSize(QtCore.QSize(16777215, 16777215))
         self.w_pushbutton_temporary.setText("")
         icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap(":/img/img/Add_Log_Marker.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon1.addPixmap(QtGui.QPixmap(":/img/img/Save_Temporarily.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.w_pushbutton_temporary.setIcon(icon1)
         self.w_pushbutton_temporary.setIconSize(QtCore.QSize(140, 65))
         self.w_pushbutton_temporary.setObjectName("w_pushbutton_temporary")

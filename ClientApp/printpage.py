@@ -131,7 +131,7 @@ class PrintPage(BasePage, Ui_PrintPage):
         self.ButtonTabs = {"LOCAL":self.pushbutton_Localtab, "USB":self.pushbutton_USBtab, "SD": self.pushbutton_SDtab}
 
         self.print_method = ""
-        self.setLocaltab()
+        self.setSDtab()
         self.file_being_printed = "-----"
 
         self.setAllTransparentButton([self.Back, self.pushbutton_active_print, self.pushbutton_start_print, self.pushbutton_stop_print,
@@ -363,7 +363,10 @@ class PrintPage(BasePage, Ui_PrintPage):
             self.pushbutton_start_print.setEnabled(False)
             self.pushbutton_active_print.setEnabled(True)
             self.pushbutton_stop_print.setEnabled(True)
-
+    def showEvent(self, event):
+        self.USBTable.setFocus()
+        self.SDTable.setFocus()
+        self.LocalTable.setFocus()
 
 
 
