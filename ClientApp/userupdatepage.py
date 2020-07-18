@@ -128,33 +128,12 @@ class UserUpdatePage(BasePage, Ui_UserUpdatePage):
         self.softwareTableModel = TableModel(self, ["Version", "Released Date"], [1,1], rowClickedSignal = self.rowClickedSignal)
         self.rowClickedSignal.connect(self.show_update_message)
         self.SoftwareTable.rootContext().setContextProperty("tableModel", self.softwareTableModel)
-        self.selectedRow = None
+        #Set the current row to -1 representing no row is selected. 
+        self.selectedRow = -1
 
         self.SoftwareTable.setSource(QtCore.QUrl("qrc:/qml/table.qml"))
         # self.SoftwareTable.setObjectName("SoftwareTable")
         self.SoftwareTableLayout.addWidget(self.SoftwareTable)
-
-
-        # # OLD IMPLEMENTATION OF QT WIDGET, QTABLEWIDGET. DID NOT WORK WITH KINETIC SCROLLING ON TOUCHSCREEN.
-        # # Make the selection Behavior as selecting the entire row
-        # self.SoftwareList.setSelectionBehavior(QtWidgets.QTableView.SelectRows)
-        # self.SoftwareList.setSelectionMode(
-        #     QtWidgets.QTableView.SingleSelection)
-        # # Update the side dialog box when a software version is selected.
-        # self.SoftwareList.itemSelectionChanged.connect(
-        #     self.show_update_message)
-        # # Hide the vertical header which contains the Index of the row.
-        # self.SoftwareList.verticalHeader().hide()
-        # # Stretch out the horizontal header to take up the entire view
-        # header = self.SoftwareList.horizontalHeader()
-        # header.setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
-        # header.setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
-
-        # self.SoftwareList.setVerticalScrollMode(
-        #     QtWidgets.QAbstractItemView.ScrollPerPixel)
-        # self.SoftwareList.setAutoScroll(False)
-        # QtWidgets.QScroller.grabGesture(
-        #     self.SoftwareList, QtWidgets.QScroller.LeftMouseButtonGesture)
 
         self.Back.clicked.connect(self.back)
         self.CheckUpdate.clicked.connect(self.checkupdate)
@@ -339,7 +318,7 @@ class UserUpdatePage(BasePage, Ui_UserUpdatePage):
     #   Move the current touchscreen git project to another folder in root directory for backup
     #   Uses psutil to kill the current process, then calls sys.exit(0)
     def update(self):
-        if self.selectedRow != None:
+        if self.selectedRow != -1:
             self.display_text("Updating....")
             self.popup_signal.emit("Updating Touchscreen Software", "DO NOT UNPLUG DEVICE", "", True)
 

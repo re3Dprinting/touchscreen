@@ -26,9 +26,6 @@ class PrintPage(BasePage, Ui_PrintPage):
     # of USB files. Each signal takes a single argument, which is the
     # path to the newly mounted (created) or unmounted (deleted)
     # directory.
-
-    # create_signal = pyqtSignal(str)
-    # delete_signal = pyqtSignal(str)
     sdfile_signal = pyqtSignal(list)
 
     SDrowClickedSignal = pyqtSignal(int)
@@ -70,27 +67,12 @@ class PrintPage(BasePage, Ui_PrintPage):
         self.pushbutton_active_print.setEnabled(False)
         self.pushbutton_stop_print.setEnabled(False)
 
-        # SD File Select Behavior
-        # self.SDFileList.setVerticalScrollMode(
-        #     QtWidgets.QAbstractItemView.ScrollPerPixel)
-        # self.SDFileList.setHorizontalScrollMode(
-        #     QtWidgets.QAbstractItemView.ScrollPerPixel)
-        # self.SDFileList.setSelectionBehavior(QtWidgets.QTableView.SelectRows)
-        # self.SDFileList.setSelectionMode(QtWidgets.QTableView.SingleSelection)
-        # self.SDFileList.verticalHeader().hide()
-        # # Stretch out the horizontal header to take up the entire view
-        # header = self.SDFileList.horizontalHeader()
-        # header.setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
-        # header.setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
-        # self.SDFileList.verticalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Fixed)
-        # self.SDFileList.verticalHeader().setDefaultSectionSize(50)
-
-
         #SETUP SD QML TABLE
         self.SDTableModel = TableModel(self, ["Name", "Size"], [7,3], rowClickedSignal = self.SDrowClickedSignal)
         self.SDTable = self.setUpQMLTable(self.SDMainLayout, self.SDTableModel)
         self.SDTableLayout.addWidget(self.SDTable)
         self.SDrowClickedSignal.connect(self.sd_rowClicked)
+        self.sd_selectedRow = -1
 
         #SETUP USB QML TABLE
         self.USBTableModel = TableModel(self, ["Name", "Size"], [7,3], rowClickedSignal = self.USBrowClickedSignal)
@@ -270,7 +252,7 @@ class PrintPage(BasePage, Ui_PrintPage):
         self.sdfile_signal.emit(sd_file_list)
 
     def update_sd_files(self, file_list):
-        self.SDTableModel.updateDataList(files_list)
+        self.SDTableModel.updateDataList(file_list)
         self.SDTableModel.layoutChanged.emit()
         self.sd_selectedFile = None
         self.sd_selectedRow = -1
@@ -363,122 +345,4 @@ class PrintPage(BasePage, Ui_PrintPage):
             self.pushbutton_start_print.setEnabled(False)
             self.pushbutton_active_print.setEnabled(True)
             self.pushbutton_stop_print.setEnabled(True)
-    def showEvent(self, event):
-        self.USBTable.setFocus()
-        self.SDTable.setFocus()
-        self.LocalTable.setFocus()
 
-
-
-    # def clearlocalfiles(self):
-    #     self.LocalFileList.clearContents()
-    #     self.LocalFileList.setRowCount(0)
-
-    # def updatelocalfiles(self):
-    #     self.LocalFileList.clearContents()
-    #     self.LocalFileList.setRowCount(0)
-
-    #     files = self.loc_subdir.list()
-
-    #     for localfile in files:
-    #         rowpos = self.LocalFileList.rowCount()
-
-    #         self.LocalFileList.insertRow(rowpos)
-
-    #         file = QtWidgets.QTableWidgetItem(localfile.displayname)
-    #         file.setFlags(Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
-
-    #         if localfile.type == 'f':
-    #             size_str = str(localfile.size)
-    #         else:
-    #             size_str = ""
-
-    #         size = QtWidgets.QTableWidgetItem(size_str)
-    #         size.setFlags(Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
-
-    #         self.LocalFileList.setItem(rowpos, 0, file)
-    #         self.LocalFileList.setItem(rowpos, 1, size)
-
-    # def get_selected_widget_file(self, list_widget, subdir):
-
-    #     foolist = list_widget.selectedItems()
-
-    #     if len(foolist) < 1:
-    #         return (-1, None, None)
-
-    #     selected_row = list_widget.currentRow()
-
-    #     if selected_row == -1:
-    #         return (-1, None, None)
-
-    #     selected_file = subdir.files[selected_row]
-    #     selected_item = list_widget.currentItem()
-
-    #     return (selected_row, selected_file, selected_item)
-
-    # def get_selected_loc_file(self):
-    #     return self.get_selected_widget_file(self.LocalFileList, self.loc_subdir)
-
-    # def update_loc_button_states_none(self):
-    #     self.pushbutton_folder_up.setEnabled(False)
-    #     self.pushbutton_folder_open.setEnabled(False)
-    #     self.pushbutton_start_print.setEnabled(False)
-
-    # def update_loc_button_states(self):
-    #     selected_row, selected_file, selected_item = self.get_selected_loc_file()
-
-    #     if self.loc_subdir.depth() > 0:
-    #         self.pushbutton_folder_up.setEnabled(True)
-    #     else:
-    #         self.pushbutton_folder_up.setEnabled(False)
-
-    #     if selected_row == -1:
-    #         self.pushbutton_folder_open.setEnabled(False)
-    #         self.pushbutton_start_print.setEnabled(False)
-    #         return
-
-    #     if selected_file.type == 'd':
-    #         self.pushbutton_folder_open.setEnabled(True)
-    #         self.pushbutton_start_print.setEnabled(False)
-
-    #     elif selected_file.type == 'f':
-    #         self.pushbutton_folder_open.setEnabled(False)
-    #         self.pushbutton_start_print.setEnabled(True)
-
-    # def open_loc_subdir(self):
-    #     selected_row, selected_file, selected_item = self.get_selected_loc_file()
-
-    #     if selected_row is None:
-    #         return
-
-    #     if selected_file.type != 'd':
-    #         return
-
-    #     self.item_stack.append(selected_row)
-
-    #     self.loc_subdir.cd(selected_file.name)
-    #     self.updateusbfiles()
-    #     self.showFileAndDeselect(0)
-    #     self.update_loc_button_states()
-    #     self.loc_pathlabel.setText(self.loc_subdir.abspath)
-
-    # def up_loc_dir(self):
-    #     self.loc_subdir.up()
-    #     self.updateusbfiles()
-
-    #     selected_row = self.item_stack.pop()
-    #     self.showFile(selected_row)
-
-    #     self.update_loc_button_states()
-    #     self.loc_pathlabel.setText(self.loc_subdir.abspath)
-
-    # def showFile(self, selected_row):
-    #     self.USBFileList.setCurrentCell(selected_row, 0)
-    #     selected_item = self.USBFileList.currentItem()
-    #     self.USBFileList.scrollToItem(selected_item)
-
-    # def showFileAndDeselect(self, selected_row):
-    #     self.USBFileList.setCurrentCell(selected_row, 0)
-    #     selected_item = self.USBFileList.currentItem()
-    #     self.USBFileList.scrollToItem(selected_item)
-    #     self.USBFileList.setCurrentItem(None)

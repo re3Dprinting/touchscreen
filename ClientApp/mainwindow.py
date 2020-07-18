@@ -23,6 +23,7 @@ from .userupdatepage import UserUpdatePage
 from .duexsetuppage import DuExSetupPage
 from .popup import PopUp
 from .runout import RunOut
+from .notification import Notification
 
 
 class MainWindow(BasePage, Ui_MainWindow, QtWidgets.QMainWindow):
@@ -115,7 +116,6 @@ class MainWindow(BasePage, Ui_MainWindow, QtWidgets.QMainWindow):
 
             self.popup_signal.emit("*** ERROR ***", message_string, detail_string, False)
  
-
     def state_changed_callback(self, payload):
         state = "Printer: %s" % payload["state_string"]
         self._log("NEW PRINTER STATE " + state)

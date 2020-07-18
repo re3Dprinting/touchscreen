@@ -10,10 +10,10 @@ QWidget[cssClass~="pop-up"]{
     border-radius:25px;
 }
 QDialog[cssClass~="transparent"]{ 
-    background-color: rgba(255,255,255,0); 
+    background-color: transparent; 
 }
 QWidget[cssClass~="transparent"]{ 
-    background-color: rgba(255,255,255,0); 
+    background-color: white; 
 }
 
 

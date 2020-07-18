@@ -14,13 +14,12 @@ class PopUp(QtWidgets.QDialog, BasePage, Ui_PopUpWindow):
         self.parent = parent
 
         self.setupUi(self)
-        # self.setModal(True)
+        self.setModal(True)
         # self.setAttribute(Qt.WA_NoSystemBackground)
         # self.setAttribute(Qt.WA_TranslucentBackground)
         # self.setAutoFillBackground(False)
         # self.setWindowFlags(Qt.FramelessWindowHint)
-
-        self.setWindowFlags(self.windowFlags() |  QtCore.Qt.X11BypassWindowManagerHint | QtCore.Qt.Tool | QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.FramelessWindowHint)
+        # self.setWindowFlags(self.windowFlags() |  QtCore.Qt.X11BypassWindowManagerHint | QtCore.Qt.Tool | QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.FramelessWindowHint)
 
 
 

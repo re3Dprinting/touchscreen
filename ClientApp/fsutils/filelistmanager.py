@@ -24,23 +24,15 @@ class FileListManager:
         self.pushbutton_open_wid = pushbutton_open_wid
         self.pushbutton_print_wid = pushbutton_print_wid
 
+        #Elements for QML model/ table.
         self.table_model = table_model
         self.qmltable = qmltable
+
+
         self.watchpoint = watchpoint
         self.pathlabel_wid = pathlabel_wid
 
         self.item_stack = []
-
-        # self.file_list_wid.setSelectionBehavior(
-        #     QtWidgets.QTableView.SelectRows)
-        # self.file_list_wid.setSelectionMode(
-        #     QtWidgets.QTableView.SingleSelection)
-        # self.file_list_wid.verticalHeader().hide()
-
-        # header = self.file_list_wid.horizontalHeader()
-        # header.setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
-
-        # self.file_list_wid.itemSelectionChanged.connect(self.itemClicked)
 
         self.table_model.rowClickedSignal.connect(self.rowClicked)
         self.selectedRow = -1
