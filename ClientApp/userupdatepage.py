@@ -29,6 +29,7 @@ from util.load_properties import get_software_details
 from model.tablemodel import TableModel
 
 
+
 class UpdateType(Enum):
     USB = 1
     GIT = 2
@@ -46,6 +47,12 @@ class UpdateObject():
         if(index == 0): return self.name
         elif(index == 1): return self.date
         return None
+
+UpdateTagsForPermission = {
+    "developer": ["feature/", "bugfix/", "maint/", "devel/", "beta/", "hotfix/"],
+    "beta-tester" : ["beta/"],
+    "customer": []
+    }
 
 class UserUpdatePage(BasePage, Ui_UserUpdatePage):
     # Signal sent to notify ui is ready to be updated.
@@ -196,19 +203,24 @@ class UserUpdatePage(BasePage, Ui_UserUpdatePage):
         if(self.new_version_avalible):
             return Notification("A new software version is available!\nTo update, go to Settings > Software Update")
 
+
     def check_git_software(self):
-        # Delete tags if they contain "release/"
+        currentPermission = self.properties["permission"]
+        allowedTags = UpdateTagsForPermission[currentPermission]
+        print(currentPermission)
+        print(allowedTags)
+        #Delete all tags if on a raspberrypi
         if(self.personality.user == "pi"):
             for tag in self.repo.tags:
                 try:
                     self.repo.delete_tag(tag)
                 except:
                     pass
+        #Delete specific tags if on a developer machine. 
         else:
             for tag in self.repo.tags:
-                if("release/" in tag.name or
-                    "devel/" in tag.name or
-                        "hotfix/" in tag.name):
+                deletable = any(list(map(lambda x: x in tag.name, allowedTags)))
+                if(deletable):
                     try:
                         self.repo.delete_tag(tag)
                     except:
@@ -219,8 +231,8 @@ class UserUpdatePage(BasePage, Ui_UserUpdatePage):
         except git.GitCommandError as e:
             if("reference broken" in e.stderr):
                 shutil.rmtree(self.personality.gitrepopath+"/.git/refs/tags")
+                self.remote_repo.fetch("-tf")
 
-        self.remote_repo.fetch("-tf")
 
         tags = sorted(self.repo.tags, key=lambda t: t.commit.committed_date)
         tags.reverse()
@@ -240,17 +252,8 @@ class UserUpdatePage(BasePage, Ui_UserUpdatePage):
             if("archive" in t.name):
                 continue
 
-            if(("release" in t.name or
-                "devel" in t.name or
-                "hotfix" in t.name)
-                    and (not self.properties["permission"] == "developer")):
-                continue
-
-            if("beta" in t.name and not(self.properties["permission"] == "developer" or self.properties["permission"] == "beta-tester")):
-                continue
-
-            # Filter out any remaining tags that are not in the given X.X.X format.
-            if(self.properties["permission"] == "customer" and not given_isCustomerRelease):
+            tag_is_allowed = any(list(map(lambda x: x in t.name, allowedTags)))
+            if(not given_isCustomerRelease and not tag_is_allowed):
                 continue
 
             self.all_found_updates.append(UpdateObject(UpdateType.GIT, t))
