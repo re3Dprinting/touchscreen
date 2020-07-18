@@ -60,54 +60,12 @@ class FileListManager:
         self.table_model.updateDataList(files)
         self.table_model.layoutChanged.emit()
 
-        # self.file_list_wid.clearContents()
-        # self.file_list_wid.setRowCount(0)
-        # for file in files:
-        #     rowpos = self.file_list_wid.rowCount()
-
-        #     self.file_list_wid.insertRow(rowpos)
-
-        #     file = QtWidgets.QTableWidgetItem(file.displayname)
-        #     file.setFlags(Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
-
-        #     if file.type == 'f':
-        #         size_str = str(file.size)
-        #     else:
-        #         size_str = ""
-
-        #     size = QtWidgets.QTableWidgetItem(size_str)
-        #     size.setFlags(Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
-
-        #     self.file_list_wid.setItem(rowpos, 0, file)
-        #     self.file_list_wid.setItem(rowpos, 1, size)
-
     def clear_files(self):
         self.pathlabel_wid.setText("")
         self.table_model.updateDataList([])
         self.table_model.layoutChanged.emit()
         # self.file_list_wid.clearContents()
         # self.file_list_wid.setRowCount(0)
-
-    # def get_selected_file(self):
-    #     return self.get_selected_widget_file(self.file_list_wid, self.subdir)
-
-    # def get_selected_widget_file(self, list_widget, subdir):
-
-    #     # foolist = list_widget.selectedItems()
-        
-    #     # if len(foolist) < 1:
-    #     #     return (-1, None)
-
-    #     # selected_row = list_widget.currentRow()
-
-    #     # if selected_row == -1:
-    #     #     return (-1, None, None)
-
-    #     return( row, )
-
-    #     selected_file = subdir.files[selected_row]
-
-    #     return (selected_row, selected_file)
 
     def update_button_states_none(self):
         self.pushbutton_up_wid.setEnabled(False)

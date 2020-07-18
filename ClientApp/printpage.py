@@ -60,6 +60,7 @@ class PrintPage(BasePage, Ui_PrintPage):
         self.pushbutton_scan_sd.clicked.connect(self.scansd)
         self.pushbutton_start_print.clicked.connect(self.sd_start_print)
         self.pushbutton_start_print.clicked.connect(self.local_start_print)
+        self.pushbutton_start_print.clicked.connect(self.usb_start_print)
 
         self.pushbutton_active_print.clicked.connect(self.activeprintpop)
         self.pushbutton_stop_print.clicked.connect(self.stopprint)
@@ -92,8 +93,6 @@ class PrintPage(BasePage, Ui_PrintPage):
                                                 self.pushbutton_folder_up,
                                                 self.pushbutton_folder_open,
                                                 self.pushbutton_start_print)
-
-        # self.pushbutton_start_print.clicked.connect(self.usb_start_print)
 
         # Set up the list of local files
         self.local_file_manager = FileListManager("Local",
