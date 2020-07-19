@@ -262,7 +262,7 @@ class PrintPage(BasePage, Ui_PrintPage):
 
     def sd_rowClicked(self, row):
         self.sd_selectedRow = row
-        self.sd_selectedFile = self.SDTableModel.getDataList()[self.selectedRow]
+        self.sd_selectedFile = self.SDTableModel.get(self.sd_selectedRow, 0)
         if self.print_method == "SD":
             self.pushbutton_start_print.setEnabled(True)
 

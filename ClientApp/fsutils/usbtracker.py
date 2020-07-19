@@ -122,19 +122,3 @@ class USBTracker(QObject, FileSystemEventHandler):
     def content_modified(self, path):
         self._log("Content modified: <%s>" % (path))
         self.content_signal.emit(path)
-
-    # # These two functions override functions in the
-    # # FileSystemEventHandler class, hooking us up into changes
-    # # of the mount points.
-    
-    # def on_created(self, event):
-    #     self.mountpoint_created(event.src_path)
-        
-    # def on_deleted(self, event):
-    #     self.mountpoint_deleted(event.src_path)
-
-    # def on_modified(self, event):
-    #     print("This was modified: <%s>" % event.src_path)
-
-    # def __del__(self):
-    #     self.mount_observer.join()

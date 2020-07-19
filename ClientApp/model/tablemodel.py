@@ -27,8 +27,8 @@ class TableModel(QtCore.QAbstractListModel):
     def get(self, row, col):
         if len(self.datalist) > 0 :
             if isinstance(self.datalist[row], tuple):
-                return self.datalist[row][col]
-            return self.datalist[row].getDataFromIndex(col)
+                return str(self.datalist[row][col])
+            return str(self.datalist[row].getDataFromIndex(col))
     @QtCore.pyqtSlot(int, result=str)
     def getTitle(self, index):
         return self.headers[index]

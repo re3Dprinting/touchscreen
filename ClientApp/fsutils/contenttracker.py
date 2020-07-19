@@ -57,5 +57,4 @@ class ContentTracker(QObject, FileSystemEventHandler):
         return self.content_signal
 
     def content_modified(self, path):
-        print("Content modified: <%s>" % (path))
         self.content_signal.emit(path)
