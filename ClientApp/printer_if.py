@@ -35,6 +35,7 @@ class PrinterIF(PrinterCallback):
         # Were not received the SD file list or doing an SD print
         self.state_getting_sd_list = False
         self.printing_from_sd = False
+        self.printing = False
 
         # Null out all our callbacks.
         self.temperature_callback = None
@@ -167,7 +168,7 @@ class PrinterIF(PrinterCallback):
         self.printer.select_file(filename, True, True)
 
     def start_print(self):
-        # self.printer.start_print()
+        self.printing = True
         pass
 
     def select_local_file(self, filename):
@@ -354,8 +355,6 @@ class PrinterIF(PrinterCallback):
     _PRINTER_STATE = None
     
     def cb_printer_state_changed (self, event, payload):
-        # pre = "####"
-        # print("%s Received event: %s (Payload: %r)" % (pre, event, payload))
 
         new_state = payload['state_id']
         self._log("type of state is %s" % new_state.__class__.__name__)
@@ -364,17 +363,21 @@ class PrinterIF(PrinterCallback):
 
         if self._state_changed_callback is not None:
             self._state_changed_callback(payload)
-
-        if payload['state_id'] == self._PRINTER_STATE_FINISHING:
-            # print("******** FINISHING")
-            self._printer_state = self._PRINTER_STATE_FINISHING
-
-        if payload['state_id'] == self._PRINTER_STATE_FINISHING:
-            # print("******** OPERATIONAL")
-            if self._printer_state == self._PRINTER_STATE_FINISHING:
-                if self.print_finished_callback is not None:
-                    # print("Transition from finishing to operational, do print-finished stuff.")
+        if self.printer_finished_callback is not None:
+            if self.printer_state == self._PRINTER_STATE_FINISHING:
                     self.print_finished_callback()
+
+        #What the hell is this garbage code???
+        # if payload['state_id'] == self._PRINTER_STATE_FINISHING:
+        #     # print("******** FINISHING")
+        #     self._printer_state = self._PRINTER_STATE_FINISHING
+
+        # if payload['state_id'] == self._PRINTER_STATE_FINISHING:
+        #     # print("******** OPERATIONAL")
+        #     if self._printer_state == self._PRINTER_STATE_FINISHING:
+        #         if self.print_finished_callback is not None:
+        #             # print("Transition from finishing to operational, do print-finished stuff.")
+        #             self.print_finished_callback()
 
     def set_state_changed_callback(self, callback):
         self._state_changed_callback = callback

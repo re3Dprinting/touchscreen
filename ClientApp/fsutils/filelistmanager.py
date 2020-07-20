@@ -8,7 +8,7 @@ from .subfilesystem import SubFileSystem
 
 class FileListManager:
 
-    def __init__(self, name, table_model, qmltable, watchpoint,
+    def __init__(self, name, printer_if, table_model, qmltable, watchpoint,
                  pathlabel_wid, pushbutton_up_wid,
                  pushbutton_open_wid, pushbutton_print_wid):
 
@@ -16,6 +16,7 @@ class FileListManager:
         self._logger = logging.getLogger(__name__)
         self._log("FileListManager __init__")
 
+        self.printer_if = printer_if
         self.name = name
 
         self.enabled = False
@@ -84,14 +85,13 @@ class FileListManager:
             self.pushbutton_open_wid.setEnabled(False)
             self.pushbutton_print_wid.setEnabled(False)
             return
-
         if self.selectedFile.type == 'd':
             self.pushbutton_open_wid.setEnabled(True)
             self.pushbutton_print_wid.setEnabled(False)
 
         elif self.selectedFile.type == 'f':
             self.pushbutton_open_wid.setEnabled(False)
-            self.pushbutton_print_wid.setEnabled(True)
+            if(not self.printer_if.printing): self.pushbutton_print_wid.setEnabled(True)
 
     def rowClicked(self, row):
         self._log("UI: User touched item")
@@ -131,7 +131,7 @@ class FileListManager:
 
         #Scroll to previous selected file
         selected_row = self.item_stack.pop()
-        # self.showFile(selected_row)
+
         self.setSelectedRow(selected_row)
         self.update_button_states()
         self.pathlabel_wid.setText(self.subdir.abspath)
@@ -147,14 +147,3 @@ class FileListManager:
         self.selectedRow = row
         self.selectedFile = None if (row == -1) else self.table_model.getDataList()[self.selectedRow]
         self.qmltable.rootObject().findChild(QtCore.QObject, "tableView").setProperty("selectedRow", row)
-
-    def showFile(self, selected_row):
-        self.file_list_wid.setCurrentCell(selected_row, 0)
-        selected_item = self.file_list_wid.currentItem()
-        self.file_list_wid.scrollToItem(selected_item)
-
-    def showFileAndDeselect(self, selected_row):
-        self.file_list_wid.setCurrentCell(selected_row, 0)
-        selected_item = self.file_list_wid.currentItem()
-        self.file_list_wid.scrollToItem(selected_item)
-        self.file_list_wid.setCurrentItem(None)

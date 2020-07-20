@@ -86,7 +86,7 @@ class PrintPage(BasePage, Ui_PrintPage):
         self.LocalTableLayout.addWidget(self.LocalTable)
 
         # Set up the list of USB files
-        self.usb_file_manager = FileListManager("USB",
+        self.usb_file_manager = FileListManager("USB", self.printer_if,
                                                 self.USBTableModel, self.USBTable,
                                                 self.personality.watchpoint,
                                                 self.usb_pathlabel,
@@ -95,7 +95,7 @@ class PrintPage(BasePage, Ui_PrintPage):
                                                 self.pushbutton_start_print)
 
         # Set up the list of local files
-        self.local_file_manager = FileListManager("Local",
+        self.local_file_manager = FileListManager("Local", self.printer_if,
                                                   self.LocalTableModel, self.LocalTable,
                                                   self.personality.localpath,
                                                   self.loc_pathlabel,
@@ -222,6 +222,7 @@ class PrintPage(BasePage, Ui_PrintPage):
         self.pushbutton_stop_print.setEnabled(False)
         self.pushbutton_start_print.setEnabled(True)
         self.pushbutton_scan_sd.setEnabled(True)
+        self.printer_if.printing = False
         self.set_control_page(True)
 
     def temperature_active(self):
@@ -263,7 +264,7 @@ class PrintPage(BasePage, Ui_PrintPage):
     def sd_rowClicked(self, row):
         self.sd_selectedRow = row
         self.sd_selectedFile = self.SDTableModel.get(self.sd_selectedRow, 0)
-        if self.print_method == "SD":
+        if self.print_method == "SD" and not self.printer_if.printing:
             self.pushbutton_start_print.setEnabled(True)
 
     def sd_start_print(self):

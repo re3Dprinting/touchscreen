@@ -207,8 +207,6 @@ class UserUpdatePage(BasePage, Ui_UserUpdatePage):
     def check_git_software(self):
         currentPermission = self.properties["permission"]
         allowedTags = UpdateTagsForPermission[currentPermission]
-        print(currentPermission)
-        print(allowedTags)
         #Delete all tags if on a raspberrypi
         if(self.personality.user == "pi"):
             for tag in self.repo.tags:
