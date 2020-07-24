@@ -84,7 +84,7 @@ class Ui_ActivePrintWidget(object):
         self.w_pushbutton_flowrate_dec.setMaximumSize(QtCore.QSize(16777215, 16777215))
         self.w_pushbutton_flowrate_dec.setText("")
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(":/img/img/Letft.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(":/img/img/Left.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.w_pushbutton_flowrate_dec.setIcon(icon)
         self.w_pushbutton_flowrate_dec.setIconSize(QtCore.QSize(50, 50))
         self.w_pushbutton_flowrate_dec.setObjectName("w_pushbutton_flowrate_dec")

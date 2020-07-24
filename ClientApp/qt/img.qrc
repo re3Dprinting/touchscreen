@@ -66,6 +66,7 @@
         <file>img/Left.png</file>
         <file>img/LOCAL_2.png</file>
         <file>img/LOCAL.png</file>
+        <file>img/logo.png</file>
         <file>img/Movement.png</file>
         <file>img/Open_folder.png</file>
         <file>img/pause.png</file>
@@ -110,6 +111,5 @@
         <file>img/USB.png</file>
         <file>img/Wifi.png</file>
         <file>img/X.png</file>
-        <file>img/logo.png</file>
     </qresource>
 </RCC>

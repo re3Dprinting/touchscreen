@@ -166,7 +166,7 @@
          </property>
          <property name="icon">
           <iconset resource="img.qrc">
-           <normaloff>:/img/img/Letft.png</normaloff>:/img/img/Letft.png</iconset>
+           <normaloff>:/img/img/Left.png</normaloff>:/img/img/Left.png</iconset>
          </property>
          <property name="iconSize">
           <size>
@@ -376,7 +376,7 @@
          </property>
          <property name="icon">
           <iconset resource="img.qrc">
-           <normaloff>:/img/img/Letft.png</normaloff>:/img/img/Letft.png</iconset>
+           <normaloff>:/img/img/Left.png</normaloff>:/img/img/Left.png</iconset>
          </property>
          <property name="iconSize">
           <size>
