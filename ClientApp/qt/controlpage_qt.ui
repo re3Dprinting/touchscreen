@@ -436,7 +436,7 @@
          </property>
          <property name="icon">
           <iconset resource="img.qrc">
-           <normaloff>:/img/img/Extruder_1.png</normaloff>:/img/img/Extruder_1.png</iconset>
+           <normaloff>:/img/img/Extruder_0.png</normaloff>:/img/img/Extruder_0.png</iconset>
          </property>
          <property name="iconSize">
           <size>

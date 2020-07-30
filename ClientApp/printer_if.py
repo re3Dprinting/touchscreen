@@ -13,8 +13,9 @@ position_regex = re.compile("x:(-?[0-9]+\.[0-9]+) y:(-?[0-9]+\.[0-9]+) z:(-?[0-9
 runout_message_regex = re.compile("echo:(R[0-9]+) (.*)")
 
 from util.ctor import Ctor, CtorTuple, CtorStr
+from util.log import tsLogger
 
-class PrinterIF(PrinterCallback):
+class PrinterIF(PrinterCallback, tsLogger):
     def __init__(self, printer):
 
         # Keep a reference to the OctoPrint printer object and register to receive callbacks
@@ -30,7 +31,7 @@ class PrinterIF(PrinterCallback):
 
         # Set up logging
         self._logger = logging.getLogger(__name__)
-        self._log("PrinterIF starting up")
+        self._log_d("PrinterIF __init__()")
 
         # Were not received the SD file list or doing an SD print
         self.state_getting_sd_list = False
@@ -73,9 +74,6 @@ class PrinterIF(PrinterCallback):
     def get_printer(self):
         return self.printer
 
-    def _log(self, message):
-        self._logger.debug(message)
-
     def get_connection_options(self):
 
         # Ask the printer to scan the ports and return those it thinks
@@ -87,7 +85,7 @@ class PrinterIF(PrinterCallback):
         return ports
     
     def connect(self, device):
-        self._log("CONNECT to device <%s>." % (device))
+        self._log_d("CONNECT to device <%s>." % (device))
         # Connect to the specified device using the default Gigabot bit rate.
         self.printer.connect(device, 250000)
         # self.printer.connect(device, 115200)
@@ -108,7 +106,7 @@ class PrinterIF(PrinterCallback):
         self.printer.feed_rate(rate)
 
     def set_flow_rate(self, rate, extruder = ""):
-        self._log("set_flow_rate %d <%s>" % (rate, extruder))
+        self._log_d("set_flow_rate %d <%s>" % (rate, extruder))
         if extruder != "":
             extruder = ' ' + extruder
 
@@ -118,12 +116,12 @@ class PrinterIF(PrinterCallback):
 
         # Build and send the message
         flowrate_command = "M221 S" + str(rate) + extruder
-        self._log("FLOW RATE command <%s>" % flowrate_command)
+        self._log_d("FLOW RATE command <%s>" % flowrate_command)
         self.commands(flowrate_command)
 
     def set_babystep(self, value):
         babystep_command = "M290 P0 Z" + str(value)
-        self._log("BABYSTEP command <%s>" % babystep_command)
+        self._log_d("BABYSTEP command <%s>" % babystep_command)
         self.printer.commands(babystep_command)
         # self.tempwindow.serial.send_serial("M290 Z " + str(self.babystep))        
 
@@ -211,7 +209,7 @@ class PrinterIF(PrinterCallback):
         # this by moving back to the last known position.
         if self.resume_position is not None:
             resume_pos_str = "G1 X%.3f Y%.3f Z%.3f" % self.resume_position
-            self._log("Sending resume-position <%s>" % resume_pos_str)
+            self._log_d("Sending resume-position <%s>" % resume_pos_str)
             self.printer.commands(resume_pos_str)
 
         # And now we can resume the print.
@@ -357,7 +355,7 @@ class PrinterIF(PrinterCallback):
     def cb_printer_state_changed (self, event, payload):
 
         new_state = payload['state_id']
-        self._log("type of state is %s" % new_state.__class__.__name__)
+        self._log_d("type of state is %s" % new_state.__class__.__name__)
         self.state_change_ctor.notify(self.printer_state, new_state)
         self.printer_state = new_state
 
@@ -409,7 +407,7 @@ class PrinterIF(PrinterCallback):
         # Determine whether the message contains a filament-change
         # message
         match = runout_message_regex.match(data)
-        # self._log("Matched in <%s>" % data)
+        # self._log_d("Matched in <%s>" % data)
 
         # If it does contain a match...
         if match:
@@ -417,11 +415,11 @@ class PrinterIF(PrinterCallback):
             # Extract the code and text from the message
             code = match.group(1)
             text = match.group(2)
-            self._log("Match groups 1:<%s>, 2:<%s>." % (code, text))
+            self._log_d("Match groups 1:<%s>, 2:<%s>." % (code, text))
 
             # If a callback is set up for filament-change messages, call it now.
             if self.runout_callback is not None:
-                self._log("We have callback, calling...")
+                self._log_d("We have callback, calling...")
                 self.runout_callback.handle_runout_message(code, text)
 
         # Determine whether the message contains position data.

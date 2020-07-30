@@ -9,8 +9,9 @@ from constants import LogConstants
 from fsutils.mountfinder import MountFinder
 
 import logging
+from util.log import tsLogger
 
-class Tarballer(QRunnable):
+class Tarballer(QRunnable, tsLogger):
     def __init__(self, proxy, personality):
         super(QRunnable, self).__init__()
 
@@ -18,7 +19,7 @@ class Tarballer(QRunnable):
         self.personality = personality
         
         self._logger = logging.getLogger(__name__)
-        self._log("DebugWindow __init__()")
+        self._log_d("Tarball __init__()")
 
     def do_copy_log(self):
         QThreadPool.globalInstance().start(self)
@@ -28,9 +29,6 @@ class Tarballer(QRunnable):
 
     def display(self, message):
         self.proxy.signal_display(message)
-
-    def _log(self, message):
-        self._logger.debug(message)
 
     def build_tarball_filename(self):
             # Build up a string to represent the tarball filename, starting with the date.
@@ -62,12 +60,12 @@ class Tarballer(QRunnable):
             if not os.path.isdir(logpath) or not os.access(logpath, os.W_OK):
 
                 self.display('Cannot write to "%s", logs not written.' % logpath)
-                self._log('Cannot write to "%s", logs not written.' % logpath)
+                self._log_d('Cannot write to "%s", logs not written.' % logpath)
 
                 return None
         else:
             # It doesn't exist, so create it.
-            self._log("Creating <%s>" % logpath)
+            self._log_d("Creating <%s>" % logpath)
             os.mkdir(logpath)
 
         return logpath
@@ -80,7 +78,7 @@ class Tarballer(QRunnable):
         paths = MountFinder.thumbdrive_candidates()
 
         if len(paths) == 0:
-            self._log("(!) Could not find USB drive, copying log files to local path.")
+            self._log_d("(!) Could not find USB drive, copying log files to local path.")
             self.display("(!) Could not find USB drive, copying log files to local path.")
 
             return self.get_local_logpath()
@@ -93,23 +91,23 @@ class Tarballer(QRunnable):
         # Get the name of the tarball we're going to copy the log
         # files to.
         tarball_filename = self.build_tarball_filename()
-        self._log("tarball = <%s>" % tarball_filename)
+        self._log_d("tarball = <%s>" % tarball_filename)
 
         # Get the location where we're going to save the tarball.
         logpath = self.find_logpath()
-        self._log("logpath = <%s>" % logpath)
+        self._log_d("logpath = <%s>" % logpath)
 
         # Build the full path to the tarball
         tarball_path = os.path.join(logpath, tarball_filename)
-        self._log("tarball_path = <%s>" % tarball_path)
+        self._log_d("tarball_path = <%s>" % tarball_path)
 
         # Get the names of the log files
         logfiles = self.get_log_file_names()
-        self._log("logfiles = <%s>" % logfiles)
+        self._log_d("logfiles = <%s>" % logfiles)
 
         # Now build the command.
         command = "tar cvf %s %s" % (tarball_path, logfiles)
-        self._log("command = <%s>" % command)
+        self._log_d("command = <%s>" % command)
 
         # Construct a commandline caller to run the tar command.
         caller = CommandlineCaller()
@@ -124,7 +122,7 @@ class Tarballer(QRunnable):
         # Finish off with a message stating that the tarball has been
         # created.
         done_message = "Logs copied to file \"%s\"" % tarball_path
-        self._log(done_message)
+        self._log_d(done_message)
         self.display("\n" + done_message)
         self.display("")
 
@@ -139,7 +137,7 @@ class Tarballer(QRunnable):
 
             # Display and log the line
             self.display(line)
-            self._log(line)
+            self._log_d(line)
 
     # Display some lines written to stderr
     def display_stderr(self, *lines):
@@ -158,10 +156,10 @@ class Tarballer(QRunnable):
             # it's not really an error).
 
             if 'ts.log: Truncated write; file may have grown while being archived' in line or 'file changed as we read it' in line:
-               self._log(line)
+               self._log_d(line)
                continue
 
             # Display and log the error line
             self.display(line)
-            self._log(line)
+            self._log_d(line)
 

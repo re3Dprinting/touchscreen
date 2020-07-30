@@ -64,7 +64,7 @@ class UserUpdatePage(BasePage, Ui_UserUpdatePage):
         super(UserUpdatePage, self).__init__()
 
         self._logger = logging.getLogger(__name__)
-        self._log("UserUpdate __init__")
+        self._log_d("UserUpdate __init__")
         self.setupUi(self)
 
         self.personality = context.personality

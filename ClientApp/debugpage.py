@@ -25,7 +25,7 @@ class DebugPage(BasePage, Ui_DebugPage):
 
         # Set up logging
         self._logger = logging.getLogger(__name__)
-        self._log("DebugPage __init__()")
+        self._log_d("DebugPage __init__()")
 
         # Set up user interface
         self.setupUi(self)
@@ -54,40 +54,31 @@ class DebugPage(BasePage, Ui_DebugPage):
         self.display(str)
 
     def debug_level_changed(self):
-        print("### LEVEL CHANGED ###")
         new_index = self.w_combobox_debuglevel.currentIndex()
-        print("New index = %d" % new_index)
         root_logger = find_root_logger()
-        print("Root logger =", root_logger)
 
         if new_index == 0:
             root_logger.setLevel(logging.DEBUG)
             new_level_str = "DEBUG"
-            self._log("Set debug level to DEBUG")
 
         if new_index == 1:
-            self._log("Set debug level to INFO")
             new_level_str = "INFO"
             root_logger.setLevel(logging.INFO)
 
         self.popup_signal.emit("", "New Logging Level: "+new_level_str, "", False)
 
     def handle_add_marker(self):
-        self._log("UI: User touched Add Marker")
-
         message = self.w_lineedit_message.text()
 
-        self._log(
-            "******************************************************************************")
-        self._log("* User log message <%s>" % message)
-        self._log(
-            "******************************************************************************")
+        self._log_d("******************************************************************************")
+        self._log_d("* User log message <%s>" % message)
+        self._log_d("******************************************************************************")
 
         self.display("Log marker added.")
 
     # Send a fake acknowledgement
     def send_fake_ack(self):
-        self._log("Sending fake acknowledgement.")
+        self._log_d("Sending fake acknowledgement.")
         self.printer_if.send_fake_ack()
         self.display("Sent fake acknowledgement.")
 
@@ -95,9 +86,6 @@ class DebugPage(BasePage, Ui_DebugPage):
     def display(self, message):
         self.w_message_text.moveCursor(QtGui.QTextCursor.End)
         self.w_message_text.append(message)
-
-    def on_printer_add_message(self, data):
-        print("GOT <%s>" % data)
 
     def handle_copy_log(self):
         tarballer = Tarballer(self, self.personality)

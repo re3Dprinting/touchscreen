@@ -41,7 +41,7 @@ class PrintPage(BasePage, Ui_PrintPage):
 
         # Set up logging
         self._logger = logging.getLogger(__name__)
-        self._log("PrintPage __init__")
+        self._log_d("PrintPage __init__")
 
         # Connect slots to the signals
         self.sdfile_signal.connect(self.update_sd_files)
@@ -194,7 +194,7 @@ class PrintPage(BasePage, Ui_PrintPage):
         signal.connect(self.update_local_content)
 
     def update_usb_create(self, mountpoint):
-        self._log("UPDATE_USB_CREATE: path <%s>, actual path <%s>" %
+        self._log_d("UPDATE_USB_CREATE: path <%s>, actual path <%s>" %
                   (mountpoint.path, mountpoint.actual_path))
         self.usb_file_manager.update_create(mountpoint.path)
 
@@ -209,7 +209,7 @@ class PrintPage(BasePage, Ui_PrintPage):
 
 
     def stopprint(self):
-        self._log("UI: User touched Stop Print")
+        self._log_d("UI: User touched Stop Print")
         self.printer_if.cancel_printing()
         self.print_finished_callback()
 
@@ -228,7 +228,7 @@ class PrintPage(BasePage, Ui_PrintPage):
     def temperature_active(self):
         temperature_page = self.ui_controller.get_page(Pages.TEMPERATURE_PAGE)
         temperature_page.activeprint()
-        self._log("temperature_active: calling reset_parameters.")
+        self._log_d("temperature_active: calling reset_parameters.")
         temperature_page.reset_parameters()
         temperature_page.set_progress(0)
 
@@ -239,11 +239,11 @@ class PrintPage(BasePage, Ui_PrintPage):
         temperature_page.set_progress(0)
 
     def activeprintpop(self):
-        self._log("UI: User touched Active Print")
+        self._log_d("UI: User touched Active Print")
         self.ui_controller.push(Pages.TEMPERATURE_PAGE)
 
     def scansd(self):
-        self._log("UI: User touched Scan")
+        self._log_d("UI: User touched Scan")
         self.printer_if.release_sd_card()
         self.printer_if.init_sd_card()
         self.printer_if.list_sd_card()
@@ -270,7 +270,7 @@ class PrintPage(BasePage, Ui_PrintPage):
     def sd_start_print(self):
         if not self.print_method == "SD":
             return
-        self._log("UI: User touched (SD) Start Print")
+        self._log_d("UI: User touched (SD) Start Print")
 
         selected_file = self.sd_selectedFile
 
@@ -293,12 +293,12 @@ class PrintPage(BasePage, Ui_PrintPage):
     def local_start_print(self):
         if not self.print_method == "LOCAL":
             return
-        self._log("UI: User touched (Local) Start Print")
+        self._log_d("UI: User touched (Local) Start Print")
         selected_file = self.usb_file_manager.selectedFile
 
         selected_file_name = selected_file.name
         selected_file_loc_path = selected_file.relative_path
-        self._log("File name <%s>, local path <%s>." %
+        self._log_d("File name <%s>, local path <%s>." %
                   (selected_file_name, selected_file_loc_path))
 
         if selected_file_name != None:
@@ -318,17 +318,16 @@ class PrintPage(BasePage, Ui_PrintPage):
     def usb_start_print(self):
         if not self.print_method == "USB":
             return
-        self._log("UI: User touched (USB) Start Print")
+        self._log_d("UI: User touched (USB) Start Print")
         selected_file = self.usb_file_manager.selectedFile
 
         selected_file_name = selected_file.name
         selected_file_rel = selected_file.relative_path
         selected_file_abs = selected_file.absolute_path
-        self._log("File name <%s>, relative path <%s>, absolute path <%s>." % (
+        self._log_d("File name <%s>, relative path <%s>, absolute path <%s>." % (
             selected_file_name, selected_file_rel, selected_file_abs))
 
         if selected_file_name != None:
-            print("USB start print")
             self.file_being_printed = selected_file_name
 
             self.set_control_page(False)

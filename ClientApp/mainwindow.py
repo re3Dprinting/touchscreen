@@ -32,7 +32,7 @@ class MainWindow(BasePage, Ui_MainWindow, QtWidgets.QMainWindow):
 
         # Set up logging
         self._logger = logging.getLogger(__name__)
-        self._log("MainWindow starting up")
+        self._log_d("MainWindow __init__()")
 
         self.context = Context(printer_if, persona, self, properties)
         self.printer_if = printer_if
@@ -94,10 +94,9 @@ class MainWindow(BasePage, Ui_MainWindow, QtWidgets.QMainWindow):
     def state_change_connector_callback(self, from_state, to_state):
         if to_state.startswith("ERROR"):
             state_string = self.printer_if.get_printer().get_state_string()
-            self._log(
-                "################################################################################################")
-            self._log("from state <%s> to state <%s>" % (from_state, to_state))
-            self._log("state string <%s>" % state_string)
+            self._log_d("################################################################################################")
+            self._log_d("from state <%s> to state <%s>" % (from_state, to_state))
+            self._log_d("state string <%s>" % state_string)
 
             message_string = ""
             detail_string = "Message from printer:\n%s" % state_string
@@ -118,7 +117,7 @@ class MainWindow(BasePage, Ui_MainWindow, QtWidgets.QMainWindow):
  
     def state_changed_callback(self, payload):
         state = "Printer: %s" % payload["state_string"]
-        self._log("NEW PRINTER STATE " + state)
+        self._log_d("NEW PRINTER STATE " + state)
         self.set_middle_status(state)
 
     def list_children(self, widget):
@@ -137,9 +136,6 @@ class MainWindow(BasePage, Ui_MainWindow, QtWidgets.QMainWindow):
             return widget
         except KeyError:
             return None
-
-    def _log(self, message):
-        self._logger.debug(message)
 
     def set_left_status(self, text):
         self.left_status.setText(text)
@@ -162,21 +158,10 @@ class MainWindow(BasePage, Ui_MainWindow, QtWidgets.QMainWindow):
             # Display the next page
             self.stack.setCurrentWidget(widget)
 
-            # Call the page's "just_pushed" method, if it exists. This
-            # callback enables pages to perform processing after being
-            # pushed, such as focusing a particular widget.
-
-            just_pushed_op = getattr(widget, "just_pushed", None)
-
-            if callable(just_pushed_op):
-                self._log(
-                    "<%s> just_pushed callback exists, calling..." % page_name)
-                widget.just_pushed()
-
         except KeyError:
             # If the name of the requested widget to push doesn't
             # exist, log an error.
-            self._log("MainWindow: page \"%s\" not found." % page_name)
+            self._log_e("MainWindow: page \"%s\" not found." % page_name)
 
     def pop(self):
         try:
@@ -189,7 +174,7 @@ class MainWindow(BasePage, Ui_MainWindow, QtWidgets.QMainWindow):
         except IndexError:
             # An index error indicates we tried to pop when the stack
             # was empty.
-            self._log("ERROR: popping from an empty stack!")
+            self._log_e("ERROR: popping from an empty stack!")
 
     def show_popup(self, title, mess, dets, hideButton = False):
         self.popup.popup_title.setText(title)

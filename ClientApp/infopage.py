@@ -16,7 +16,7 @@ class InfoPage(BasePage, Ui_InfoPage):
 
         # Set up logging
         self._logger = logging.getLogger(__name__)
-        self._log("InfoPage __init__()")
+        self._log_d("InfoPage __init__()")
 
         # Keep a reference to the OctoPrint printer object and register to receive callbacks
         # from it.
@@ -92,25 +92,21 @@ class InfoPage(BasePage, Ui_InfoPage):
         self.display(data)
 
     def handle_info_touch(self):
-        self._log("UI: User touched Info")
         self.w_message_text.clear()
         self.echo_output = True
         self.printer_if.commands("R999")
 
     def handle_capabilities_touch(self):
-        self._log("UI: User touched Capabilities")
         self.w_message_text.clear()
         self.echo_output = True
         self.printer_if.commands("M115")
 
     def handle_stats_touch(self):
-        self._log("UI: User touched Stats")
         self.w_message_text.clear()
         self.echo_output = True
         self.printer_if.commands("M78")
 
     def handle_settings_touch(self):
-        self._log("UI: User touched Settings")
         self.w_message_text.clear()
         self.echo_output = True
         self.printer_if.commands("M503")

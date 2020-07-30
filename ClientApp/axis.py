@@ -2,13 +2,14 @@ from builtins import str
 from builtins import object
 import logging
 import PyQt5
+from util.log import tsLogger
 
 
-class Axis(object):
+class Axis(tsLogger):
     def __init__(self, ax, feedrate, parent=None, holdmove=None):
         # Set up logging
         self._logger = logging.getLogger(__name__)
-        self._log("Axis __init__()")
+        self._log_d("Axis __init__()")
 
         self.feedrate = feedrate
         self.ax = ax
@@ -33,9 +34,6 @@ class Axis(object):
         self.init_movement()
         self.init_increment()
 
-    def _log(self, message):
-        self._logger.debug(message)
-
     def init_movement(self):
 
         #getattr(self.parent, self.Ax + "Pos").clicked.connect(self.movepos)
@@ -51,21 +49,16 @@ class Axis(object):
                 "Neg").released.connect(self.buttonreleased)
 
     def posbuttonpressed(self):
-        self._log("UI: User touched <%s> +" % self.Ax)
         self.held_count = 0
         self.timer.start(250)
         self.direction = "Pos"
 
     def negbuttonpressed(self):
-        self._log("UI: User touched <%s> -" % self.Ax)
         self.held_count = 0
         self.timer.start(250)
         self.direction = "Neg"
 
     def buttonreleased(self):
-        if self.held_count > 0:
-            self._log("UI: User released button after %d counts." %
-                      self.held_count)
         self.timer.stop()
         if (self.button_held_time == 0 or self.holdmove == None) and self.direction == "Pos":
             self.movepos()
@@ -83,11 +76,9 @@ class Axis(object):
                 self.moveneg(self.holdmove)
 
     def init_increment(self):
-        self._log("UI: Increment = %s" % self.inc)
         self.parent.globalIncrementSelector.buttonClicked.connect(self.updateincrement)
 
     def updateincrement(self):
-        self._log("UI: User set <%s> increment to <%s>" % (self.ax, self.inc))
         self.inc = self.parent.globalIncrementSelector.checkedButton().text()
         
     def travel_limits(self):

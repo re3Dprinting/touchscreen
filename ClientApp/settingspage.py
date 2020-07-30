@@ -21,7 +21,7 @@ class SettingsPage(BasePage, Ui_SettingsPage):
 
         # Set up logging
         self._logger = logging.getLogger(__name__)
-        self._log("SettingsPage __init__()")
+        self._log_d("SettingsPage __init__()")
 
         # Set up UI
         self.setupUi(self)
@@ -53,38 +53,33 @@ class SettingsPage(BasePage, Ui_SettingsPage):
 
         self.Back.clicked.connect(self.back)
 
-    def _log(self, message):
-        self._logger.debug(message)
-
     def userupdatepop(self):
-        self._log("UI: User touched Update")
+        self._log_d("UI: User touched Update")
         self.ui_controller.push(Pages.USERUPDATE_PAGE)
 
     def serialpop(self):
-        self._log("UI: User touched Serial")
+        self._log_d("UI: User touched Serial")
         self.ui_controller.push(Pages.SERIAL_PAGE)
 
     def serverpop(self):
-        self._log("UI: User touched Server")
+        self._log_d("UI: User touched Server")
 
     def handle_debug(self):
-        self._log("UI: User touched Debug")
+        self._log_d("UI: User touched Debug")
         self.ui_controller.push(Pages.DEBUG_PAGE)
 
     def handle_info(self):
-        self._log("UI: User touched Info")
+        self._log_d("UI: User touched Info")
         self.ui_controller.push(Pages.INFO_PAGE)
 
     def handle_duex(self):
-        self._log("UI: User touched Dual Extruder")
-        # NOTE: when pushing this page, the just_pushed callback will
-        # allow the DuEx widget to load the current settings.
+        self._log_d("UI: User touched Dual Extruder")
         self.ui_controller.push(Pages.DUEXSETUP_PAGE)
 
     def handle_term(self):
-        self._log("UI: User touched Term")
+        self._log_d("UI: User touched Term")
         # is_not_defined()
 
     def user_back(self):
-        self._log("UI: User touched Back")
+        self._log_d("UI: User touched Back")
         self.close()

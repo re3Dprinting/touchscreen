@@ -4,10 +4,11 @@ Temperature Open-Look Control.
 
 import logging
 from enum import Enum
+from util.log import tsLogger
 
 from PyQt5.QtCore import QTimer
 
-class TempOLControl:
+class TempOLControl(tsLogger):
     """Class to implement open-look control of a heater temperature
     set-point. This class is instantiated with the widgets used to
     control and display the set-point, and the extruder index.
@@ -16,7 +17,7 @@ class TempOLControl:
 
         # Set up logging
         self._logger = logging.getLogger(__name__)
-        self._log("TemperaturePage __init__")
+        self._log_d("TemperaturePage __init__")
 
         # The printer interface
         self.printer_if = context.printer_if
@@ -74,9 +75,6 @@ class TempOLControl:
         self.sync_timer = QTimer()
         self.sync_timer.timeout.connect(self._handle_sync_timeout)
 
-    def _log(self, message):
-        self._logger.debug(message)
-
     def _is_operational_state(self, state):
         # This is the equivalent of the OPERATIONAL_STATES tuple found
         # at about line 371 of src/octoprint/util/comm.py.
@@ -103,7 +101,7 @@ class TempOLControl:
         sub_tuple = tuple[self.index]
         (setpoint, actual) = sub_tuple
 
-        # self._log("setpoint = <%s>, actual = <%s> (state = <%s>)" % (str(setpoint), str(actual), self.state))
+        # self._log_d("setpoint = <%s>, actual = <%s> (state = <%s>)" % (str(setpoint), str(actual), self.state))
 
         if setpoint is None:
             # This can happen when we print on printers with only one
@@ -127,7 +125,7 @@ class TempOLControl:
         # and we'll change the state to SYNCED.
         if self.state == State.changed:
             if self.set_point == setpoint:
-                self._log("New set-point (%d) equals local set-point: entering SYNC state." % setpoint)
+                self._log_d("New set-point (%d) equals local set-point: entering SYNC state." % setpoint)
                 self.state = State.synced
 
                 # The sync timer is running (because its timeout will
@@ -141,7 +139,7 @@ class TempOLControl:
             # printer's set-point even if it's changed by Gcode in the
             # file being printed.
             if self.set_point != setpoint:
-                self._log("Received new set-point (%d) while in SYNC stat: tracking new set point." % setpoint)
+                self._log_d("Received new set-point (%d) while in SYNC stat: tracking new set point." % setpoint)
                 self.set_point = setpoint
                 self._update_display()
 
@@ -154,7 +152,7 @@ class TempOLControl:
     def _handle_inc_press(self):
         if not self.is_operational:
             return
-        self._log("UI: User pressed Increment.")
+        self._log_d("UI: User pressed Increment.")
         self.change_amount = 1
         self._change_setpoint_by_amount(self.change_amount)
         self.repeat_timer.start(500)
@@ -162,14 +160,14 @@ class TempOLControl:
     def _handle_inc_release(self):
         if not self.is_operational:
             return
-        self._log("UI: User released Increment.")
+        self._log_d("UI: User released Increment.")
         self._send_setpoint()
         self.repeat_timer.stop()
 
     def _handle_dec_press(self):
         if not self.is_operational:
             return
-        self._log("UI: User pressed Decrement.")
+        self._log_d("UI: User pressed Decrement.")
         self.change_amount = -1
         self._change_setpoint_by_amount(self.change_amount)
         self.repeat_timer.start(500)
@@ -177,7 +175,7 @@ class TempOLControl:
     def _handle_dec_release(self):
         if not self.is_operational:
             return
-        self._log("UI: User released Decrement.")
+        self._log_d("UI: User released Decrement.")
         self._send_setpoint()
         self.repeat_timer.stop()
 
@@ -193,12 +191,12 @@ class TempOLControl:
         # from the printer that's equal to ours. We will revert our
         # set-point to the last received from the printer and go to
         # SYNCED state.
-        self._log("Sync TIMEOUT has occurred in state = %s" % self.state)
+        self._log_d("Sync TIMEOUT has occurred in state = %s" % self.state)
 
         if self.state == State.changed:
             self.state = State.synced
             self.set_point = self.last_received_setpoint
-            self._log("Timed out in CHANGED state. Reverting to sync last received set-point (%d)." % self.set_point)
+            self._log_d("Timed out in CHANGED state. Reverting to sync last received set-point (%d)." % self.set_point)
             self._update_display()
         self.sync_timer.stop()
 
@@ -222,7 +220,7 @@ class TempOLControl:
 
     def _send_setpoint(self):
         # Send the new set-point to the printer
-        self._log("Sending setpoint <%s> to <%d>." % (self.index_str, self.set_point))
+        self._log_d("Sending setpoint <%s> to <%d>." % (self.index_str, self.set_point))
         self.printer_if.set_temperature(self.index_str, self.set_point)
         self.sync_timer.start(60000)
 

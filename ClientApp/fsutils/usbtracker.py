@@ -4,6 +4,7 @@
 import os
 import time
 import logging
+from util.log import tsLogger
 
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
@@ -15,7 +16,7 @@ from .mountpoint import MountPoint
 from .mountpointwatcher import MountpointWatcher
 from .contentwatcher import ContentWatcher
 
-class USBTracker(QObject, FileSystemEventHandler):
+class USBTracker(QObject, FileSystemEventHandler, tsLogger):
 
     create_signal = pyqtSignal(MountPoint)
     delete_signal = pyqtSignal(str)
@@ -26,7 +27,7 @@ class USBTracker(QObject, FileSystemEventHandler):
         
         # Set up logging
         self._logger = logging.getLogger(__name__)
-        self._log("USBTracker __init__()")
+        self._log_d("USBTracker __init__()")
 
         self.watch_path = watch_path
         self.current_mountpoint = MountPoint("")
@@ -34,7 +35,7 @@ class USBTracker(QObject, FileSystemEventHandler):
         # print("Watch path = <%s>" % watch_path)
         # print("Initial path = <%s>" % initial_path)
 
-        self._log("Initializing with watch path = <%s>, initial path = <%s>" % (watch_path, initial_path))
+        self._log_d("Initializing with watch path = <%s>, initial path = <%s>" % (watch_path, initial_path))
 
         self.content_watcher = ContentWatcher(self)
         self.mountpoint_watcher = MountpointWatcher(self)
@@ -50,8 +51,6 @@ class USBTracker(QObject, FileSystemEventHandler):
         # else:
         #     print("NOT content only")
 
-    def _log(self, message):
-        self._logger.debug(message)
 
     def create_mount_observer(self):
         self.mount_observer = Observer()
@@ -66,7 +65,7 @@ class USBTracker(QObject, FileSystemEventHandler):
 
     def create_content_observer(self, path):
         self.content_observer = None
-        self._log("creating content observer on <%s>" % path)
+        self._log_d("creating content observer on <%s>" % path)
         return
 
         # self.content_observer = Observer()
@@ -87,7 +86,7 @@ class USBTracker(QObject, FileSystemEventHandler):
         return self.content_signal
 
     def mountpoint_created(self, mountpoint):
-        self._log("MOUNTPOINT CREATED: path <%s>, actual <%s>, Current is: <%s>, current actual: <%s>" % (mountpoint.path, mountpoint.actual_path, self.current_mountpoint.path, self.current_mountpoint.actual_path))
+        self._log_d("MOUNTPOINT CREATED: path <%s>, actual <%s>, Current is: <%s>, current actual: <%s>" % (mountpoint.path, mountpoint.actual_path, self.current_mountpoint.path, self.current_mountpoint.actual_path))
 
         self.mountpoint = mountpoint
 
@@ -109,7 +108,7 @@ class USBTracker(QObject, FileSystemEventHandler):
             self.create_signal.emit(mountpoint)
 
     def mountpoint_deleted(self, path):
-        self._log("Mountpoint deleted: <%s> Current is: <%s>, current actual: <%s>" % (path, self.current_mountpoint.path, self.current_mountpoint.actual_path))
+        self._log_d("Mountpoint deleted: <%s> Current is: <%s>, current actual: <%s>" % (path, self.current_mountpoint.path, self.current_mountpoint.actual_path))
 
         if self.current_mountpoint.path == path:
             self.delete_signal.emit(path)
@@ -120,5 +119,5 @@ class USBTracker(QObject, FileSystemEventHandler):
         # self.create_mount_observer()
 
     def content_modified(self, path):
-        self._log("Content modified: <%s>" % (path))
+        self._log_d("Content modified: <%s>" % (path))
         self.content_signal.emit(path)

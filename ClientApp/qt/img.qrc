@@ -111,5 +111,6 @@
         <file>img/USB.png</file>
         <file>img/Wifi.png</file>
         <file>img/X.png</file>
+        <file>img/dot.png</file>
     </qresource>
 </RCC>

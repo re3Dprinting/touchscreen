@@ -2,14 +2,15 @@ import logging
 from PyQt5.QtCore import Qt, pyqtSignal
 from .qt.popup import *
 from basepage import BasePage
+from util.log import tsLogger
 
-class PopUp(QtWidgets.QDialog, BasePage, Ui_PopUpWindow):
+class PopUp(QtWidgets.QDialog, BasePage, Ui_PopUpWindow, tsLogger):
     # runout_signal = pyqtSignal(str, str)
 
     def __init__(self, parent):
         super(PopUp, self).__init__()
         self._logger = logging.getLogger(__name__)
-        self._log("PopUp Window Appeared")
+        self._log_d("PopUp __init__()")
 
         self.parent = parent
 
@@ -32,6 +33,3 @@ class PopUp(QtWidgets.QDialog, BasePage, Ui_PopUpWindow):
         self.setAllStyleProperty([self.popup_button], "btn-font-s black-text btn-pressed-light yellow-btn")
         self.setAllStyleProperty([self.PopUpMain], "pop-up")
         self.setAllStyleProperty([self], "transparent")
-
-    def _log(self, message):
-        self._logger.debug(message)

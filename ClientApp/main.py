@@ -24,7 +24,7 @@ from touchscreen.fsutils.mountfinder import MountFinder
 from fsutils.mountpoint import MountPoint
 
 from util.configid import get_touchscreen_commit_id
-from util.log import setup_root_logger
+from util.log import setup_root_logger, tsLogger
 
 from touchscreen.fsutils.ostype import *
 from constants import Pages
@@ -38,27 +38,14 @@ from util.restore_backup import restore_backup
 from fsutils.checksum import validate_checksum
 
 
-def setup_local_logger(name):
-    global logger
-    logger = logging.getLogger(name)
-
-
-def _log(message):
-    global logger
-
-    # NOTE: All messages logged here are at INFO level. Elsewhere,
-    # always use DEBUG
-    logger.info(message)
-
-
 # This function takes care of all the high-level application
 # initialization and setup. It is called belowe.
-class MainHandler():
+class MainHandler(tsLogger):
+
     """
     Entry point of touchscreen software.
     Set up initial exception hooks, user-setup, and file paths
     """
-
     def __init__(self):
         # Hook up our exception handler
         sys._excepthook = sys.excepthook
@@ -66,7 +53,7 @@ class MainHandler():
 
         # Setup logging first of all
         setup_root_logger()
-        setup_local_logger(__name__)
+        self._logger = logging.getLogger(__name__)
 
         # Locate to the absolute path of the current path. Locate the root re3d dir where Octoprint, config.properties, and touchscreen folders lie.
         #     .
@@ -131,17 +118,14 @@ class MainHandler():
         config_string = "%s/%s" % (version_string, config_id)
 
         # Print a banner to stdout.
-        print(
-            "******************************************************************************")
-        print("re:3D touchscreen starting %s %s " %
-              (ip_string, version_string))
-        print(
-            "******************************************************************************")
+        print("******************************************************************************")
+        print("re:3D touchscreen starting %s %s " % (ip_string, version_string))
+        print("******************************************************************************")
 
         # And log the same banner.
-        _log("******************************************************************************")
-        _log("re:3D touchscreen starting %s %s " % (ip_string, version_string))
-        _log("******************************************************************************")
+        self._log_i("******************************************************************************")
+        self._log_i("re:3D touchscreen starting %s %s " % (ip_string, version_string))
+        self._log_i("******************************************************************************")
 
         # Set up all the OctoPrint stuff. We need two bits of information
         # from that: the printer and the storage manager.
@@ -170,14 +154,14 @@ class MainHandler():
         # possible_usb_mounts = MountFinder.thumbdrive_candidates()
         possible_usb_mounts = glob.glob(self.persona.watchpoint + "/*")
 
-        logger.debug("persona watchpoint = <%s>", self.persona.watchpoint)
+        self._log_d("USB Watchpoint = <%s>" % self.persona.watchpoint)
 
         # If the mount finder located any possible USB mountpoints...
         if len(possible_usb_mounts) > 0:
 
             # ...loop through the possible USB mount points
             for possible_path in possible_usb_mounts:
-                logger.debug("Possible path: <%s>", possible_path)
+                self._log_d("Possible path: <%s>" % possible_path)
 
                 # Break the first time we find a USB drive mounted on the
                 # mount point we're watching.
@@ -186,7 +170,7 @@ class MainHandler():
                     break
 
             if current_path != "":
-                logger.debug("Initial USB path = <%s>" % current_path)
+                self._log_d("Initial USB path = <%s>" % current_path)
 
                 # There seems to be a thumb drive plugged in. Tell the UI
                 # print window to use it as the inital file list.
@@ -242,8 +226,7 @@ class MainHandler():
             value {Exception Instance} -- Instance of the Exception
             traceback {Traceback Object} -- origin of the error
         """
-        global logger
-        logger.exception("**** Logging an uncaught exception",
+        self._logger.exception("**** Logging an uncaught exception",
                          exc_info=(exctype, value, traceback))
         sys._excepthook(exctype, value, traceback)
 
@@ -251,17 +234,5 @@ class MainHandler():
         restore_backup(self.persona, self.properties)
         sys.exit(1)
 
-# def dummyall():
-#     logger = setup_root_logger()
-
-
-#     while True:
-#         # Build up a string to represent the tarball filename, starting with the date.
-#         now = datetime.now()
-#         nowstr = now.strftime("%Y-%m-%d-%H-%M-%S.%f")
-#         # for i in range(1, 1000000):
-#         logger.info("*****************************%s*********************************" % nowstr)
-# Everything's now defined. All we have to do is call it.
 if __name__ == "__main__":
-    # dummyall()
     MainHandler()

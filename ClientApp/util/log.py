@@ -2,6 +2,17 @@ import logging
 from constants import LogConstants
 from logging.handlers import RotatingFileHandler
 
+
+class tsLogger():
+    def _log_d(self, message):
+        self._logger.debug(message)
+    def _log_i(self, message):
+        self._logger.info(message)
+    def _log_w(self, message):
+        self._logger.warn(message)
+    def _log_e(self, message):
+        self._logger.error(message)
+
 def dump_logger_hierarchy(note, log_to_debug):
     print(note, ": Dumping logger", log_to_debug)
     while log_to_debug is not None:

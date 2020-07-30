@@ -18,7 +18,7 @@ class ControlPage(BasePage, Ui_ControlPage):
 
         # Set up logging
         self._logger = logging.getLogger(__name__)
-        self._log("ControlPage __init__()")
+        self._log_d("ControlPage __init__()")
 
         # Set up UI
         self.setupUi(self)
@@ -70,7 +70,6 @@ class ControlPage(BasePage, Ui_ControlPage):
     def hello(self):
         print("hello")
     def user_back(self):
-        self._log("UI: User touched Back")
         self.close()
 
     def updateposition(self, x, y, z):
@@ -87,23 +86,23 @@ class ControlPage(BasePage, Ui_ControlPage):
 
     def disablemotors(self):
         # self.serial.send_serial('M18')
-        self._log("UI: User touched Motor enable/disable")
+        self._log_d("UI: User touched Motor enable/disable")
         self.printer_if.commands("M18", force=True)
         pass
 
     def homexy(self):
         # self.serial.send_serial('G28 XY')
-        self._log("UI: User touched Home XY")
+        self._log_d("UI: User touched Home XY")
         self.printer_if.homexy()
 
     def homez(self):
         # self.serial.send_serial('G28 Z')
-        self._log("UI: User touched Home Z")
+        self._log_d("UI: User touched Home Z")
         self.printer_if.homez()
 
     def homeall(self):
         # self.serial.send_serial('G28')
-        self._log("UI: User touched Home All")
+        self._log_d("UI: User touched Home All")
         self.printer_if.homeall()
 
     def AddButtontoGroup(self, axis):

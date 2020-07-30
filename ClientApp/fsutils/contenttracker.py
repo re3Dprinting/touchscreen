@@ -6,7 +6,6 @@ from watchdog.events import FileSystemEventHandler
 
 from PyQt5.QtCore import QObject, pyqtSignal
 
-from .mountfinder import MountFinder
 from .mountpointwatcher import MountpointWatcher
 from .contentwatcher import ContentWatcher
 

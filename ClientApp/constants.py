@@ -5,7 +5,7 @@ from enum import Enum
 class LogConstants(Enum):
     LOGNAME = "ts.log"
     LOGMAXBYTES = 2**30
-    LOGCOUNT = 9
+    LOGCOUNT = 3
 
 class Pages(Enum):
     HOME_PAGE = "home"

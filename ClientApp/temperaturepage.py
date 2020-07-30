@@ -38,7 +38,7 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
 
         # Set up logging
         self._logger = logging.getLogger(__name__)
-        self._log("TemperaturePage __init__")
+        self._log_d("TemperaturePage __init__()")
 
         self.context = context
         self.printer_if = context.printer_if
@@ -182,7 +182,7 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
         self.control_page = self.ui_controller.get_page(Pages.CONTROL_PAGE)
 
     def update_parameter_display(self):
-        self._log("update_paramater_display")
+        self._log_d("update_paramater_display")
 
         print_page = self.ui_controller.get_page(Pages.PRINT_PAGE)
         if print_page is not None:
@@ -199,13 +199,13 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
         self.updateflowlabel()
 
     def reset_parameters(self):
-        self._log("***************************************************************************************************reset_paramaters")
+        self._log_d("***************************************************************************************************reset_paramaters")
         self.print_handler.reset_parameters()
         self.print_handler.send_all()
         self.update_parameter_display()
 
     def feedrateslider_released(self):
-        self._log("UI: User released Feed Rate slider")
+        self._log_d("UI: User released Feed Rate slider")
 
         feed_rate = self.ActivePrintWid.w_slider_feedrate.value()
         indicated_feed_rate = feed_rate
@@ -223,12 +223,12 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
         self.print_handler.sendfeedrate()
 
     def feedrateslider_changed(self):
-        self._log("UI: User moved Feed Rate slider")
+        self._log_d("UI: User moved Feed Rate slider")
         val = self.ActivePrintWid.w_slider_feedrate.value()
         self.ActivePrintWid.w_label_feedrate.setText(str(val))
 
     def babystepneg(self):
-        self._log("UI: User touched Baby Step Decrement")
+        self._log_d("UI: User touched Baby Step Decrement")
         self.print_handler.babystepx10 -= self.print_handler.babystepinc
         self.print_handler.babystep = float(
             self.print_handler.babystepx10) / float(100)
@@ -238,7 +238,7 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
         self.printer_if.set_babystep(self.print_handler.babystep)
 
     def babysteppos(self):
-        self._log("UI: User touched Baby Step Increment")
+        self._log_d("UI: User touched Baby Step Increment")
         self.print_handler.babystepx10 += self.print_handler.babystepinc
         self.print_handler.babystep = float(
             self.print_handler.babystepx10) / float(100)
@@ -268,7 +268,7 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
 
     def update_progress_slot(self, completion):
         if completion != "N/A":
-            self._log("Received progress signal <%s>" % completion)
+            self._log_d("Received progress signal <%s>" % completion)
             completion = int(float(completion))
             self.ActivePrintWid.w_progressbar_file_progress.setValue(
                 completion)
@@ -282,7 +282,7 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
 
     def handle_flowratelabel_touch(self):
 
-        self._log("UI: User touched Flow Rate Label")
+        self._log_d("UI: User touched Flow Rate Label")
 
         # Increment the flow rate index, cycling between ALL, Extruder
         # 0, and Extruder 1
@@ -291,15 +291,15 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
         self.updateflowlabel()
 
     def flowrate_inc(self):
-        self._log("UI: User touched Flow Rate Increase")
+        self._log_d("UI: User touched Flow Rate Increase")
         self.flowrateadjust(+1)
 
     def flowrate_dec(self):
-        self._log("UI: User touched Flow Rate Increase")
+        self._log_d("UI: User touched Flow Rate Increase")
         self.flowrateadjust(-1)
 
     def flowrateadjust(self, amount):
-        self._log("UI: User touched Flow Rate Decrease")
+        self._log_d("UI: User touched Flow Rate Decrease")
 
         # Decrease the flow rate
         self.print_handler.flowrate[self.print_handler.fr_index] += amount
@@ -331,7 +331,7 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
         self.ActivePrintWid.setVisible(True)
 
     def pauseprint(self):
-        self._log("UI: User touched Pause")
+        self._log_d("UI: User touched Pause")
         self.printer_if.pause_print()
         self.ActivePrintWid.w_pushbutton_resumeprint.setEnabled(True)
         self.ActivePrintWid.w_pushbutton_pauseprint.setEnabled(False)
@@ -340,7 +340,7 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
         home.pushbutton_control.setEnabled(True)
 
     def resumeprint(self):
-        self._log("UI: User touched Resume")
+        self._log_d("UI: User touched Resume")
         self.printer_if.resume_print()
         self.ActivePrintWid.w_pushbutton_resumeprint.setEnabled(False)
         self.ActivePrintWid.w_pushbutton_pauseprint.setEnabled(True)
@@ -384,11 +384,11 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
             self.cooldown.allset)
 
     def notactive_fan(self):
-        self._log("UI: User touched (not active) Fan")
+        self._log_d("UI: User touched (not active) Fan")
         self.fan()
 
     def active_fan(self):
-        self._log("UI: User touched (active) Fan")
+        self._log_d("UI: User touched (active) Fan")
         self.fan()
 
     def fan(self):
@@ -412,12 +412,12 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
                 QtCore.QSize(55, 55))
 
     def active_close(self):
-        self._log("UI: User touched (active) Back")
+        self._log_d("UI: User touched (active) Back")
         self.parent.show()
         self.close()
 
     def notactive_close(self):
-        self._log("UI: User touched (not active) Back")
+        self._log_d("UI: User touched (not active) Back")
         self.parent.show()
         self.close()
 
@@ -466,15 +466,15 @@ class TemperaturePage(BasePage, Ui_TemperaturePage):
             self.e1temp.setText(unknown_temp_str)
 
     def set_bed_temperature(self, value):
-        self._log("Setting bed temp to %d." % value)
+        self._log_d("Setting bed temp to %d." % value)
         self.printer_if.set_temperature("bed", value)
 
     def set_tool0_temperature(self, value):
-        self._log("Setting tool0 temp to %d." % value)
+        self._log_d("Setting tool0 temp to %d." % value)
         self.printer_if.set_temperature("tool0", value)
 
     def set_tool1_temperature(self, value):
-        self._log("Setting tool1 temp to %d." % value)
+        self._log_d("Setting tool1 temp to %d." % value)
         self.printer_if.set_temperature("tool1", value)
 
     def set_progress(self, value):

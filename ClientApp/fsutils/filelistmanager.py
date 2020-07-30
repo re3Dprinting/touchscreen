@@ -1,4 +1,5 @@
 import logging
+from util.log import tsLogger
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import Qt
@@ -6,7 +7,7 @@ from PyQt5.QtCore import Qt
 from .subfilesystem import SubFileSystem
 
 
-class FileListManager:
+class FileListManager(tsLogger):
 
     def __init__(self, name, printer_if, table_model, qmltable, watchpoint,
                  pathlabel_wid, pushbutton_up_wid,
@@ -14,7 +15,7 @@ class FileListManager:
 
         # Set up logging
         self._logger = logging.getLogger(__name__)
-        self._log("FileListManager __init__")
+        self._log_d("FileListManager __init__")
 
         self.printer_if = printer_if
         self.name = name
@@ -46,9 +47,6 @@ class FileListManager:
 
         self.clear_files()
         self.update_button_states()
-
-    def _log(self, message):
-        self._logger.debug(message)
 
     def enable(self):
         self.enabled = True
@@ -94,7 +92,7 @@ class FileListManager:
             if(not self.printer_if.printing): self.pushbutton_print_wid.setEnabled(True)
 
     def rowClicked(self, row):
-        self._log("UI: User touched item")
+        self._log_d("UI: User touched item")
         self.selectedRow = row
         self.selectedFile = self.table_model.getDataList()[self.selectedRow]
         self.update_button_states()
@@ -103,7 +101,7 @@ class FileListManager:
     def open_subdir(self):
         if not self.enabled:
             return
-        self._log("UI: User touched Open")
+        self._log_d("UI: User touched Open")
         # (selected_row, selected_file) = self.get_selected_file()
 
         if self.selectedRow == -1:
@@ -125,7 +123,7 @@ class FileListManager:
     def up_dir(self):
         if not self.enabled:
             return
-        self._log("UI: User touched Up")
+        self._log_d("UI: User touched Up")
         self.subdir.up()
         self.update_files()
 

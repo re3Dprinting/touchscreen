@@ -16,7 +16,7 @@ class SerialPage(BasePage, Ui_SerialPage):
 
         # Set up logging
         self._logger = logging.getLogger(__name__)
-        self._log("SerialPage __init__()")
+        self._log_d("SerialPage __init__()")
 
         # Set up the UI
         self.setupUi(self)
@@ -71,7 +71,7 @@ class SerialPage(BasePage, Ui_SerialPage):
         return False
 
     def state_change_callback(self, from_state, to_state):
-        self._log("**************** STATE CHANGE from %s to %s." %
+        self._log_d("**************** STATE CHANGE from %s to %s." %
                   (from_state, to_state))
 
         # If we have transition from connecting state to any other
@@ -83,23 +83,22 @@ class SerialPage(BasePage, Ui_SerialPage):
 #        if from_state == "OPERATIONAL" and to_state != "OPERATIONAL" and to_state != "ERROR":
         if from_state != "OFFLINE" and to_state == "OFFLINE":
 
-            self._log(
-                "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-            self._log("Disconnect detected!")
+            self._log_d("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+            self._log_d("Disconnect detected!")
 
             # Disconnect occurred. Were we expecting it?
             if self.disconnect_expected:
 
                 # We expected a disconnect, and now it's happened. Further
                 # disconnects are unexpected
-                self._log("Disconnect expected, resetting.")
+                self._log_d("Disconnect expected, resetting.")
                 self.disconnect_expected = False
 
             else:
                 # We are not expecting the disconnect. Pop up the
                 # error dialog.
 
-                self._log("Disconnect unexpected, popping up error dialog.")
+                self._log_d("Disconnect unexpected, popping up error dialog.")
                 self.popup_signal.emit("*** ERROR ***", "Printer disconnected", "", False)
 
 
@@ -108,10 +107,6 @@ class SerialPage(BasePage, Ui_SerialPage):
 
         if to_state == "ERROR":
             self.disconnect_expected = True
-
-
-    def _log(self, message):
-        self._logger.debug(message)
 
     def reconnect_serial(self):
         if self.scan_serial():
@@ -127,7 +122,7 @@ class SerialPage(BasePage, Ui_SerialPage):
         self.w_textb_output.append(text)
 
     def user_connect_serial(self):
-        self._log("UI: User touched Connect")
+        self._log_d("UI: User touched Connect")
         self.disable_page()
         self.connect_serial()
 
@@ -146,21 +141,21 @@ class SerialPage(BasePage, Ui_SerialPage):
         self.w_table_ports.setEnabled(True)
 
     def connect_serial(self):
-        self._log("UI: User touched Connect")
+        self._log_d("UI: User touched Connect")
         self.disconnect_expected = True
         selected_row = self.w_table_ports.currentRow()
         selected_device = self.w_table_ports.item(selected_row, 0).text()
-        self._log("Connecting to device <%s>." % selected_device)
+        self._log_d("Connecting to device <%s>." % selected_device)
         self.printer_if.connect(selected_device)
 
     def disconnect_serial(self):
-        self._log("UI: User touched Disconnect")
+        self._log_d("UI: User touched Disconnect")
         # self.output_serial(self.serial.disconnect())
         self.disconnect_expected = True
         self.printer_if.disconnect()
 
     def scan_serial(self):
-        self._log("UI: User touched Scan")
+        self._log_d("UI: User touched Scan")
         # Call the printer to get its connection options
         serial_port_list = self.printer_if.get_connection_options()
 

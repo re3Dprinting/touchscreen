@@ -1,10 +1,11 @@
 from builtins import str
 import logging
+from util.log import tsLogger
 
 # The Event Handler operates the temperature preheats, setting the temperatures,
 #
 
-class PrintHandler():
+class PrintHandler(tsLogger):
     def __init__(self, context, tempwindow):
         super(PrintHandler).__init__()
 
@@ -13,7 +14,7 @@ class PrintHandler():
 
         # Set up logging
         self._logger = logging.getLogger(__name__)
-        self._log("TemperaturePage __init__")
+        self._log_d("PrintHandler __init__()")
 
         # Feed rate variables
         self.feedrate = 100
@@ -31,11 +32,8 @@ class PrintHandler():
         self.sendtempcount = 0
         self.rescanserial_count = 0
 
-    def _log(self, message):
-        self._logger.debug(message)
-
     def reset_parameters(self):
-        self._log("reset_parameters")
+        self._log_d("reset_parameters")
         self.fr_index = 2
         self.feedrate = 100
         self.flowrate = [100, 100, 100]

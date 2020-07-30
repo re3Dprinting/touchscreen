@@ -8,7 +8,7 @@ class RunOut(PopUp):
     def __init__(self, parent, printer_if):
         super(RunOut, self).__init__(parent)
         self._logger = logging.getLogger(__name__)
-        self._log("Runout handler starting up")
+        self._log_d("Runout __init__()")
 
         self.popup_button.setEnabled(False)
         self.printer_if = printer_if
@@ -18,9 +18,6 @@ class RunOut(PopUp):
         self.send_m108_on_ok = False
 
         self.popup_button.clicked.connect(self.accept)
-
-    def _log(self, message):
-        self._logger.debug(message)
 
     # Called when the user clicks OK:
     def accept(self):
@@ -73,7 +70,7 @@ class RunOut(PopUp):
     # This method runs in the printer thread; emit a signal so we can
     # handle the message in the UI thread.
     def handle_runout_message(self, code, mess):
-        self._log("Received runout message <%s>, <%s>, sending signal..." % (code, mess))
+        self._log_d("Received runout message <%s>, <%s>, sending signal..." % (code, mess))
         self.runout_signal.emit(code, mess)
 
     # Slot called when the filament-change signal emits a message. We
@@ -83,7 +80,7 @@ class RunOut(PopUp):
     # Note that in some cases we override the default message with one
     # that makes more sense for a touchscreen
     def runout_handler_slot(self, code, mess):
-        self._log("Received runout signal <%s>, <%s>, handling..." % (code, mess))
+        self._log_d("Received runout signal <%s>, <%s>, handling..." % (code, mess))
 
         # "Wait for start of the filament change."
         if code == "R301":

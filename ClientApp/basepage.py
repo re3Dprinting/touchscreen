@@ -1,15 +1,12 @@
 from PyQt5 import QtWidgets, QtCore
+from util.log import tsLogger
 
-
-class BasePage(QtWidgets.QWidget):
+class BasePage(QtWidgets.QWidget, tsLogger):
     popup_signal = QtCore.pyqtSignal(str, str, str, bool)
     def __init__(self):
         super(BasePage, self).__init__()
 
-    def _log(self, message):
-        self._logger.debug(message)
-
-        # Global function that allows windows to create a borderless button
+    # Global function that allows windows to create a borderless button
     def setAllStyleProperty(self, listobj, prop):
         for obj in listobj:
             obj.setProperty("cssClass", prop)
@@ -41,5 +38,4 @@ class BasePage(QtWidgets.QWidget):
         self.setStyleProperty(obj, "transparent-icon")
 
     def back(self):
-        self._log("UI: User touched Back")
         self.ui_controller.pop()

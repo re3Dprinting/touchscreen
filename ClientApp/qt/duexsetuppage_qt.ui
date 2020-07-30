@@ -719,7 +719,7 @@
              </property>
              <property name="icon">
               <iconset resource="img.qrc">
-               <normaloff>:/img/img/0.png</normaloff>:/img/img/0.png</iconset>
+               <normaloff>:/img/img/dot.png</normaloff>:/img/img/dot.png</iconset>
              </property>
              <property name="iconSize">
               <size>

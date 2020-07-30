@@ -20,7 +20,7 @@ class DuExSetupPage(BasePage, Ui_DuExSetupPage):
 
         # Set up logging
         self._logger = logging.getLogger(__name__)
-        self._log("DuExSetupPage __init__()")
+        self._log_d("DuExSetupPage __init__()")
 
         # Keep a reference to the OctoPrint printer object and register to receive callbacks
         # from it.
@@ -69,11 +69,6 @@ class DuExSetupPage(BasePage, Ui_DuExSetupPage):
         self.setAllTransparentIcon([self.t1xIcon, self.t1yIcon])
         self.setAllTransparentButton([self.Back, self.w_pushbutton_permanent,
                                       self.w_pushbutton_temporary, self.w_pushbutton_revert], True)
-
-    def just_pushed(self):
-        self._log("just_pushed callback called!")
-        self.get_settings()
-        self.w_lineedit_x1.setFocus()
 
     def handle_x1_focus_in(self):
         self.num_keys.setEnabled(True)
@@ -125,20 +120,16 @@ class DuExSetupPage(BasePage, Ui_DuExSetupPage):
         self.num_keys.load("")
 
     def get_settings(self):
-        self._log("Dual Extruder window getting current settings...")
         self.filter_output = True
         self.printer_if.commands("M218 T1")
 
     def handle_temporary_touch(self):
-        self._log("UI: User touched Use Temporarily.")
         self.set_offsets_temporarily()
 
     def handle_permanent_touch(self):
-        self._log("UI: User touched Make Permanent.")
         self.set_offsets_permanently()
 
     def handle_revert_touch(self):
-        self._log("UI: User touched Revert.")
         self.printer_if.restore_settings()
         time.sleep(1.0)
         self.get_settings()
@@ -148,7 +139,7 @@ class DuExSetupPage(BasePage, Ui_DuExSetupPage):
         y1 = self.w_lineedit_y1.text()
 
         command = "M218 T1 X%s Y%s" % (x1, y1)
-        self._log("Setting offsets: <%s>" % command)
+        self._log_d("Dual Extrusion Offset Set: <%s>" % command)
 
         self.printer_if.commands(command)
 
@@ -183,6 +174,9 @@ class DuExSetupPage(BasePage, Ui_DuExSetupPage):
 
                 self.w_lineedit_x1.setText(x1)
                 self.w_lineedit_y1.setText(y1)
+    def showEvent(self,event):
+        self.get_settings()
+        self.w_lineedit_x1.setFocus()
 
 
 class DuexLineEdit(QtWidgets.QLineEdit):

@@ -1,4 +1,3 @@
-from builtins import object
 import os
 import os.path
 import tarfile, zipfile
@@ -10,7 +9,7 @@ import shutil
 import datetime
 import random
 
-class SubFileSystem(object):
+class SubFileSystem():
     def __init__(self, rootdir):
         self.files = []
         self.rootdir = rootdir

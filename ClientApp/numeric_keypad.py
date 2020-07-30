@@ -1,7 +1,8 @@
 import logging
 from PyQt5.QtCore import QObject, pyqtSignal
+from util.log import tsLogger
 
-class NumericKeypad(QObject):
+class NumericKeypad(QObject, tsLogger):
 
     # These get converted to bound instance variables
     changed = pyqtSignal(str)
@@ -21,7 +22,7 @@ class NumericKeypad(QObject):
 
         # Set up logging
         self._logger = logging.getLogger(__name__)
-        self._log("NumericKeypad __init__()")
+        self._log_d("NumericKeypad __init__()")
 
         # Connect event handlers to each of the pushbuttons
         ui.w_pushbutton_1.clicked.connect(self.handle_1_touch)
@@ -67,10 +68,6 @@ class NumericKeypad(QObject):
             self.actual_value_str = self.value_str
             self.changed.emit(self.actual_value_str)
 
-    # Add a message to the log
-    def _log(self, message):
-        self._logger.debug(message)
-
     # Enable or disable all the widgets.
     def setEnabled(self, value):
         self.ui.w_pushbutton_1.setEnabled(value)
@@ -93,52 +90,52 @@ class NumericKeypad(QObject):
     # digit to the value string.
 
     def handle_1_touch(self):
-        self._log("UI: User touched 1")
+        self._log_d("UI: User touched 1")
         self.handle_digit("1")
 
     # See handle_1_touch
     def handle_2_touch(self):
-        self._log("UI: User touched 2")
+        self._log_d("UI: User touched 2")
         self.handle_digit("2")
 
     # See handle_1_touch
     def handle_3_touch(self):
-        self._log("UI: User touched 3")
+        self._log_d("UI: User touched 3")
         self.handle_digit("3")
 
     # See handle_1_touch
     def handle_4_touch(self):
-        self._log("UI: User touched 4")
+        self._log_d("UI: User touched 4")
         self.handle_digit("4")
 
     # See handle_1_touch
     def handle_5_touch(self):
-        self._log("UI: User touched 5")
+        self._log_d("UI: User touched 5")
         self.handle_digit("5")
 
     # See handle_1_touch
     def handle_6_touch(self):
-        self._log("UI: User touched 6")
+        self._log_d("UI: User touched 6")
         self.handle_digit("6")
 
     # See handle_1_touch
     def handle_7_touch(self):
-        self._log("UI: User touched 7")
+        self._log_d("UI: User touched 7")
         self.handle_digit("7")
 
     # See handle_1_touch
     def handle_8_touch(self):
-        self._log("UI: User touched 8")
+        self._log_d("UI: User touched 8")
         self.handle_digit("8")
 
     # See handle_1_touch
     def handle_9_touch(self):
-        self._log("UI: User touched 9")
+        self._log_d("UI: User touched 9")
         self.handle_digit("9")
 
     # See handle_1_touch
     def handle_0_touch(self):
-        self._log("UI: User touched 0")
+        self._log_d("UI: User touched 0")
         if not self.value_str == "0":
             self.handle_digit("0")
 
@@ -146,7 +143,7 @@ class NumericKeypad(QObject):
     # toggling a "-" at the beginning of the string (thus making the
     # "-" key act like a +/- key on old calculators).
     def handle_negative_touch(self):
-        self._log("UI: User touched -")
+        self._log_d("UI: User touched -")
 
         if "-" in self.value_str:
             # If the value string contains a "-", then delete it by
@@ -162,7 +159,7 @@ class NumericKeypad(QObject):
         self.do_value_change()
 
     def handle_decimal_touch(self):
-        self._log("UI: User touched .")
+        self._log_d("UI: User touched .")
 
         # Handle the case where the user touches ".". We handle
         # this by appending a decimal to the string only if it
@@ -178,12 +175,12 @@ class NumericKeypad(QObject):
                 self.handle_digit(".")
 
     def handle_delete_touch(self):
-        self._log("UI: User touched delete")
+        self._log_d("UI: User touched delete")
         self.value_str = self.value_str[:-1]
         self.do_value_change()
 
     def handle_clear_touch(self):
-        self._log("UI: User touched Clear")
+        self._log_d("UI: User touched Clear")
         self.cleared.emit(self.actual_value_str)
         pass
     
