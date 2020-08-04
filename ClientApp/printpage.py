@@ -52,8 +52,7 @@ class PrintPage(BasePage, Ui_PrintPage):
         self.printer_if.set_file_list_update_callback(
             self.sd_file_list_update_callback)
         # print("Setting print finished callback")
-        self.printer_if.set_print_finished_callback(
-            self.print_finished_callback)
+        self.printer_if.set_print_finished_callback(self.print_finished_callback)
 
         self.item_stack = []
 
@@ -172,9 +171,10 @@ class PrintPage(BasePage, Ui_PrintPage):
 
     def showSDButtons(self, isSDprinting):
         #Disable SD scan button if already printing
-        if(not self.printer_if.printing): self.pushbutton_scan_sd.setVisible(isSDprinting)
+        self.pushbutton_scan_sd.setVisible(isSDprinting)
         self.pushbutton_folder_up.setVisible(not isSDprinting)
         self.pushbutton_folder_open.setVisible(not isSDprinting)
+        if(not self.printer_if.printing): self.pushbutton_scan_sd.setEnabled(False)
 
     def set_control_page(self, on):
         home_page = self.ui_controller.get_page(Pages.HOME_PAGE)
