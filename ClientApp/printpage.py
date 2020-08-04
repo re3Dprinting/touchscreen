@@ -171,7 +171,8 @@ class PrintPage(BasePage, Ui_PrintPage):
                 self.ButtonTabs[tab].setIcon(QtGui.QIcon(QtGui.QPixmap(QtGui.QPixmap(":/img/img/"+tab+"_2.png"))))
 
     def showSDButtons(self, isSDprinting):
-        self.pushbutton_scan_sd.setVisible(isSDprinting)
+        #Disable SD scan button if already printing
+        if(not self.printer_if.printing): self.pushbutton_scan_sd.setVisible(isSDprinting)
         self.pushbutton_folder_up.setVisible(not isSDprinting)
         self.pushbutton_folder_open.setVisible(not isSDprinting)
 
@@ -266,6 +267,7 @@ class PrintPage(BasePage, Ui_PrintPage):
         self.sd_selectedFile = self.SDTableModel.get(self.sd_selectedRow, 0)
         if self.print_method == "SD" and not self.printer_if.printing:
             self.pushbutton_start_print.setEnabled(True)
+        
 
     def sd_start_print(self):
         if not self.print_method == "SD":
