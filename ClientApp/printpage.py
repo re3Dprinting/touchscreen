@@ -52,8 +52,7 @@ class PrintPage(BasePage, Ui_PrintPage):
         self.printer_if.set_file_list_update_callback(
             self.sd_file_list_update_callback)
         # print("Setting print finished callback")
-        self.printer_if.set_print_finished_callback(
-            self.print_finished_callback)
+        self.printer_if.set_print_finished_callback(self.print_finished_callback)
 
         self.item_stack = []
 
@@ -172,7 +171,7 @@ class PrintPage(BasePage, Ui_PrintPage):
 
     def showSDButtons(self, isSDprinting):
         #Disable SD scan button if already printing
-        if(not self.printer_if.printing): self.pushbutton_scan_sd.setVisible(isSDprinting)
+        self.pushbutton_scan_sd.setVisible(isSDprinting)
         self.pushbutton_folder_up.setVisible(not isSDprinting)
         self.pushbutton_folder_open.setVisible(not isSDprinting)
 
@@ -316,6 +315,7 @@ class PrintPage(BasePage, Ui_PrintPage):
             self.pushbutton_start_print.setEnabled(False)
             self.pushbutton_active_print.setEnabled(True)
             self.pushbutton_stop_print.setEnabled(True)
+            self.pushbutton_scan_sd.setEnabled(False)
 
     def usb_start_print(self):
         if not self.print_method == "USB":
@@ -346,4 +346,5 @@ class PrintPage(BasePage, Ui_PrintPage):
             self.pushbutton_start_print.setEnabled(False)
             self.pushbutton_active_print.setEnabled(True)
             self.pushbutton_stop_print.setEnabled(True)
+            self.pushbutton_scan_sd.setEnabled(False)
 
