@@ -219,7 +219,7 @@ class PrinterIF(PrinterCallback, tsLogger):
         return self.printer.get_current_temperatures()
 
     def set_temperature(self, name, temp):
-        self.printer.set_temperature(name, temp)
+        if(temp >= 0): self.printer.set_temperature(name, temp)
         
     ### PrinterCallback stuff:
 
