@@ -13,8 +13,7 @@ setup-sys.sh
 setup-sys2.sh
 
 1. upgrade and update raspbian os system
-2. relocate StartClientApp script to home directory
-3. install global package dependencies for application.
+2. install global package dependencies for application.
    - git
    - python3-virtualenv
    - python3-pyqt5 : UI package for python
@@ -27,9 +26,9 @@ setup-sys2.sh
    - x11-apps : miscellaneous X applications that ship with X Window System.
    - imagemagick : creating/modifying raster images
    - usbmount : mounts USB mass storage devices when plugged it.
-4. Setup the scripts that configure the usbmount package that will mount filesystems when inserted.
-5. Setup systemmd?
-6. Create the usb directory that thumb drives will be mounted to.
+3. Setup the scripts that configure the usbmount package that will mount filesystems when inserted.
+4. Setup systemmd?
+5. Create the usb directory that thumb drives will be mounted to.
 
 setup-re3d.sh
 

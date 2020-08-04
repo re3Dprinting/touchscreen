@@ -52,7 +52,7 @@ UpdateTagsForPermission = {
     "developer": ["feature/", "bugfix/", "maint/", "devel/", "beta/", "hotfix/"],
     "beta-tester" : ["beta/"],
     "customer": []
-    }
+}
 
 class UserUpdatePage(BasePage, Ui_UserUpdatePage):
     # Signal sent to notify ui is ready to be updated.

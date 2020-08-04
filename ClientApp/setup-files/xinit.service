@@ -5,7 +5,7 @@ Description=Autologin to X
 After=systemd-user-sessions.service
 
 [Service]
-ExecStart=/usr/bin/xinit /home/pi/StartClientApp.sh -- /usr/lib/xorg/Xorg :0 -nocursor vt7
+ExecStart=/usr/bin/xinit /home/pi/re3d/touchscreen/StartClientApp.sh -- /usr/lib/xorg/Xorg :0 -nocursor vt7
 StandardOutput=syslog
 
 [Install]
