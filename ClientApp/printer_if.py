@@ -361,7 +361,7 @@ class PrinterIF(PrinterCallback, tsLogger):
 
         if self._state_changed_callback is not None:
             self._state_changed_callback(payload)
-        if self.printer_finished_callback is not None:
+        if self.print_finished_callback is not None:
             if self.printer_state == self._PRINTER_STATE_FINISHING:
                     self.print_finished_callback()
 
