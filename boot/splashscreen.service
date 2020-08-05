@@ -1,0 +1,13 @@
+[Unit]
+Description=Display re:3D logo
+DefaultDependencies=no
+After=local-fs.target
+
+[Service]
+Type=idle
+ExecStart=/usr/bin/fbi -d /dev/fb0 -blend 1000 --noverbose /home/pi/re3d/touchscreen/boot/re3d-logo.png
+StandardInput=tty
+StandardOutput=tty
+
+[Install]
+WantedBy=sysinit.target

@@ -1,0 +1,12 @@
+#/etc/systemd/system/xinit.service
+
+[Unit]
+Description=Autologin to X
+After=systemd-user-sessions.service
+
+[Service]
+ExecStart=/usr/bin/xinit /home/pi/re3d/touchscreen/StartTouchscreen.sh -- /usr/lib/xorg/Xorg :0 -nocursor vt7
+StandardOutput=syslog
+
+[Install]
+WantedBy=multi-user.target
