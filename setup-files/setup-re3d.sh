@@ -51,6 +51,10 @@ EOF
 
 echo 'SUBSYSTEM=="backlight",RUN+="/bin/chmod 666 /sys/class/backlight/%k/brightness /sys/class/backlight/%k/bl_power"' | sudo tee -a /etc/udev/rules.d/backlight-permissions.rules
 
+# Copy config.properties over to re3d directory
+cp /home/pi/setup-files/config.properties /home/pi/re3d/
+chmod 777 /home/pi/re3d/config.properties
+
 # Make starting script executable
 chmod +x /home/pi/re3d/touchscreen/StartTouchscreen.sh
 

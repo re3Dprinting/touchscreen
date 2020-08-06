@@ -106,7 +106,6 @@ class UserUpdatePage(BasePage, Ui_UserUpdatePage):
         # Signal passed to subfilesystem to update unzipping progress in UI
         self.unzipProgressSignal.connect(self.display_stored_text)
         self.store_text = ""
-
         self.exitSignal.connect(self.exit_now)
 
         # self.DebugOutput.setLineWrapMode(QtWidgets.QTextBrowser.NoWrap)
@@ -170,6 +169,7 @@ class UserUpdatePage(BasePage, Ui_UserUpdatePage):
             if(self.properties["wifienabled"]):
                 self.check_git_software()
                 self.uiUpdateSignal.emit("Server Updates found... \nFetching USB Updates...")
+            
             usbUpdatesFound = self.check_usb_software()
             if(usbUpdatesFound):
                 self.uiUpdateSignal.emit("USB Updates found.")
@@ -206,13 +206,17 @@ class UserUpdatePage(BasePage, Ui_UserUpdatePage):
 
     def check_git_software(self):
         currentPermission = self.properties["permission"]
-        allowedTags = UpdateTagsForPermission[currentPermission]
+        if currentPermission in UpdateTagsForPermission:
+            allowedTags = UpdateTagsForPermission[currentPermission]
+        else:
+            allowedTags = []
         #Delete all tags if on a raspberrypi
         if(self.personality.user == "pi"):
             for tag in self.repo.tags:
                 try:
                     self.repo.delete_tag(tag)
-                except:
+                except Exception as e:
+                    self._log_e("Error: "+e)
                     pass
         #Delete specific tags if on a developer machine. 
         else:
@@ -222,6 +226,7 @@ class UserUpdatePage(BasePage, Ui_UserUpdatePage):
                     try:
                         self.repo.delete_tag(tag)
                     except:
+                        self._log_e("Error: "+e)
                         pass
 
         try:
@@ -230,7 +235,6 @@ class UserUpdatePage(BasePage, Ui_UserUpdatePage):
             if("reference broken" in e.stderr):
                 shutil.rmtree(self.personality.gitrepopath+"/.git/refs/tags")
                 self.remote_repo.fetch("-tf")
-
 
         tags = sorted(self.repo.tags, key=lambda t: t.commit.committed_date)
         tags.reverse()
@@ -398,7 +402,6 @@ class UserUpdatePage(BasePage, Ui_UserUpdatePage):
         # print("UPDATE_USB_CREATE: path <%s>, actual path <%s>" % (mountpoint.path, mountpoint.actual_path))
         self.subdir = SubFileSystem(mountpoint.path)
         self.usb_mounted = True
-        # print("USB create called");
 
     def update_usb_delete(self, path):
         self.usb_mounted = False

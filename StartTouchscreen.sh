@@ -15,7 +15,7 @@ export XDG_RUNTIME_DIR=/run/user/1000
 
 # Source the activate file to set up the virtual environment.
 . ~/re3d/OctoPrint/venv/bin/activate
-cd ~/re3d/touchscreen
+cd ~/re3d/
 
 # Turn off the X screen saver. Here's why we have to do this: when the
 # screen saver activates, the display goes dark and a user will have
@@ -26,8 +26,8 @@ cd ~/re3d/touchscreen
 # this is not a good long-term solution, because leaving the
 # screensave off can lead to screen burn-in.
 
-# xset s off
-# xset -dpms
+xset s off
+xset -dpms
 
 # Loop forever (so that if the UI dies or exits, it will be
 # automatically restarted.
@@ -42,7 +42,7 @@ while :; do
     # Run the UI. Redirect all output, including stderr, to the script
     # log.
 
-    python src/main.py >> touchscreen.out 2>&1
+    python touchscreen/src/main.py >> touchscreen.out 2>&1
     sleep 1
 done
 
