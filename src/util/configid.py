@@ -15,7 +15,7 @@ def runcommand(cmd_string):
 
 def get_touchscreen_commit_id():
     pushed = os.getcwd()
-    os.chdir("../touchscreen/")
+    os.chdir("./touchscreen/")
 
     cmd = "git log -n 1 --pretty='%h'"
 
