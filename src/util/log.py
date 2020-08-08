@@ -37,6 +37,8 @@ def setup_root_logger():
     root_logger = logging.getLogger()
     root_logger.setLevel(logging.DEBUG)
 
+    logging.getLogger("SERIAL").setLevel(logging.CRITICAL)
+
     # print("Octo: got logger", root_logger)
     # dump_logger_hierarchy("Octo 1", root_logger)
 

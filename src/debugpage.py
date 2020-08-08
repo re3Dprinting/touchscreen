@@ -34,8 +34,7 @@ class DebugPage(BasePage, Ui_DebugPage):
         self.w_pushbutton_add_marker.clicked.connect(self.handle_add_marker)
         self.w_pushbutton_copy_log.clicked.connect(self.handle_copy_log)
         self.w_pushbutton_send_fake_ack.clicked.connect(self.send_fake_ack)
-        self.w_combobox_debuglevel.currentIndexChanged.connect(
-            self.debug_level_changed)
+        self.w_combobox_debuglevel.currentIndexChanged.connect(self.debug_level_changed)
 
         self.display_signal.connect(self.slot_display)
         self.Back.clicked.connect(self.back)
@@ -46,6 +45,7 @@ class DebugPage(BasePage, Ui_DebugPage):
         self.setStyleProperty(self.LeftBar, "left-bar")
         self.setAllTransparentButton([self.Back, self.w_pushbutton_add_marker,
                                       self.w_pushbutton_copy_log, self.w_pushbutton_send_fake_ack], True)
+        print("Octoprint Serial Logging set to: ", logging.getLogger("SERIAL").getEffectiveLevel())
 
     def signal_display(self, str):
         self.display_signal.emit(str)
