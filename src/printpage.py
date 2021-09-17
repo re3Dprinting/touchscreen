@@ -96,7 +96,7 @@ class PrintPage(BasePage, Ui_PrintPage):
         # Set up the list of local files
         self.local_file_manager = FileListManager("Local", self.printer_if,
                                                   self.LocalTableModel, self.LocalTable,
-                                                  self.personality.localpath,
+                                                  self.personality.gcodepath,
                                                   self.loc_pathlabel,
                                                   self.pushbutton_folder_up,
                                                   self.pushbutton_folder_open,

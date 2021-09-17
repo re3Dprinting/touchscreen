@@ -48,7 +48,7 @@ def setup_octoprint(persona):
     storage_managers = dict()
 
     # Create our local storage manager and add it to the dictionary.
-    local_storage_manager = storage.LocalFileStorage(persona.localpath)
+    local_storage_manager = storage.LocalFileStorage(persona.gcodepath)
     storage_managers[FileDestinations.LOCAL] = local_storage_manager
 
     # Now we can create the file manager...

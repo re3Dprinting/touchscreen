@@ -69,26 +69,18 @@ class MainHandler(tsLogger):
         # will change from one OS to another. We create the personality
         # based on whether we're running Linux (including Raspbian) or
         # macOS.
-        if os_is_linux():
-            # Linux
-            self.persona = Personality(
-                "pi", "/usb", "/home/pi/gcode-cache", "/home/pi/log-cache", touchscreen_path)
-            self.properties = get_properties(self.persona)
-        elif os_is_macos():
-            # macOS
-            if getpass.getuser() == "jct":
-                octopath = "/Users/jct/Dropbox/re3D/touchscreen/OctoPrint"
-                self.persona = Personality(
-                    "jt", "/Volumes", octopath + "/localgcode", octopath + "/log-cache", touchscreen_path)
-                self.properties = get_properties(self.persona, "developer")
-            if getpass.getuser() == "npan":
-                octopath = "/Users/npan/re3D/OctoPrint"
-                self.persona = Personality(
-                    "Noah", "/Volumes", octopath + "/localgcode", octopath + "/log-cache", touchscreen_path)
-                self.properties = get_properties(self.persona, "developer")
-        else:
-            print("Unable to determine operating system, aborting...")
-            sys.exit(1)
+
+        TS_USER = os.environ["TS_USER"].strip()
+        TS_FS_WATCHPOINT_PATH = os.environ["TS_FS_WATCHPOINT_PATH"].strip()
+        TS_GCODE_PATH = os.environ["TS_GCODE_PATH"].strip()
+        TS_LOG_PATH = os.environ["TS_LOG_PATH"].strip()
+        TS_PATH = os.environ["TS_PATH"].strip()
+        self.persona = Personality(user = TS_USER, \
+                        watchpoint = TS_FS_WATCHPOINT_PATH, \
+                        gcodepath = TS_GCODE_PATH, \
+                        logpath = TS_LOG_PATH, \
+                        touchscreenpath = touchscreen_path)
+        self.properties = get_properties(self.persona, "developer")
 
         # After creating the personality object, validate the filesystem with the md5check script.
         validate_checksum(self.persona.gitrepopath + "/md5verify",
@@ -156,6 +148,8 @@ class MainHandler(tsLogger):
 
         self._log_d("USB Watchpoint = <%s>" % self.persona.watchpoint)
 
+        self.persona.watchpoint = "/home/npan/"
+
         # If the mount finder located any possible USB mountpoints...
         if len(possible_usb_mounts) > 0:
 
@@ -186,7 +180,7 @@ class MainHandler(tsLogger):
         print_page = mainwindow.get_page(Pages.PRINT_PAGE)
         userupdate_page = mainwindow.get_page(Pages.USERUPDATE_PAGE)
         wd_thread = WatchdogThread(print_page, self.persona.watchpoint,
-                                   current_path, self.persona.localpath)
+                                   current_path, self.persona.gcodepath)
 
         # Set up the signals that let us safely communicate between
         # threads that watch the filesystem and the UI.
@@ -231,7 +225,7 @@ class MainHandler(tsLogger):
         sys._excepthook(exctype, value, traceback)
 
         # Restore backup version if backup exists. Backup is created, when a update is clicked.
-        restore_backup(self.persona, self.properties)
+        # restore_backup(self.persona, self.properties)
         sys.exit(1)
 
 if __name__ == "__main__":
