@@ -77,7 +77,7 @@ cp interface/keyboard /etc/default/keyboard
 
 # Copy the passwd and shadow files. This is a simple way of ensuring
 # that the 'pi' user password is what we want it to be, without having
-# to enter its plaintext into a setup file.
+# to enter its plaintext into a setup file. (gigabotprinting)
 echo "Copying over password file..."
 cp interface/shadow /etc/shadow
 chown 640 /etc/shadow
@@ -195,7 +195,7 @@ chmod 777 /home/pi/re3d/config.properties
 chmod +x /home/pi/re3d/touchscreen/StartTouchscreen.sh
 
 # Enable the Xinit service.
-cp xinit.service /etc/systemd/system/
+cp touchscreen.service /etc/systemd/system/
 systemctl enable xinit
 
 # Enable Splahscreen through service.

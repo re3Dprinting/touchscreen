@@ -59,7 +59,7 @@ chmod 777 /home/pi/re3d/config.properties
 chmod +x /home/pi/re3d/touchscreen/StartTouchscreen.sh
 
 # Enable the Xinit service.
-cp xinit.service /etc/systemd/system/
+cp touchscreen.service /etc/systemd/system/
 systemctl enable xinit
 
 # Enable Splahscreen through service.

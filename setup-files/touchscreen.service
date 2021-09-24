@@ -1,4 +1,4 @@
-#/etc/systemd/system/xinit.service
+#/etc/systemd/system/touchscreen.service
 
 [Unit]
 Description=Autologin to X
